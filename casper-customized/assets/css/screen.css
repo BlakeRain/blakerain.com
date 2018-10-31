@@ -92,7 +92,7 @@ body {
 /* ---------------------------------------------------------- */
 
 @media (min-width: 900px) {
-    .home-template .post-feed,
+    /* .home-template .post-feed,
     .tag-template .post-feed,
     .author-template .post-feed {
         margin-top: -70px;
@@ -101,7 +101,7 @@ body {
     .home-template .site-nav {
         position: relative;
         top: -70px;
-    }
+    } */
 }
 
 
