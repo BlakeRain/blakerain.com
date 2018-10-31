@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{lang}}">
+
 <head>
 
     {{!-- Document Settings --}}
@@ -18,6 +19,7 @@
     {{ghost_head}}
 
 </head>
+
 <body class="{{body_class}}">
 
     <div class="site-wrapper">
@@ -33,7 +35,7 @@
                     <a href="{{@blog.url}}">Latest Posts</a>
                     {{#if @blog.facebook}}<a href="{{facebook_url @blog.facebook}}" target="_blank" rel="noopener">Facebook</a>{{/if}}
                     {{#if @blog.twitter}}<a href="{{twitter_url @blog.twitter}}" target="_blank" rel="noopener">Twitter</a>{{/if}}
-                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Built with Ghost</a>
                 </nav>
             </div>
         </footer>
@@ -46,10 +48,11 @@
         <a class="subscribe-overlay-close" href="#"></a>
         <div class="subscribe-overlay-content">
             {{#if @blog.logo}}
-                <img class="subscribe-overlay-logo" src="{{@blog.logo}}" alt="{{@blog.title}}" />
+            <img class="subscribe-overlay-logo" src="{{@blog.logo}}" alt="{{@blog.title}}" />
             {{/if}}
             <h1 class="subscribe-overlay-title">Subscribe to {{@blog.title}}</h1>
-            <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered straight to your inbox</p>
+            <p class="subscribe-overlay-description">Stay up to date! Get all the latest &amp; greatest posts delivered
+                straight to your inbox</p>
             {{subscribe_form placeholder="youremail@example.com"}}
         </div>
     </div>
@@ -68,11 +71,9 @@
 
 
     {{!-- jQuery + Fitvids, which makes all video embeds responsive --}}
-    <script
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous">
-    </script>
+        </script>
     <script type="text/javascript" src="{{asset "built/jquery.fitvids.js"}}"></script>
 
     {{#if pagination.pages}}
@@ -85,11 +86,15 @@
     <script src="{{asset "built/infinitescroll.js"}}"></script>
     {{/if}}
 
-    {{!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. --}}
+    {{!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some
+    JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already
+    loaded. --}}
     {{{block "scripts"}}}
 
-    {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag --}}
+    {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the
+    closing body tag --}}
     {{ghost_foot}}
 
 </body>
+
 </html>
