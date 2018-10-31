@@ -152,8 +152,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4vw 4vw;
-    min-height: 200px;
+    padding: 2vw 4vw;
+    min-height: 150px;
     max-height: 450px;
     text-align: center;
 }
