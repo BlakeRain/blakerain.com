@@ -37,7 +37,7 @@ gulp.task('css', function () {
         easyimport,
         customProperties,
         colorFunction(),
-        autoprefixer({browsers: ['last 2 versions']}),
+        autoprefixer({ browsers: ['last 2 versions'] }),
         cssnano()
     ];
 
@@ -51,7 +51,7 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-    var jsFilter = filter(['**/*.js'], {restore: true});
+    var jsFilter = filter(['**/*.js', '!assets/js/impress.js'], { restore: true });
 
     return gulp.src('assets/js/*.js')
         .on('error', swallowError)
