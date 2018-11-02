@@ -8,15 +8,11 @@ collections:
     permalink: /blog/{slug}/
     filter: tag:hash-blog
     rss: true
-    template:
-      - index
 
   /projects/:
     permalink: /projects/{slug}/
     filter: tag:hash-project
     rss: false
-    template:
-      - index
 
 taxonomies:
   tag: /tag/{slug}/
