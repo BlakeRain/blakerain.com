@@ -272,7 +272,8 @@ body {
     right: 0;
     left: 0;
     z-index: 1000;
-    background: color(var(--darkgrey) l(-5%));
+    /* background: color(var(--darkgrey) l(-5%)); */
+    background-color: rgb(19, 48, 78);
 }
 
 .site-nav {
@@ -1823,7 +1824,8 @@ Usage (In Ghost editor):
 
 .read-next {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: color(var(--darkgrey) l(-5%));
+    /* background: color(var(--darkgrey) l(-5%)); */
+    background-color: rgb(19, 48, 78);
 }
 
 .read-next-feed {
