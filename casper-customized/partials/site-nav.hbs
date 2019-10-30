@@ -15,6 +15,14 @@
     </div>
   </div>
   <div class="site-nav-right">
+    <div class="search-bar">
+      <form name="search" action="/search" method="GET">
+        <input type="text" name="search_term" placeholder="Search">
+        <button type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
     <div class="social-links">
       {{#if @site.facebook}}
       <a class="social-link social-link-fb" href="{{facebook_url @site.facebook}}" title="Facebook" target="_blank"
