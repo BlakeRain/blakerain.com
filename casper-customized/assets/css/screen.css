@@ -584,6 +584,7 @@ The knock-on effect of this is ugly browser-scroll bars at the bottom, so 80px o
   flex-grow: 1;
   background: none;
   outline: none;
+  color: rgba(255, 255, 255, 0.75);
   border: 1px solid #7f92a6;
   padding: 5px;
   border-radius: 5px;
@@ -592,6 +593,7 @@ The knock-on effect of this is ugly browser-scroll bars at the bottom, so 80px o
 
 .search-bar button {
   flex-grow: 0;
+  color: rgba(255, 255, 255, 0.75);
   border: 1px solid #7f92a6;
   border-radius: 5px;
   background: none;
@@ -2832,6 +2834,10 @@ Usage (In Ghost editor):
 
     .site-header-background:before {
         background: rgba(0,0,0,0.6);
+    }
+
+    .search-bar input, .search-bar button {
+
     }
 
     .post-feed {
