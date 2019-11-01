@@ -1202,7 +1202,7 @@ Usage (In Ghost editor):
 }
 
 .post-full-content p code {
-    word-break: break-all;
+    /* word-break: break-all; */
 }
 
 .post-full-content pre {
