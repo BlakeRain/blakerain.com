@@ -2,7 +2,7 @@
   "name": "casper-customized",
   "description": "Customized version of the default Ghost theme",
   "demo": "https://demo.ghost.io",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "engines": {
     "ghost": ">=3.0.0",
     "ghost-api": "v3"
