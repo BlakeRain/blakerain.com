@@ -18,11 +18,13 @@
     <a class="post-card-content-link" href="{{url}}">
 
       <header class="post-card-header">
+        {{!--
         {{#if primary_tag}}
         {{#primary_tag}}
         <div class="post-card-primary-tag">{{name}}</div>
         {{/primary_tag}}
         {{/if}}
+        --}}
         <h2 class="post-card-title">{{title}}</h2>
       </header>
 
@@ -60,6 +62,7 @@
         <span class="post-card-byline-date"><time
             datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time> <span class="bull">&bull;</span>
           {{reading_time}}</span>
+        <div class="post-card-tags">{{tags separator=" &bull; "}}</div>
       </div>
     </footer>
 
