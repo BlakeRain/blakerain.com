@@ -13,6 +13,8 @@ conn.execute("""
 CREATE VIRTUAL TABLE IF NOT EXISTS posts USING fts3(
   post_id TEXT,
   url TEXT,
+  date TEXT,
+  image TEXT,
   title TEXT,
   excerpt TEXT,
   html TEXT
@@ -21,23 +23,22 @@ CREATE VIRTUAL TABLE IF NOT EXISTS posts USING fts3(
 conn.commit()
 
 PARAMS = {
-  "key": API_KEY,
-  "fields": "id,title,custom_excerpt,html,url",
-  "page": 1
+    "key": API_KEY,
+    "fields": "id,title,custom_excerpt,html,url,feature_image,published_at",
+    "page": 1
 }
 
 page = 1
 while True:
-  print(f"Fetching page {page} from Ghost content API")
-  r = requests.get(url = URL_BASE, params = PARAMS)
-  data = r.json()
-  c = conn.cursor()
-  for post in data["posts"]:
-    c.execute("DELETE FROM posts WHERE post_id = ?", (post["id"], ))
-    c.execute("INSERT INTO posts(post_id, url, title, excerpt, html) VALUES(?, ?, ?, ?, ?)",
-              (post["id"], post["url"], post["title"], post["custom_excerpt"], post["html"]))
-  if data["meta"]["pagination"]["pages"] <= page:
-    print(f"This is the last page")
-    break
+    print(f"Fetching page {page} from Ghost content API")
+    r = requests.get(url=URL_BASE, params=PARAMS)
+    data = r.json()
+    c = conn.cursor()
+    for post in data["posts"]:
+        c.execute("DELETE FROM posts WHERE post_id = ?", (post["id"], ))
+        c.execute("INSERT INTO posts(post_id, url, date, image, title, excerpt, html) VALUES(?, ?, ?, ?, ?, ?, ?)",
+                  (post["id"], post["url"], post["published_at"], post["feature_image"], post["title"], post["custom_excerpt"], post["html"]))
+    if data["meta"]["pagination"]["pages"] <= page:
+        print(f"This is the last page")
+        break
 conn.commit()
-
