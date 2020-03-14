@@ -2,7 +2,7 @@
   "name": "casper-customized",
   "description": "Customized version of the default Ghost theme",
   "demo": "https://demo.ghost.io",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "engines": {
     "ghost": ">=3.0.0",
     "ghost-api": "v3"
@@ -41,19 +41,17 @@
   "bugs": "https://github.com/HalfWayMan/blakerain.com/issues",
   "devDependencies": {
     "@tryghost/release-utils": "0.3.2",
-    "autoprefixer": "9.6.5",
     "beeper": "2.0.0",
     "cssnano": "4.1.10",
     "gscan": "3.0.0",
     "gulp": "4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "4.0.2",
-    "gulp-postcss": "8.0.0",
     "gulp-uglify-es": "2.0.0",
     "gulp-zip": "5.0.1",
-    "postcss-color-function": "4.1.0",
-    "postcss-custom-properties": "9.0.2",
-    "postcss-easy-import": "3.0.0",
+    "gulp-sass": "4.0.2",
+    "gulp-sourcemaps": "2.6.5",
+    "node-sass": "4.13.1",
     "pump": "3.0.0"
   },
   "config": {

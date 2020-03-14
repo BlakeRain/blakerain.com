@@ -3,19 +3,15 @@ const pump = require("pump");
 
 // gulp plugins and utils
 const livereload = require("gulp-livereload");
-const postcss = require("gulp-postcss");
+const sass = require("gulp-sass");
 const zip = require("gulp-zip");
 const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
+const sourcemaps = require("gulp-sourcemaps");
 const beeper = require("beeper");
 const fs = require("fs");
 
-// postcss plugins
-const autoprefixer = require("autoprefixer");
-const colorFunction = require("postcss-color-function");
-const cssnano = require("cssnano");
-const customProperties = require("postcss-custom-properties");
-const easyimport = require("postcss-easy-import");
+sass.compiler = require("node-sass");
 
 function serve(done) {
   livereload.listen();
@@ -36,18 +32,12 @@ function hbs(done) {
 }
 
 function css(done) {
-  const processors = [
-    easyimport,
-    customProperties({ preserve: false }),
-    colorFunction(),
-    autoprefixer(),
-    cssnano()
-  ];
-
   pump(
     [
-      src("assets/css/*.css", { sourcemaps: true }),
-      postcss(processors),
+      src("assets/sass/*.scss")
+        .pipe(sourcemaps.init())
+        .pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
+        .pipe(sourcemaps.write()),
       dest("assets/built/", { sourcemaps: "." }),
       livereload()
     ],
