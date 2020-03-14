@@ -37,8 +37,8 @@ function css(done) {
       src("assets/sass/*.scss")
         .pipe(sourcemaps.init())
         .pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
-        .pipe(sourcemaps.write()),
-      dest("assets/built/", { sourcemaps: "." }),
+        .pipe(sourcemaps.write(".")),
+      dest("assets/built/"),
       livereload()
     ],
     handleError(done)
