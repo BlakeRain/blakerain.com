@@ -40,18 +40,18 @@
   },
   "bugs": "https://github.com/HalfWayMan/blakerain.com/issues",
   "devDependencies": {
-    "@tryghost/release-utils": "0.3.2",
+    "@tryghost/release-utils": "0.6.7",
     "beeper": "2.0.0",
     "cssnano": "4.1.10",
-    "gscan": "3.0.0",
+    "gscan": "3.5.7",
     "gulp": "4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "4.0.2",
     "gulp-uglify-es": "2.0.0",
-    "gulp-zip": "5.0.1",
-    "gulp-sass": "4.0.2",
+    "gulp-zip": "5.0.2",
+    "gulp-sass": "4.1.0",
     "gulp-sourcemaps": "2.6.5",
-    "node-sass": "4.13.1",
+    "node-sass": "4.14.1",
     "pump": "3.0.0"
   },
   "config": {
