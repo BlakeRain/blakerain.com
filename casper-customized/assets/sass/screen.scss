@@ -1029,13 +1029,11 @@ body {
       border: adjust-color($whitegrey, $lightness: -1%, $saturation: -5%) 1px solid;
     }
     th {
-      color: var(--darkgrey);
       font-size: 1.2rem;
       font-weight: 700;
       letter-spacing: 0.2px;
       text-align: left;
       text-transform: uppercase;
-      background-color: adjust-color($whitegrey, $lightness: +4%);
       padding: 6px 12px;
       border: adjust-color($whitegrey, $lightness: -1%, $saturation: -5%) 1px solid;
     }
