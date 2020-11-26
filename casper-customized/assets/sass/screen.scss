@@ -1983,6 +1983,9 @@ body {
       text-decoration: none;
     }
   }
+  section.badges img {
+      margin-left: 6px;
+  }
 }
 .site-footer-nav {
   display: flex;
@@ -2385,6 +2388,11 @@ body {
   }
   .site-footer-content {
     flex-direction: column;
+
+    section.badges img {
+      display: block;
+      margin: 6px auto;
+    }
   }
   .site-footer-nav {
     a {
