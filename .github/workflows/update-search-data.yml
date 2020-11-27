@@ -30,4 +30,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOYMENT_AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPLOYMENT_AWS_SECRET }}
         run: |
-          aws s3 cp --region eu-west-1 ./search.bin s3://s3.blakerain.com/data/search.bin
+          aws s3 cp --region eu-west-1 --acl public-read ./search.bin s3://s3.blakerain.com/data/search.bin
