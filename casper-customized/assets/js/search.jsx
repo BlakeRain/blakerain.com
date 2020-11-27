@@ -377,7 +377,7 @@ class Search extends React.Component {
               <b>Search Documentation</b>
             </div>
             <div className="column">
-              <span className="tag">Tag</span>
+              <span className="tag">Tab</span>
               {" / "}
               <span className="tag">S</span>
               {" to search, "}
