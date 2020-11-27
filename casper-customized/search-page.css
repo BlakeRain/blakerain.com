@@ -69,7 +69,18 @@
   padding-top: 25px;
 }
 
-img.search-card-image {
+img.search-card-image,
+div.search-card-image {
   width: 200px;
   margin: 0;
+}
+
+div.search-card-image.missing {
+  height: 200px;
+  background-color: #2e333e;
+  text-align: center;
+  line-height: 175px;
+  color: #515959;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
 }

@@ -16,9 +16,10 @@ class Search(Resource):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         results = []
-        for row in c.execute("SELECT post_id, url, date, image, title, excerpt FROM posts WHERE html MATCH ?", (term,)):
+        for row in c.execute("SELECT post_id, url, date, image, title, excerpt FROM posts WHERE content MATCH ?", (term,)):
             results.append({"id": row[0], "url": row[1], "date": row[2],
                             "image": row[3], "title": row[4], "excerpt": row[5]})
+        print(f"  Found {len(results)} results")
         return results, 200
 
 

@@ -15,15 +15,24 @@
 
   class PostCardImage extends React.Component {
     render() {
-      return e(
-        "a",
-        { className: "search-card-image-link", href: this.props.post.url },
-        e("img", {
+      var image;
+      if (this.props.post.image) {
+        image = e("img", {
           className: "search-card-image",
           src: this.props.post.image,
-          alt: this.props.post.title
-        })
-      );
+          alt: this.props.post.title,
+        });
+      } else {
+        image = e(
+          "div",
+          {
+            className: "search-card-image missing",
+          },
+          "No Image"
+        );
+      }
+
+      return e("a", { className: "search-card-image-link", href: this.props.post.url }, image);
     }
   }
 
@@ -53,8 +62,8 @@
         e(PostCardImage, { key: "image", post: this.props.post }),
         e("a", { key: "a", className: "search-card-content", href: this.props.post.url }, [
           e(PostCardHeader, { key: "header", post: this.props.post }),
-          e(PostCardExcerpt, { key: "excerpt", post: this.props.post })
-        ])
+          e(PostCardExcerpt, { key: "excerpt", post: this.props.post }),
+        ]),
       ]);
     }
   }
@@ -95,10 +104,9 @@
   function processSearch() {
     const search_bar = document.querySelector(".search-bar input");
     const search_box = document.querySelector(".search-box input");
-    const term = /\?search_term=(.*)/
-      .exec(window.location.search)[1]
-      .replace(/\+/g, " ")
-      .trim();
+    const term = decodeURIComponent(
+      /\?search_term=(.*)/.exec(window.location.search)[1].replace(/\+/g, " ").trim()
+    );
 
     if (term.length === 0) {
       return;
@@ -110,13 +118,16 @@
     showSearchLoader();
     const req = new XMLHttpRequest();
     req.addEventListener("load", () => {
-      showSearchResults(JSON.parse(req.responseText));
+      const suffix = "?highlight=" + encodeURIComponent(term);
+      const results = JSON.parse(req.responseText);
+      results.forEach((result) => (result.url = result.url + suffix));
+      showSearchResults(results);
     });
-    req.open("GET", "https://blakerain.com:9443/search/" + term);
+    req.open("GET", "https://blakerain.com:9443/search/" + encodeURIComponent(term));
     req.send();
   }
 
-  window.addEventListener("load", function() {
+  window.addEventListener("load", function () {
     processSearch();
   });
 </script>

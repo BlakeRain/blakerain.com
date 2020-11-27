@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Environment="DB_PATH=/var/www/blakerain/ghost-search.db"
-ExecStart="/var/www/blakerain/simple-search.py"
+ExecStart="/usr/bin/python3 /var/www/blakerain/simple-search.py"
 
 [Install]
 WantedBy=multi-user.target
