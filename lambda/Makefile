@@ -1,6 +1,6 @@
 .PHONY: dependencies deploy-lambda
 
-blakerain_build_search.zip: build-search.py dependencies
+blakerain_build_search.zip: lambda_function.py dependencies
 	rm -f blakerain_build_search.zip
 	zip -r blakerain_build_search.zip .
 
