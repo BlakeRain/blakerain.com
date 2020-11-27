@@ -17,7 +17,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
       - name: Install requirements
-        uses: pip3 install -r requirements.txt
+        run: |
+          pip3 install -r requirements.txt
       - name: Build the search data
         env:
           DOMAIN: blakerain.com
