@@ -14,6 +14,7 @@
 
   {{!-- Styles'n'Scripts --}}
   <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
+  <link rel="stylesheet" type="text/css" href="{{asset "built/search.css"}}" />
 
   {{!-- Font Awesome --}}
   <link rel="stylesheet" type="text/css" href="{{asset "css/fontawesome.css"}}" />
@@ -31,6 +32,8 @@
 
     {{!-- All the main content gets inserted here, index.hbs, post.hbs, etc --}}
     {{{body}}}
+
+    <div id="search-container"></div>
 
     {{!-- The footer at the very bottom of the screen --}}
     <footer class="site-footer outer">
@@ -99,6 +102,15 @@
   {{!-- Fitvids (for responsive video embeds), infinite scroll, floating header, and gallery card support --}}
   <script src="{{asset "built/casper.js"}}"></script>
 
+  {{!-- Handle the search link --}}
+  <script>
+    $("a.search-link").on("click", function (event) {
+      event.preventDefault();
+      window["__searchStore"].open();
+      return false;
+    });
+  </script>
+
   {{!-- Scripts for Members subscription --}}
   <script>
     // Parse the URL parameter
@@ -130,6 +142,11 @@
 
   {{!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. --}}
   {{{block "scripts"}}}
+
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+
+  <script src="{{asset "built/search.js"}}"></script>
 
   {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag --}}
   {{ghost_foot}}

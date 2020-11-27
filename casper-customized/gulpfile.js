@@ -5,6 +5,7 @@ const pump = require("pump");
 const livereload = require("gulp-livereload");
 const sass = require("gulp-sass");
 const zip = require("gulp-zip");
+const babel = require("gulp-babel");
 const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
 const sourcemaps = require("gulp-sourcemaps");
@@ -18,8 +19,8 @@ function serve(done) {
   done();
 }
 
-const handleError = done => {
-  return function(err) {
+const handleError = (done) => {
+  return function (err) {
     if (err) {
       beeper();
     }
@@ -39,7 +40,7 @@ function css(done) {
         .pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
         .pipe(sourcemaps.write(".")),
       dest("assets/built/"),
-      livereload()
+      livereload(),
     ],
     handleError(done)
   );
@@ -52,14 +53,28 @@ function js(done) {
         [
           // pull in lib files first so our own code can depend on it
           "assets/js/lib/*.js",
-          "assets/js/*.js"
+          "assets/js/*.js",
         ],
         { sourcemaps: true }
       ),
       concat("casper.js"),
       uglify(),
       dest("assets/built/", { sourcemaps: "." }),
-      livereload()
+      livereload(),
+    ],
+    handleError(done)
+  );
+}
+
+function transpile(done) {
+  pump(
+    [
+      src("assets/js/*.jsx").pipe(
+        babel({
+          presets: ["@babel/preset-react"],
+        })
+      ),
+      dest("assets/built/"),
     ],
     handleError(done)
   );
@@ -74,7 +89,7 @@ function zipper(done) {
     [
       src(["**", "!node_modules", "!node_modules/**", "!dist", "!dist/**"]),
       zip(filename),
-      dest(targetDir)
+      dest(targetDir),
     ],
     handleError(done)
   );
@@ -83,7 +98,7 @@ function zipper(done) {
 const cssWatcher = () => watch("assets/css/**", css);
 const hbsWatcher = () => watch(["*.hbs", "partials/**/*.hbs"], hbs);
 const watcher = parallel(cssWatcher, hbsWatcher);
-const build = series(css, js);
+const build = series(css, transpile, js);
 const dev = series(build, serve, watcher);
 
 exports.build = build;
@@ -108,13 +123,13 @@ const CHANGELOG_PATH = path.join(process.cwd(), ".", "changelog.md");
 const changelog = ({ previousVersion }) => {
   const changelog = new releaseUtils.Changelog({
     changelogPath: CHANGELOG_PATH,
-    folder: path.join(process.cwd(), ".")
+    folder: path.join(process.cwd(), "."),
   });
 
   changelog
     .write({
       githubRepoPath: `https://github.com/${REPO}`,
-      lastVersion: previousVersion
+      lastVersion: previousVersion,
     })
     .sort()
     .clean();
@@ -124,9 +139,9 @@ const previousRelease = () => {
   return releaseUtils.releases
     .get({
       userAgent: USER_AGENT,
-      uri: `https://api.github.com/repos/${REPO}/releases`
+      uri: `https://api.github.com/repos/${REPO}/releases`,
     })
-    .then(response => {
+    .then((response) => {
       if (!response || !response.length) {
         console.log("No releases found. Skipping");
         return;
@@ -181,7 +196,7 @@ const release = () => {
     return;
   }
 
-  return previousRelease().then(previousVersion => {
+  return previousRelease().then((previousVersion) => {
     changelog({ previousVersion });
 
     return releaseUtils.releases
@@ -194,14 +209,14 @@ const release = () => {
         uri: `https://api.github.com/repos/${REPO}/releases`,
         github: {
           username: config.github.username,
-          token: config.github.token
+          token: config.github.token,
         },
         content: [
-          `**Ships with Ghost ${shipsWithGhost} Compatible with Ghost >= ${compatibleWithGhost}**\n\n`
+          `**Ships with Ghost ${shipsWithGhost} Compatible with Ghost >= ${compatibleWithGhost}**\n\n`,
         ],
-        changelogPath: CHANGELOG_PATH
+        changelogPath: CHANGELOG_PATH,
       })
-      .then(response => {
+      .then((response) => {
         console.log(`\nRelease draft generated: ${response.releaseUrl}\n`);
       });
   });
