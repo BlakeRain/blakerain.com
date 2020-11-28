@@ -374,7 +374,7 @@ class Search extends React.Component {
         <div className="search-box" onClick={(event) => this.onSearchBoxClick(event)}>
           <div className="row">
             <div className="column">
-              <b>Search Documentation</b>
+              <b>Search Blog and Pages</b>
             </div>
             <div className="column hints">
               <span className="tag">Tab</span>
