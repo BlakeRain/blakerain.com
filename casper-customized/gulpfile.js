@@ -74,6 +74,7 @@ function transpile(done) {
           presets: ["@babel/preset-react"],
         })
       ),
+      uglify(),
       dest("assets/built/"),
     ],
     handleError(done)
