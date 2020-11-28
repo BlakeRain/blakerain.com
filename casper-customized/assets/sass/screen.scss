@@ -309,7 +309,8 @@ body {
     }
   }
 }
-.social-link {
+.social-link,
+.search-link {
   display: inline-block;
   margin: 0;
   padding: 10px;
@@ -1984,7 +1985,7 @@ body {
     }
   }
   section.badges img {
-      margin-left: 6px;
+    margin-left: 6px;
   }
 }
 .site-footer-nav {
