@@ -310,7 +310,7 @@ class SearchResults extends React.Component {
       );
     } else {
       let query = "highlight=" + this.context.highlight;
-      let rows = this.context.results.slice(0, 10).map((result) => {
+      let rows = this.context.results.slice(0, 5).map((result) => {
         return (
           <a
             key={"post-" + result.post.id}
@@ -376,7 +376,7 @@ class Search extends React.Component {
             <div className="column">
               <b>Search Documentation</b>
             </div>
-            <div className="column">
+            <div className="column hints">
               <span className="tag">Tab</span>
               {" / "}
               <span className="tag">S</span>

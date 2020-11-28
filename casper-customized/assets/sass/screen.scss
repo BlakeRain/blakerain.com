@@ -82,9 +82,9 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 6vw 3vw;
-  min-height: 200px;
+  padding: 1vw 3vw;
   max-height: 340px;
+
   .author-profile-image {
     z-index: 10;
     flex-shrink: 0;
@@ -118,9 +118,6 @@ body {
   z-index: 1000;
   .site-header-background {
     margin-top: 0;
-  }
-  .site-header-content {
-    padding: 5vw 3vw 6vw;
   }
   .site-title {
     font-size: 5.5rem;
