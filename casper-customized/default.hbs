@@ -15,7 +15,6 @@
   {{!-- Styles'n'Scripts --}}
   <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
   <link rel="stylesheet" type="text/css" href="{{asset "built/search.css"}}" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
   {{!-- Font Awesome --}}
   <link rel="stylesheet" type="text/css" href="{{asset "css/fontawesome.css"}}" />
@@ -104,28 +103,31 @@
   <script src="{{asset "built/casper.js"}}"></script>
 
   {{!-- Handle the search link and highlighting --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
   <script>
-    $("a.search-link").on("click", function (event) {
-      event.preventDefault();
-      window["__searchStore"].open();
-      return false;
-    });
-
     function highlight_search_terms(terms) {
         var mark = new Mark(document.querySelector("section.post-full-content"));
         var opts = { separateWordSearch: true, diactritics: true };
         mark.mark(terms, opts);
     }
 
-    window.location.search
-    	.substr(1)
-    	.split("&")
-    	.map(term => term.split("="))
-    	.forEach(term_pair => {
-        	if (term_pair.length > 1 && term_pair[0] == "highlight") {
-                highlight_search_terms(decodeURIComponent(term_pair[1]));
-            }
-    	});
+    window.addEventListener("load", () => {
+      $("a.search-link").on("click", function (event) {
+        event.preventDefault();
+        window["__searchStore"].open();
+        return false;
+      });
+
+      window.location.search
+        .substr(1)
+        .split("&")
+        .map(term => term.split("="))
+        .forEach(term_pair => {
+            if (term_pair.length > 1 && term_pair[0] == "highlight") {
+                  highlight_search_terms(decodeURIComponent(term_pair[1]));
+              }
+        });
+    });
   </script>
 
   {{!-- Scripts for Members subscription --}}
