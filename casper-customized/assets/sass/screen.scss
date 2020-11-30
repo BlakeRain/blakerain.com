@@ -888,6 +888,9 @@ body {
     &::selection {
       color: adjust-color($midgrey, $lightness: -25%);
     }
+    &.language-box-drawing {
+      line-height: 1.4rem;
+    }
     code {
       padding: 0;
       font-size: inherit;
