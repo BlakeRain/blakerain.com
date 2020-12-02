@@ -7,17 +7,20 @@
   padding: 0;
   list-style: none;
 }
+
 .author-list-item {
   position: relative;
   flex-shrink: 0;
   margin: 0;
   padding: 0;
+
   &:hover {
     .author-name-tooltip {
       opacity: 1;
       transform: translateY(0px);
     }
   }
+
   .author-card {
     position: absolute;
     bottom: 130%;
@@ -36,6 +39,7 @@
     transition: all 0.35s cubic-bezier(0.4, 0.01, 0.165, 0.99);
     transform: scale(0.98) translateY(15px);
     pointer-events: none;
+
     &:before {
       content: "";
       position: absolute;
@@ -50,6 +54,7 @@
       border-left: 8px solid transparent;
     }
   }
+
   .author-card.hovered {
     opacity: 1;
     transform: scale(1) translateY(0px);
@@ -85,16 +90,20 @@
   line-height: 1.4em;
   font-weight: 500;
 }
+
 .single-author {
   display: flex;
   align-items: center;
+
   .static-avatar {
     margin-left: -2px;
   }
 }
+
 .single-author-name {
   display: inline-block;
 }
+
 .author-avatar {
   display: block;
   overflow: hidden;
@@ -105,6 +114,7 @@
   border-radius: 100%;
   transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99) 700ms;
 }
+
 .avatar-wrapper {
   display: block;
   width: 100%;
@@ -113,6 +123,7 @@
   border-radius: 100%;
   object-fit: cover;
 }
+
 .basic-info {
   .avatar-wrapper {
     position: relative;
@@ -121,6 +132,7 @@
     height: 60px;
     border: none;
     background: rgba(229, 239, 245, 0.1);
+
     svg {
       margin: 0;
       width: 60px;
@@ -129,6 +141,7 @@
     }
   }
 }
+
 .static-avatar {
   display: block;
   overflow: hidden;
@@ -138,28 +151,35 @@
   border: #fff 2px solid;
   border-radius: 100%;
 }
+
 .author-card {
   padding: 20px 20px 22px;
+
   .author-info {
     flex: 1 1 auto;
     padding: 0 0 0 20px;
+
     h2 {
       margin: 8px 0 0;
       font-size: 1.6rem;
     }
+
     p {
       margin: 4px 0 0;
       color: adjust-color($midgrey, $lightness: -10%);
     }
+
     .bio {
       h2 {
         margin-top: 0;
       }
+
       p {
         margin-top: 0.8em;
       }
     }
   }
+
   .author-profile-image {
     flex: 0 0 60px;
     margin: 0;
@@ -185,11 +205,13 @@
   align-items: flex-start;
   padding: 10vw 0 10px;
 }
+
 .author-header-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 5px 0 0 30px;
+
   .author-bio {
     z-index: 10;
     flex-shrink: 0;
@@ -200,6 +222,7 @@
     font-weight: 400;
     opacity: 0.8;
   }
+
   .author-meta {
     z-index: 10;
     flex-shrink: 0;
@@ -211,24 +234,29 @@
     letter-spacing: 0.2px;
     text-transform: uppercase;
   }
+
   .social-link {
     &:first-of-type {
       padding-left: 4px;
     }
   }
 }
+
 .author-social-link {
-  a {
-    color: $lightgrey;
-    font-weight: 600;
-    &:hover {
-      opacity: 1;
-    }
-  }
   padding: 10px 0;
   display: inline-block;
   margin: 0;
   padding: 10px 0;
+
+  a {
+    color: $lightgrey;
+    font-weight: 600;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   + {
     .author-social-link {
       &:before {
@@ -241,6 +269,7 @@
     }
   }
 }
+
 .author-location {
   + {
     .author-stats {
@@ -254,6 +283,7 @@
     }
   }
 }
+
 .author-stats {
   + {
     .author-social-link {
@@ -274,6 +304,7 @@
       color: var(--midgrey);
       opacity: 1;
     }
+
     .author-meta {
       color: var(--midgrey);
       opacity: 1;
@@ -296,25 +327,31 @@
     width: 32px;
     height: 32px;
   }
+
   .author-header {
     padding: 10px 0 0;
   }
+
   .no-image {
     .author-header {
       padding-bottom: 10px;
     }
   }
+
   .author-header-content {
     margin-left: 20px;
+
     .author-bio {
       font-size: 1.8rem;
       line-height: 1.3em;
       letter-spacing: 0;
     }
   }
+
   .author-location {
     display: none;
   }
+
   .author-stats {
     display: none;
   }
@@ -339,6 +376,7 @@
     .author-card {
       margin-left: -50px;
       width: 430px;
+
       &:before {
         left: 50px;
       }
@@ -350,16 +388,17 @@
   .author-profile-image {
     background: var(--darkmode);
   }
-  .author-avatar {
-    border-color: adjust-color($darkgrey, $lightness: +2%);
-  }
+
+  .author-avatar,
   .static-avatar {
     border-color: adjust-color($darkgrey, $lightness: +2%);
   }
+
   .author-list-item {
     .author-card {
       background: adjust-color($darkmode, $lightness: +4%);
       box-shadow: 0 12px 26px rgba(0, 0, 0, 0.4);
+
       &:before {
         border-top-color: adjust-color($darkmode, $lightness: +4%);
       }

@@ -1,10 +1,13 @@
+@import "variables.scss";
+
 .site-footer {
   position: relative;
   padding-top: 20px;
   padding-bottom: 60px;
   color: #fff;
-  background: rgb(19, 48, 78);
+  background: $primary-background;
 }
+
 .site-footer-content {
   display: flex;
   flex-wrap: wrap;
