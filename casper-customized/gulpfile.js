@@ -5,7 +5,6 @@ const pump = require("pump");
 const livereload = require("gulp-livereload");
 const sass = require("gulp-sass");
 const zip = require("gulp-zip");
-const babel = require("gulp-babel");
 const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
 const sourcemaps = require("gulp-sourcemaps");
@@ -66,21 +65,6 @@ function js(done) {
   );
 }
 
-function transpile(done) {
-  pump(
-    [
-      src("assets/js/*.jsx").pipe(
-        babel({
-          presets: ["@babel/preset-react"],
-        })
-      ),
-      uglify(),
-      dest("assets/built/"),
-    ],
-    handleError(done)
-  );
-}
-
 function zipper(done) {
   const targetDir = "dist/";
   const themeName = require("./package.json").name;
@@ -99,7 +83,7 @@ function zipper(done) {
 const cssWatcher = () => watch("assets/css/**", css);
 const hbsWatcher = () => watch(["*.hbs", "partials/**/*.hbs"], hbs);
 const watcher = parallel(cssWatcher, hbsWatcher);
-const build = series(css, transpile, js);
+const build = series(css, js);
 const dev = series(build, serve, watcher);
 
 exports.build = build;

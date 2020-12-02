@@ -213,7 +213,7 @@ class SearchStore {
   close() {
     this._state = STATE.CLOSED;
     this.onStateChanged();
-    this.onSearchChangedHandlers = [];
+    // this.onSearchChangedHandlers = [];
   }
 
   setTerm(term) {
@@ -286,138 +286,99 @@ class SearchStore {
   }
 }
 
-const SearchContext = React.createContext(null);
+class SearchView {
+  constructor(store) {
+    this.store = store;
+    this.container = document.querySelector(".search-box-container");
+    this.input = document.getElementById("search-input");
+    this.hint = document.getElementById("search-hint");
+    this.empty = document.getElementById("search-empty");
+    this.summary = document.getElementById("search-summary");
+    this.results = document.getElementById("search-results");
+    this.count = document.getElementById("search-results-count");
+    this.limit = document.getElementById("search-results-limit");
 
-class SearchResults extends React.Component {
-  componentDidMount() {
-    this.context.onSearchChangedHandlers.push(() => this.forceUpdate());
+    this.container.addEventListener("click", () => {
+      this.store.close();
+    });
+
+    document.querySelector(".search-box").addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    this.input.addEventListener("input", (event) => {
+      this.store.setTerm(this.input.value);
+    });
+
+    this.store.onStateChangedHandlers.push(() => {
+      if (this.store.isOpen) {
+        this.container.style.display = "flex";
+        this.input.select();
+        this.input.focus();
+      } else {
+        this.container.style.display = "none";
+      }
+    });
+
+    this.store.onSearchChangedHandlers.push(() => {
+      this.update();
+    });
   }
 
-  render() {
-    if (this.context.term.length === 0) {
-      return (
-        <div className="row center">
-          <div className="column">{"Search for words and phrases directly"}</div>
-        </div>
-      );
-    } else if (this.context.results.length === 0) {
-      return (
-        <div className="row center">
-          <div className="column" style={{ color: "#c7cf2f" }}>
-            <b>Sorry, nothing was found.</b>
-          </div>
-        </div>
-      );
+  update() {
+    if (this.store.term.length === 0) {
+      this.hint.style.display = "flex";
+      this.empty.style.display = "none";
+      this.summary.style.display = "none";
+      this.results.style.display = "none";
+    } else if (this.store.results.length === 0) {
+      this.hint.style.display = "none";
+      this.empty.style.display = "flex";
+      this.summary.style.display = "none";
+      this.results.style.display = "none";
     } else {
-      let query = "highlight=" + this.context.highlight;
-      let rows = this.context.results.slice(0, 5).map((result) => {
-        return (
-          <a
-            key={"post-" + result.post.id}
-            href={result.post.url + "?" + query}
-            className="row search-result">
-            <div className="column">{result.post.title}</div>
-            <div className="column">
-              {result.relevance} match{result.relevance != 1 ? "es" : ""}
-            </div>
-          </a>
-        );
-      });
+      this.hint.style.display = "none";
+      this.empty.style.display = "none";
+      this.summary.style.display = "flex";
+      this.results.style.display = "block";
+      this.count.innerText =
+        this.store.results.length.toString() +
+        " post" +
+        (this.store.results.length != 1 ? "s" : "") +
+        " match";
 
-      return (
-        <React.Fragment>
-          {rows}
-          <div className="row center">
-            <div className="column">
-              <p>
-                <b>
-                  {this.context.results.length} post
-                  {this.context.results.length == 1 ? "" : "s"} match
-                </b>
-                <br />
-                {this.context.results.length > 10 ? (
-                  <i className="muted">
-                    <small>Showing first 10 results</small>
-                  </i>
-                ) : null}
-              </p>
-            </div>
-          </div>
-        </React.Fragment>
-      );
+      if (this.store.results.length > 5) {
+        this.limit.style.display = "block";
+      } else {
+        this.limit.style.display = "none";
+      }
+
+      while (this.results.firstChild) {
+        this.results.removeChild(this.results.lastChild);
+      }
+
+      let query = "?highlight=" + this.store.highlight;
+      this.store.results.forEach((result) => {
+        let link = document.createElement("A");
+        link.href = result.post.url + query;
+        link.className = "row search-result";
+
+        let title = document.createElement("DIV");
+        title.className = "column";
+        title.innerText = result.post.title;
+        link.appendChild(title);
+
+        let matches = document.createElement("DIV");
+        matches.className = "column";
+        matches.innerText =
+          result.relevance.toString() + " match" + (result.relevance != 1 ? "es" : "");
+        link.appendChild(matches);
+
+        this.results.appendChild(link);
+      });
     }
   }
 }
-
-SearchResults.contextType = SearchContext;
-
-class Search extends React.Component {
-  onBackgroundClick(event) {
-    this.context.close();
-  }
-
-  onSearchBoxClick(event) {
-    event.stopPropagation();
-  }
-
-  onInputChange(event) {
-    this.context.setTerm(event.target.value);
-  }
-
-  componentDidMount() {
-    this.context.onSearchChangedHandlers.push(() => this.forceUpdate());
-  }
-
-  render() {
-    return (
-      <div className="search-box-container" onClick={(event) => this.onBackgroundClick(event)}>
-        <div className="search-box" onClick={(event) => this.onSearchBoxClick(event)}>
-          <div className="row">
-            <div className="column">
-              <b>Search Blog and Pages</b>
-            </div>
-            <div className="column hints">
-              <span className="tag">Tab</span>
-              {" / "}
-              <span className="tag">S</span>
-              {" to search, "}
-              <span className="tag">Esc</span>
-              {" to close"}
-            </div>
-          </div>
-          <div className="row">
-            <div className="column wide">
-              <input
-                type="search"
-                placeholder="Type something here ..."
-                autoComplete="off"
-                autoFocus={true}
-                spellCheck="false"
-                value={this.context.term}
-                onChange={(event) => this.onInputChange(event)}
-              />
-            </div>
-          </div>
-          <SearchResults />
-        </div>
-      </div>
-    );
-  }
-}
-
-Search.contextType = SearchContext;
-
-class SearchAnchor extends React.Component {
-  componentDidMount() {
-    this.context.onStateChangedHandlers.push(() => this.forceUpdate());
-  }
-
-  render() {
-    return this.context.isOpen ? <Search /> : null;
-  }
-}
-
-SearchAnchor.contextType = SearchContext;
 
 fetch("https://s3-eu-west-1.amazonaws.com/s3.blakerain.com/data/search.bin", {
   method: "GET",
@@ -430,13 +391,9 @@ fetch("https://s3-eu-west-1.amazonaws.com/s3.blakerain.com/data/search.bin", {
         let store = new SearchStore(buffer);
         window["__searchStore"] = store;
 
-        const container = document.getElementById("search-container");
-        ReactDOM.render(
-          <SearchContext.Provider value={store}>
-            <SearchAnchor />
-          </SearchContext.Provider>,
-          container
-        );
+        let view = new SearchView(store);
+        window["__searchView"] = view;
+        view.update();
       })
       .catch((err) => console.error(err));
   } else {

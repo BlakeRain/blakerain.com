@@ -14,7 +14,6 @@
 
   {{!-- Styles'n'Scripts --}}
   <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
-  <link rel="stylesheet" type="text/css" href="{{asset "built/search.css"}}" />
 
   {{!-- This tag outputs SEO meta+structured data and other important settings --}}
   {{ghost_head}}
@@ -30,7 +29,48 @@
     {{!-- All the main content gets inserted here, index.hbs, post.hbs, etc --}}
     {{{body}}}
 
-    <div id="search-container"></div>
+    <div class="search-box-container" style="display: none;">
+      <div class="search-box">
+        <div class="row">
+          <div class="column">
+            Search Blog Posts and Pages
+          </div>
+          <div class="column hints">
+            <span class="tag">Tab</span>/<span class="tag">S</span> to search, <span class="tag">Esc</span> to close
+          </div>
+        </div>
+        <div class="row">
+          <div class="column wide">
+            <input
+              id="search-input"
+              type="search"
+              placeholder="Type search term here ..."
+              autocomplete="off"
+              autofocus="yes"
+              spellcheck="false">
+          </div>
+        </div>
+        <div class="row center" id="search-hint">
+          <div class="column center">
+            Search for a word prefix
+          </div>
+        </div>
+        <div class="row center" id="search-empty" style="color: #c7cf2f; display: none;">
+          <b>Sorry, nothing was found.</b>
+        </div>
+        <div id="search-results"></div>
+        <div class="row center" id="search-summary">
+          <p>
+            <b id="search-results-count"></b>
+          </p>
+          <br>
+          <i id="search-results-limit" class="muted">
+            <small>Showing top 5 results</small>
+          </i>
+        </div>
+      </div>
+    </div>
+
 
     {{!-- The footer at the very bottom of the screen --}}
     <footer class="site-footer outer">
@@ -90,11 +130,6 @@
 
   {{!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. --}}
   {{{block "scripts"}}}
-
-  <script src="https://unpkg.com/react@16.14.0/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.production.min.js" crossorigin></script>
-
-  <script src="{{asset "built/search.js"}}"></script>
 
   {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag --}}
   {{ghost_foot}}
