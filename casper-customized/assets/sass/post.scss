@@ -30,6 +30,18 @@
   line-height: 1.4em;
   font-weight: 600;
   text-transform: uppercase;
+
+  a {
+    margin: 0 0.5rem;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
 }
 
 .post-full-meta-date {
