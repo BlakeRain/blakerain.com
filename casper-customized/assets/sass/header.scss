@@ -1,18 +1,5 @@
 @import "variables.scss";
 
-.site-title {
-  z-index: 10;
-  margin: 0 0 0 -2px;
-  padding: 0;
-  font-size: 5rem;
-  line-height: 1em;
-  font-weight: 600;
-}
-
-.site-logo {
-  max-height: 55px;
-}
-
 .site-header-background {
   position: relative;
   margin-top: 64px;
@@ -44,15 +31,15 @@
     display: block;
     height: 140px;
   }
-}
 
-.site-header-background.no-image {
-  &:before {
-    display: none;
-  }
+  &.site-header-background.no-image {
+    &:before {
+      display: none;
+    }
 
-  &:after {
-    display: none;
+    &:after {
+      display: none;
+    }
   }
 }
 
@@ -75,6 +62,29 @@
   }
 }
 
+.site-title {
+  z-index: 10;
+  margin: 0 0 0 -2px;
+  padding: 0;
+  font-size: 5rem;
+  line-height: 1em;
+  font-weight: 600;
+}
+
+.site-logo {
+  max-height: 55px;
+}
+
+.site-description {
+  z-index: 10;
+  margin: 0;
+  padding: 5px 0;
+  font-size: 2.1rem;
+  line-height: 1.4em;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
 .site-home-header {
   z-index: 1000;
 
@@ -90,10 +100,6 @@
   .site-description {
     font-size: 2.2rem;
     font-weight: 300;
-  }
-
-  .site-nav-logo {
-    display: none;
   }
 }
 
@@ -135,6 +141,38 @@
   }
 }
 
+@media (max-width: 500px) {
+  .site-header-content {
+    .author-profile-image {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .site-home-header {
+    .site-title {
+      font-size: 3.2rem;
+    }
+
+    .site-description {
+      font-size: 1.8rem;
+    }
+  }
+
+  .site-archive-header {
+    .site-header-content {
+      flex-direction: column;
+      align-items: center;
+      min-height: unset;
+    }
+
+    .site-title {
+      font-size: 4.2rem;
+      text-align: center;
+    }
+  }
+}
+
 @media (max-width: 700px) {
   .site-header-background {
     &:not(.responsive-header-img) {
@@ -155,30 +193,6 @@
   .site-home-header {
     .site-nav {
       margin-left: -5vw;
-    }
-  }
-}
-
-@media (max-width: 500px) {
-  .site-header-content {
-    .author-profile-image {
-      width: 80px;
-      height: 80px;
-    }
-  }
-
-  .site-home-header {
-    .site-title {
-      font-size: 3.2rem;
-    }
-    .site-description {
-      font-size: 1.8rem;
-    }
-  }
-
-  .site-archive-header {
-    .site-header-content {
-      min-height: unset;
     }
   }
 }
