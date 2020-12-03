@@ -129,27 +129,9 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 900px) {
   .site-header-content {
-    .author-profile-image {
-      width: 80px;
-      height: 80px;
-    }
-  }
-
-  .site-home-header {
-    .site-title {
-      font-size: 3.2rem;
-    }
-    .site-description {
-      font-size: 1.8rem;
-    }
-  }
-
-  .site-archive-header {
-    .site-header-content {
-      min-height: unset;
-    }
+    padding-bottom: 9vw;
   }
 }
 
@@ -177,9 +159,27 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 500px) {
   .site-header-content {
-    padding-bottom: 9vw;
+    .author-profile-image {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .site-home-header {
+    .site-title {
+      font-size: 3.2rem;
+    }
+    .site-description {
+      font-size: 1.8rem;
+    }
+  }
+
+  .site-archive-header {
+    .site-header-content {
+      min-height: unset;
+    }
   }
 }
 

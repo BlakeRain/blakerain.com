@@ -17,12 +17,6 @@
   }
 }
 
-@media (max-width: 650px) {
-  .post-feed {
-    padding-top: 5vw;
-  }
-}
-
 @media (min-width: 900px) {
   .home-template,
   .tag-template {
@@ -31,6 +25,12 @@
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
     }
+  }
+}
+
+@media (max-width: 650px) {
+  .post-feed {
+    padding-top: 5vw;
   }
 }
 

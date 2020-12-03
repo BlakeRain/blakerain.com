@@ -593,92 +593,50 @@
   }
 }
 
-@media (max-width: 500px) {
-  .post-full-header {
-    padding: 20px 0 35px;
-  }
-
-  .post-full-custom-excerpt {
-    font-size: 1.9rem;
-    line-height: 1.5em;
-  }
-
+@media (min-width: 1180px) {
   .post-full-content {
-    padding: 0;
-
-    p,
-    ul,
-    ol,
-    dl,
-    pre {
-      margin-bottom: 1.28em;
-    }
-
-    blockquote {
-      padding: 0 1.3em;
-    }
-
-    &:before,
-    &:after {
-      display: none;
-    }
-
-    .kg-width-wide,
-    .kg-width-full {
-      margin-right: -5vw;
-      margin-left: -5vw;
-    }
-
-    figcaption {
-      margin-bottom: 0.4em;
-    }
-
-    .kg-bookmark-container {
-      flex-direction: column;
-    }
-
-    .kg-bookmark-icon {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  .post-full-comments {
-    margin-bottom: 1.28em;
-  }
-
-  .footnotes {
-    margin-bottom: 1.28em;
-  }
-
-  .post-full-meta {
-    font-size: 1.2rem;
-    line-height: 1.3em;
-  }
-
-  .post-full-title {
-    margin-top: 0.2em;
-    font-size: 3.3rem;
-  }
-
-  .post-full-image {
-    margin-top: 5px;
-    margin-bottom: 5vw;
-  }
-
-  .post-full-byline-meta {
-    font-size: 1.2rem;
-
-    h4 {
-      margin-bottom: 2px;
-      font-size: 1.2rem;
+    h5 {
+      max-width: 1060px;
+      width: 100vw;
     }
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1170px) {
+  .post-full-header {
+    padding: 60px 11vw 50px;
+  }
+
+  .post-full-content {
+    padding: 0 11vw;
+  }
+
   .post-full-image {
-    margin: 25px -5vw;
+    margin: 25px -6vw 50px;
+    border-radius: 0;
+    img {
+      max-width: 1170px;
+    }
+  }
+
+  .read-next-card {
+    flex: 1 1 261px;
+    margin-bottom: 5vw;
+  }
+}
+
+@media (max-width: 1040px) {
+  .post-full-content {
+    img,
+    video {
+      width: 100%;
+    }
+
+    .kg-width-full {
+      .kg-image {
+        width: 100vw;
+      }
+    }
   }
 }
 
@@ -758,49 +716,91 @@
   }
 }
 
-@media (max-width: 1040px) {
-  .post-full-content {
-    img,
-    video {
-      width: 100%;
-    }
-
-    .kg-width-full {
-      .kg-image {
-        width: 100vw;
-      }
-    }
+@media (max-width: 700px) {
+  .post-full-image {
+    margin: 25px -5vw;
   }
 }
 
-@media (max-width: 1170px) {
+@media (max-width: 500px) {
   .post-full-header {
-    padding: 60px 11vw 50px;
+    padding: 20px 0 35px;
+  }
+
+  .post-full-custom-excerpt {
+    font-size: 1.9rem;
+    line-height: 1.5em;
   }
 
   .post-full-content {
-    padding: 0 11vw;
+    padding: 0;
+
+    p,
+    ul,
+    ol,
+    dl,
+    pre {
+      margin-bottom: 1.28em;
+    }
+
+    blockquote {
+      padding: 0 1.3em;
+    }
+
+    &:before,
+    &:after {
+      display: none;
+    }
+
+    .kg-width-wide,
+    .kg-width-full {
+      margin-right: -5vw;
+      margin-left: -5vw;
+    }
+
+    figcaption {
+      margin-bottom: 0.4em;
+    }
+
+    .kg-bookmark-container {
+      flex-direction: column;
+    }
+
+    .kg-bookmark-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .post-full-comments {
+    margin-bottom: 1.28em;
+  }
+
+  .footnotes {
+    margin-bottom: 1.28em;
+  }
+
+  .post-full-meta {
+    font-size: 1.2rem;
+    line-height: 1.3em;
+  }
+
+  .post-full-title {
+    margin-top: 0.2em;
+    font-size: 3.3rem;
   }
 
   .post-full-image {
-    margin: 25px -6vw 50px;
-    border-radius: 0;
-    img {
-      max-width: 1170px;
-    }
-  }
-
-  .read-next-card {
-    flex: 1 1 261px;
+    margin-top: 5px;
     margin-bottom: 5vw;
   }
-}
 
-@media (min-width: 1180px) {
-  .post-full-content {
-    h5 {
-      max-width: 1060px;
-      width: 100vw;
+  .post-full-byline-meta {
+    font-size: 1.2rem;
+
+    h4 {
+      margin-bottom: 2px;
+      font-size: 1.2rem;
     }
   }
 }

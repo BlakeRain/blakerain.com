@@ -125,13 +125,9 @@
   }
 }
 
-@media (max-width: 500px) {
-  .post-card-title {
-    font-size: 1.9rem;
-  }
-
-  .post-card-excerpt {
-    font-size: 1.6rem;
+@media (max-width: 1170px) {
+  .post-card {
+    margin-bottom: 5vw;
   }
 }
 
@@ -191,15 +187,19 @@
   }
 }
 
-@media (max-width: 1170px) {
+@media (max-width: 650px) {
   .post-card {
     margin-bottom: 5vw;
   }
 }
 
-@media (max-width: 650px) {
-  .post-card {
-    margin-bottom: 5vw;
+@media (max-width: 500px) {
+  .post-card-title {
+    font-size: 1.9rem;
+  }
+
+  .post-card-excerpt {
+    font-size: 1.6rem;
   }
 }
 
