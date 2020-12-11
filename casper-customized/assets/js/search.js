@@ -176,7 +176,7 @@ class SearchStore {
   }
 
   constructor(search_data) {
-    this._search_data = new SearchData(search_data);
+    this._search_data = null;
     this._state = STATE.CLOSED;
     this._term = "";
     this._highlight = "";
@@ -203,17 +203,47 @@ class SearchStore {
     });
   }
 
+  load() {
+    return new Promise((resolve, reject) => {
+      if (!this._search_data) {
+        fetch("https://s3-eu-west-1.amazonaws.com/s3.blakerain.com/data/search.bin", {
+          method: "GET",
+          cache: "no-cache",
+        }).then((response) => {
+          if (response.ok) {
+            response
+              .arrayBuffer()
+              .then((buffer) => {
+                this._search_data = new SearchData(buffer);
+                resolve();
+              })
+              .catch((err) => {
+                console.error(err);
+                reject(err);
+              });
+          } else {
+            console.error(response.statusText);
+            reject(err);
+          }
+        });
+      } else {
+        resolve();
+      }
+    });
+  }
+
   open() {
     if (this._state == STATE.CLOSED) {
-      this._state = STATE.OPEN;
-      this.onStateChanged();
+      this.load().then(() => {
+        this._state = STATE.OPEN;
+        this.onStateChanged();
+      });
     }
   }
 
   close() {
     this._state = STATE.CLOSED;
     this.onStateChanged();
-    // this.onSearchChangedHandlers = [];
   }
 
   setTerm(term) {
@@ -380,23 +410,8 @@ class SearchView {
   }
 }
 
-fetch("https://s3-eu-west-1.amazonaws.com/s3.blakerain.com/data/search.bin", {
-  method: "GET",
-  cache: "no-cache",
-}).then((response) => {
-  if (response.ok) {
-    response
-      .arrayBuffer()
-      .then((buffer) => {
-        let store = new SearchStore(buffer);
-        window["__searchStore"] = store;
-
-        let view = new SearchView(store);
-        window["__searchView"] = view;
-        view.update();
-      })
-      .catch((err) => console.error(err));
-  } else {
-    console.error(response.statusText);
-  }
+window.addEventListener("load", () => {
+  let store = new SearchStore();
+  let view = new SearchView(store);
+  view.update();
 });
