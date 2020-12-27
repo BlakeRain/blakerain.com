@@ -1,0 +1,24 @@
+name: Deploy Theme
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    if: ${{ github.repository == 'BlakeRain/blakerain.com' }}
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Build Ghost Theme
+        working-directory: casper-customized
+        run: yarn zip
+      - name: Deploy Ghost Theme
+        uses: TryGhost/action-deploy-theme@v1.4.0
+        with:
+          api-url: ${{ secrets.GHOST_ADMIN_API_URL }}
+          api-key: ${{ secrets.GHOST_ADMIN_API_KEY }}
+          file: casper-customized/dist/casper-customized.zip
