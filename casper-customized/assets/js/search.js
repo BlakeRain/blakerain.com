@@ -13,7 +13,7 @@ class Decoder {
       shift = 0;
 
     do {
-      byte = view.getUint8(this.offset++);
+      byte = this.view.getUint8(this.offset++);
       value |= (byte & 0x7f) << shift;
       shift += 7;
     } while (byte >= 0x80);
@@ -419,4 +419,6 @@ window.addEventListener("load", () => {
   let store = new SearchStore();
   let view = new SearchView(store);
   view.update();
+
+  window["__searchStore"] = store;
 });
