@@ -1,9 +1,40 @@
 const STATE = { OPEN: 1, CLOSED: 0 };
 
+class Decoder {
+  constructor(buffer) {
+    this.buffer = buffer;
+    this.offset = 0;
+    this.view = new DataView(this.buffer);
+  }
+
+  decode7() {
+    var byte = 0,
+      value = 0,
+      shift = 0;
+
+    do {
+      byte = view.getUint8(this.offset++);
+      value |= (byte & 0x7f) << shift;
+      shift += 7;
+    } while (byte >= 0x80);
+
+    return value;
+  }
+
+  decodeUtf8() {
+    const len = this.decode7();
+    const str = new TextDecoder("utf-8").decode(new DataView(this.buffer, this.offset, len));
+    this.offset += len;
+    return str;
+  }
+}
+
+function decode7(view, offset) {}
+
 class Occurrence {
-  constructor(view, offset) {
-    this.post = view.getUint16(offset + 0, false);
-    this.count = view.getUint16(offset + 2, false);
+  constructor(decoder) {
+    this.post = decoder.decode7();
+    this.count = decoder.decode7();
   }
 }
 
@@ -30,27 +61,24 @@ class TrieNode {
     return output.join("");
   }
 
-  decode(view, offset, stats) {
-    this.key = view.getUint8(offset);
-    offset += 1;
+  decode(decoder, stats) {
+    this.key = decoder.view.getUint8(decoder.offset);
+    decoder.offset += 1;
 
-    let noccurrences = view.getUint16(offset + 0);
-    let nchildren = view.getUint16(offset + 2);
-    offset += 4;
+    let noccurrences = decoder.decode7();
+    let nchildren = decoder.decode7();
 
     for (let i = 0; i < noccurrences; ++i) {
-      this.occurrences.push(new Occurrence(view, offset));
-      offset += 4;
+      this.occurrences.push(new Occurrence(decoder));
     }
 
     for (let i = 0; i < nchildren; ++i) {
       let child = new TrieNode(0, this);
-      offset = child.decode(view, offset, stats);
+      child.decode(decoder, stats);
       this.children[child.key] = child;
     }
 
     stats.count++;
-    return offset;
   }
 }
 
@@ -59,8 +87,8 @@ class Trie {
     this.root = new TrieNode(0, null);
   }
 
-  decode(view, offset, stats) {
-    return this.root.decode(view, offset, stats);
+  decode(decoder, stats) {
+    return this.root.decode(decoder, stats);
   }
 
   find_string(prefix) {
@@ -93,51 +121,28 @@ class Trie {
 }
 
 class SearchPost {
-  constructor() {
-    this.id = 0;
-    this.title = "";
-    this.url = "";
-  }
-
-  decode(view, offset) {
-    this.id = view.getUint16(offset);
-    offset += 2;
-
-    let title_length = view.getUint16(offset, false);
-    offset += 2;
-    this.title = new TextDecoder("utf-8").decode(
-      new DataView(view.buffer, offset, title_length)
-    );
-    offset += title_length;
-
-    let url_length = view.getUint16(offset, false);
-    offset += 2;
-    this.url = new TextDecoder("utf-8").decode(new DataView(view.buffer, offset, url_length));
-    offset += url_length;
-
-    return offset;
+  constructor(decoder) {
+    this.id = decoder.decode7();
+    this.title = decoder.decodeUtf8();
+    this.url = decoder.decodeUtf8();
   }
 }
 
 class SearchData {
   constructor(encoded) {
     let t0 = performance.now();
-    let view = new DataView(encoded);
-    var offset = 0;
-
-    let num_posts = view.getUint16(0, false);
-    offset += 2;
+    let decoder = new Decoder(encoded);
+    let num_posts = decoder.decode7();
 
     this.posts = {};
     for (let i = 0; i < num_posts; ++i) {
-      let post = new SearchPost();
-      offset = post.decode(view, offset);
+      let post = new SearchPost(decoder);
       this.posts[post.id] = post;
     }
 
     let term_stats = { count: 0 };
     this.trie = new Trie();
-    offset = this.trie.decode(view, offset, term_stats);
+    this.trie.decode(decoder, term_stats);
 
     let t1 = performance.now();
     console.log(
@@ -148,7 +153,7 @@ class SearchData {
         " term trie nodes in " +
         (t1 - t0) +
         " milliseconds from " +
-        (view.buffer.byteLength / 1024.0).toFixed(2) +
+        (encoded.byteLength / 1024.0).toFixed(2) +
         " Kb"
     );
   }
@@ -175,7 +180,7 @@ class SearchStore {
     return this._search_results;
   }
 
-  constructor(search_data) {
+  constructor() {
     this._search_data = null;
     this._state = STATE.CLOSED;
     this._term = "";

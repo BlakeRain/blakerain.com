@@ -26,6 +26,15 @@ class SearchOutput:
         self.buffer += buf
         self.offset += len
 
+    def store7(self, *args):
+        for n in args:
+            assert isinstance(n, int)
+            assert n >= 0
+            while n > 0x80:
+                self.store("B", (n & 0x7f) | 0x80)
+                n = n >> 7
+            self.store("B", n & 0x7f)
+
     def write(self, fp):
         fp.write(self.buffer)
 
@@ -36,7 +45,7 @@ class SearchTermOccurrence:
         self.count: int = 1
 
     def encode(self, output: SearchOutput):
-        output.store(">HH", self.post, self.count)
+        output.store7(self.post, self.count)
 
 
 class SearchTerm:
@@ -62,8 +71,10 @@ class SearchPost:
     def encode(self, output: SearchOutput):
         title_enc = self.title.encode("utf-8")
         url_enc = self.url.encode("utf-8")
-        output.store(f">HH{len(title_enc)}sH{len(url_enc)}s", self.id, len(
-            title_enc), title_enc, len(url_enc), url_enc)
+        output.store7(self.id, len(title_enc))
+        output.store(f">{len(title_enc)}s", title_enc)
+        output.store7(len(url_enc))
+        output.store(f">{len(url_enc)}s", url_enc)
 
 
 class TrieNode:
@@ -73,8 +84,8 @@ class TrieNode:
         self.occurrences: List[SearchTermOccurrence] = []
 
     def encode(self, output: SearchOutput):
-        output.store(">BHH", self.key, len(
-            self.occurrences), len(self.children))
+        output.store(">B", self.key)
+        output.store7(len(self.occurrences), len(self.children))
         for occurrence in self.occurrences:
             occurrence.encode(output)
         for child_key in self.children:
@@ -122,7 +133,7 @@ class SearchData:
                 term.add_occurrence(post)
 
     def encode(self, output: SearchOutput):
-        output.store(">H", len(self.posts))
+        output.store7(len(self.posts))
         for post_id in self.posts:
             post = self.posts[post_id]
             post.encode(output)
