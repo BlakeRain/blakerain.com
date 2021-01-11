@@ -29,8 +29,6 @@ class Decoder {
   }
 }
 
-function decode7(view, offset) {}
-
 class Occurrence {
   constructor(decoder) {
     this.post = decoder.decode7();
@@ -62,33 +60,29 @@ class TrieNode {
   }
 
   decode(decoder, stats) {
-    this.key = decoder.view.getUint8(decoder.offset);
-    decoder.offset += 1;
+    const key = decoder.decode7();
 
-    let noccurrences = decoder.decode7();
-    let nchildren = decoder.decode7();
+    this.key = key >> 2;
 
-    for (let i = 0; i < noccurrences; ++i) {
-      this.occurrences.push(new Occurrence(decoder));
-    }
-
-    for (let i = 0; i < nchildren; ++i) {
-      let child = new TrieNode(0, this);
-      child.decode(decoder, stats);
-      this.children[child.key] = child;
+    if (key & 0x02) {
+      let noccurrences = decoder.decode7();
+      for (let i = 0; i < noccurrences; ++i) {
+        this.occurrences.push(new Occurrence(decoder));
+      }
     }
 
     stats.count++;
+    return (key & 0x01) == 0x01;
   }
 }
 
 class Trie {
   constructor() {
-    this.root = new TrieNode(0, null);
+    this.root = null;
   }
 
   decode(decoder, stats) {
-    return this.root.decode(decoder, stats);
+    this.root = Trie.decode_trie(decoder, stats);
   }
 
   find_string(prefix) {
@@ -117,6 +111,46 @@ class Trie {
     }
 
     return output;
+  }
+
+  static decode_trie(decoder, stats) {
+    let stack = [];
+    let root = null;
+
+    for (;;) {
+      // Create the node and decode it. The decode method will indicate whether we should expect
+      // another node to immediately follow, or if this was a leaf node.
+      let parent = stack.length > 0 ? stack[stack.length - 1] : null;
+      let node = new TrieNode(0, parent);
+      let has_children = node.decode(decoder, stats);
+
+      stack.push(node);
+
+      if (!root) {
+        root = node;
+      }
+
+      if (parent) {
+        parent.children[node.key] = node;
+      }
+
+      if (!has_children) {
+        // This was a leaf node, so we want to pop the stack to get to the parent. The number of
+        // nodes to pop is encoded in the stream.
+        let pop = decoder.decode7();
+
+        while (pop-- > 0) {
+          stack.pop();
+        }
+
+        // If we came to the end of the stack, then we're done
+        if (stack.length === 0) {
+          break;
+        }
+      }
+    }
+
+    return root;
   }
 }
 
