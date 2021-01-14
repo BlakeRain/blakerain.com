@@ -16,7 +16,7 @@ class ExtractorParser(HTMLParser):
         self.code: List[str] = []
 
     def handle_starttag(self, tag, attrs):
-        if tag in ["img", "br"]:
+        if tag in ["img", "br", "source"]:
             return
         if self.current:
             self.stack.append(self.current)
