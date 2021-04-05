@@ -1,7 +1,7 @@
 routes:
   /:
-    controller: channel
-    filter: tag:hash-blog
+    data: page.root
+    template: root
 
 collections:
   /blog/:
@@ -12,6 +12,11 @@ collections:
   /projects/:
     permalink: /projects/{slug}/
     filter: tag:hash-project
+    rss: false
+
+  /tips/:
+    permalink: /tips/{slug}/
+    filter: tag:hash-tip
     rss: false
 
 taxonomies:
