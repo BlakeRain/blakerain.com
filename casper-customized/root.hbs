@@ -14,97 +14,12 @@
 
   {{!-- Styles'n'Scripts --}}
   <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
+  <link rel="stylesheet" type="text/css" href="{{asset "built/root.css"}}" />
 
   {{!-- This tag outputs SEO meta+structured data and other important settings --}}
   {{ghost_head}}
 
   {{{block "styles"}}}
-
-  <style type="text/css">
-    .main-page-outer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 100vh;
-    }
-
-    .main-page-inner {
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-column-gap: 20px;
-    }
-
-    .main-page-inner .left-side,
-    .main-page-inner .right-side {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .main-page-inner h1 {
-      margin-bottom: 0;
-    }
-
-    .main-page-inner p {
-      font-family: Georgia, serif;
-    }
-
-    .main-page-inner .subtitle {
-      font-weight: bold;
-    }
-
-    .main-page-inner .avatar {
-      width: 128px;
-      height: 128px;
-      border-radius: 100%;
-    }
-
-    .main-page-outer ul.nav {
-      text-transform: uppercase;
-      position: inherit;
-    }
-
-    .main-page-outer ul.nav > li > a {
-      padding: 0 12px 4px 12px;
-    }
-
-    .main-page-outer .social-links {
-      margin-left: -5px;
-    }
-
-    .main-page-outer .social-links > a {
-      padding: 0 5px;
-    }
-
-    .main-page-outer .footer-part {
-      margin-bottom: 20px;
-    }
-
-    .main-page-outer .footer-part .site-footer-nav a {
-      color: rgb(44, 67, 88);
-    }
-
-    @media(max-width: 500px) {
-      .main-page-inner {
-        grid-template-columns: auto;
-      }
-
-      .main-page-inner .left-side,
-      .main-page-inner .right-side {
-        align-items: center;
-      }
-
-      .main-page-inner p.info {
-        text-align: center;
-      }
-    }
-
-    @media(min-width: 1024px) {
-      .main-page-inner p.info {
-        max-width: 33vw;
-      }
-    }
-  </style>
 
 </head>
 
