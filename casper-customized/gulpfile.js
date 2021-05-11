@@ -3,7 +3,7 @@ const pump = require("pump");
 
 // gulp plugins and utils
 const livereload = require("gulp-livereload");
-const sass = require("gulp-sass");
+const sass = require("gulp-dart-sass");
 const zip = require("gulp-zip");
 const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
@@ -11,7 +11,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const beeper = require("beeper");
 const fs = require("fs");
 
-sass.compiler = require("node-sass");
+// sass.compiler = require("node-sass");
 
 function serve(done) {
   livereload.listen();
