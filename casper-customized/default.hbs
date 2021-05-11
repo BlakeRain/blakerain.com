@@ -79,20 +79,26 @@
           <a href="{{@site.url}}">{{@site.title}}</a> &copy; {{date format="YYYY"}}
         </section>
         <section class="badges">
-          <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fuptime.json"></a>
-          <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fresponse-time.json"></a>
+          <div>
+            <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fuptime.json"></a>
+            <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fresponse-time.json"></a>
+          </div>
         </section>
-        <nav class="site-footer-nav">
-          <a href="{{@site.url}}">Latest Posts</a>
-          <a href="{{@site.url}}/disclaimer">Disclaimer</a>
-          {{#if @site.facebook}}<a href="{{facebook_url @site.facebook}}" target="_blank"
-            rel="noopener">Facebook</a>{{/if}}
-          {{#if @site.twitter}}<a href="{{twitter_url @site.twitter}}" target="_blank" rel="noopener">Twitter</a>{{/if}}
-          <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
-        </nav>
+        <section class="footer-nav">
+          <nav class="site-footer-nav">
+            <a href="{{@site.url}}/blog">Latest Posts</a>
+            <a href="{{@site.url}}/disclaimer">Disclaimer</a>
+            {{#if @site.facebook}}<a href="{{facebook_url @site.facebook}}" target="_blank"
+              rel="noopener">Facebook</a>{{/if}}
+            {{#if @site.twitter}}<a href="{{twitter_url @site.twitter}}" target="_blank" rel="noopener">Twitter</a>{{/if}}
+            <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+          </nav>
+          <a href="https://simpleanalytics.com/?utm_source=blakerain.com&utm_content=badge" referrerpolicy="origin" target="_blank">
+            <img src="https://simpleanalyticsbadge.com/blakerain.com?mode=dark&background=1a1c20&logo=13304e" loading="lazy" referrerpolicy="no-referrer" crossorigin="anonymous" />
+          </a>
+        </section>
       </div>
     </footer>
-
   </div>
 
   {{!-- jQuery, required for fitvids --}}

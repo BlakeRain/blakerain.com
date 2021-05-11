@@ -3,7 +3,7 @@
 .site-footer {
   position: relative;
   padding-top: 20px;
-  padding-bottom: 60px;
+  padding-bottom: 20px;
   color: #fff;
   background: $primary-background;
 }
@@ -12,7 +12,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   color: rgba(255, 255, 255, 0.7);
   font-size: 1.3rem;
 
@@ -25,8 +25,16 @@
     }
   }
 
-  section.badges img {
-    margin-left: 6px;
+  section.footer-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  section.badges {
+    img {
+      margin-left: 6px;
+    }
   }
 }
 
