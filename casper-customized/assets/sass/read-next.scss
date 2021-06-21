@@ -37,7 +37,6 @@ $read-next-dark: rgba(255, 255, 255, 0.1);
   .post-card-title {
     color: #fff;
     opacity: 0.8;
-    transition: all 0.2s ease-in-out;
   }
 
   .post-card-excerpt {
@@ -72,8 +71,6 @@ $read-next-dark: rgba(255, 255, 255, 0.1);
   );
 
   a {
-    transition: all 0.2s ease-in-out;
-
     &:hover {
       text-decoration: none;
     }
@@ -175,7 +172,6 @@ $read-next-dark: rgba(255, 255, 255, 0.1);
     color: $read-next-light;
     font-size: 1.3rem;
     border-radius: 999px;
-    transition: all 0.35s ease-in-out;
 
     &:hover {
       border-color: var(--yellow);

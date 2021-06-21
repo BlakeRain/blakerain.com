@@ -79,7 +79,6 @@
   margin: 0 0 0 -12px;
   padding: 0;
   list-style: none;
-  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 
   li {
     display: block;
@@ -103,7 +102,6 @@
         height: 1px;
         background: #fff;
         opacity: 0.25;
-        transition: all 0.35s ease-in-out;
       }
 
       &:hover {
@@ -142,7 +140,6 @@
   font-weight: 400;
   text-transform: none;
   opacity: 0;
-  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
   transform: translateY(175%);
 
   &.dash {
@@ -246,12 +243,10 @@
 
     .site-nav {
       opacity: 0;
-      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0s;
     }
 
     .fixed-nav-active {
       opacity: 1;
-      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.05s;
     }
   }
 }

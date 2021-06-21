@@ -113,7 +113,7 @@ ul.nav li a:before {
   height: 1px;
   background: #fff;
   opacity: 0.25;
-  transition: all 0.35s ease-in-out;
+  /* transition: all 0.35s ease-in-out; */
 }
 
 ul.nav li a:hover {
