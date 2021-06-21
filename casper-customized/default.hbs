@@ -1,146 +1,162 @@
-<!DOCTYPE html>
 <html lang="{{@site.lang}}">
 
-<head>
+  <head>
 
-  {{!-- Document Settings --}}
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    {{! Document Settings }}
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  {{!-- Base Meta --}}
-  <title>{{meta_title}}</title>
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{! Base Meta }}
+    <title>{{meta_title}}</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  {{!-- Styles'n'Scripts --}}
-  <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
+    {{! Styles'n'Scripts }}
+    <link rel="stylesheet" type="text/css" href="{{asset "built/screen.css"}}" />
 
-  {{!-- This tag outputs SEO meta+structured data and other important settings --}}
-  {{ghost_head}}
+    {{! This tag outputs SEO meta+structured data and other important settings }}
+    {{ghost_head}}
 
-  {{{block "styles"}}}
+    {{{block "styles"}}}
 
-</head>
+  </head>
 
-<body class="{{body_class}}">
+  <body class="{{body_class}}">
 
-  <div class="site-wrapper">
+    <div class="site-wrapper">
 
-    {{!-- All the main content gets inserted here, index.hbs, post.hbs, etc --}}
-    {{{body}}}
+      {{! All the main content gets inserted here, index.hbs, post.hbs, etc }}
+      {{{body}}}
 
-    <div class="search-box-container" style="display: none;">
-      <div class="search-box">
-        <div class="row">
-          <div class="column">
-            Search Blog Posts and Pages
+      <div class="search-box-container" style="display: none;">
+        <div class="search-box">
+          <div class="row">
+            <div class="column">
+              Search Blog Posts and Pages
+            </div>
+            <div class="column hints">
+              <span class="tag">Tab</span>/<span class="tag">S</span>
+              to search,
+              <span class="tag">Esc</span>
+              to close
+            </div>
           </div>
-          <div class="column hints">
-            <span class="tag">Tab</span>/<span class="tag">S</span> to search, <span class="tag">Esc</span> to close
+          <div class="row">
+            <div class="column wide">
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Type search term here ..."
+                autocomplete="off"
+                autofocus="yes"
+                spellcheck="false"
+              />
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="column wide">
-            <input
-              id="search-input"
-              type="search"
-              placeholder="Type search term here ..."
-              autocomplete="off"
-              autofocus="yes"
-              spellcheck="false">
+          <div class="row center" id="search-hint">
+            <div class="column center">
+              Search for a word prefix
+            </div>
           </div>
-        </div>
-        <div class="row center" id="search-hint">
-          <div class="column center">
-            Search for a word prefix
+          <div class="row center" id="search-empty" style="color: #c7cf2f; display: none;">
+            <b>Sorry, nothing was found.</b>
           </div>
-        </div>
-        <div class="row center" id="search-empty" style="color: #c7cf2f; display: none;">
-          <b>Sorry, nothing was found.</b>
-        </div>
-        <div id="search-results"></div>
-        <div class="row center" id="search-summary">
-          <p>
-            <b id="search-results-count"></b>
-          </p>
-          <br>
-          <i id="search-results-limit" class="muted">
-            <small>Showing top 5 results</small>
-          </i>
+          <div id="search-results"></div>
+          <div class="row center" id="search-summary">
+            <p>
+              <b id="search-results-count"></b>
+            </p>
+            <br />
+            <i id="search-results-limit" class="muted">
+              <small>Showing top 5 results</small>
+            </i>
+          </div>
         </div>
       </div>
+
+      {{! The footer at the very bottom of the screen }}
+      <footer class="site-footer outer">
+        <div class="site-footer-content inner">
+          <section class="copyright">
+            <a href="{{@site.url}}">{{@site.title}}</a>
+            &copy;
+            {{date format="YYYY"}}
+          </section>
+          <section class="badges">
+            <div>
+              <a href="https://status.blakerain.com/" title="Status page"><img
+                  src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fuptime.json"
+                  alt="Website uptime metric"
+                /></a>
+              <a href="https://status.blakerain.com/" title="Status page"><img
+                  src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fresponse-time.json"
+                  alt="Website response time metric"
+                /></a>
+            </div>
+          </section>
+          <section class="footer-nav">
+            <nav class="site-footer-nav">
+              <a href="{{@site.url}}/blog">Latest Posts</a>
+              <a href="{{@site.url}}/disclaimer">Disclaimer</a>
+              {{#if @site.facebook}}<a
+                  href="{{facebook_url @site.facebook}}"
+                  target="_blank"
+                  rel="noopener"
+                >Facebook</a>{{/if}}
+              {{#if @site.twitter}}<a
+                  href="{{twitter_url @site.twitter}}"
+                  target="_blank"
+                  rel="noopener"
+                >Twitter</a>{{/if}}
+              <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+            </nav>
+            <a
+              href="https://simpleanalytics.com/?utm_source=blakerain.com&utm_content=badge"
+              referrerpolicy="origin"
+              rel="noopener"
+              target="_blank"
+            >
+              <img
+                src="https://simpleanalyticsbadge.com/blakerain.com?mode=dark&background=1a1c20&logo=13304e"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                crossorigin="anonymous"
+                alt="Simple Analytics"
+              />
+            </a>
+          </section>
+        </div>
+      </footer>
     </div>
 
+    {{! jQuery, required for fitvids }}
+    <script
+      src="https://unpkg.com/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+      crossorigin="anonymous"
+    ></script>
+    {{! Fitvids (for responsive video embeds), infinite scroll, floating header, and gallery card support }}
+    <script src="{{asset "built/casper.js"}}"></script>
 
-    {{!-- The footer at the very bottom of the screen --}}
-    <footer class="site-footer outer">
-      <div class="site-footer-content inner">
-        <section class="copyright">
-          <a href="{{@site.url}}">{{@site.title}}</a> &copy; {{date format="YYYY"}}
-        </section>
-        <section class="badges">
-          <div>
-            <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fuptime.json"></a>
-            <a href="https://status.blakerain.com/" title="Status page"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fresponse-time.json"></a>
-          </div>
-        </section>
-        <section class="footer-nav">
-          <nav class="site-footer-nav">
-            <a href="{{@site.url}}/blog">Latest Posts</a>
-            <a href="{{@site.url}}/disclaimer">Disclaimer</a>
-            {{#if @site.facebook}}<a href="{{facebook_url @site.facebook}}" target="_blank"
-              rel="noopener">Facebook</a>{{/if}}
-            {{#if @site.twitter}}<a href="{{twitter_url @site.twitter}}" target="_blank" rel="noopener">Twitter</a>{{/if}}
-            <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
-          </nav>
-          <a href="https://simpleanalytics.com/?utm_source=blakerain.com&utm_content=badge" referrerpolicy="origin" target="_blank">
-            <img src="https://simpleanalyticsbadge.com/blakerain.com?mode=dark&background=1a1c20&logo=13304e" loading="lazy" referrerpolicy="no-referrer" crossorigin="anonymous" />
-          </a>
-        </section>
-      </div>
-    </footer>
-  </div>
+    {{! Handle the search link and highlighting }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
+    <script>
+      function highlight_search_terms(terms) { var mark = new
+      Mark(document.querySelector("section.post-full-content")); var opts = {
+      separateWordSearch: true, diactritics: true }; mark.mark(terms, opts); }
+      window.addEventListener("load", () => { $("a.search-link").on("click", function (event) {
+      event.preventDefault(); window["__searchStore"].open(); return false; });
+      window.location.search .substr(1) .split("&") .map(term => term.split("="))
+      .forEach(term_pair => { if (term_pair.length > 1 && term_pair[0] == "highlight") {
+      highlight_search_terms(decodeURIComponent(term_pair[1])); } }); });
+    </script>
 
-  {{!-- jQuery, required for fitvids --}}
-  <script src="https://unpkg.com/jquery@3.5.1/dist/jquery.slim.min.js"
-    integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
-  {{!-- Fitvids (for responsive video embeds), infinite scroll, floating header, and gallery card support --}}
-  <script src="{{asset "built/casper.js"}}"></script>
+    {{! The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. }}
+    {{{block "scripts"}}}
 
-  {{!-- Handle the search link and highlighting --}}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
-  <script>
-    function highlight_search_terms(terms) {
-        var mark = new Mark(document.querySelector("section.post-full-content"));
-        var opts = { separateWordSearch: true, diactritics: true };
-        mark.mark(terms, opts);
-    }
+    {{! Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag }}
+    {{ghost_foot}}
 
-    window.addEventListener("load", () => {
-      $("a.search-link").on("click", function (event) {
-        event.preventDefault();
-        window["__searchStore"].open();
-        return false;
-      });
-
-      window.location.search
-        .substr(1)
-        .split("&")
-        .map(term => term.split("="))
-        .forEach(term_pair => {
-            if (term_pair.length > 1 && term_pair[0] == "highlight") {
-                  highlight_search_terms(decodeURIComponent(term_pair[1]));
-              }
-        });
-    });
-  </script>
-
-  {{!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. --}}
-  {{{block "scripts"}}}
-
-  {{!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag --}}
-  {{ghost_foot}}
-
-</body>
+  </body>
 
 </html>
