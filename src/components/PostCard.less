@@ -1,0 +1,144 @@
+@import "../less/variables.less";
+
+div.post-cards {
+  display: flex;
+  flex-wrap: wrap;
+
+  margin-top: 40px;
+
+  article {
+    flex: 1 1 300px;
+    min-height: 220px;
+
+    margin: 0 0 40px;
+    padding: 0 20px 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .inner {
+      flex-grow: 1;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      a {
+        display: block;
+        margin-bottom: 1em;
+      }
+
+      header {
+        font-size: 2.2rem;
+        font-weight: 600;
+        line-height: 1.15em;
+        color: rgba(255, 255, 255, 0.85);
+
+        margin-top: 15px;
+        margin-bottom: 10px;
+      }
+
+      section {
+        color: #60747c;
+        font-family: Georgia, serif;
+      }
+
+      footer {
+        display: flex;
+        flex-direction: row;
+
+        div.author-images {
+          > img {
+            width: 34px;
+            height: 34px;
+            border-radius: 100%;
+          }
+        }
+
+        div.post-card-details {
+          margin-left: 6px;
+          text-transform: uppercase;
+          font-size: 1.2rem;
+          line-height: 1.4em;
+          font-weight: 400;
+          color: @color-light-grey;
+
+          .reading-time {
+            position: absolute;
+            margin-left: 20px;
+
+            &:before {
+              content: "";
+              position: absolute;
+              top: 7px;
+              left: -11px;
+              display: block;
+              width: 2px;
+              height: 2px;
+              background: rgba(255, 255, 255, 0.5);
+              border-radius: 100%;
+            }
+          }
+
+          ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            display: flex;
+            flex-direction: row;
+
+            li {
+              position: relative;
+              display: block;
+              font-weight: 600;
+              margin-left: 10px;
+
+              &:before {
+                content: "";
+                position: absolute;
+                top: 7px;
+                left: -6px;
+                display: block;
+                width: 2px;
+                height: 2px;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 100%;
+              }
+
+              &:first-of-type {
+                margin-left: 0;
+
+                &:before {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.large {
+      flex: 1 1 100%;
+      flex-direction: row;
+      min-height: 280px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      div.inner {
+        margin-left: 40px;
+        justify-content: start;
+      }
+    }
+  }
+}
