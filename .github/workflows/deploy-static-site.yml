@@ -15,10 +15,7 @@ jobs:
           node-version: "16"
       - name: Check runner state
         run: |
-          echo "---------------------"
-          ls -l .
-          echo "---------------------"
-          ls -l _work
+          npm
       - name: Install dependencies
         run: yarn install
       - name: Build the static site
