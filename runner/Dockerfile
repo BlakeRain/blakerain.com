@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y \
       curl unzip apt-transport-https ca-certificates software-properties-common sudo \
       jq iputils-ping build-essential zlib1g-dev gettext liblttng-ust0 \
-      libcurl4-openssl-dev openssh-client
+      libcurl4-openssl-dev openssh-client awscli
 
 # Install Docker CLI
 RUN curl -fsSL https://get.docker.com -o- | sh
