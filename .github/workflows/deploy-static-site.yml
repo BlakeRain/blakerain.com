@@ -18,7 +18,7 @@ jobs:
           echo "---------------------"
           ls -l .
           echo "---------------------"
-          ls -l /opt/hostedtoolcache
+          ls -l _work
       - name: Install dependencies
         run: yarn install
       - name: Build the static site
