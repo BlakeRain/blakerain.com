@@ -15,7 +15,7 @@ jobs:
           node-version: "16"
       - name: Check runner state
         run: |
-          npm
+          yarn --version
       - name: Install dependencies
         run: yarn install
       - name: Build the static site
