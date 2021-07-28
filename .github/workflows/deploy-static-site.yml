@@ -1,0 +1,45 @@
+name: Deploy Static Site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Install dependencies
+        run: yarn install
+      - name: Build the static site
+        env:
+          GHOST_HOSTNAME: ${{ secrets.GHOST_HOSTNAME }}
+          GHOST_CONTENT_API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+        run: yarn build
+      - name: Setup Python
+        uses: actions/setup-python@v2
+      - name: Install requirements
+        run: |
+          pip3 install -r search/requirements.txt
+      - name: Build the search data
+        env:
+          DOMAIN: ${{ secrets.GHOST_HOSTNAME }}
+          API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
+        run: |
+          python3 search/update-search.py
+      - name: Upload the static site to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync --region eu-west-1 ./dist s3://${{ secrets.AWS_SITE_BUCKET }}
+      - name: Upload the search data to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp --region eu-west-1 --acl public-read ./search.bin s3://${{ secrets.AWS_SEARCH_BUCKET }}/data/search.bin

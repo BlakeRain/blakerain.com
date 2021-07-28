@@ -1,15 +1,19 @@
 # blakerain.com
 
-Repository for the customized [Casper](https://github.com/tryghost/Casper) theme for my blog
-along with various related bits and pieces.
+This repository contains the sources for the website [blakerain.com]. The website is built using
+[react-static] from content managed by the [Ghost CMS].
 
-## Search Data Workflow
+This design for the site is inspired by the [Jamstack] principles of delivering as much of the
+site as static content as possible.
 
-This repository contains the Python
-[script](https://github.com/BlakeRain/blakerain.com/blob/master/search/update-search.py) which
-updates the search data used by the site. This script is run by a GitHub workflow called
-[Update Search Data](https://github.com/BlakeRain/blakerain.com/blob/master/.github/workflows/update-search-data.yml).
-This workflow is triggered either manually or when I update or publish a post on the site. A set
-of webhooks are installed in Ghost which call an AWS Lambda function called
-[ghost-post-actions](https://github.com/BlakeRain/blakerain.com/blob/master/lambda/ghost-post-actions/index.js).
-This translates the Ghost webhook to an invocation of the GitHub workflow via the GitHub API.
+The site content is authored using a Ghost instance running in a Docker container. In addition a
+GitHub actions runner running in the same network as the Ghost instance is attached to this
+repository. The [build workflow] expects to be able to connect to the Ghost instance, and will
+build the static site and then upload it to S3.
+
+[blakerain.com]: https://blakerain.com
+[react-static]: https://github.com/react-static/react-static
+[jamstack]: https://jamstack.org
+[ghost cms]: https://ghost.org
+[build workflow]:
+  https://github.com/BlakeRain/blakerain.com/blob/master/.github/workflows/deploy-static-site.yml
