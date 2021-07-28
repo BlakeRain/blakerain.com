@@ -225,7 +225,7 @@ class SearchData:
 
 DOMAIN = os.environ.get("DOMAIN", "blakerain.com")
 API_KEY = os.environ.get("API_KEY")
-URL_BASE = f"https://{DOMAIN}/ghost/api/v2/content/"
+URL_BASE = f"{DOMAIN}/ghost/api/v2/content/"
 
 PARAMS = {
     "key": API_KEY,
