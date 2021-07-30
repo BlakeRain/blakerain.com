@@ -37,4 +37,4 @@ jobs:
           python3 search/update-search.py
       - name: Upload the static site to Netlify
         run: |
-          npx netlify-cli deploy --auth=${{ secrets.NETLIFY_AUTH }} --dir=dist --site=${{ secrets.NETLIFY_SITE_API_ID }}
+          npx netlify-cli deploy --auth=${{ secrets.NETLIFY_AUTH }} --dir=dist --site=${{ secrets.NETLIFY_SITE_API_ID }} --prod
