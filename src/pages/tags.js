@@ -7,7 +7,7 @@ const Tags = (props) => {
   return (
     <div>
       <Head>
-        <title>{tag.name} Tag</title>
+        <title>Post Tags</title>
       </Head>
       <h1>There are {tags.length} tags on this site:</h1>
       <ul>
