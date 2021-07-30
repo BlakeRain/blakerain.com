@@ -100,7 +100,8 @@ class SearchTerm:
 
 
 class SearchPost:
-    def __init__(self, id: int, title: str, url: str):
+    def __init__(self, is_page: bool, id: int, title: str, url: str):
+        self.is_page: bool = is_page
         self.id: int = id
         self.title: str = title
         self.url: str = url
@@ -108,7 +109,8 @@ class SearchPost:
     def encode(self, output: Store):
         title_enc = self.title.encode("utf-8")
         url_enc = self.url.encode("utf-8")
-        output.store7(self.id, len(title_enc))
+        output.store7((self.id << 1) | (
+            0x01 if self.is_page else 0x00), len(title_enc))
         output.store(f">{len(title_enc)}s", title_enc)
         output.store7(len(url_enc))
         output.store(f">{len(url_enc)}s", url_enc)
@@ -200,8 +202,9 @@ class SearchData:
         self.terms[text] = term
         return term
 
-    def add_post(self, data):
-        post = SearchPost(len(self.posts), data["title"], data["slug"])
+    def add_post(self, is_page, data):
+        post = SearchPost(is_page, len(self.posts),
+                          data["title"], data["slug"])
         self.posts[post.id] = post
         words = extract_content(data["html"])
         for word in words:
@@ -260,7 +263,7 @@ for resource in ["posts", "pages"]:
                 continue
             content = extract_content(post["html"])
             post["content"] = content
-            SEARCH_DATA.add_post(post)
+            SEARCH_DATA.add_post(resource == "pages", post)
         if data["meta"]["pagination"]["pages"] <= page:
             print(f"  This is the last page")
             break

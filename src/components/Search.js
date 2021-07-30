@@ -158,7 +158,9 @@ class Trie {
 
 class SearchPost {
   constructor(decoder) {
-    this.id = decoder.decode7();
+    const id_flags = decoder.decode7();
+    this.id = id_flags >> 1;
+    this.isPage = (id_flags & 0x01) != 0;
     this.title = decoder.decodeUtf8();
     this.url = decoder.decodeUtf8();
   }
@@ -276,7 +278,7 @@ export const SearchDialog = (props) => {
           <Link
             key={index.toString()}
             className="row search-result"
-            to={"/blog/" + result.post.url + query}>
+            to={(result.post.isPage ? "/" : "/blog/") + result.post.url + query}>
             <div className="column">{result.post.title}</div>
             <div className="column">
               {result.relevance.toString()} match{result.relevance !== 1 ? "es" : ""}
