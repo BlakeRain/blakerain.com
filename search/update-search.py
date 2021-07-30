@@ -254,7 +254,7 @@ for resource in ["posts", "pages"]:
         data = r.json()
         for post in data[resource]:
             print(
-                f"  Found {resource} {post['id']}: {post['title']} ({post['url']})")
+                f"  Found {resource} {post['id']}: {post['title']} ({post['slug']})")
             if not TAG_MATCHER[resource](post):
                 print(f"    Does not match required tags")
                 continue
