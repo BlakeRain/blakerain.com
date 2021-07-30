@@ -33,16 +33,11 @@ jobs:
           DOMAIN: ${{ secrets.GHOST_HOSTNAME }}
           API_KEY: ${{ secrets.GHOST_CONTENT_API_KEY }}
         run: |
+          mkdir -p dist/data
           python3 search/update-search.py
-      - name: Upload the static site to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws s3 sync --region eu-west-1 ./dist s3://${{ secrets.AWS_SITE_BUCKET }}
-      - name: Upload the search data to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          aws s3 cp --region eu-west-1 --acl public-read ./search.bin s3://${{ secrets.AWS_SEARCH_BUCKET }}/data/search.bin
+      - name: Upload the static site to Netlify
+        uses: jsmrcaga/action-netlify-deploy@v1.1.0
+        with:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH }}
+          NETLIFY_SITE_ID: blakerain-static
+          build-directory: dist
