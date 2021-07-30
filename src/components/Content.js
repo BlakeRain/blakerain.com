@@ -9,28 +9,26 @@ Prism.languages["box-drawing"] = {};
 
 export default function Content(props) {
   const contentDiv = useRef();
-  const location = useLocation();
-
-  useEffect(() => {
-    location.search
-      .substr(1)
-      .split("&")
-      .map((term) => term.split("="))
-      .forEach((term_pair) => {
-        if (term_pair.length > 1 && term_pair[0] == "highlight") {
-          const instance = new Mark(contentDiv.current);
-          instance.mark(
-            decodeURIComponent(term_pair[1], {
-              separateWordSearch: true,
-              diacritics: true,
-            })
-          );
-        }
-      });
-  });
+  // const location = useLocation();
 
   useEffect(() => {
     if (typeof document !== "undefined") {
+      window.location.search
+        .substr(1)
+        .split("&")
+        .map((term) => term.split("="))
+        .forEach((term_pair) => {
+          if (term_pair.length > 1 && term_pair[0] == "highlight") {
+            const instance = new Mark(contentDiv.current);
+            instance.mark(
+              decodeURIComponent(term_pair[1], {
+                separateWordSearch: true,
+                diacritics: true,
+              })
+            );
+          }
+        });
+
       Prism.highlightAllUnder(document.querySelector("div.post-content"));
     }
   }, [false]);
