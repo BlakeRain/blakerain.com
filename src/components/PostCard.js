@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "components/Router";
 import PostDetails from "./PostDetails";
 
-import "./PostCard.less";
-
 const PostCard = ({ post, large, tags, authors }) => {
   return (
     <article key={post.id} className={"post-card " + (large ? "large" : "")}>

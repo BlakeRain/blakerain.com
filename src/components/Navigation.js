@@ -3,8 +3,6 @@ import { Location } from "@reach/router";
 import { useSiteData } from "react-static";
 import { Link } from "components/Router";
 
-import "./Navigation.less";
-
 const trimTrailingSlash = (str) => {
   return str.length > 0 && str.endsWith("/") ? str.substr(0, str.length - 1) : str;
 };

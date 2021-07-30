@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import "./Search.less";
-
 class SearchDecoder {
   constructor(buffer) {
     this.buffer = buffer;

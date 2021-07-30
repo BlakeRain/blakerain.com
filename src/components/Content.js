@@ -16,8 +16,6 @@ import "prismjs/components/prism-python";
 
 Prism.languages["box-drawing"] = {};
 
-import "./Content.less";
-
 export default function Content(props) {
   const contentDiv = useRef();
   const location = useLocation();

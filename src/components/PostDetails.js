@@ -1,8 +1,6 @@
 import React from "react";
 import { useSiteData } from "react-static";
 
-import "./PostDetails.less";
-
 const monthName = (month) => {
   switch (month) {
     case 0:
