@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "@reach/router";
 
 class SearchDecoder {
   constructor(buffer) {
@@ -272,15 +273,15 @@ export const SearchDialog = (props) => {
     result = (
       <React.Fragment>
         {searchResults.map((result, index) => (
-          <a
+          <Link
             key={index.toString()}
             className="row search-result"
-            href={result.post.url + query}>
+            to={"/blog/" + result.post.url + query}>
             <div className="column">{result.post.title}</div>
             <div className="column">
               {result.relevance.toString()} match{result.relevance !== 1 ? "es" : ""}
             </div>
-          </a>
+          </Link>
         ))}
         <div className="row center">
           <p>

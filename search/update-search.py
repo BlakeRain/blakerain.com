@@ -201,7 +201,7 @@ class SearchData:
         return term
 
     def add_post(self, data):
-        post = SearchPost(len(self.posts), data["title"], data["url"])
+        post = SearchPost(len(self.posts), data["title"], data["slug"])
         self.posts[post.id] = post
         words = extract_content(data["html"])
         for word in words:
