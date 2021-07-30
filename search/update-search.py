@@ -268,5 +268,5 @@ for resource in ["posts", "pages"]:
 
 STORE = Store()
 SEARCH_DATA.encode(STORE)
-with open("search.bin", "wb") as fp:
+with open("dist/data/search.bin", "wb") as fp:
     STORE.write(fp)
