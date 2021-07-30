@@ -1,17 +1,16 @@
-import React from 'react'
-import { useRouteData, Head } from 'react-static'
-import { Link } from 'components/Router'
+import React from "react";
+import { useRouteData, Head } from "react-static";
+import Content from "../components/Content";
 
 export default function Page() {
   const { page } = useRouteData();
 
   return (
-    <div className="post-content">
+    <React.Fragment>
       <Head>
         <title>{page.title}</title>
       </Head>
-      <div dangerouslySetInnerHTML={{__html: page.html}}>
-      </div>
-    </div>
+      <Content content={page} />
+    </React.Fragment>
   );
 }

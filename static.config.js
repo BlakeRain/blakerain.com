@@ -10,13 +10,60 @@ const ContentApi = new GhostContentAPI({
 
 const other_settings = {};
 
+const simplifyAuthor = ({ id, name, profile_image, slug }) => {
+  return { id, name, profile_image, slug };
+};
+
+const authorDictionary = (authors) => {
+  return authors.reduce((obj, author) => {
+    obj[author.id] = simplifyAuthor(author);
+    return obj;
+  }, {});
+};
+
+const simplifyTag = ({ id, name, slug, description, visibility }) => {
+  return { id, name, slug, description, visibility };
+};
+
+const tagDictionary = (tags) => {
+  return tags.reduce((obj, tag) => {
+    obj[tag.id] = simplifyTag(tag);
+    return obj;
+  }, {});
+};
+
+const simplifyPost = ({
+  id,
+  slug,
+  feature_image,
+  title,
+  custom_excerpt,
+  tags,
+  authors,
+  published_at,
+}) => {
+  return {
+    id,
+    slug,
+    feature_image,
+    title,
+    custom_excerpt,
+    published_at,
+    tags: tags.map((tag) => tag.id),
+    authors: authors.map((author) => author.id),
+  };
+};
+
 export default {
   getSiteData: async () => {
     const settings = await ContentApi.settings.browse({ limit: "all" });
+    console.log(settings);
     return { ...settings, ...other_settings };
   },
 
   getRoutes: async () => {
+    const tags = await ContentApi.tags.browse();
+    const authors = await ContentApi.authors.browse();
     const posts = await ContentApi.posts.browse({ limit: "all", include: ["authors", "tags"] });
     const pages = await ContentApi.pages.browse({ limit: "all", include: ["authors", "tags"] });
 
@@ -34,16 +81,49 @@ export default {
       {
         path: "/",
         getData: () => ({
-          posts,
+          posts: posts.map(simplifyPost),
         }),
+      },
+      {
+        path: "/tags",
+        getData: () => ({
+          tags: tags.filter((tag) => tag.visibility === "public").map(simplifyTag),
+        }),
+        children: tags
+          .filter((tag) => tag.visibility === "public")
+          .map((tag) => {
+            const tag_posts = posts
+              .filter((post) => {
+                return post.tags.findIndex((post_tag) => post_tag.id === tag.id) != -1;
+              })
+              .map(simplifyPost);
+
+            const tag_posts_tags = tags.filter((post_tag) => {
+              return tag_posts.reduce((acc, tag_post) => {
+                return acc || tag_post.tags.indexOf(post_tag.id) !== -1;
+              }, false);
+            });
+
+            return {
+              path: `/${tag.slug}`,
+              template: "src/containers/Tag",
+              getData: () => ({
+                tag_id: tag.id,
+                authors: authorDictionary(authors),
+                tags: tagDictionary(tag_posts_tags),
+                posts: tag_posts,
+              }),
+            };
+          }),
       },
       {
         path: "/blog",
         getData: () => ({
-          posts,
+          authors: authorDictionary(authors),
+          tags: tagDictionary(tags),
+          posts: posts.map(simplifyPost),
         }),
         children: posts.map((post) => {
-          console.log("PAGE", post.id);
           return {
             path: `/${post.slug}`,
             template: "src/containers/BlogPost",
@@ -65,7 +145,10 @@ export default {
         <meta name="referer" content="no-referrer-when-downgrade" />
         <link rel="icon" href="/favicon.png" type="image/png" />
       </Head>
-      <Body>{children}</Body>
+      <Body>
+        {children}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
+      </Body>
     </Html>
   ),
 

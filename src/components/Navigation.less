@@ -21,6 +21,10 @@ nav.site-nav {
     .left {
       display: flex;
       align-items: center;
+
+      .loading {
+        margin-left: 2rem;
+      }
     }
 
     .right {
@@ -58,7 +62,7 @@ nav.site-nav {
             position: relative;
             color: white;
             opacity: 0.8;
-            padding: 12px 12px;
+            padding: 12px 12px 3px;
             text-transform: uppercase;
 
             &:before {
@@ -69,15 +73,15 @@ nav.site-nav {
               bottom: 8px;
               height: 1px;
               background: white;
-              opacity: 0.0;
+              opacity: 0;
             }
 
             &.active {
-              opacity: 1.0;
+              opacity: 1;
             }
 
             &:hover {
-              opacity: 1.0;
+              opacity: 1;
 
               &:before {
                 opacity: 0.75;
@@ -90,7 +94,7 @@ nav.site-nav {
       &.buttons {
         li {
           a {
-            padding: 11px 10px 8px 10px;
+            padding: 11px 10px 3px 10px;
 
             svg {
               height: 1.8rem;
@@ -100,30 +104,5 @@ nav.site-nav {
         }
       }
     }
-
-  //   ul {
-  //     margin: 0;
-  //     padding: 0;
-  //     list-style: none;
-  //     display: flex;
-
-  //     li {
-  //       display: block;
-
-  //       a {
-
-  //         &:before {
-  //         }
-
-  //         &:hover {
-  //           opacity: 1.0;
-
-  //           &:before {
-  //             opacity: 0.75;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
   }
 }
