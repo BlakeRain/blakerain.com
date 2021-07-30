@@ -55,9 +55,10 @@ const simplifyPost = ({
 };
 
 export default {
+  siteRoot: "https://blakerain.com",
+
   getSiteData: async () => {
     const settings = await ContentApi.settings.browse({ limit: "all" });
-    console.log(settings);
     return { ...settings, ...other_settings };
   },
 
