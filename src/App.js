@@ -14,9 +14,7 @@ import "./App.less";
 // Any routes that start with 'dynamic' will be treated as non-static routes
 addPrefetchExcludes(["dynamic"]);
 
-const SEARCH_DATA_URL =
-  process.env.SEARCH_DATA_URL ||
-  "https://s3-eu-west-1.amazonaws.com/static.blakerain.com/data/search.bin";
+const SEARCH_DATA_URL = process.env.SEARCH_DATA_URL || "https://blakerain.com/data/search.bin";
 
 function App() {
   const [searchVisible, setSearchVisible] = useState(false);
