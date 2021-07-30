@@ -120,10 +120,12 @@ export default function Content(props) {
         {props.content.custom_excerpt ? <p>{props.content.custom_excerpt}</p> : null}
         <PostDetails post={props.content} />
       </header>
-      <div
-        ref={contentDiv}
-        className="post-content"
-        dangerouslySetInnerHTML={{ __html: props.content.html }}></div>
+      <div className="post-content">
+        <div
+          ref={contentDiv}
+          className="inner"
+          dangerouslySetInnerHTML={{ __html: props.content.html }}></div>
+      </div>
     </article>
   );
 }
