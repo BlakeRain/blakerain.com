@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useLocation } from "@reach/router";
-import Mark from "mark.js";
 
 import { Link } from "./Router";
 import PostDetails from "./PostDetails";
