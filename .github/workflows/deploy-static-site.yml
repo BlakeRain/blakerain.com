@@ -36,8 +36,5 @@ jobs:
           mkdir -p dist/data
           python3 search/update-search.py
       - name: Upload the static site to Netlify
-        uses: jsmrcaga/action-netlify-deploy@v1.1.0
-        with:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH }}
-          NETLIFY_SITE_ID: blakerain-static
-          build-directory: dist
+        run: |
+          npx netlify-cli deploy --auth=${{ secrets.NETLIFY_AUTH }} --dir=dist --site=blakerain-static
