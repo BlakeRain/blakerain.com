@@ -1,13 +1,17 @@
 import React from "react";
 import { useRouteData } from "react-static";
+import PostCard from "components/PostCard";
+import TwitterCard from "../components/metadata/Twitter";
 
 export default () => {
-  const { posts } = useRouteData();
+  const { authors, tags, posts } = useRouteData();
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <h1>Welcome to React-Static</h1>
-      <p>There are {posts.length} blog posts</p>
+    <div className="post-cards">
+      <TwitterCard card="summary" />
+      {posts.map((post, index) => (
+        <PostCard key={post.id} tags={tags} authors={authors} post={post} large={index === 0} />
+      ))}
     </div>
   );
 };

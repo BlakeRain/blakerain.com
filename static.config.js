@@ -81,6 +81,8 @@ export default {
       {
         path: "/",
         getData: () => ({
+          authors: authorDictionary(authors),
+          tags: tagDictionary(tags),
           posts: posts.map(simplifyPost),
         }),
       },
