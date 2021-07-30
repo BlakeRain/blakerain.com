@@ -50,56 +50,6 @@ export default function Content(props) {
         node.innerHTML = html;
       }
     });
-
-    const graphs = Array.prototype.slice.call(
-      contentDiv.current.querySelectorAll("script[type='text/dot']")
-    );
-
-    if (graphs.length > 0) {
-      const d3 = require("d3");
-      require("d3-graphviz");
-
-      graphs.forEach((script, index) => {
-        const div = document.createElement("DIV");
-        div.innerHTML = "<i>Loading ...</i>";
-        script.parentNode.insertBefore(div, script);
-
-        d3.select(div)
-          .graphviz({})
-          .zoom(false)
-          .attributer((d) => {
-            if (d.attributes && d.parent && "class" in d.parent.attributes) {
-              const parent_class = d.parent.attributes["class"];
-
-              if (parent_class == "graph") {
-                if (d.tag == "polygon" && d.attributes["fill"] == "white") {
-                  d.attributes["fill"] = "transparent";
-                }
-              } else if (parent_class == "cluster") {
-                if (d.tag == "polygon" && d.attributes["stroke"] == "black") {
-                  delete d.attributes["stroke"];
-                }
-              } else if (parent_class == "node") {
-                if (d.tag == "text" && d.attributes["fill"] == "white") {
-                  delete d.attributes["fill"];
-                } else if (d.tag == "ellipse" && d.attributes["stroke"] == "black") {
-                  delete d.attributes["stroke"];
-                }
-              } else if (parent_class == "edge") {
-                if (d.tag == "polygon" && d.attributes["fill"] == "black") {
-                  delete d.attributes["fill"];
-                  delete d.attributes["stroke"];
-                } else if (d.tag == "path" && d.attributes["stroke"] == "black") {
-                  delete d.attributes["stroke"];
-                }
-              }
-            }
-          })
-          .renderDot(script.innerText, () => {
-            div.firstChild.remove();
-          });
-      });
-    }
   });
 
   return (
