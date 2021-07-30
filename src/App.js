@@ -96,7 +96,7 @@ function App() {
       <Navigation onSearchClick={onSearchClick} />
       <div className="content">
         <div className="inner">
-          <React.Suspense fallback={<em>Loading...</em>}>
+          <React.Suspense fallback={<h4 className="loading">Loading...</h4>}>
             <Router>
               <Dynamic path="dynamic" />
               <Routes path="*" />
