@@ -5,15 +5,6 @@ import Mark from "mark.js";
 import { Link } from "./Router";
 import PostDetails from "./PostDetails";
 
-import Prism from "prismjs";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cmake";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-javascript";
-import "prismjs/components/prism-nginx";
-import "prismjs/components/prism-python";
-
 Prism.languages["box-drawing"] = {};
 
 export default function Content(props) {
@@ -39,16 +30,10 @@ export default function Content(props) {
   });
 
   useEffect(() => {
-    contentDiv.current.querySelectorAll("code[class*='language-']").forEach((node) => {
-      const lang = node.className.substr(9);
-      if (!Prism.languages[lang]) {
-        console.warn(`Missing Prism language '${lang}'`);
-      } else {
-        const html = Prism.highlight(node.innerText, Prism.languages[lang], lang);
-        node.innerHTML = html;
-      }
-    });
-  });
+    if (typeof document !== "undefined") {
+      Prism.highlightAllUnder(document.querySelector("div.post-content"));
+    }
+  }, [false]);
 
   return (
     <article className="post">
