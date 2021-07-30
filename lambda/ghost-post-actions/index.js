@@ -35,7 +35,7 @@ exports.handler = async (event) => {
       })
     );
 
-    req.write('{"event_type":"event_type"}');
+    req.write('{"event_type":"deploy-event"}');
     req.end();
   });
 
