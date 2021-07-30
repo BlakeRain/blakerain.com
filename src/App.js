@@ -87,7 +87,7 @@ function App() {
       console.log("Removing window event listener");
       window.removeEventListener("keydown", onWindowKeyDown);
     };
-  }, [searchData == null]);
+  });
 
   return (
     <Root>
