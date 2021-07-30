@@ -229,7 +229,7 @@ URL_BASE = f"{DOMAIN}/ghost/api/v2/content/"
 
 PARAMS = {
     "key": API_KEY,
-    "fields": "id,title,html,url",
+    "fields": "id,title,html,slug",
     "include": "tags",
     "page": 1
 }
