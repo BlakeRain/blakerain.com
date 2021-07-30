@@ -1,12 +1,15 @@
 import { Link } from "@reach/router";
 import React from "react";
-import { useRouteData } from "react-static";
+import { useRouteData, Head } from "react-static";
 
 const Tags = (props) => {
   const { tags } = useRouteData();
   return (
     <div>
-      <h1>Le Tags ({tags.length} many tags)</h1>
+      <Head>
+        <title>{tag.name} Tag</title>
+      </Head>
+      <h1>There are {tags.length} tags on this site:</h1>
       <ul>
         {tags.map((tag) => (
           <li key={tag.id}>

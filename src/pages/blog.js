@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouteData } from "react-static";
+import { useRouteData, Head } from "react-static";
 import PostCard from "components/PostCard";
 import TwitterCard from "../components/metadata/Twitter";
 
@@ -8,6 +8,9 @@ export default function Blog() {
 
   return (
     <div className="post-cards">
+      <Head>
+        <title>Blog</title>
+      </Head>
       <TwitterCard card="summary" />
       {posts.map((post, index) => (
         <PostCard key={post.id} tags={tags} authors={authors} post={post} large={index === 0} />

@@ -9,7 +9,7 @@ const Tag = () => {
   return (
     <React.Fragment>
       <Head>
-        <title>{tag.name}</title>
+        <title>{tag.name} Tag</title>
       </Head>
       <h1>{tag.name}</h1>
       <p>This tag features in {posts.length} posts</p>
