@@ -95,7 +95,7 @@ class S3Adapter extends BaseAdapter {
                 console.error("Failed to put S3 object:", err);
                 reject(err);
               } else {
-                console.log(`Wrote S3 object for image '${image.path}'`);
+                console.log(`Wrote S3 object for image '${image.path}': '${fileName}'`);
                 resolve(`${this.host}${fileName}`);
               }
             }
