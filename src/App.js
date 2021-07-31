@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Root, Routes, addPrefetchExcludes } from "react-static";
-import { Link, Router } from "components/Router";
+import { Router } from "components/Router";
 
 import Navigation from "components/Navigation";
 import Footer from "components/Footer";
 import { SearchData, SearchContainer } from "components/Search";
+import ScrollToTop from "./components/ScrollToTop";
 
 import Dynamic from "containers/Dynamic";
 
@@ -96,6 +97,7 @@ function App() {
 
   return (
     <Root>
+      <ScrollToTop />
       <Navigation onSearchClick={onSearchClick} />
       <div className="content">
         <div className="inner">
