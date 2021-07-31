@@ -191,7 +191,7 @@ export class SearchData {
   }
 }
 
-export const SearchDialog = (props) => {
+const SearchDialog = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTimer, setSearchTimer] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
@@ -297,34 +297,50 @@ export const SearchDialog = (props) => {
   }
 
   return (
+    <React.Fragment>
+      <div className="row">
+        <div className="column">Search Blog Posts and Pages</div>
+        <div className="column hints">
+          <span className="tag">Tab</span>/<span className="tag">S</span>
+          to search,
+          <span className="tag">Esc</span>
+          to close
+        </div>
+      </div>
+      <div className="row">
+        <div className="column wide">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Type search term here ..."
+            autoComplete="off"
+            autoFocus="yes"
+            spellCheck="false"
+            value={searchTerm}
+            onChange={onSearchTermChanged}
+          />
+        </div>
+      </div>
+      {result}
+    </React.Fragment>
+  );
+};
+
+export const SearchContainer = (props) => {
+  return (
     <div
       className={"search-box-container " + (props.visible ? "" : "hidden")}
       onClick={() => props.setSearchVisible(false)}>
       <div className="search-box">
-        <div className="row">
-          <div className="column">Search Blog Posts and Pages</div>
-          <div className="column hints">
-            <span className="tag">Tab</span>/<span className="tag">S</span>
-            to search,
-            <span className="tag">Esc</span>
-            to close
+        {props.searchData ? (
+          <SearchDialog {...props} />
+        ) : (
+          <div className="row center">
+            <div className="column">
+              <h1>Search is unavailable</h1>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="column wide">
-            <input
-              id="search-input"
-              type="search"
-              placeholder="Type search term here ..."
-              autoComplete="off"
-              autoFocus="yes"
-              spellCheck="false"
-              value={searchTerm}
-              onChange={onSearchTermChanged}
-            />
-          </div>
-        </div>
-        {result}
+        )}
       </div>
     </div>
   );

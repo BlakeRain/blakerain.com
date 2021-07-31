@@ -3,9 +3,14 @@
 html {
   font-size: 62.5%;
   box-sizing: border-box;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 body {
+  overflow-x: hidden;
+
   color: lighten(@color-mid-grey, -30%);
 
   font-family: @body-font-family;
@@ -36,12 +41,6 @@ body {
 a {
   color: lighten(@color-blue, -5%);
   text-decoration: none;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
 }
 
 h1,
@@ -357,11 +356,6 @@ nav.site-nav {
 
   z-index: 1000;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-
   background-color: fade(lighten(desaturate(@primary-background, 75%), -25%), 75%);
 
   &.hidden {
@@ -373,7 +367,7 @@ nav.site-nav {
     flex-direction: column;
 
     width: 50%;
-    margin-top: 10rem;
+    margin: 10rem auto 0;
     padding: 2rem;
 
     background-color: @primary-background;
@@ -846,12 +840,14 @@ article.post {
       min-width: 100%;
 
       border-left: 3px solid #3eb0ef;
+      font-style: italic;
+      color: @color-mid-grey;
 
       p {
         margin: 0 0 1em 0;
         color: inherit;
         font-size: inherit;
-        font-size: italic;
+        font-style: italic;
         line-height: inherit;
 
         &:last-child {
@@ -1236,6 +1232,10 @@ article.post {
       strong,
       em {
         color: rgba(255, 255, 255, 0.75);
+      }
+
+      blockquote {
+        color: lighten(@color-mid-grey, 30%);
       }
 
       pre {

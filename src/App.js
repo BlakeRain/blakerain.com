@@ -4,7 +4,7 @@ import { Link, Router } from "components/Router";
 
 import Navigation from "components/Navigation";
 import Footer from "components/Footer";
-import { SearchData, SearchDialog } from "components/Search";
+import { SearchData, SearchContainer } from "components/Search";
 
 import Dynamic from "containers/Dynamic";
 
@@ -38,8 +38,8 @@ function App() {
               reject(err);
             });
         } else {
-          console.error(response.statusText);
-          reject(err);
+          console.error("Failed to retrieve search data: " + response.statusText);
+          reject(response.statusText);
         }
       });
     });
@@ -47,9 +47,14 @@ function App() {
 
   function loadAndSetVisible() {
     if (!searchData) {
-      loadSearchData().then(() => {
-        setSearchVisible(true);
-      });
+      loadSearchData()
+        .then(() => {
+          setSearchVisible(true);
+        })
+        .catch((err) => {
+          setSearchData(null);
+          setSearchVisible(true);
+        });
     } else {
       setSearchVisible(true);
     }
@@ -102,7 +107,7 @@ function App() {
           </React.Suspense>
         </div>
       </div>
-      <SearchDialog
+      <SearchContainer
         visible={searchVisible}
         setSearchVisible={setSearchVisible}
         searchData={searchData}
