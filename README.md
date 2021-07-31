@@ -1,6 +1,5 @@
 # blakerain.com
 
-[![Deploy Static Site](https://github.com/BlakeRain/blakerain.com/actions/workflows/deploy-static-site.yml/badge.svg)](https://github.com/BlakeRain/blakerain.com/actions/workflows/deploy-static-site.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/ba2a37a1-cb69-4db3-af29-c0a230373b70/deploy-status)](https://app.netlify.com/sites/blakerain-static/deploys)
 
 This repository contains the sources for the website [blakerain.com]. The website is built using
