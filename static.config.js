@@ -179,6 +179,8 @@ export default {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="referer" content="no-referrer-when-downgrade" />
         <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.png" type="image/png" />
       </Head>
       <Body>
         {children}
