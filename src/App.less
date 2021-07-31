@@ -44,6 +44,33 @@ a {
   box-sizing: inherit;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  small {
+    display: block;
+    margin-top: 0.4em;
+    font-size: 70%;
+    color: lighten(@color-mid-grey, 20%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    small {
+      color: lighten(@color-mid-grey, 10%);
+    }
+  }
+}
+
 ul.bullet-list {
   list-style: none;
   margin: 0;

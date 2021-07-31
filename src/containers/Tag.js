@@ -11,8 +11,12 @@ const Tag = () => {
       <Head>
         <title>{tag.name} Tag</title>
       </Head>
-      <h1>{tag.name}</h1>
-      <p>This tag features in {posts.length} posts</p>
+      <h1>
+        {tag.name}
+        <small>
+          There are {posts.length} post{posts.length === 1 ? "" : "s"} with this tag
+        </small>
+      </h1>
       <div className="post-cards">
         {posts.map((post, index) => (
           <PostCard key={post.id} tags={tags} authors={authors} post={post} large={false} />
