@@ -84,8 +84,8 @@ export default {
   siteRoot: "https://blakerain.com",
 
   getSiteData: async () => {
-    const { title, navigation } = await ContentApi.settings.browse({ limit: "all" });
-    return { title, navigation, ...other_settings };
+    const { title, navigation, twitter } = await ContentApi.settings.browse({ limit: "all" });
+    return { title, navigation, twitter, ...other_settings };
   },
 
   getRoutes: async () => {
@@ -99,6 +99,8 @@ export default {
         path: `/${page.slug}`,
         template: "src/containers/Page",
         getData: () => ({
+          authors: authorDictionary(page.authors),
+          tags: tagDictionary(page.tags),
           page: simplifyDisplayPost(page),
         }),
       };

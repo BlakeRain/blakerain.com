@@ -15,7 +15,7 @@ const TwitterCard = (props) => {
         <meta property="twitter:data1" content={props.written_by.name} />
         <meta property="twitter:creator" content={"@" + props.written_by.twitter} />
       </React.Fragment>
-    )
+    );
   }
 
   var description = null;
@@ -30,7 +30,7 @@ const TwitterCard = (props) => {
       <meta property="twitter:site" content={siteData.twitter} />
       {description}
       {written_by}
-      <meta property="twitter:url" content={siteData.siteRoot + location.pathname} />
+      <meta property="twitter:url" content={"https://blakerain.com" + location.pathname} />
     </Head>
   );
 };
