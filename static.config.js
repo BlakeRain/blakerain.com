@@ -32,7 +32,7 @@ const tagDictionary = (tags) => {
   }, {});
 };
 
-const simplifyPost = ({
+const simplifyListPost = ({
   id,
   slug,
   feature_image,
@@ -40,6 +40,7 @@ const simplifyPost = ({
   custom_excerpt,
   tags,
   authors,
+  reading_time,
   published_at,
 }) => {
   return {
@@ -48,9 +49,34 @@ const simplifyPost = ({
     feature_image,
     title,
     custom_excerpt,
+    reading_time,
     published_at,
     tags: tags.map((tag) => tag.id),
     authors: authors.map((author) => author.id),
+  };
+};
+
+const simplifyDisplayPost = ({
+  id,
+  slug,
+  title,
+  custom_excerpt,
+  tags,
+  authors,
+  reading_time,
+  published_at,
+  html,
+}) => {
+  return {
+    id,
+    slug,
+    title,
+    custom_excerpt,
+    reading_time,
+    published_at,
+    tags: tags.map((tag) => tag.id),
+    authors: authors.map((author) => author.id),
+    html,
   };
 };
 
@@ -58,8 +84,8 @@ export default {
   siteRoot: "https://blakerain.com",
 
   getSiteData: async () => {
-    const settings = await ContentApi.settings.browse({ limit: "all" });
-    return { ...settings, ...other_settings };
+    const { title, navigation } = await ContentApi.settings.browse({ limit: "all" });
+    return { title, navigation, ...other_settings };
   },
 
   getRoutes: async () => {
@@ -73,7 +99,7 @@ export default {
         path: `/${page.slug}`,
         template: "src/containers/Page",
         getData: () => ({
-          page,
+          page: simplifyDisplayPost(page),
         }),
       };
     });
@@ -84,7 +110,7 @@ export default {
         getData: () => ({
           authors: authorDictionary(authors),
           tags: tagDictionary(tags),
-          posts: posts.map(simplifyPost),
+          posts: posts.map(simplifyListPost),
         }),
       },
       {
@@ -99,7 +125,7 @@ export default {
               .filter((post) => {
                 return post.tags.findIndex((post_tag) => post_tag.id === tag.id) != -1;
               })
-              .map(simplifyPost);
+              .map(simplifyListPost);
 
             const tag_posts_tags = tags.filter((post_tag) => {
               return tag_posts.reduce((acc, tag_post) => {
@@ -124,13 +150,17 @@ export default {
         getData: () => ({
           authors: authorDictionary(authors),
           tags: tagDictionary(tags),
-          posts: posts.map(simplifyPost),
+          posts: posts.map(simplifyListPost),
         }),
         children: posts.map((post) => {
           return {
             path: `/${post.slug}`,
             template: "src/containers/BlogPost",
-            getData: () => ({ post }),
+            getData: () => ({
+              authors: authorDictionary(post.authors),
+              tags: tagDictionary(post.tags),
+              post: simplifyDisplayPost(post),
+            }),
           };
         }),
       },

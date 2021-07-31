@@ -3,14 +3,14 @@ import { useRouteData, Head } from "react-static";
 import Content from "../components/Content";
 
 export default function BlogPost() {
-  const { post } = useRouteData();
+  const { authors, tags, post } = useRouteData();
 
   return (
     <div>
       <Head>
         <title>{post.title}</title>
       </Head>
-      <Content content={post} />
+      <Content authors={authors} tags={tags} content={post} />
     </div>
   );
 }

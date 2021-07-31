@@ -8,7 +8,6 @@ Prism.languages["box-drawing"] = {};
 
 export default function Content(props) {
   const contentDiv = useRef();
-  // const location = useLocation();
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -38,6 +37,7 @@ export default function Content(props) {
         <h1>{props.content.title}</h1>
         <ul className="bullet-list">
           {props.content.tags
+            .map((tag) => props.tags[tag])
             .filter((tag) => tag.visibility == "public")
             .map((tag) => (
               <li key={tag.id}>
@@ -48,7 +48,7 @@ export default function Content(props) {
             ))}
         </ul>
         {props.content.custom_excerpt ? <p>{props.content.custom_excerpt}</p> : null}
-        <PostDetails post={props.content} />
+        <PostDetails authors={props.authors} post={props.content} />
       </header>
       <div className="post-content">
         <div
