@@ -479,19 +479,35 @@ div.post-cards {
         font-size: 2.2rem;
         font-weight: 600;
         line-height: 1.15em;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(0, 0, 0, 0.85);
 
         margin-top: 15px;
         margin-bottom: 10px;
       }
 
       section {
-        color: #60747c;
+        color: #445358;
         font-family: Georgia, serif;
       }
 
       div.post-details ul li {
         font-weight: 600;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  div.post-cards {
+    article {
+      .inner {
+        header {
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        section {
+          color: #60747c;
+        }
       }
     }
   }
@@ -541,7 +557,7 @@ div.post-details {
     font-size: 1.2rem;
     line-height: 1.4em;
     font-weight: 400;
-    color: @color-light-grey;
+    color: @color-dark-grey;
 
     div.date-and-time {
       display: flex;
@@ -567,6 +583,14 @@ div.post-details {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  div.post-details {
+    div.post-card-details {
+      color: @color-light-grey;
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
 // Post/Page Content
 
@@ -576,7 +600,7 @@ article.post {
     padding: 70px 170px 50px;
 
     h1 {
-      color: rgba(255, 255, 255, 0.9);
+      color: @color-dark-grey;
       margin: 0 0 0.2em;
 
       font-size: 5.5rem;
@@ -754,10 +778,10 @@ article.post {
       max-width: 100%;
       overflow-x: auto;
 
-      border: 1px darken(@color-dark-grey, 10%) solid;
+      border: 1px darken(@color-light-grey, 10%) solid;
       border-radius: 5px;
-      color: @color-white-grey;
-      background-color: darken(@color-dark-grey, 3%);
+      color: @color-dark-grey;
+      background-color: lighten(@color-light-grey, 15%);
 
       font-size: 1.4rem;
       line-height: 1.5em;
@@ -859,7 +883,7 @@ article.post {
       font-size: 0.8em;
       line-height: 1em;
       font-weight: 400 !important;
-      background: @color-white-grey;
+      background-color: lighten(@color-light-grey, 15%);
       border-radius: 3px;
     }
 
@@ -1152,6 +1176,10 @@ article.post {
 @media (prefers-color-scheme: dark) {
   article.post {
     .post-header {
+      h1 {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
       p {
         color: #60747c;
       }
@@ -1179,6 +1207,12 @@ article.post {
       strong,
       em {
         color: rgba(255, 255, 255, 0.75);
+      }
+
+      pre {
+        background-color: darken(@color-dark-grey, 3%);
+        border-color: darken(@color-dark-grey, 10%);
+        color: @color-white-grey;
       }
 
       code {
@@ -1220,18 +1254,15 @@ article.post {
 code {
   span {
     &.token {
-      @code-grey: #8292a2; // Appears 4 times
-      @code-yellow: #e6db74; // Appears 4 times
-      @code-white: #f8f8f2; // Appears 2 times
-      @code-purple: #ae81ff; // Appears 2 times
-      @code-orange: #fd971f; // Appears 2 times
-
       &.comment,
       &.prolog,
       &.doctype,
-      &.cdata,
+      &.cdata {
+        color: slategray;
+      }
+
       &.punctuation {
-        color: @code-grey;
+        color: #999999;
       }
 
       &.namespace {
@@ -1240,15 +1271,12 @@ code {
 
       &.property,
       &.tag,
+      &.boolean,
+      &.number,
       &.constant,
       &.symbol,
       &.deleted {
-        color: #f92672;
-      }
-
-      &.boolean,
-      &.number {
-        color: @code-purple;
+        color: #990055;
       }
 
       &.selector,
@@ -1257,35 +1285,37 @@ code {
       &.char,
       &.builtin,
       &.inserted {
-        color: #a6e22e;
+        color: #669900;
       }
 
       &.operator,
       &.entity,
-      &.url,
-      &.variable {
-        color: @code-white;
+      &.url {
+        color: #9a6e3a;
       }
 
       &.atrule,
       &.attr-value,
-      &.function,
-      &.class-name {
-        color: @code-yellow;
+      &.keyword {
+        color: #0077aa;
       }
 
-      &.keyword {
-        color: #66d9ef;
+      &.function,
+      &.class-name {
+        color: #dd4a68;
       }
 
       &.regex,
-      &.important {
-        color: @code-orange;
+      &.important,
+      &.variable {
+        color: #ee9900;
       }
 
+      &.important,
       &.bold {
         font-weight: bold;
       }
+
       &.italic {
         font-style: italic;
       }
@@ -1297,77 +1327,72 @@ code {
   }
 }
 
-svg {
-  g.cluster {
-    text {
-      fill: black;
-    }
-
-    polygon {
-      stroke: rgb(19, 48, 78);
-    }
-  }
-
-  g.node {
-    text {
-      fill: black;
-    }
-
-    ellipse {
-      stroke: rgb(19, 48, 78);
-    }
-  }
-
-  g.edge {
-    polygon {
-      stroke: rgb(19, 48, 78);
-      fill: rgb(19, 48, 78);
-    }
-
-    path {
-      stroke: rgb(19, 48, 78);
-    }
-
-    text {
-      fill: rgb(19, 48, 78);
-    }
-  }
-}
-
 @media (prefers-color-scheme: dark) {
-  svg {
-    g.cluster {
-      text {
-        fill: white;
-      }
+  code {
+    span {
+      &.token {
+        @code-grey: #8292a2; // Appears 4 times
+        @code-yellow: #e6db74; // Appears 4 times
+        @code-white: #f8f8f2; // Appears 2 times
+        @code-purple: #ae81ff; // Appears 2 times
+        @code-orange: #fd971f; // Appears 2 times
 
-      polygon {
-        stroke: rgb(46, 88, 132);
-      }
-    }
+        &.comment,
+        &.prolog,
+        &.doctype,
+        &.cdata,
+        &.punctuation {
+          color: @code-grey;
+        }
 
-    g.node {
-      text {
-        fill: white;
-      }
+        &.namespace {
+          opacity: 0.7;
+        }
 
-      ellipse {
-        stroke: rgb(46, 88, 132);
-      }
-    }
+        &.property,
+        &.tag,
+        &.constant,
+        &.symbol,
+        &.deleted {
+          color: #f92672;
+        }
 
-    g.edge {
-      polygon {
-        stroke: #eeeeee;
-        fill: #eeeeee;
-      }
+        &.boolean,
+        &.number {
+          color: @code-purple;
+        }
 
-      path {
-        stroke: #eeeeee;
-      }
+        &.selector,
+        &.attr-name,
+        &.string,
+        &.char,
+        &.builtin,
+        &.inserted {
+          color: #a6e22e;
+        }
 
-      text {
-        fill: white;
+        &.operator,
+        &.entity,
+        &.url,
+        &.variable {
+          color: @code-white;
+        }
+
+        &.atrule,
+        &.attr-value,
+        &.function,
+        &.class-name {
+          color: @code-yellow;
+        }
+
+        &.keyword {
+          color: #66d9ef;
+        }
+
+        &.regex,
+        &.important {
+          color: @code-orange;
+        }
       }
     }
   }
