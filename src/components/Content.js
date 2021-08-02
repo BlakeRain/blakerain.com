@@ -96,7 +96,9 @@ export default function Content(props) {
       instance.mark(term, {
         separateWordSearch: true,
         done: () => {
-          setResults(Array.prototype.slice.call(contentDiv.current.querySelectorAll("mark")));
+          if (contentDiv.current) {
+            setResults(Array.prototype.slice.call(contentDiv.current.querySelectorAll("mark")));
+          }
         },
       });
 
