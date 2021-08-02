@@ -461,6 +461,41 @@ nav.site-nav {
   }
 }
 
+.highlight-controls {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 1rem;
+  background-color: @primary-background;
+  border-radius: 9px;
+  z-index: 50;
+
+  font-size: 80%;
+
+  button {
+    color: white;
+    border: 0;
+    background-color: darken(@primary-background, 10%);
+    border-radius: 3px;
+
+    &:hover {
+      background-color: lighten(@primary-background, 10%);
+    }
+
+    & + button {
+      margin-left: 1rem;
+    }
+  }
+
+  span {
+    margin-left: 1rem;
+  }
+}
+
+mark.current {
+  background: orange;
+}
+
 // ---------------------------------------------------------------------------------------------
 // Post Cards
 
