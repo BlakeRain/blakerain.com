@@ -1,19 +1,14 @@
+//
+// S3 Storage Adapter
+//
+// See: https://github.com/colinmeinke/ghost-storage-adapter-s3 and
+//      https://github.com/spanishdict/ghost-s3-compat
+//
+
 const BaseAdapter = require("ghost-storage-base");
 const AWS = require("aws-sdk");
 const path = require("path");
 const fs = require("fs");
-
-const readFileAsync = (fp) => {
-  return new Promise((resolve, reject) => {
-    return fs.readFile(fp, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-};
 
 const stripLeadingSlash = (s) => {
   return s.indexOf("/") === 0 ? s.substring(1) : s;
@@ -79,7 +74,19 @@ class S3Adapter extends BaseAdapter {
   save(image, targetDir) {
     const dir = targetDir || this.getTargetDir(this.settings.prefix);
     return new Promise((resolve, reject) => {
-      Promise.all([this.getUniqueFileName(image, dir), readFileAsync(image.path)])
+      Promise.all([
+        //
+        this.getUniqueFileName(image, dir),
+        new Promise((resolve, reject) => {
+          return fs.readFile(image.path, (err, data) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data);
+            }
+          });
+        }),
+      ])
         .then(([fileName, file]) => {
           this.s3.putObject(
             {

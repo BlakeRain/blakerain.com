@@ -1,3 +1,9 @@
+#
+# GitHub Runner Dockerfile
+#
+# Some of this is inspired by https://github.com/tcardonne/docker-github-runner
+#
+
 FROM ubuntu:latest
 
 ARG GIT_VERSION="2.30.1"
