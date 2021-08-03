@@ -1,5 +1,5 @@
-import { Link } from "@reach/router";
 import React from "react";
+import { Link } from "@reach/router";
 import { useRouteData, Head } from "react-static";
 import DateSpan from "components/DateSpan";
 

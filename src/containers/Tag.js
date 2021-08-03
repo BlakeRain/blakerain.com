@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@reach/router";
 import { useRouteData, Head } from "react-static";
 import PostCard from "components/PostCard";
 
@@ -12,7 +13,7 @@ const Tag = () => {
         <title>{tag.name} Tag</title>
       </Head>
       <h1>
-        {tag.name}
+        <Link to={"/tags"}>Tags</Link> / {tag.name}
         <small>
           There are {posts.length} post{posts.length === 1 ? "" : "s"} with this tag
         </small>
