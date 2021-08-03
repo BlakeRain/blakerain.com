@@ -106,6 +106,12 @@ export default {
       };
     });
 
+    const postsForTag = (tag_id) => {
+      return posts.filter((post) => {
+        return post.tags.findIndex((post_tag) => post_tag.id === tag_id) !== -1;
+      });
+    };
+
     return [
       {
         path: "/",
@@ -118,16 +124,28 @@ export default {
       {
         path: "/tags",
         getData: () => ({
-          tags: tags.filter((tag) => tag.visibility === "public").map(simplifyTag),
+          tags: tags
+            .filter((tag) => tag.visibility === "public")
+            .map((tag) => {
+              tag = simplifyTag(tag);
+              return {
+                posts: postsForTag(tag.id).map(
+                  ({ id, slug, title, published_at, reading_time }) => ({
+                    id,
+                    slug,
+                    title,
+                    published_at,
+                    reading_time,
+                  })
+                ),
+                ...tag,
+              };
+            }),
         }),
         children: tags
           .filter((tag) => tag.visibility === "public")
           .map((tag) => {
-            const tag_posts = posts
-              .filter((post) => {
-                return post.tags.findIndex((post_tag) => post_tag.id === tag.id) != -1;
-              })
-              .map(simplifyListPost);
+            const tag_posts = postsForTag(tag.id).map(simplifyListPost);
 
             const tag_posts_tags = tags.filter((post_tag) => {
               return tag_posts.reduce((acc, tag_post) => {
@@ -190,7 +208,8 @@ export default {
         {children}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
-        <script>Prism.languages["box-drawing"] = {};</script>
+        <script
+          dangerouslySetInnerHTML={{ __html: "Prism.languages['box-drawing'] = {};" }}></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
         <script async defer src="https://sa.blakerain.com/app.js"></script>
         <noscript>

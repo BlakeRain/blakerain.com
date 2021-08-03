@@ -1,42 +1,6 @@
 import React from "react";
 import { useSiteData } from "react-static";
-
-const monthName = (month) => {
-  switch (month) {
-    case 0:
-      return "January";
-    case 1:
-      return "February";
-    case 2:
-      return "March";
-    case 3:
-      return "April";
-    case 4:
-      return "May";
-    case 5:
-      return "June";
-    case 6:
-      return "July";
-    case 7:
-      return "August";
-    case 8:
-      return "September";
-    case 9:
-      return "October";
-    case 10:
-      return "November";
-    case 11:
-      return "December";
-    default:
-      return "???";
-  }
-};
-
-const DateSpan = ({ date }) => (
-  <span>
-    {date.getDate()} {monthName(date.getMonth()).substr(0, 3)} {date.getFullYear()}
-  </span>
-);
+import DateSpan from "./DateSpan";
 
 const buildImageURL = (image_url) => {
   const { url } = useSiteData();
@@ -81,7 +45,7 @@ const PostDetails = (props) => {
             <li key={author.id}>{author.name}</li>
           ))}
         </ul>
-        <div className="date-and-time">
+        <div className="post-date-and-time">
           <DateSpan date={published} />
           <span className="reading-time">{post.reading_time} min read</span>
         </div>
