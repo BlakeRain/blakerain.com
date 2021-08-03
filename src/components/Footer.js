@@ -27,6 +27,7 @@ const Footer = () => {
         <section className="navigation">
           <nav>
             <Link to="/blog">Latest Posts</Link>
+            <Link to="/tags">Tags</Link>
             <Link to="/disclaimer">Disclaimer</Link>
             <a href="https://twitter.com/HalfWayMan">Twitter</a>
             <a href="https://ghost.org/">Ghost CMS</a>
