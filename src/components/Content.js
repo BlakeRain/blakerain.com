@@ -6,30 +6,27 @@ import PostDetails from "./PostDetails";
 
 const HighlightControls = (props) => {
   function jumpTo(index) {
-    if (index >= 0 && index < props.results.length && index !== props.current) {
+    index = index % props.results.length;
+    if (index < props.results.length) {
       if (props.current !== -1) {
         props.results[props.current].className = "";
       }
 
-      props.results[index].className = "current";
       props.setCurrent(index);
+      props.results[index].className = "current";
       window.scrollTo(0, props.results[index].offsetTop);
     }
   }
 
   function onNextClick() {
-    if (props.current === props.results.length - 1) {
-      jumpTo(0);
-    } else {
-      jumpTo(Math.min(props.current + 1, props.results.length - 1));
-    }
+    jumpTo(props.current + 1);
   }
 
   function onPrevClick() {
-    if (props.current === -1 || props.current === 0) {
+    if (props.current === 0) {
       jumpTo(props.results.length - 1);
     } else {
-      jumpTo(Math.max(0, props.current - 1));
+      jumpTo(props.current - 1);
     }
   }
 
