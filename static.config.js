@@ -190,6 +190,7 @@ export default {
         {children}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script>Prism.languages["box-drawing"] = {};</script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
         <script async defer src="https://sa.blakerain.com/app.js"></script>
         <noscript>

@@ -4,8 +4,6 @@ import { useLocation } from "@reach/router";
 import { Link } from "./Router";
 import PostDetails from "./PostDetails";
 
-Prism.languages["box-drawing"] = {};
-
 const HighlightControls = (props) => {
   function jumpTo(index) {
     if (index >= 0 && index < props.results.length && index !== props.current) {
