@@ -11,13 +11,21 @@ const Footer = () => {
           <Link to="/">Blake Rain</Link> &copy; {date.getFullYear().toString()}
         </section>
         <section className="badges">
-          <a href="https://status.blakerain.com/" title="Status page">
+          <a
+            href="https://status.blakerain.com/"
+            title="Status page"
+            referrerPolicy="origin"
+            rel="noopener">
             <img
               src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fuptime.json"
               alt="Website uptime metric"
             />
           </a>
-          <a href="https://status.blakerain.com/" title="Status page">
+          <a
+            href="https://status.blakerain.com/"
+            title="Status page"
+            referrerPolicy="origin"
+            rel="noopener">
             <img
               src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FBlakeRain%2Fupptime.blakerain.com%2Fmaster%2Fapi%2Fblakerain-com%2Fresponse-time-week-day.json"
               alt="Website response time metric"
