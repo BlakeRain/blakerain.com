@@ -71,7 +71,7 @@ function App() {
 
   function onWindowKeyDown(event) {
     const tag = event.target.tagName;
-    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
+    if ((tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") && event.key == "s") {
       return;
     }
 
