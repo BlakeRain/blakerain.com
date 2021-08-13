@@ -7,10 +7,14 @@ export default function BlogPost() {
   const { authors, tags, post } = useRouteData();
 
   useEffect(() => {
-    const commento_script = document.createElement("SCRIPT");
-    commento_script.defer = true;
-    commento_script.src = "https://cdn.commento.io/js/commento.js";
-    commento.current.parentNode.appendChild(commento_script);
+    const existing = document.querySelector("script#commento-script");
+    if (!existing) {
+      const commento_script = document.createElement("SCRIPT");
+      commento_script.id = "commento-script";
+      commento_script.defer = true;
+      commento_script.src = "https://cdn.commento.io/js/commento.js";
+      commento.current.parentNode.appendChild(commento_script);
+    }
   });
 
   return (
