@@ -70,6 +70,11 @@ function App() {
   }
 
   function onWindowKeyDown(event) {
+    const tag = event.target.tagName;
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
+      return;
+    }
+
     if (!event.repeat) {
       if (event.key == "Tab" || event.key == "s") {
         if (!searchVisible) {
