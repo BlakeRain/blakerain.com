@@ -80,7 +80,7 @@ const TwitterLink = (props) => {
   );
 };
 
-const NavigationBar = ({ searchVisible, setSearchVisible }) => {
+const NavigationBar = ({ location, searchVisible, setSearchVisible }) => {
   return (
     <nav className="site-nav">
       <div className="inner">
