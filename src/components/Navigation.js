@@ -15,11 +15,16 @@ const SiteNavLinks = (props) => {
   return (
     <ul className="navigation">
       {navigation.map((item, index) => {
+        var url = item.url;
+        if (url.length > 1 && url.endsWith("/")) {
+          url = url.substr(0, url.length - 1);
+        }
+
         return (
           <li key={index.toString()}>
             <Link
               to={trimTrailingSlash(item.url)}
-              className={props.location.pathname.startsWith(item.url) ? "active" : ""}>
+              className={props.location.pathname.startsWith(url) ? "active" : ""}>
               {item.label}
             </Link>
           </li>
