@@ -3,6 +3,7 @@ import { useLocation } from "@reach/router";
 
 import { Link } from "./Router";
 import PostDetails from "./PostDetails";
+import { ScrollToTopButton } from "./ScrollToTop";
 
 const HighlightControls = (props) => {
   function jumpTo(index) {
@@ -59,20 +60,15 @@ const HighlightControls = (props) => {
 
 export default function Content(props) {
   const contentDiv = useRef();
+  const syntaxHighlighted = useRef(false);
+  const mark = useRef(null);
+  const lastTerm = useRef("");
+  const location = useLocation();
   const [results, setResults] = useState([]);
   const [current, setCurrent] = useState(-1);
 
-  function onClearHighlight() {
-    setResults([]);
-    setCurrent(-1);
-
-    if (window["_mark"]) {
-      window["_mark"].unmark();
-    }
-  }
-
-  function getHighlightTerm() {
-    const terms = window.location.search
+  const getHighlightTerm = () => {
+    const terms = location.search
       .substr(1)
       .split("&")
       .map((term) => term.split("="))
@@ -82,38 +78,96 @@ export default function Content(props) {
     } else {
       return null;
     }
-  }
+  };
+
+  const getMarkInstance = () => {
+    if (mark.current) {
+      return mark.current;
+    } else {
+      return (mark.current = new Mark(contentDiv.current));
+    }
+  };
+
+  const onClearHighlight = () => {
+    setResults([]);
+    setCurrent(-1);
+
+    if (mark.current) {
+      mark.current.unmark();
+    }
+  };
 
   function prepareHighlight() {
     const term = getHighlightTerm();
-    if (term) {
-      const instance = new Mark(contentDiv.current);
+    if (term && term != lastTerm.current) {
+      console.log(`Preparing highlight of term: '${term}'`);
+      lastTerm.current = term;
+      const highlight_start = performance.now();
+      const instance = getMarkInstance();
+
+      instance.unmark();
+
       instance.mark(term, {
         separateWordSearch: true,
         done: () => {
           if (contentDiv.current) {
-            setResults(Array.prototype.slice.call(contentDiv.current.querySelectorAll("mark")));
+            const new_results = Array.prototype.slice.call(
+              contentDiv.current.querySelectorAll("mark")
+            );
+
+            setResults(new_results);
+
+            if (new_results.length > 0) {
+              setCurrent(0);
+              window.scrollTo(0, new_results[0].offsetTop);
+              new_results[0].className = "current";
+            } else {
+              setCurrent(-1);
+            }
+
+            console.log(
+              `Completed highlighting of ${new_results.length} match(es) in ${(
+                performance.now() - highlight_start
+              ).toFixed(2)} ms`
+            );
           }
         },
       });
-
-      window["_mark"] = instance;
     }
   }
 
-  useEffect(() => {
-    if (typeof document !== "undefined") {
+  const syntaxHighlight = () => {
+    if (!syntaxHighlighted.current) {
+      var highlight_count = 0;
+      const highlight_start = performance.now();
+
       contentDiv.current.querySelectorAll('code[class*="language-"').forEach((element) => {
         Prism.highlightElement(element, false, () => {
-          console.log("Syntax highlighting done for", element);
+          ++highlight_count;
         });
       });
+
+      if (highlight_count > 0) {
+        console.log(
+          `Completed syntax highlighting of ${highlight_count} element(s) in ${(
+            performance.now() - highlight_start
+          ).toFixed(2)} ms`
+        );
+      }
+
+      syntaxHighlighted.current = true;
+    }
+  };
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      syntaxHighlight();
 
       window.setTimeout(() => {
         prepareHighlight();
       }, 100);
     }
-  }, [false]);
+  });
 
   return (
     <article className="post">
@@ -146,6 +200,7 @@ export default function Content(props) {
           className="inner"
           dangerouslySetInnerHTML={{ __html: props.content.html }}></div>
       </div>
+      <ScrollToTopButton className={results.length > 0 ? "skip-highlight-controls" : ""} />
     </article>
   );
 }

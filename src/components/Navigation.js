@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Location } from "@reach/router";
 import { useSiteData } from "react-static";
+
 import { Link } from "components/Router";
+import { SearchProvider, SearchContainer } from "components/Search";
 
 const trimTrailingSlash = (str) => {
   return str.length > 0 && str.endsWith("/") ? str.substr(0, str.length - 1) : str;
@@ -78,30 +80,57 @@ const TwitterLink = (props) => {
   );
 };
 
+const NavigationBar = ({ searchVisible, setSearchVisible }) => {
+  return (
+    <nav className="site-nav">
+      <div className="inner">
+        <div className="left">
+          <SiteNav location={location} />
+        </div>
+        <div className="right">
+          <ul className="buttons">
+            <li>
+              <SearchLink
+                onSearchClick={() => {
+                  setSearchVisible(!searchVisible);
+                }}
+              />
+            </li>
+            <li>
+              <GitHubLink />
+            </li>
+            <li>
+              <TwitterLink />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+const NavigationInner = ({ location, searchData, searchVisible, setSearchVisible }) => {
+  return (
+    <React.Fragment>
+      <NavigationBar
+        location={location}
+        searchVisible={setSearchVisible}
+        setSearchVisible={setSearchVisible}
+      />
+      <SearchContainer
+        visible={searchVisible}
+        setSearchVisible={setSearchVisible}
+        searchData={searchData}
+      />
+    </React.Fragment>
+  );
+};
+
 const Navigation = (props) => {
   return (
     <Location>
       {({ location }) => (
-        <nav className="site-nav">
-          <div className="inner">
-            <div className="left">
-              <SiteNav location={location} />
-            </div>
-            <div className="right">
-              <ul className="buttons">
-                <li>
-                  <SearchLink onSearchClick={props.onSearchClick} />
-                </li>
-                <li>
-                  <GitHubLink />
-                </li>
-                <li>
-                  <TwitterLink />
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+        <SearchProvider child={NavigationInner} childProps={{ location: location }} />
       )}
     </Location>
   );

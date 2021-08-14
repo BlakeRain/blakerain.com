@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "@reach/router";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "@reach/router";
 
 /**
  * A decoder for the search data
@@ -333,7 +333,11 @@ class SearchPost {
     this.id = id_flags >> 1;
     this.isPage = (id_flags & 0x01) != 0;
     this.title = decoder.decodeUtf8();
-    this.url = decoder.decodeUtf8();
+    this.slug = decoder.decodeUtf8();
+  }
+
+  get url() {
+    return (this.isPage ? "/" : "/blog/") + this.slug;
   }
 }
 
@@ -391,7 +395,164 @@ export class SearchData {
   }
 }
 
+// The URL from which we load the search data.
+//
+// By default we load the search data from a data file located in the 'data' directory under
+// the site domain; however in development we can pass an environment variable that contains
+// this location.
+
+const SEARCH_DATA_URL = process.env.SEARCH_DATA_URL || "https://blakerain.com/data/search.bin";
+
+/**
+ * The search data provider component.
+ *
+ * This component provides the search data and visibility flag to it's child. This child is
+ * then able to use the search data and visibility controls with a `<SearchContainer>`, or
+ * other elements that require the search data and controls.
+ *
+ * Example usage:
+ *
+ * ```
+ * const UsingSearch = (props) => {
+ *   return (
+ *     <div>
+ *       <button type="button" onClick={props.setSearchVisible}>Open Search</button>
+ *       <span>Search is {props.searchVisible ? "visible" : "invisible"}</span>
+ *       <SearchContainer {... props} />
+ *     </div>
+ *   );
+ * };
+ *
+ * <SearchProvider child={UsingSearch} />
+ * ```
+ */
+export const SearchProvider = ({ child, childProps }) => {
+  const Child = child;
+  const searchData = useRef(null);
+  const [searchVisible, setSearchVisible] = useState(false);
+
+  // Load the search data from the URL, decode it and store the result in 'searchData'. This
+  // function returns a promise that is resolved/rejected depending on whether the load was
+  // successful or not.
+
+  const loadSearchData = () => {
+    return new Promise((resolve, reject) => {
+      // Load the search data from the URL
+      console.log("Loading search data from: " + SEARCH_DATA_URL);
+      fetch(SEARCH_DATA_URL, { method: "GET", cache: "no-cache" })
+        .then((response) => {
+          // If we got the data okay, then we want to convert it to an 'ArrayBuffer'
+          if (response.ok) {
+            response
+              .arrayBuffer()
+              .then((buffer) => {
+                // We have the search data as an 'ArrayBuffer', so we can construct a new
+                // 'SearchData' which will parse the data. We assign this as the current value
+                // of the 'searchData' reference, which means we won't try and load again.
+                searchData.current = new SearchData(buffer);
+                resolve();
+              })
+              .catch((err) => {
+                // We couldn't convert the data to an 'ArrayBuffer'
+                console.error(err);
+                reject(err);
+              });
+          } else {
+            // We were unable to load the data
+            console.error("Failed to retrieve search data: " + response.statusText);
+            reject(response.statusText);
+          }
+        })
+        .catch((err) => {
+          // We were unable to load the data
+          console.error(err);
+          reject(err);
+        });
+    });
+  };
+
+  // Convenience wrapper which will first load the search data (using 'loadSearchData') if we
+  // do not already have the data loaded. If the data is not loaded, once loading has completed
+  // it will set the 'visible' state to true. If the data is already loaded it will immediately
+  // set the state to loaded.
+
+  const loadAndSetVisible = () => {
+    if (!searchData.current) {
+      loadSearchData()
+        .then(() => {
+          console.log("Search data loaded; setting search box visible");
+          setSearchVisible(true);
+        })
+        .catch((err) => {
+          console.log("Search data could not be loaded; setting search box visible");
+          setSearchVisible(true);
+        });
+    } else {
+      setSearchVisible(true);
+    }
+  };
+
+  // Handle our search hotkeys: S or Tab to open the search and Escape to close. We check to
+  // ensure that the event did not bubble up to the window from an input, select or textarea.
+
+  const onWindowKeyDown = (event) => {
+    const tag = event.target.tagName;
+    if ((tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") && event.key === "s") {
+      return;
+    }
+
+    if (!event.repeat) {
+      if (event.key === "Tab" || event.key === "s") {
+        loadAndSetVisible();
+        event.preventDefault();
+      } else if (event.key === "Escape") {
+        setSearchVisible(false);
+        event.preventDefault();
+      }
+    }
+  };
+
+  // When we mount this component we want to add an event listener to the window for our
+  // hotkeys; then when we unmount we want to remove the event listener.
+
+  useEffect(() => {
+    console.log("Adding window event listener for search hotkeys");
+    window.addEventListener("keydown", onWindowKeyDown);
+
+    return () => {
+      console.log("Removing window event listener for search hotkeys");
+      window.removeEventListener("keydown", onWindowKeyDown);
+    };
+  }, [false]);
+
+  return (
+    <React.Fragment>
+      <Child
+        {...childProps}
+        searchVisible={searchVisible}
+        searchData={searchData.current}
+        setSearchVisible={(visible) => {
+          if (visible) {
+            loadAndSetVisible();
+          } else {
+            setSearchVisible(false);
+          }
+        }}
+      />
+    </React.Fragment>
+  );
+};
+
+/**
+ * The search dialog component
+ *
+ * This creates the search dialog and encapsulates the majority of it's inner workings. It
+ * expects to receive a property called 'searchData' that is an instance of 'SearchData'.
+ * Additionally, a property called 'searchSearchVisible' is expected that allows the search
+ * dialog to be dismissed.
+ */
 const SearchDialog = (props) => {
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [highlight, setHighlight] = useState("");
@@ -463,19 +624,49 @@ const SearchDialog = (props) => {
   } else {
     const query = `?highlight=${highlight}`;
 
+    const SearchLink = ({ post, relevance }) => {
+      return (
+        <Link
+          className="row search-result"
+          to={post.url + query}
+          onClick={(event) => {
+            props.setSearchVisible(false);
+          }}>
+          <div className="column">{post.title}</div>
+          <div className="column">
+            {relevance.toString()} match{relevance !== 1 ? "es" : ""}
+          </div>
+        </Link>
+      );
+    };
+
+    var current_page = null;
+    var search_links = [];
+
+    searchResults.forEach((result, index) => {
+      const link = (
+        <SearchLink key={index.toString()} post={result.post} relevance={result.relevance} />
+      );
+
+      if (result.post.url === location.pathname) {
+        current_page = link;
+      } else {
+        search_links.push(link);
+      }
+    });
+
+    if (current_page) {
+      current_page = (
+        <div className={"current-page" + (search_links.length > 0 ? " other-results" : "")}>
+          {current_page}
+        </div>
+      );
+    }
+
     result = (
       <React.Fragment>
-        {searchResults.map((result, index) => (
-          <Link
-            key={index.toString()}
-            className="row search-result"
-            to={(result.post.isPage ? "/" : "/blog/") + result.post.url + query}>
-            <div className="column">{result.post.title}</div>
-            <div className="column">
-              {result.relevance.toString()} match{result.relevance !== 1 ? "es" : ""}
-            </div>
-          </Link>
-        ))}
+        {current_page}
+        {search_links}
         <div className="row center">
           <p>
             <b>
@@ -505,7 +696,7 @@ const SearchDialog = (props) => {
             type="search"
             placeholder="Type search term here ..."
             autoComplete="off"
-            autoFocus="yes"
+            autoFocus
             spellCheck="false"
             value={searchTerm}
             onChange={onSearchTermChanged}
@@ -517,22 +708,48 @@ const SearchDialog = (props) => {
   );
 };
 
+/**
+ * Container for the search dialog
+ *
+ * This is the container for displaying the search interface. It expects to receive a number
+ * of props, all of which are provided by the `SearchProvider` component. These props are:
+ *
+ * 1. The `visible` property, being a boolean indicating whether the search should be visible
+ *    or not.
+ * 2. A `searchData` property containing either a `SearchData` instance or `null`. If this is
+ *    `null` and `visible` is true, then the search dialog will display a message indicating
+ *    that searching is unavailable.
+ * 3. A function property called `setSearchVisible` which takes a boolean argument and changes
+ *    the search to be either visible or invisible depending on the argument. This is used to
+ *    dismiss the search window when the container is clicked.
+ */
 export const SearchContainer = (props) => {
+  const containerRef = useRef();
+
+  const handleBackdropClick = (event) => {
+    if (event.target === containerRef.current) {
+      props.setSearchVisible(false);
+    }
+  };
+
   return (
     <div
+      ref={containerRef}
       className={"search-box-container " + (props.visible ? "" : "hidden")}
-      onClick={() => props.setSearchVisible(false)}>
-      <div className="search-box">
-        {props.searchData ? (
-          <SearchDialog {...props} />
-        ) : (
-          <div className="row center">
-            <div className="column">
-              <h1>Search is unavailable</h1>
+      onClick={handleBackdropClick}>
+      {props.visible ? (
+        <div className="search-box">
+          {props.searchData ? (
+            <SearchDialog {...props} />
+          ) : (
+            <div className="row center">
+              <div className="column">
+                <h1>Search is unavailable</h1>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };

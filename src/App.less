@@ -239,6 +239,25 @@ nav.site-nav {
   }
 }
 
+button.scroll-to-top {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+
+  border: none;
+  border-radius: 5px;
+  background-color: lighten(@primary-background, 25%);
+
+  cursor: pointer;
+  font-size: 80%;
+
+  animation: fadeIn 700ms ease-in-out 1s both;
+
+  &.skip-highlight-controls {
+    bottom: 6rem;
+  }
+}
+
 @media (max-width: 700px) {
   nav.site-nav {
     .inner {
@@ -363,6 +382,11 @@ nav.site-nav {
 
   z-index: 1000;
 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+
   background-color: fade(lighten(desaturate(@primary-background, 75%), -25%), 75%);
 
   &.hidden {
@@ -374,7 +398,8 @@ nav.site-nav {
     flex-direction: column;
 
     width: 50%;
-    margin: 10rem auto 0;
+    // margin: 10rem auto 0;
+    margin-top: 10rem;
     padding: 2rem;
 
     background-color: @primary-background;
@@ -420,6 +445,30 @@ nav.site-nav {
       &:hover {
         text-decoration: none;
         color: @color-blue;
+      }
+    }
+
+    .current-page {
+      padding: 1rem 0;
+
+      &:before,
+      &:after {
+        font-size: 80%;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      &:before {
+        content: "Current Page";
+      }
+
+      &.other-results {
+        &:after {
+          content: "Other Results";
+          display: block;
+          margin-top: 1rem;
+          border-top: 1px solid lighten(@primary-background, 25%);
+        }
       }
     }
 

@@ -9,6 +9,7 @@ export default function BlogPost() {
   useEffect(() => {
     const existing = document.querySelector("script#commento-script");
     if (!existing) {
+      console.log("Inserting commento.io script");
       const commento_script = document.createElement("SCRIPT");
       commento_script.id = "commento-script";
       commento_script.defer = true;
