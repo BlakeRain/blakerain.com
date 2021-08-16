@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "@reach/router";
+import { Link, useLocation, navigate } from "@reach/router";
 
 /**
  * A decoder for the search data
@@ -556,8 +556,10 @@ const SearchDialog = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [highlight, setHighlight] = useState("");
+  const [active, setActive] = useState(-1);
+  const query = `?highlight=${highlight}`;
 
-  function completeSearch(term) {
+  const completeSearch = (term) => {
     // Sanitise the search input: we only care about letters really.
     let term_words = term
       .toLowerCase()
@@ -588,25 +590,62 @@ const SearchDialog = (props) => {
       if (occ.post in post_results) {
         post_results[occ.post].relevance += occ.count;
       } else {
+        const post = props.searchData.posts[occ.post];
         post_results[occ.post] = {
+          current: post.url === location.pathname,
           relevance: occ.count,
-          post: props.searchData.posts[occ.post],
+          post: post,
         };
       }
     });
 
     // Sort the search results by their relevance (number of occurrences)
-    setSearchResults(
-      Object.keys(post_results)
-        .map((key) => post_results[key])
-        .sort((a, b) => b.relevance - a.relevance)
-    );
-  }
+    const sorted = Object.keys(post_results)
+      .map((key) => post_results[key])
+      .sort((a, b) => b.relevance - a.relevance);
 
-  function onSearchTermChanged(event) {
+    // Filter out the match for the current page, if any
+    const current = sorted.find((result) => result.current);
+    const remaining = current ? sorted.filter((result) => !result.current) : sorted;
+
+    // Assign the index to all the results
+    if (current) {
+      current.index = 0;
+      remaining.forEach((result, index) => {
+        result.index = 1 + index;
+      });
+      remaining.unshift(current);
+    } else {
+      remaining.forEach((result, index) => {
+        result.index = index;
+      });
+    }
+
+    // Store the results and reset the current selection
+    setSearchResults(remaining);
+    setActive(-1);
+  };
+
+  const onSearchTermChanged = (event) => {
     setSearchTerm(event.target.value);
     completeSearch(event.target.value.trim());
-  }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActive(Math.min(active + 1, searchResults.length - 1));
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActive(Math.max(0, active - 1));
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (active !== -1) {
+        props.setSearchVisible(false);
+        navigate(searchResults[active].post.url + query);
+      }
+    }
+  };
 
   var result = null;
   if (searchTerm.length == 0) {
@@ -622,14 +661,12 @@ const SearchDialog = (props) => {
       </div>
     );
   } else {
-    const query = `?highlight=${highlight}`;
-
-    const SearchLink = ({ post, relevance }) => {
+    const SearchLink = ({ post, relevance, index }) => {
       return (
         <Link
-          className="row search-result"
+          className={"row search-result" + (index === active ? " active" : "")}
           to={post.url + query}
-          onClick={(event) => {
+          onClick={() => {
             props.setSearchVisible(false);
           }}>
           <div className="column">{post.title}</div>
@@ -640,32 +677,31 @@ const SearchDialog = (props) => {
       );
     };
 
-    var current_page = null;
-    var search_links = [];
-
-    searchResults.forEach((result, index) => {
+    const search_links = searchResults.map((result, index) => {
       const link = (
-        <SearchLink key={index.toString()} post={result.post} relevance={result.relevance} />
+        <SearchLink
+          key={index.toString()}
+          post={result.post}
+          relevance={result.relevance}
+          index={result.index}
+        />
       );
 
-      if (result.post.url === location.pathname) {
-        current_page = link;
+      if (result.current) {
+        return (
+          <div
+            key={index.toString()}
+            className={"current-page" + (searchResults.length > 1 ? " other-results" : "")}>
+            {link}
+          </div>
+        );
       } else {
-        search_links.push(link);
+        return link;
       }
     });
 
-    if (current_page) {
-      current_page = (
-        <div className={"current-page" + (search_links.length > 0 ? " other-results" : "")}>
-          {current_page}
-        </div>
-      );
-    }
-
     result = (
       <React.Fragment>
-        {current_page}
         {search_links}
         <div className="row center">
           <p>
@@ -700,6 +736,7 @@ const SearchDialog = (props) => {
             spellCheck="false"
             value={searchTerm}
             onChange={onSearchTermChanged}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>
