@@ -40,7 +40,10 @@ const HighlightControls = (props) => {
 
       props.setCurrent(index);
       props.results[index].className = "current";
-      window.scrollTo(0, props.results[index].offsetTop);
+      props.results[index].scrollIntoView({
+        behaviour: "smooth",
+        block: "center",
+      });
     }
   }
 
@@ -127,8 +130,11 @@ const SearchHighlighter = ({ term, children }) => {
 
             if (new_results.length > 0) {
               setCurrent(0);
-              window.scrollTo(0, new_results[0].offsetTop);
               new_results[0].className = "current";
+              new_results[0].scrollIntoView({
+                behaviour: "smooth",
+                block: "center",
+              });
             } else {
               setCurrent(-1);
             }

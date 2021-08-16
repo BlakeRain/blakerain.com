@@ -44,7 +44,7 @@ export const ScrollToTopButton = (props) => {
     <button
       className={"scroll-to-top " + (props.className || "")}
       tabIndex={-1}
-      onClick={(event) => {
+      onClick={() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }}>
       &uarr; Goto Top
