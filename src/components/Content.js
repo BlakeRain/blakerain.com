@@ -5,6 +5,31 @@ import { Link } from "./Router";
 import PostDetails from "./PostDetails";
 import { ScrollToTopButton } from "./ScrollToTop";
 
+const SyntaxHighlighter = (props) => {
+  const contentRef = useRef();
+
+  useEffect(() => {
+    var highlight_count = 0;
+    const highlight_start = performance.now();
+
+    contentRef.current.querySelectorAll('code[class*="language-"]').forEach((element) => {
+      Prism.highlightElement(element, false, () => {
+        ++highlight_count;
+      });
+    });
+
+    if (highlight_count > 0) {
+      console.log(
+        `Completed syntax highlighting of ${highlight_count} element(s) in ${(
+          performance.now() - highlight_start
+        ).toFixed(2)} ms`
+      );
+    }
+  });
+
+  return <div ref={contentRef}>{props.children}</div>;
+};
+
 const HighlightControls = (props) => {
   function jumpTo(index) {
     index = index % props.results.length;
@@ -58,33 +83,18 @@ const HighlightControls = (props) => {
   );
 };
 
-export default function Content(props) {
-  const contentDiv = useRef();
-  const syntaxHighlighted = useRef(false);
-  const mark = useRef(null);
-  const lastTerm = useRef("");
+const SearchHighlighter = ({ term, children }) => {
   const location = useLocation();
+  const contentRef = useRef();
+  const mark = useRef(null);
   const [results, setResults] = useState([]);
   const [current, setCurrent] = useState(-1);
-
-  const getHighlightTerm = () => {
-    const terms = location.search
-      .substr(1)
-      .split("&")
-      .map((term) => term.split("="))
-      .filter((term_pair) => term_pair.length == 2 && term_pair[0] === "highlight");
-    if (terms.length > 0) {
-      return terms.map((term) => decodeURIComponent(term[1])).join(" ");
-    } else {
-      return null;
-    }
-  };
 
   const getMarkInstance = () => {
     if (mark.current) {
       return mark.current;
     } else {
-      return (mark.current = new Mark(contentDiv.current));
+      return (mark.current = new Mark(contentRef.current));
     }
   };
 
@@ -97,22 +107,20 @@ export default function Content(props) {
     }
   };
 
-  function prepareHighlight() {
-    const term = getHighlightTerm();
-    if (term && term != lastTerm.current) {
-      console.log(`Preparing highlight of term: '${term}'`);
-      lastTerm.current = term;
-      const highlight_start = performance.now();
-      const instance = getMarkInstance();
+  useEffect(() => {
+    if (term) {
+      window.setTimeout(() => {
+        console.log(`Highlighting search term: '${term}'`);
 
-      instance.unmark();
+        const highlight_start = performance.now();
+        const instance = getMarkInstance();
 
-      instance.mark(term, {
-        separateWordSearch: true,
-        done: () => {
-          if (contentDiv.current) {
+        instance.unmark();
+        instance.mark(term, {
+          separateWordSearch: true,
+          done: () => {
             const new_results = Array.prototype.slice.call(
-              contentDiv.current.querySelectorAll("mark")
+              contentRef.current.querySelectorAll("mark")
             );
 
             setResults(new_results);
@@ -130,77 +138,83 @@ export default function Content(props) {
                 performance.now() - highlight_start
               ).toFixed(2)} ms`
             );
-          }
-        },
-      });
-    }
-  }
-
-  const syntaxHighlight = () => {
-    if (!syntaxHighlighted.current) {
-      var highlight_count = 0;
-      const highlight_start = performance.now();
-
-      contentDiv.current.querySelectorAll('code[class*="language-"').forEach((element) => {
-        Prism.highlightElement(element, false, () => {
-          ++highlight_count;
+          },
         });
-      });
-
-      if (highlight_count > 0) {
-        console.log(
-          `Completed syntax highlighting of ${highlight_count} element(s) in ${(
-            performance.now() - highlight_start
-          ).toFixed(2)} ms`
-        );
-      }
-
-      syntaxHighlighted.current = true;
-    }
-  };
-
-  useEffect(() => {
-    if (typeof document !== "undefined") {
-      syntaxHighlight();
-
-      window.setTimeout(() => {
-        prepareHighlight();
       }, 100);
     }
-  });
+  }, [term, location.pathname]);
 
   return (
-    <article className="post">
+    <div ref={contentRef} className={results.length > 0 ? "has-highlight-results" : ""}>
+      {children}
       <HighlightControls
         current={current}
         setCurrent={setCurrent}
         results={results}
         onClear={onClearHighlight}
       />
-      <header className="post-header">
-        <h1>{props.content.title}</h1>
-        <ul className="bullet-list">
-          {props.content.tags
-            .map((tag) => props.tags[tag])
-            .filter((tag) => tag.visibility == "public")
-            .map((tag) => (
-              <li key={tag.id}>
-                <Link to={"/tags/" + tag.slug} title={tag.description}>
-                  {tag.name}
-                </Link>
-              </li>
-            ))}
-        </ul>
-        {props.content.custom_excerpt ? <p>{props.content.custom_excerpt}</p> : null}
-        <PostDetails authors={props.authors} post={props.content} />
-      </header>
-      <div className="post-content">
-        <div
-          ref={contentDiv}
-          className="inner"
-          dangerouslySetInnerHTML={{ __html: props.content.html }}></div>
-      </div>
-      <ScrollToTopButton className={results.length > 0 ? "skip-highlight-controls" : ""} />
+    </div>
+  );
+};
+
+const ContentHeader = ({ authors, tags, content }) => {
+  return (
+    <header className="post-header">
+      <h1>{content.title}</h1>
+      <ul className="bullet-list">
+        {content.tags
+          .map((tag) => tags[tag])
+          .filter((tag) => tag.visibility == "public")
+          .map((tag) => (
+            <li key={tag.id}>
+              <Link to={"/tags/" + tag.slug} title={tag.description}>
+                {tag.name}
+              </Link>
+            </li>
+          ))}
+      </ul>
+      {content.custom_excerpt ? <p>{content.custom_excerpt}</p> : null}
+      <PostDetails authors={authors} post={content} />
+    </header>
+  );
+};
+
+const getHighlightTerm = (location) => {
+  const terms = location.search
+    .substr(1)
+    .split("&")
+    .map((term) => term.split("="))
+    .filter((term_pair) => term_pair.length == 2 && term_pair[0] === "highlight");
+  if (terms.length > 0) {
+    return terms.map((term) => decodeURIComponent(term[1])).join(" ");
+  } else {
+    return null;
+  }
+};
+
+const ContentBody = ({ content }) => {
+  const location = useLocation();
+  const searchTerm = getHighlightTerm(location);
+
+  return (
+    <SearchHighlighter term={searchTerm}>
+      <SyntaxHighlighter>
+        <div className="post-content">
+          <div className="inner" dangerouslySetInnerHTML={{ __html: content.html }}></div>
+        </div>
+        <ScrollToTopButton />
+      </SyntaxHighlighter>
+    </SearchHighlighter>
+  );
+};
+
+const Content = ({ authors, tags, content }) => {
+  return (
+    <article className="post">
+      <ContentHeader authors={authors} tags={tags} content={content} />
+      <ContentBody content={content} />
     </article>
   );
-}
+};
+
+export default Content;
