@@ -1,30 +1,25 @@
 import React from "react";
-import { Location } from "@reach/router";
+import { Link } from "@reach/router";
 import { useSiteData } from "react-static";
-
-import { Link } from "components/Router";
 import { SearchProvider, SearchContainer } from "components/Search";
 
 const trimTrailingSlash = (str) => {
   return str.length > 0 && str.endsWith("/") ? str.substr(0, str.length - 1) : str;
 };
 
-const SiteNavLinks = (props) => {
+const SiteNavLinks = () => {
   const { navigation } = useSiteData();
+
+  const isPartiallyActive = ({ isPartiallyCurrent }) => {
+    return isPartiallyCurrent ? { className: "active" } : {};
+  };
 
   return (
     <ul className="navigation">
       {navigation.map((item, index) => {
-        var url = item.url;
-        if (url.length > 1 && url.endsWith("/")) {
-          url = url.substr(0, url.length - 1);
-        }
-
         return (
           <li key={index.toString()}>
-            <Link
-              to={trimTrailingSlash(item.url)}
-              className={props.location.pathname.startsWith(url) ? "active" : ""}>
+            <Link to={trimTrailingSlash(item.url)} getProps={isPartiallyActive}>
               {item.label}
             </Link>
           </li>
@@ -34,28 +29,28 @@ const SiteNavLinks = (props) => {
   );
 };
 
-const SiteNav = (props) => {
+const SiteNav = () => {
   return (
     <React.Fragment>
       <Link to="/" className="logo">
         <img src="/media/logo-text.png" alt="Blake Rain"></img>
       </Link>
       <React.Suspense fallback={<i className="loading">Loading Navigation ...</i>}>
-        <SiteNavLinks location={props.location} />
+        <SiteNavLinks />
       </React.Suspense>
     </React.Fragment>
   );
 };
 
-const SearchLink = (props) => {
+const SearchLink = ({ onSearchClick }) => {
   return (
     <a
       href="#"
       title="Search"
       onClick={(event) => {
         event.preventDefault();
-        if (props.onSearchClick) {
-          props.onSearchClick();
+        if (onSearchClick) {
+          onSearchClick();
         }
       }}>
       <svg viewBox="0 0 32 32">
@@ -85,12 +80,12 @@ const TwitterLink = () => {
   );
 };
 
-const NavigationBar = ({ location, searchVisible, setSearchVisible }) => {
+const NavigationBar = ({ searchVisible, setSearchVisible }) => {
   return (
     <nav className="site-nav">
       <div className="inner">
         <div className="left">
-          <SiteNav location={location} />
+          <SiteNav />
         </div>
         <div className="right">
           <ul className="buttons">
@@ -114,14 +109,10 @@ const NavigationBar = ({ location, searchVisible, setSearchVisible }) => {
   );
 };
 
-const NavigationInner = ({ location, searchData, searchVisible, setSearchVisible }) => {
+const NavigationInner = ({ searchData, searchVisible, setSearchVisible }) => {
   return (
     <React.Fragment>
-      <NavigationBar
-        location={location}
-        searchVisible={setSearchVisible}
-        setSearchVisible={setSearchVisible}
-      />
+      <NavigationBar searchVisible={searchVisible} setSearchVisible={setSearchVisible} />
       <SearchContainer
         visible={searchVisible}
         setSearchVisible={setSearchVisible}
@@ -132,13 +123,7 @@ const NavigationInner = ({ location, searchData, searchVisible, setSearchVisible
 };
 
 const Navigation = () => {
-  return (
-    <Location>
-      {({ location }) => (
-        <SearchProvider child={NavigationInner} childProps={{ location: location }} />
-      )}
-    </Location>
-  );
+  return <SearchProvider child={NavigationInner} />;
 };
 
 export default Navigation;
