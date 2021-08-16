@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "components/Router";
+import { Link } from "@reach/router";
 
 const TagList = ({ tagsDict, tagIds }) => (
   <ul className="bullet-list">

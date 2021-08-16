@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "components/Router";
+import { Link } from "@reach/router";
 import PostDetails from "./PostDetails";
 import TagList from "./TagList";
 

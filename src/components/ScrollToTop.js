@@ -17,7 +17,7 @@ const LocationChangeWorker = ({ location }) => {
   return null;
 };
 
-export const ScrollToTop = () => {
+export const ScrollToTopOnLocation = () => {
   return <Location>{({ location }) => <LocationChangeWorker location={location} />}</Location>;
 };
 
