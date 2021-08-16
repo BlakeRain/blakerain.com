@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Location } from "@reach/router";
 import { useSiteData } from "react-static";
 
@@ -65,7 +65,7 @@ const SearchLink = (props) => {
   );
 };
 
-const GitHubLink = (props) => {
+const GitHubLink = () => {
   return (
     <a href="https://github.com/BlakeRain" title="GitHub" target="_blank" rel="noopener">
       <svg viewBox="0 0 32 32">
@@ -75,7 +75,7 @@ const GitHubLink = (props) => {
   );
 };
 
-const TwitterLink = (props) => {
+const TwitterLink = () => {
   return (
     <a href="https://twitter.com/HalfWayMan" title="Twitter" target="_blank" rel="noopener">
       <svg viewBox="0 0 32 32">
@@ -131,7 +131,7 @@ const NavigationInner = ({ location, searchData, searchVisible, setSearchVisible
   );
 };
 
-const Navigation = (props) => {
+const Navigation = () => {
   return (
     <Location>
       {({ location }) => (
