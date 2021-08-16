@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "components/Router";
 import PostDetails from "./PostDetails";
+import TagList from "./TagList";
 
 const PostCard = ({ post, large, tags, authors }) => {
   return (
@@ -14,16 +15,7 @@ const PostCard = ({ post, large, tags, authors }) => {
           <section>{post.custom_excerpt}</section>
         </Link>
         <PostDetails post={post} authors={authors}>
-          <ul className="bullet-list">
-            {post.tags
-              .map((tag_id) => tags[tag_id])
-              .filter((tag) => tag.visibility == "public")
-              .map((tag) => (
-                <li key={tag.id}>
-                  <Link to={"/tags/" + tag.slug}>{tag.name}</Link>
-                </li>
-              ))}
-          </ul>
+          <TagList tagsDict={tags} tagIds={post.tags} />
         </PostDetails>
       </div>
     </article>

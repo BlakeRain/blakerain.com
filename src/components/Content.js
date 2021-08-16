@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "@reach/router";
 
-import { Link } from "./Router";
 import PostDetails from "./PostDetails";
 import { ScrollToTopButton } from "./ScrollToTop";
+import TagList from "./TagList";
 
 const SyntaxHighlighter = (props) => {
   const contentRef = useRef();
@@ -161,18 +161,7 @@ const ContentHeader = ({ authors, tags, content }) => {
   return (
     <header className="post-header">
       <h1>{content.title}</h1>
-      <ul className="bullet-list">
-        {content.tags
-          .map((tag) => tags[tag])
-          .filter((tag) => tag.visibility == "public")
-          .map((tag) => (
-            <li key={tag.id}>
-              <Link to={"/tags/" + tag.slug} title={tag.description}>
-                {tag.name}
-              </Link>
-            </li>
-          ))}
-      </ul>
+      <TagList tagsDict={tags} tagIds={content.tags} />
       {content.custom_excerpt ? <p>{content.custom_excerpt}</p> : null}
       <PostDetails authors={authors} post={content} />
     </header>
