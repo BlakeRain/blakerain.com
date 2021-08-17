@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, navigate } from "@reach/router";
+import { createUseStyles } from "react-jss";
+import { ColorBlue, ColorDarkGrey, ColorWhiteGrey, PrimaryBackground } from "./Styles";
 
 /**
  * A decoder for the search data
@@ -543,6 +545,103 @@ export const SearchProvider = ({ child, childProps }) => {
   );
 };
 
+const useSearchGridStyles = createUseStyles({
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  centerRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  column: {
+    display: "flex",
+  },
+  hints: {
+    opacity: 0.75,
+
+    "@media (max-width: 650px)": {
+      display: "none",
+    },
+  },
+  wide: {
+    flexGrow: 1,
+  },
+});
+
+const useSearchDialogStyles = createUseStyles({
+  searchResult: {
+    position: "relative",
+    color: ColorWhiteGrey.string(),
+
+    "&:hover": {
+      textDecoration: "none",
+      color: ColorBlue.string(),
+    },
+
+    "@media (max-width: 900px)": {
+      padding: "0.5rem",
+    },
+
+    "@media (max-width: 650px)": {
+      padding: "0.5rem",
+    },
+  },
+  relevance: {
+    "@media (max-width: 650px)": {
+      display: "none",
+    },
+  },
+  active: {
+    color: ColorBlue.string(),
+
+    "&:before": {
+      content: '""',
+
+      position: "absolute",
+      top: 4,
+      left: -10,
+
+      borderTop: "8px solid transparent",
+      borderBottom: "8px solid transparent",
+      borderLeft: "8px solid " + ColorBlue.string(),
+    },
+  },
+  currentPage: {
+    padding: [["1rem", 0]],
+
+    "&:before": {
+      content: '"Current Page"',
+      fontSize: "80%",
+      fontWeight: 800,
+      textTransform: "uppercase",
+    },
+  },
+  otherResults: {
+    "&:after": {
+      content: '"Other Results"',
+      fontSize: "80%",
+      fontWeight: 800,
+      textTransform: "uppercase",
+      display: "block",
+      marginTop: "1rem",
+      borderTop: "1px solid " + PrimaryBackground.lighten(0.25),
+    },
+  },
+  tag: {
+    color: ColorBlue.string(),
+    padding: [[0, "0.5rem"]],
+  },
+  searchInput: {
+    flexGrow: 1,
+    color: ColorDarkGrey.string(),
+    margin: [["1rem", 0]],
+    padding: "0.5rem",
+  },
+});
+
 /**
  * The search dialog component
  *
@@ -552,6 +651,8 @@ export const SearchProvider = ({ child, childProps }) => {
  * dialog to be dismissed.
  */
 const SearchDialog = (props) => {
+  const searchGrid = useSearchGridStyles();
+  const classes = useSearchDialogStyles();
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -650,13 +751,13 @@ const SearchDialog = (props) => {
   var result = null;
   if (searchTerm.length == 0) {
     result = (
-      <div className="row center">
-        <div className="column center">Search for a word prefix.</div>
+      <div className={searchGrid.centerRow}>
+        <div className={searchGrid.column}>Search for a word prefix.</div>
       </div>
     );
   } else if (searchResults.length == 0) {
     result = (
-      <div className="row center" style={{ color: "#c7cf2f" }}>
+      <div className={searchGrid.centerRow} style={{ color: "#c7cf2f" }}>
         Sorry, nothing was found.
       </div>
     );
@@ -664,13 +765,19 @@ const SearchDialog = (props) => {
     const SearchLink = ({ post, relevance, index }) => {
       return (
         <Link
-          className={"row search-result" + (index === active ? " active" : "")}
+          className={
+            searchGrid.row +
+            " " +
+            classes.searchResult +
+            " " +
+            (index === active ? classes.active : "")
+          }
           to={post.url + query}
           onClick={() => {
             props.setSearchVisible(false);
           }}>
-          <div className="column">{post.title}</div>
-          <div className="column">
+          <div className={searchGrid.column}>{post.title}</div>
+          <div className={searchGrid.column + " " + classes.relevance}>
             {relevance.toString()} match{relevance !== 1 ? "es" : ""}
           </div>
         </Link>
@@ -691,7 +798,9 @@ const SearchDialog = (props) => {
         return (
           <div
             key={index.toString()}
-            className={"current-page" + (searchResults.length > 1 ? " other-results" : "")}>
+            className={
+              classes.currentPage + (searchResults.length > 1 ? " " + classes.otherResults : "")
+            }>
             {link}
           </div>
         );
@@ -703,7 +812,7 @@ const SearchDialog = (props) => {
     result = (
       <React.Fragment>
         {search_links}
-        <div className="row center">
+        <div className={searchGrid.centerRow}>
           <p>
             <b>
               {searchResults.length} post{searchResults.length !== 1 ? "s" : ""} match
@@ -716,19 +825,20 @@ const SearchDialog = (props) => {
 
   return (
     <React.Fragment>
-      <div className="row">
-        <div className="column">Search Blog Posts and Pages</div>
-        <div className="column hints">
-          <span className="tag">Tab</span>/<span className="tag">S</span>
+      <div className={searchGrid.row}>
+        <div className={searchGrid.column}>Search Blog Posts and Pages</div>
+        <div className={searchGrid.column + " " + searchGrid.hints}>
+          <span className={classes.tag}>Tab</span>/<span className={classes.tag}>S</span>
           to search,
-          <span className="tag">Esc</span>
+          <span className={classes.tag}>Esc</span>
           to close
         </div>
       </div>
-      <div className="row">
-        <div className="column wide">
+      <div className={searchGrid.row}>
+        <div className={searchGrid.column + " " + searchGrid.wide}>
           <input
             id="search-input"
+            className={classes.searchInput}
             type="search"
             placeholder="Type search term here ..."
             autoComplete="off"
@@ -744,6 +854,53 @@ const SearchDialog = (props) => {
     </React.Fragment>
   );
 };
+
+const useSearchContainerStyles = createUseStyles({
+  root: {
+    position: "fixed",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: 1000,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    backgroundColor: PrimaryBackground.desaturate(0.75).darken(0.75).fade(0.25).string(),
+
+    "@media (max-width: 900px)": {
+      alignItems: "flex-start",
+    },
+
+    "@media (max-width: 650px)": {
+      alignItems: "flex-start",
+    },
+  },
+  hidden: {
+    display: "none",
+  },
+  searchBox: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    marginTop: "10rem",
+    padding: "2rem",
+    backgroundColor: PrimaryBackground.string(),
+    borderRadius: 15,
+    color: "rgba(255, 255, 255, 0.75)",
+
+    "@media (max-width: 900px)": {
+      width: "80%",
+      marginTop: "4rem",
+    },
+
+    "@media (max-width: 650px)": {
+      width: "100%",
+      marginTop: "8rem",
+    },
+  },
+});
 
 /**
  * Container for the search dialog
@@ -761,6 +918,8 @@ const SearchDialog = (props) => {
  *    dismiss the search window when the container is clicked.
  */
 export const SearchContainer = (props) => {
+  const classes = useSearchContainerStyles();
+  const searchGrid = useSearchGridStyles();
   const containerRef = useRef();
 
   const handleBackdropClick = (event) => {
@@ -772,15 +931,15 @@ export const SearchContainer = (props) => {
   return (
     <div
       ref={containerRef}
-      className={"search-box-container " + (props.visible ? "" : "hidden")}
+      className={classes.root + (props.visible ? "" : " " + classes.hidden)}
       onClick={handleBackdropClick}>
       {props.visible ? (
-        <div className="search-box">
+        <div className={classes.searchBox}>
           {props.searchData ? (
             <SearchDialog {...props} />
           ) : (
-            <div className="row center">
-              <div className="column">
+            <div className={searchGrid.centerRow}>
+              <div className={searchGrid.column}>
                 <h1>Search is unavailable</h1>
               </div>
             </div>

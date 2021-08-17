@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 import { useRouteData, Head } from "react-static";
-import PostCard from "components/PostCard";
+import { PostCards } from "components/PostCard";
 
 const Tag = () => {
   const { tag_id, posts, authors, tags } = useRouteData();
@@ -18,11 +18,7 @@ const Tag = () => {
           There are {posts.length} post{posts.length === 1 ? "" : "s"} with this tag
         </small>
       </h1>
-      <div className="post-cards">
-        {posts.map((post, index) => (
-          <PostCard key={post.id} tags={tags} authors={authors} post={post} large={false} />
-        ))}
-      </div>
+      <PostCards tags={tags} authors={authors} posts={posts} large={false} />
     </React.Fragment>
   );
 };

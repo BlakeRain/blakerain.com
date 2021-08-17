@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "@reach/router";
+import { createUseStyles } from "react-jss";
+import Color from "color";
 
 import PostDetails from "./PostDetails";
 import { ScrollToTopButton } from "./ScrollToTop";
 import TagList from "./TagList";
+import { ColorDarkGrey, ColorMidGrey, PrimaryBackground } from "./Styles";
 
 const SyntaxHighlighter = (props) => {
   const contentRef = useRef();
@@ -30,7 +33,40 @@ const SyntaxHighlighter = (props) => {
   return <div ref={contentRef}>{props.children}</div>;
 };
 
+const useHighlightControlsStyles = createUseStyles({
+  root: {
+    position: "fixed",
+    bottom: "1rem",
+    right: "1rem",
+    padding: "1rem",
+    backgroundColor: PrimaryBackground.string(),
+    borderRadius: 5,
+    border: "1px solid rgba(0, 0, 0, 0.2)",
+    boxShadow: "-1px 1px 3px rgba(0, 0, 0, 0.2)",
+    zIndex: 50,
+    fontSize: "80%",
+  },
+  button: {
+    cursor: "pointer",
+    color: "white",
+    border: "none",
+    backgroundColor: PrimaryBackground.darken(0.4).string(),
+    borderRadius: 3,
+    "&:hover": {
+      backgroundColor: PrimaryBackground.lighten(1.2).string(),
+    },
+    "& + button": {
+      marginLeft: "1rem",
+    },
+  },
+  label: {
+    marginLeft: "1rem",
+  },
+});
+
 const HighlightControls = (props) => {
+  const classes = useHighlightControlsStyles();
+
   function jumpTo(index) {
     index = index % props.results.length;
     if (index < props.results.length) {
@@ -68,17 +104,17 @@ const HighlightControls = (props) => {
   }
 
   return (
-    <div className="highlight-controls">
-      <button type="button" onClick={onNextClick}>
+    <div className={classes.root}>
+      <button type="button" className={classes.button} onClick={onNextClick}>
         &darr; Next
       </button>
-      <button type="button" onClick={onPrevClick}>
+      <button type="button" className={classes.button} onClick={onPrevClick}>
         &uarr; Previous
       </button>
-      <button type="button" onClick={onClearClick}>
+      <button type="button" className={classes.button} onClick={onClearClick}>
         Clear
       </button>
-      <span>
+      <span className={classes.label}>
         {props.current === -1 ? "0" : (props.current + 1).toString()} /{" "}
         {props.results.length.toString()} result{props.results.length === 1 ? "" : "s"}
       </span>
@@ -163,13 +199,53 @@ const SearchHighlighter = ({ term, children }) => {
   );
 };
 
+const useContentHeaderStyles = createUseStyles({
+  root: {
+    margin: [[0, "auto"]],
+    padding: [70, 70, 50, 70],
+  },
+  title: {
+    color: ColorDarkGrey.string(),
+    margin: [0, 0, "0.2em", 0],
+    fontSize: "5.5rem",
+    fontWeight: 600,
+    lineHeight: 1.15,
+    "@media (prefers-color-scheme: dark)": {
+      color: "rgba(255, 255, 255, 0.9)",
+    },
+  },
+  excerpt: {
+    margin: [20, 0, 0, 0],
+    color: ColorMidGrey.string(),
+    fontFamily: 'Georgia, "Times New Roman", Times, serif',
+    fontSize: "2.3rem",
+    lineHeight: "1.4em",
+    fontWeight: 300,
+    "@media (prefers-color-scheme: dark)": {
+      color: ColorMidGrey.lighten(0.4).string(),
+    },
+  },
+  postDetails: {
+    borderTop: "1px solid #e4eaed",
+    marginTop: "4rem",
+    paddingTop: "2rem",
+    "@media (prefers-color-scheme: dark)": {
+      borderTopColor: "#3c414a",
+    },
+  },
+});
+
 const ContentHeader = ({ authors, tags, content }) => {
+  const classes = useContentHeaderStyles();
+
   return (
-    <header className="post-header">
-      <h1>{content.title}</h1>
+    <header className={classes.root}>
+      <h1 className={classes.title}>{content.title}</h1>
       <TagList tagsDict={tags} tagIds={content.tags} />
-      {content.custom_excerpt ? <p>{content.custom_excerpt}</p> : null}
-      <PostDetails authors={authors} post={content} />
+      {content.custom_excerpt ? (
+        <p className={classes.excerpt}>{content.custom_excerpt}</p>
+      ) : null}
+      <PostDetails authors={authors} post={content} className={classes.postDetails} />
     </header>
   );
 };
