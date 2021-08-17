@@ -1,8 +1,17 @@
 import React, { useEffect, useRef } from "react";
+import { createUseStyles } from "react-jss";
 import { useRouteData, Head } from "react-static";
 import Content from "../components/Content";
 
+const useBlogPostStyles = createUseStyles({
+  postComments: {
+    margin: [0, "auto", "1.5em", "auto"],
+    maxWidth: 840,
+  },
+});
+
 export default function BlogPost() {
+  const classes = useBlogPostStyles();
   const commento = useRef();
   const { authors, tags, post } = useRouteData();
 
@@ -24,7 +33,7 @@ export default function BlogPost() {
         <title>{post.title}</title>
       </Head>
       <Content authors={authors} tags={tags} content={post} />
-      <section className="post-comments">
+      <section className={classes.postComments}>
         <div ref={commento} id="commento"></div>
       </section>
     </div>

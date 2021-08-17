@@ -70,31 +70,25 @@ h6 {
   }
 }
 
-div.content {
-  display: flex;
-  justify-content: center;
-  padding: 0 5vw;
-
-  .inner {
-    width: 100%;
-    max-width: @content-width-default;
-  }
-}
-
-h4.loading {
-  text-align: center;
-}
-
+// Help ouy the scroll button: when we're in a <SearchHighlighter> that indicates it has search
+// results, the search controls will overlap with the scroll-to-top button. This moves the
+// button up a bit, so it sits on top of the search controls.
 div.has-highlight-results button.scroll-button {
   bottom: 6rem;
 }
 
+// When we're highlighting a search term, we add a 'current' class to the current <mark>. This
+// makes it orange instead of yellow.
 mark.current {
   background: orange;
 }
 
 // ---------------------------------------------------------------------------------------------
 // Post/Page Content
+//
+// All the rest of this is really to do with styling the content of a page that we receive from
+// the Ghost CMS. We get the contents of a post/page as a raw HTML string, so we can't exactly
+// use JSS to style it for now.
 
 article.post {
   .post-content {
@@ -625,27 +619,8 @@ article.post {
   }
 }
 
-.post-comments {
-  margin: 0 auto 1.5em auto;
-  max-width: 840px;
-}
-
 @media (prefers-color-scheme: dark) {
   article.post {
-    .post-header {
-      h1 {
-        color: rgba(255, 255, 255, 0.9);
-      }
-
-      p {
-        color: lighten(@color-mid-grey, 20%);
-      }
-
-      div.post-details {
-        border-top-color: #3c414a;
-      }
-    }
-
     .post-content {
       h1,
       h2,
@@ -872,10 +847,6 @@ code {
 
 @media (max-width: 1170px) {
   article.post {
-    .post-header {
-      padding: 60px 11vw 50px;
-    }
-
     .post-full-content {
       padding: 0 11vw;
     }
@@ -893,11 +864,6 @@ code {
 
 @media (max-width: 800px) {
   article.post {
-    .post-header {
-      padding-right: 5vw;
-      padding-left: 5vw;
-    }
-
     .post-content {
       padding: 0 5vw;
       font-size: 1.8rem;
@@ -963,14 +929,6 @@ code {
 
 @media (max-width: 500px) {
   article.post {
-    .post-header {
-      padding: 20px 0 35px;
-
-      h1 {
-        font-size: 3.3rem;
-      }
-    }
-
     .post-content {
       padding: 0;
 

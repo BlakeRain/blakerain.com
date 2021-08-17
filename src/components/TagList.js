@@ -9,6 +9,16 @@ const useTagListStyles = createUseStyles({
     padding: 0,
     display: "flex",
     flexDirection: "row",
+
+    textTransform: "uppercase",
+    fontSize: "1.2rem",
+    lineHeight: "1.4em",
+    fontWeigh: 400,
+  },
+  large: {
+    fontSize: "1.3rem",
+    lineHeight: "1.6em",
+    fontWeight: 600,
   },
   item: {
     position: "relative",
@@ -36,18 +46,29 @@ const useTagListStyles = createUseStyles({
       borderRadius: "100%",
     },
   },
+  largeItem: {
+    marginLeft: 20,
+
+    "&:before": {
+      top: 8,
+      left: -12,
+      width: 4,
+      height: 4,
+    },
+  },
 });
 
-const TagList = ({ tagsDict, tagIds }) => {
+const TagList = ({ tagsDict, tagIds, large }) => {
   const classes = useTagListStyles();
+  const itemClassName = classes.item + (large ? " " + classes.largeItem : "");
 
   return (
-    <ul className={classes.root}>
+    <ul className={classes.root + (large ? " " + classes.large : "")}>
       {tagIds
         .map((tag) => tagsDict[tag])
         .filter((tag) => tag.visibility === "public")
         .map((tag) => (
-          <li key={tag.id} className={classes.item}>
+          <li key={tag.id} className={itemClassName}>
             <Link to={"/tags/" + tag.slug} title={tag.description}>
               {tag.name}
             </Link>

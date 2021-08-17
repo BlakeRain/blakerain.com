@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "@reach/router";
 import { createUseStyles } from "react-jss";
-import Color from "color";
 
 import PostDetails from "./PostDetails";
 import { ScrollToTopButton } from "./ScrollToTop";
 import TagList from "./TagList";
-import { ColorDarkGrey, ColorMidGrey, PrimaryBackground } from "./Styles";
+import { ColorDarkGrey, ColorMidGrey, PrimaryBackground, TextFontFamily } from "./Styles";
 
 const SyntaxHighlighter = (props) => {
   const contentRef = useRef();
@@ -203,6 +202,19 @@ const useContentHeaderStyles = createUseStyles({
   root: {
     margin: [[0, "auto"]],
     padding: [70, 70, 50, 70],
+
+    "@media (max-width: 1170px)": {
+      padding: [60, "11vw", 50, "11vw"],
+    },
+
+    "@media (max-width: 800px)": {
+      paddingLeft: "5vw",
+      paddingRight: "5vw",
+    },
+
+    "@media (max-width: 500px)": {
+      padding: [20, 0, 35, 0],
+    },
   },
   title: {
     color: ColorDarkGrey.string(),
@@ -210,19 +222,24 @@ const useContentHeaderStyles = createUseStyles({
     fontSize: "5.5rem",
     fontWeight: 600,
     lineHeight: 1.15,
+
     "@media (prefers-color-scheme: dark)": {
       color: "rgba(255, 255, 255, 0.9)",
+    },
+
+    "@media (max-width: 500px)": {
+      fontSize: "3.3rem",
     },
   },
   excerpt: {
     margin: [20, 0, 0, 0],
     color: ColorMidGrey.string(),
-    fontFamily: 'Georgia, "Times New Roman", Times, serif',
+    fontFamily: TextFontFamily,
     fontSize: "2.3rem",
     lineHeight: "1.4em",
     fontWeight: 300,
     "@media (prefers-color-scheme: dark)": {
-      color: ColorMidGrey.lighten(0.4).string(),
+      color: ColorMidGrey.lighten(0.6).string(),
     },
   },
   postDetails: {
@@ -241,7 +258,7 @@ const ContentHeader = ({ authors, tags, content }) => {
   return (
     <header className={classes.root}>
       <h1 className={classes.title}>{content.title}</h1>
-      <TagList tagsDict={tags} tagIds={content.tags} />
+      <TagList tagsDict={tags} tagIds={content.tags} large />
       {content.custom_excerpt ? (
         <p className={classes.excerpt}>{content.custom_excerpt}</p>
       ) : null}

@@ -98,6 +98,7 @@ const usePostDetailsStyles = createUseStyles({
     display: "block",
     marginLeft: 10,
     fontWeight: 600,
+    fontSize: "1.3rem",
 
     "&:first-of-type": {
       marginLeft: 0,
