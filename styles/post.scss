@@ -14,6 +14,11 @@ mark.current {
   background: orange;
 }
 
+.post-comments {
+  margin: 0 auto 1.5em auto;
+  max-width: 840px;
+}
+
 article.post {
   .post-content {
     position: relative;

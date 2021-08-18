@@ -131,6 +131,11 @@ export async function getAllPostSlugs(): Promise<string[]> {
   return posts.map((post) => post.slug);
 }
 
+export async function getAllPageSlugs(): Promise<string[]> {
+  const pages = await getContentAPI().pages.browse({ limit: "all", fields: ["slug"] });
+  return pages.map((page) => page.slug);
+}
+
 export async function getAllListPosts(): Promise<ListPost[]> {
   const posts = await getContentAPI().posts.browse({
     limit: "all",
@@ -139,9 +144,27 @@ export async function getAllListPosts(): Promise<ListPost[]> {
   return posts.map((post) => buildListPost(post));
 }
 
+export async function getPostsWithTag(slug: string): Promise<ListPost[]> {
+  const posts = await getContentAPI().posts.browse({
+    limit: "all",
+    filter: `tag:${slug}`,
+    include: ["authors", "tags"],
+  });
+  return posts.map((post) => buildListPost(post));
+}
+
 export async function getAllTags(): Promise<TagDictionary> {
   const tags = await getContentAPI().tags.browse();
   return buildTagDictionary(tags);
+}
+
+export async function getAllTagSlugs(): Promise<string[]> {
+  const tags = await getContentAPI().tags.browse({
+    limit: "all",
+    filter: "visibility:public",
+    fields: ["slug"],
+  });
+  return tags.map((tag) => tag.slug);
 }
 
 export async function getAllAuthors(): Promise<AuthorDictionary> {
@@ -165,4 +188,60 @@ export async function getPostWithSlug(slug: string): Promise<PostInformation> {
     tags: buildTagDictionary(post.tags || []),
     authors: buildAuthorDictionary(post.authors || []),
   };
+}
+
+export interface PageInformation {
+  page: DisplayPost;
+  tags: TagDictionary;
+  authors: AuthorDictionary;
+}
+
+export async function getPageWithSlug(slug: string): Promise<PageInformation> {
+  const page = await getContentAPI().pages.read(
+    { slug: slug },
+    { include: ["authors", "tags"] }
+  );
+  return {
+    page: buildDisplayPost(page),
+    tags: buildTagDictionary(page.tags || []),
+    authors: buildAuthorDictionary(page.authors || []),
+  };
+}
+
+export interface TagPosts extends SimpleTag {
+  posts: ListPost[];
+}
+
+export async function getTagsWithPosts(): Promise<TagPosts[]> {
+  const posts = await getContentAPI().posts.browse({ limit: "all", include: ["tags"] });
+  var tags: { [tag_id: string]: TagPosts } = {};
+
+  posts.forEach((post) => {
+    post.tags?.forEach((tag) => {
+      if (tag.visibility !== "public") {
+        return;
+      }
+
+      var tag_post: TagPosts;
+
+      if (tag.id in tags) {
+        tag_post = tags[tag.id];
+      } else {
+        tag_post = simplifyTag(tag) as TagPosts;
+        tag_post.posts = [];
+        tags[tag.id] = tag_post;
+      }
+
+      tag_post.posts.push(buildListPost(post));
+    });
+  });
+
+  return Object.keys(tags)
+    .map((tag_id) => tags[tag_id])
+    .sort((a, b) => a.posts.length - b.posts.length);
+}
+
+export async function getTagWithSlug(slug: string): Promise<SimpleTag> {
+  const tag = await getContentAPI().tags.read({ slug: slug });
+  return simplifyTag(tag);
 }
