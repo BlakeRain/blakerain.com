@@ -4,6 +4,9 @@ import styles from "./Content.module.scss";
 import { PostDetails } from "./PostDetails";
 import { TagList } from "./TagList";
 import SyntaxHighlighter from "./SyntaxHighlighter";
+import { useRouter } from "next/router";
+import { getHighlightTerm, SearchHighlighter } from "./search/SearchHighlighter";
+import { ScrollToTopButton } from "./ScrollToTop";
 
 const ContentHeader: FC<ContentProps> = ({ authors, tags, post }) => {
   return (
@@ -19,12 +22,18 @@ const ContentHeader: FC<ContentProps> = ({ authors, tags, post }) => {
 };
 
 const ContentBody: FC<{ post: DisplayPost }> = ({ post }) => {
+  const router = useRouter();
+  const term = getHighlightTerm(router.query);
+
   return (
-    <SyntaxHighlighter>
-      <div className="post-content">
-        <div className="inner" dangerouslySetInnerHTML={{ __html: post.html }} />
-      </div>
-    </SyntaxHighlighter>
+    <SearchHighlighter term={term}>
+      <SyntaxHighlighter>
+        <div className="post-content">
+          <div className="inner" dangerouslySetInnerHTML={{ __html: post.html }} />
+        </div>
+        <ScrollToTopButton />
+      </SyntaxHighlighter>
+    </SearchHighlighter>
   );
 };
 

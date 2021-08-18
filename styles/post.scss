@@ -1,6 +1,19 @@
 @import "./colors.scss";
 @import "./fonts.scss";
 
+// Help ouy the scroll button: when we're in a <SearchHighlighter> that indicates it has search
+// results, the search controls will overlap with the scroll-to-top button. This moves the
+// button up a bit, so it sits on top of the search controls.
+div.has-highlight-marks button.scroll-button {
+  bottom: 6rem;
+}
+
+// When we're highlighting a search term, we add a 'current' class to the current <mark>. This
+// makes it orange instead of yellow.
+mark.current {
+  background: orange;
+}
+
 article.post {
   .post-content {
     position: relative;
