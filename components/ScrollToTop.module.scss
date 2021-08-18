@@ -1,0 +1,14 @@
+@import "../styles/colors.scss";
+
+.button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: lighten($primary-background, 25%);
+  cursor: pointer;
+  font-size: 80%;
+  z-index: 50;
+}

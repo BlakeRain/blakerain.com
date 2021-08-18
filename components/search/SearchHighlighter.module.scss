@@ -1,0 +1,37 @@
+@import "../../styles/colors.scss";
+
+.controls {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 1rem;
+
+  background-color: $primary-background;
+
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.2);
+
+  z-index: 50;
+  font-size: 80%;
+}
+
+.button {
+  cursor: pointer;
+  color: white;
+  border: none;
+  background-color: darken($primary-background, 5%);
+  border-radius: 3px;
+
+  &:hover {
+    background-color: lighten($primary-background, 10%);
+  }
+
+  & + button {
+    margin-left: 1rem;
+  }
+}
+
+.label {
+  margin-left: 1rem;
+}

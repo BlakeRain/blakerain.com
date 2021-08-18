@@ -1,0 +1,922 @@
+@import "./colors.scss";
+@import "./fonts.scss";
+
+// Help ouy the scroll button: when we're in a <SearchHighlighter> that indicates it has search
+// results, the search controls will overlap with the scroll-to-top button. This moves the
+// button up a bit, so it sits on top of the search controls.
+div.has-highlight-marks button.scroll-button {
+  bottom: 6rem;
+}
+
+// When we're highlighting a search term, we add a 'current' class to the current <mark>. This
+// makes it orange instead of yellow.
+mark.current {
+  background: orange;
+}
+
+.post-comments {
+  margin: 0 auto 1.5em auto;
+  max-width: 840px;
+}
+
+article.post {
+  .post-content {
+    position: relative;
+    margin: 0 auto;
+    padding: 0 70px 6vw;
+    min-height: 230px;
+
+    font-family: $text-font-family;
+    font-size: 2rem;
+    line-height: 1.6em;
+
+    .inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      min-width: 100%;
+
+      color: darken($color-dark-grey, 5%);
+      font-family: $body-font-family;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      + figure {
+        margin-top: 2em;
+      }
+    }
+
+    h1 {
+      margin: 0.5em 0 0.4em;
+
+      font-size: 4.2rem;
+      line-height: 1.25em;
+      font-weight: 600;
+    }
+
+    h2 {
+      margin: 0.5em 0 0.4em;
+
+      font-size: 3.2rem;
+      line-height: 1.25em;
+      font-weight: 600;
+
+      + h3 {
+        margin-top: 0.7em;
+      }
+
+      + h4 {
+        margin-top: 0.7em;
+      }
+    }
+
+    h3 {
+      margin: 0.5em 0 0.2em;
+
+      font-size: 2.5rem;
+      line-height: 1.3em;
+      font-weight: 600;
+
+      + h4 {
+        margin-top: 0;
+      }
+    }
+
+    h4 {
+      margin: 0.5em 0 0.2em;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    h5 {
+      margin: 0.5em 0;
+      padding: 0.3em 1em 0.9em;
+      font-size: 3.2rem;
+      line-height: 1.35em;
+      text-align: center;
+      color: $color-blue;
+    }
+
+    h6 {
+      margin: 0.5em 0 0.2em 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0 0 1.5em 0;
+      min-width: 100%;
+
+      + h1,
+      + h2 {
+        margin-top: 0.8em;
+      }
+    }
+
+    ul,
+    ol,
+    dl {
+      margin: 0 0 1.5em 0;
+      min-width: 100%;
+    }
+
+    li {
+      word-break: break-word;
+      margin: 0.5em 0;
+      padding-left: 0.3em;
+      line-height: 1.6em;
+
+      p {
+        margin: 0;
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    pre {
+      margin: 1.5em 0 3em;
+      padding: 20px;
+      min-width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+
+      border: 1px darken($color-light-grey, 10%) solid;
+      border-radius: 5px;
+      color: $color-dark-grey;
+      background-color: lighten($color-light-grey, 15%);
+
+      font-size: 1.4rem;
+      line-height: 1.5em;
+
+      &::selection {
+        color: darken($color-mid-grey, 25%);
+      }
+
+      code {
+        display: block;
+        padding: 0;
+
+        font-size: inherit;
+        line-height: inherit;
+        background: transparent;
+
+        &.language-box-drawing,
+        &:not([class]) {
+          line-height: 1.3em;
+        }
+
+        &:not(span) {
+          color: inherit;
+        }
+      }
+    }
+
+    blockquote {
+      margin: 0 0 1.5em;
+      padding: 0 1.5em;
+      min-width: 100%;
+
+      border-left: 3px solid #3eb0ef;
+      font-style: italic;
+      color: $color-mid-grey;
+
+      p {
+        margin: 0 0 1em 0;
+        color: inherit;
+        font-size: inherit;
+        font-style: italic;
+        line-height: inherit;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    a {
+      color: $color-dark-grey;
+      word-break: break-word;
+      box-shadow: $color-dark-grey 0 -1px 0 inset;
+
+      &:hover {
+        color: $color-blue;
+        text-decoration: none;
+        box-shadow: $color-blue 0 -1px 0 inset;
+      }
+    }
+
+    strong,
+    em {
+      color: darken($color-dark-grey, 5%);
+    }
+
+    small {
+      display: inline-block;
+      line-height: 1.6em;
+    }
+
+    img {
+      display: block;
+      margin: 1.5em auto;
+      max-width: 1040px;
+      height: auto;
+
+      + br {
+        + small {
+          display: block;
+          margin-top: -3em;
+          margin-bottom: 1.5em;
+          text-align: center;
+        }
+      }
+    }
+
+    video {
+      display: block;
+      margin: 1.5em auto;
+      max-width: 1040px;
+      height: auto;
+    }
+
+    img[src$="#full"] {
+      margin: 0 auto !important;
+    }
+
+    code {
+      padding: 0 5px 2px;
+      font-size: 0.8em;
+      line-height: 1em;
+      font-weight: 400 !important;
+      background-color: lighten($color-light-grey, 15%);
+      border-radius: 3px;
+    }
+
+    hr {
+      margin: 2em 0;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        display: block;
+        margin-left: -10px;
+        width: 1px;
+        height: 30px;
+        background-color: lighten($color-light-grey, 10%);
+        box-shadow: #ffffff 0 0 0 5px;
+        transform: rotate(45deg);
+      }
+
+      + p {
+        margin-top: 1.2em;
+      }
+    }
+
+    table {
+      display: inline-block;
+      overflow-x: auto;
+      margin: 0.5em 0 2.5em;
+      max-width: 100%;
+      width: auto;
+      border-spacing: 0;
+      border-collapse: collapse;
+      font-family: $body-font-family;
+      white-space: nowrap;
+      vertical-align: top;
+      -webkit-overflow-scrolling: touch;
+
+      td {
+        padding: 6px 12px;
+        border: 1px desaturate(darken($color-white-grey, 1%), 5%) solid;
+      }
+
+      th {
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-align: left;
+        text-transform: uppercase;
+        padding: 6px 12px;
+        border: 1px desaturate(darken($color-white-grey, 1%), 5%) solid;
+      }
+    }
+
+    .kg-image {
+      max-width: 100%;
+    }
+
+    .kg-width-wide {
+      .kg-image {
+        max-width: 1040px;
+      }
+    }
+
+    .kg-width-full {
+      .kg-image {
+        max-width: 100vw;
+      }
+
+      figcaption {
+        padding: 0 1.5em;
+      }
+    }
+
+    .kg-embed-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      .fluid-width-video-wrapper {
+        margin: 0;
+      }
+    }
+
+    .kg-gallery-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1040px;
+      width: 100vw;
+    }
+
+    .kg-gallery-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      &:not(:first-of-type) {
+        margin: 0.75em 0 0 0;
+      }
+    }
+
+    .kg-gallery-image {
+      img {
+        display: block;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      &:not(:first-of-type) {
+        margin: 0 0 0 0.75em;
+      }
+    }
+
+    .kg-gallery-card {
+      + .kg-image-card.kg-width-wide {
+        margin: -2.25em 0 3em;
+      }
+
+      + .kg-gallery-card {
+        margin: -2.25em 0 3em;
+      }
+    }
+
+    .kg-image-card.kg-width-wide {
+      + .kg-gallery-card {
+        margin: -2.25em 0 3em;
+      }
+
+      + .kg-image-card.kg-width-wide {
+        margin: -2.25em 0 3em;
+      }
+    }
+
+    .kg-code-card {
+      width: 100%;
+
+      pre {
+        margin: 0;
+      }
+    }
+
+    .kg-bookmark-card {
+      width: 100%;
+      background: white;
+    }
+
+    .kg-card + .kg-bookmark-card {
+      margin-top: 0;
+    }
+
+    .kg-bookmark-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .kg-bookmark-title {
+      color: darken($color-mid-grey, 30%);
+      font-size: 1.6rem;
+      line-height: 1.65em;
+      font-weight: 600;
+    }
+
+    .kg-bookmark-description {
+      display: -webkit-box;
+      overflow-y: hidden;
+      margin-top: 12px;
+      max-height: 48px;
+      color: darken($color-mid-grey, 10%);
+      font-size: 1.5rem;
+      line-height: 1.5em;
+      font-weight: 400;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .kg-bookmark-thumbnail {
+      position: relative;
+      min-width: 33%;
+      max-height: 100%;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0 3px 3px 0;
+        object-fit: cover;
+      }
+    }
+
+    .kg-bookmark-metadata {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+      color: darken($color-mid-grey, 10%);
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .kg-bookmark-author {
+      line-height: 1.5em;
+
+      &:after {
+        content: "•";
+        margin: 0 6px;
+      }
+    }
+
+    .kg-bookmark-publisher {
+      overflow: hidden;
+      max-width: 240px;
+      line-height: 1.5em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    figure {
+      margin: 0.8em 0 2.3em;
+
+      img {
+        margin: 0 auto;
+      }
+    }
+
+    figcaption {
+      margin: 1em 0 0;
+      color: darken($color-mid-grey, 10%);
+      font-family: $body-font-family;
+      font-size: 75%;
+      line-height: 1.5em;
+      text-align: center;
+    }
+
+    .kg-bookmark-container {
+      display: flex;
+      min-height: 148px;
+      color: $color-dark-grey;
+      font-family: $body-font-family;
+      text-decoration: none;
+      border-radius: 3px;
+      box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.09);
+
+      &:hover {
+        .kg-bookmark-title {
+          color: $color-blue;
+        }
+      }
+    }
+
+    .kg-bookmark-icon {
+      margin-right: 8px;
+      width: 22px;
+      height: 22px;
+    }
+
+    .footnotes {
+      margin: 0 0 1.5em 0;
+      min-width: 100%;
+      font-size: 1.5rem;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .footnotes-sep {
+      margin-bottom: 30px;
+    }
+
+    .footnote-backref {
+      color: $color-blue !important;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  article.post {
+    .post-content {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h5 {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      a {
+        color: white;
+        box-shadow: inset 0 -1px 0 white;
+      }
+
+      strong,
+      em {
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      blockquote {
+        color: lighten($color-mid-grey, 30%);
+      }
+
+      pre {
+        background-color: darken($color-dark-grey, 3%);
+        border-color: darken($color-dark-grey, 10%);
+        color: $color-white-grey;
+      }
+
+      code {
+        color: white;
+        background: black;
+      }
+
+      figcaption {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .kg-bookmark-container {
+        color: rgba(255, 255, 255, 0.75);
+        box-shadow: 0 0 1px rgba(255, 255, 255, 0.9);
+      }
+
+      .kg-bookmark-title {
+        color: white;
+      }
+
+      .kg-bookmark-description,
+      .kg-bookmark-metadata {
+        color: rgba(255, 255, 255, 0.75);
+      }
+
+      .kg-bookmark-card {
+        background: $dark-mode-background;
+      }
+
+      .kg-bookmark-container {
+        color: rgba(255, 255, 255, 0.75);
+        box-shadow: none;
+        background: $dark-mode-primary;
+      }
+    }
+  }
+}
+
+code {
+  span {
+    &.token {
+      &.comment,
+      &.prolog,
+      &.doctype,
+      &.cdata {
+        color: slategray;
+      }
+
+      &.punctuation {
+        color: #999999;
+      }
+
+      &.namespace {
+        opacity: 0.7;
+      }
+
+      &.property,
+      &.tag,
+      &.boolean,
+      &.number,
+      &.constant,
+      &.symbol,
+      &.deleted {
+        color: #990055;
+      }
+
+      &.selector,
+      &.attr-name,
+      &.string,
+      &.char,
+      &.builtin,
+      &.inserted {
+        color: #669900;
+      }
+
+      &.operator,
+      &.entity,
+      &.url {
+        color: #9a6e3a;
+      }
+
+      &.atrule,
+      &.attr-value,
+      &.keyword {
+        color: #0077aa;
+      }
+
+      &.function,
+      &.class-name {
+        color: #dd4a68;
+      }
+
+      &.regex,
+      &.important,
+      &.variable {
+        color: #ee9900;
+      }
+
+      &.important,
+      &.bold {
+        font-weight: bold;
+      }
+
+      &.italic {
+        font-style: italic;
+      }
+
+      &.entity {
+        cursor: help;
+      }
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  code {
+    span {
+      &.token {
+        $code-grey: #8292a2; // Appears 4 times
+        $code-yellow: #e6db74; // Appears 4 times
+        $code-white: #f8f8f2; // Appears 2 times
+        $code-purple: #ae81ff; // Appears 2 times
+        $code-orange: #fd971f; // Appears 2 times
+
+        &.comment,
+        &.prolog,
+        &.doctype,
+        &.cdata,
+        &.punctuation {
+          color: $code-grey;
+        }
+
+        &.namespace {
+          opacity: 0.7;
+        }
+
+        &.property,
+        &.tag,
+        &.constant,
+        &.symbol,
+        &.deleted {
+          color: #f92672;
+        }
+
+        &.boolean,
+        &.number {
+          color: $code-purple;
+        }
+
+        &.selector,
+        &.attr-name,
+        &.string,
+        &.char,
+        &.builtin,
+        &.inserted {
+          color: #a6e22e;
+        }
+
+        &.operator,
+        &.entity,
+        &.url,
+        &.variable {
+          color: $code-white;
+        }
+
+        &.atrule,
+        &.attr-value,
+        &.function,
+        &.class-name {
+          color: $code-yellow;
+        }
+
+        &.keyword {
+          color: #66d9ef;
+        }
+
+        &.regex,
+        &.important {
+          color: $code-orange;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1180px) {
+  article.post {
+    .post-full-content {
+      h5 {
+        max-width: 1060px;
+        width: 100vw;
+      }
+    }
+  }
+}
+
+@media (max-width: 1170px) {
+  article.post {
+    .post-full-content {
+      padding: 0 11vw;
+    }
+
+    .post-full-image {
+      margin: 25px -6vw 50px;
+      border-radius: 0;
+
+      img {
+        max-width: 1170px;
+      }
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  article.post {
+    .post-content {
+      padding: 0 5vw;
+      font-size: 1.8rem;
+
+      h1 {
+        font-size: 3.2rem;
+        line-height: 1.25em;
+
+        + figure {
+          margin-top: 0.9em;
+        }
+      }
+
+      h2 {
+        margin-bottom: 0.3em;
+        font-size: 2.8rem;
+        line-height: 1.25em;
+
+        + figure {
+          margin-top: 0.9em;
+        }
+      }
+
+      h3 {
+        margin-bottom: 0.3em;
+        font-size: 2.4rem;
+        line-height: 1.3em;
+
+        + figure {
+          margin-top: 0.9em;
+        }
+      }
+
+      h4 {
+        margin-bottom: 0.3em;
+        font-size: 2.4rem;
+        line-height: 1.3em;
+
+        + figure {
+          margin-top: 0.9em;
+        }
+      }
+
+      h5 {
+        margin-bottom: 1em;
+        margin-left: 1.3em;
+        padding: 0 0 0.5em;
+        font-size: 2.4rem;
+        text-align: initial;
+      }
+
+      h6 {
+        font-size: 1.8rem;
+        line-height: 1.4em;
+      }
+
+      figure {
+        margin: 0.2em 0 1.3em;
+      }
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  article.post {
+    .post-content {
+      padding: 0;
+
+      p,
+      ul,
+      ol,
+      dl,
+      pre {
+        margin-bottom: 1.28em;
+      }
+
+      blockquote {
+        padding: 0 1.3em;
+      }
+
+      &:before,
+      &:after {
+        display: none;
+      }
+
+      .kg-width-wide,
+      .kg-width-full {
+        margin-left: -5vw;
+        margin-right: -5vw;
+      }
+
+      figcaption {
+        margin-bottom: 0.4em;
+      }
+
+      .kg-bookmark-container {
+        flex-direction: column;
+      }
+
+      .kg-bookmark-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .kg-bookmark-title,
+      .kg-bookmark-description,
+      .kg-bookmark-metadata {
+        font-size: 1.4rem;
+        line-height: 1.5em;
+      }
+
+      .kg-bookmark-thumbnail {
+        order: 1;
+        min-height: 160px;
+        width: 100%;
+
+        img {
+          border-radius: 3px 3px 0 0;
+        }
+      }
+
+      .kg-bookmark-content {
+        order: 2;
+      }
+    }
+  }
+}

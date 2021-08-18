@@ -1,0 +1,72 @@
+@import "./colors.scss";
+@import "./fonts.scss";
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+body {
+  overflow-x: hidden;
+
+  color: darken($color-mid-grey, 30%);
+
+  font-family: $body-font-family;
+  font-size: 1.6rem;
+  line-height: 1.6em;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  background: white;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smooting: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: rgba(255, 255, 255, 0.75);
+    background: $dark-mode-background;
+  }
+}
+
+::selection {
+  text-shadow: none;
+  background: lighten($color-blue, 30%);
+}
+
+a {
+  color: darken($color-blue, 5%);
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  small {
+    display: block;
+    margin-top: 0.4em;
+    font-size: 70%;
+    color: lighten($color-mid-grey, 20%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    small {
+      color: lighten($color-mid-grey, 10%);
+    }
+  }
+}

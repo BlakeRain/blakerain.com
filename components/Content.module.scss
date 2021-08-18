@@ -1,0 +1,67 @@
+@import "../styles/colors.scss";
+@import "../styles/fonts.scss";
+
+.header {
+  margin: 0 auto;
+  padding: 70px 70px 50px;
+}
+
+.title {
+  color: $color-dark-grey;
+  margin: 0 0 0.2em 0;
+  font-size: 5.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.excerpt {
+  margin: 20px 0 0 0;
+  color: $color-mid-grey;
+  font-family: $text-font-family;
+  font-size: 2.3rem;
+  line-height: 1.4em;
+  font-weight: 300;
+}
+
+.details {
+  border-top: 1px solid #e4eaed;
+  margin-top: 4rem;
+  padding-top: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .excerpt {
+    color: lighten($color-mid-grey, 20%);
+  }
+
+  .details {
+    border-top-color: #3c414a;
+  }
+}
+
+@media (max-width: 1170px) {
+  .header {
+    padding: 60px 11vw 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    padding: 20px 0 35px 0;
+  }
+
+  .title {
+    font-size: 3.3rem;
+  }
+}
