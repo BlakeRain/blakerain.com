@@ -20,11 +20,11 @@
   cursor: pointer;
   color: white;
   border: none;
-  background-color: darken($primary-background, 40%);
+  background-color: darken($primary-background, 5%);
   border-radius: 3px;
 
   &:hover {
-    background-color: lighten($primary-background, 40%);
+    background-color: lighten($primary-background, 10%);
   }
 
   & + button {

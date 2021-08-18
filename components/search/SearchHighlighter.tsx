@@ -60,10 +60,10 @@ const SearchHighlightControls: FC<{
   return (
     <div className={styles.controls}>
       <button type="button" className={styles.button} onClick={onNextClick}>
-        &daddr; Next
+        &darr; Next
       </button>
       <button type="button" className={styles.button} onClick={onPrevClick}>
-        &uaddr; Previous
+        &uarr; Previous
       </button>
       <button type="button" className={styles.button} onClick={onClearClick}>
         Clear

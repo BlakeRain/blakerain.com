@@ -13,7 +13,6 @@ import {
   SiteNavigation,
   TagDictionary,
 } from "../lib/ghost";
-import styles from "./Index.module.scss";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const posts = await getAllListPosts();

@@ -58,7 +58,7 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       } else {
         const post = searchData.posts[occ.post];
         post_results[occ.post] = {
-          current: post.url === router.pathname,
+          current: post.url === location.pathname,
           relevance: occ.count,
           post: post,
           index: 0,
