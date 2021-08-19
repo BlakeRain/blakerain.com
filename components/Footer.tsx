@@ -8,7 +8,7 @@ export const Footer: FC = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        <section>
+        <section className={styles.copyright}>
           <Link href="/">
             <a>Blake Rain</a>
           </Link>{" "}
