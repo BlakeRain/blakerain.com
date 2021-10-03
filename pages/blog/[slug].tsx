@@ -58,8 +58,8 @@ const BlogPost: NextPage<BlogPostProps> = ({
 }) => {
   const commento = useRef<HTMLDivElement>(null);
 
-  if (enableCommento) {
-    useEffect(() => {
+  useEffect(() => {
+    if (enableCommento) {
       const existing = document.querySelector("script#commento-script");
       if (!existing) {
         console.log("Inserting commento.io script");
@@ -69,8 +69,8 @@ const BlogPost: NextPage<BlogPostProps> = ({
         commento_script.src = "https://cdn.commento.io/js/commento.js";
         commento.current?.parentNode?.appendChild(commento_script);
       }
-    });
-  }
+    }
+  });
 
   return (
     <Layout navigation={navigation}>
