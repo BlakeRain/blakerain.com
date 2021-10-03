@@ -114,6 +114,7 @@ export interface SiteNavigation {
 export interface SiteSettings {
   title: string;
   navigation: SiteNavigation[];
+  enableCommento: boolean;
 }
 
 export const SiteSettingsContext = React.createContext<SiteSettings | null>(null);
@@ -123,6 +124,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return {
     title: title || "No Title",
     navigation: navigation?.map((value) => ({ label: value.label, url: value.url })) || [],
+    enableCommento: false,
   };
 }
 

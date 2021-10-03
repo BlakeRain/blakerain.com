@@ -18,6 +18,7 @@ import { Content } from "../../components/Content";
 import { useEffect, useRef } from "react";
 
 interface BlogPostProps extends PostInformation {
+  enableCommento: boolean;
   navigation: SiteNavigation[];
 }
 
@@ -41,26 +42,35 @@ export const getStaticProps: GetStaticProps<BlogPostProps, { slug: string }> = a
 
   return {
     props: {
+      enableCommento: settings.enableCommento,
       navigation: settings.navigation,
       ...post,
     },
   };
 };
 
-const BlogPost: NextPage<BlogPostProps> = ({ post, authors, tags, navigation }) => {
+const BlogPost: NextPage<BlogPostProps> = ({
+  post,
+  authors,
+  tags,
+  navigation,
+  enableCommento,
+}) => {
   const commento = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const existing = document.querySelector("script#commento-script");
-    if (!existing) {
-      console.log("Inserting commento.io script");
-      const commento_script = document.createElement("SCRIPT") as HTMLScriptElement;
-      commento_script.id = "commento-script";
-      commento_script.defer = true;
-      commento_script.src = "https://cdn.commento.io/js/commento.js";
-      commento.current?.parentNode?.appendChild(commento_script);
-    }
-  });
+  if (enableCommento) {
+    useEffect(() => {
+      const existing = document.querySelector("script#commento-script");
+      if (!existing) {
+        console.log("Inserting commento.io script");
+        const commento_script = document.createElement("SCRIPT") as HTMLScriptElement;
+        commento_script.id = "commento-script";
+        commento_script.defer = true;
+        commento_script.src = "https://cdn.commento.io/js/commento.js";
+        commento.current?.parentNode?.appendChild(commento_script);
+      }
+    });
+  }
 
   return (
     <Layout navigation={navigation}>
@@ -68,9 +78,11 @@ const BlogPost: NextPage<BlogPostProps> = ({ post, authors, tags, navigation }) 
         <title>{post.title}</title>
       </Head>
       <Content authors={authors} tags={tags} post={post} />
-      <section className="post-comments">
-        <div ref={commento} id="commento"></div>
-      </section>
+      {enableCommento && (
+        <section className="post-comments">
+          <div ref={commento} id="commento"></div>
+        </section>
+      )}
     </Layout>
   );
 };
