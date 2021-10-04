@@ -108,7 +108,7 @@ class AnalyticsData {
   }
 }
 
-const ANALYTICS_URL = "https://i0wrfe7bpl.execute-api.eu-west-1.amazonaws.com/default/pv.gif";
+const ANALYTICS_URL = "https://pv.blakerain.com/pv.gif";
 
 const AnalyticsImage = ({ data }: { data: AnalyticsData }) => {
   return (
