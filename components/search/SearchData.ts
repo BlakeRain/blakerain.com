@@ -41,7 +41,9 @@ export class SearchDecoder {
    */
   public decodeUtf8(): string {
     const len = this.decode7();
-    const str = new TextDecoder("utf-8").decode(new DataView(this.buffer, this.offset, len));
+    const str = new TextDecoder("utf-8").decode(
+      new DataView(this.buffer, this.offset, len)
+    );
     this.offset += len;
     return str;
   }
@@ -391,6 +393,13 @@ export class SearchData {
     // Create a decoder to decode data from the buffer
     let decoder = new SearchDecoder(encoded);
 
+    // Read the file magic
+    let magic = decoder.view.getUint32(decoder.offset);
+    decoder.offset += 4;
+    if (magic !== 0x53524348) {
+      throw new Error("Incorrect file magic in search data (expected 'SRCH')");
+    }
+
     // Decode the number of posts in the search data
     let num_posts = decoder.decode7();
 
@@ -420,11 +429,13 @@ export class SearchData {
     // Record how long it too us to decode
     let t1 = performance.now();
     console.log(
-      `Decoded ${num_posts} posts and ${term_stats.count} term trie nodes covering ${
-        term_stats.nterms
-      } terms occurring ${term_stats.noccurrences} times, in ${(t1 - t0).toFixed(
-        2
-      )} milliseconds from ${(encoded.byteLength / 1024.0).toFixed(2)} Kb search database`
+      `Decoded ${num_posts} posts and ${
+        term_stats.count
+      } term trie nodes covering ${term_stats.nterms} terms occurring ${
+        term_stats.noccurrences
+      } times, in ${(t1 - t0).toFixed(2)} milliseconds from ${(
+        encoded.byteLength / 1024.0
+      ).toFixed(2)} Kb search database`
     );
 
     console.log(

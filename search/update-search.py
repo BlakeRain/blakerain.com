@@ -213,6 +213,7 @@ class SearchData:
                 term.add_occurrence(post)
 
     def encode(self, store: Store):
+        store.store(">I", 0x53524348)
         store.store7(len(self.posts))
         for post_id in self.posts:
             post = self.posts[post_id]
