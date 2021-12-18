@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from html.parser import HTMLParser
 
 import os
@@ -11,7 +11,7 @@ class ExtractorParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.stack: List[str] = []
-        self.current: str = None
+        self.current: Optional[str] = None
         self.text: List[str] = []
         self.code: List[str] = []
 
@@ -190,7 +190,7 @@ class SearchData:
                         self.stop_words.append(word)
                 print(f"Loaded {len(self.stop_words)} stop words")
 
-    def get_term(self, text: str) -> SearchTerm:
+    def get_term(self, text: str) -> Optional[SearchTerm]:
         text = text.strip().lower()
         if text in self.stop_words:
             return None
