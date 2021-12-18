@@ -7,7 +7,7 @@ exports.handler = async (event) => {
         host: "api.github.com",
         method: "POST",
         port: 443,
-        path: "/repos/blakerain/blakerain.com/dispatches",
+        path: "/repos/blakerain/blakerain.com.build/dispatches",
         headers: {
           Authorization: "token " + process.env.GITHUB_TOKEN,
           Accept: "application/vnd.github.v3+json",
