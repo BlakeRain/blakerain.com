@@ -1,0 +1,57 @@
+#
+# amplify.yaml
+#
+# CloudFormation template for blakerain.com amplify
+#
+
+Description: CloudFormation template for blakerain.com
+
+Resources:
+  BlakeRainAmplifyRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: BlakeRainAmplifyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: "amplify:*"
+                Resource: "*"
+
+  BlakeRainAmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: blakerain_amplify_app
+      Description: Personal website
+      CustomRules:
+        - Source: "/<*>"
+          Target: "/index.html"
+          Status: "404-200"
+        - Source: "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|ttf|map|json)$)([^.]+$)/>"
+          Target: "/index.html"
+          Status: "200"
+      IAMServiceRole: !GetAtt BlakeRainAmplifyRole.Arn
+
+  BlakeRainAmplifyAppBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      BranchName: main
+      AppId: !GetAtt BlakeRainAmplifyApp.AppId
+      Description: Main branch
+
+  BlakeRainAmplifyAppDomain:
+    Type: AWS::Amplify::Domain
+    Properties:
+      AppId: !GetAtt BlakeRainAmplifyApp.AppId
+      DomainName: blakerain.com
+      SubDomainSettings:
+        - Prefix: www
+          BranchName: !GetAtt BlakeRainAmplifyAppBranch.BranchName
