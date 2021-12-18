@@ -70,6 +70,7 @@ export interface SearchStats {
   count: number;
   maxDepth: number;
   maxPopDistance: number;
+  totalPopDistance: number;
   nterms: number;
 }
 
@@ -328,6 +329,7 @@ export class Trie {
 
         if (stats) {
           stats.maxPopDistance = Math.max(stats.maxPopDistance, pop);
+          stats.totalPopDistance += pop;
           ++stats.nterms;
         }
 
@@ -419,6 +421,7 @@ export class SearchData {
       count: 0,
       maxDepth: 0,
       maxPopDistance: 0,
+      totalPopDistance: 0,
       nterms: 0,
       noccurrences: 0,
     };
@@ -439,7 +442,11 @@ export class SearchData {
     );
 
     console.log(
-      `Term trie decoding had a maximum stack depth of ${term_stats.maxDepth}, popping at most ${term_stats.maxPopDistance} nodes`
+      `Term trie decoding had a maximum stack depth of ${
+        term_stats.maxDepth
+      }, popping at most ${term_stats.maxPopDistance} nodes (avg. ${(
+        term_stats.totalPopDistance / term_stats.nterms
+      ).toFixed(2)} per term)`
     );
   }
 }
