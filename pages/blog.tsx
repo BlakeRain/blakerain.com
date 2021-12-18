@@ -1,6 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import React from "react";
+import Analytics from "../components/Analytics";
 import { Layout } from "../components/Layout";
 import { PostCards } from "../components/PostCard";
 import {
@@ -42,6 +43,7 @@ const Blog: NextPage<{
         <title>Blog</title>
       </Head>
       <PostCards posts={posts} authors={authors} tags={tags} />
+      <Analytics />
     </Layout>
   );
 };

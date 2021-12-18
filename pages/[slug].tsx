@@ -15,6 +15,7 @@ import {
 } from "../lib/ghost";
 import { Layout } from "../components/Layout";
 import { Content } from "../components/Content";
+import Analytics from "../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const slugs = await getAllPageSlugs();
@@ -53,6 +54,7 @@ const Page: NextPage<PageProps> = ({ page, authors, tags, navigation }) => {
         <title>{page.title}</title>
       </Head>
       <Content authors={authors} tags={tags} post={page} />
+      <Analytics />
     </Layout>
   );
 };

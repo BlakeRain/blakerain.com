@@ -16,6 +16,7 @@ import {
 import { Layout } from "../../components/Layout";
 import { Content } from "../../components/Content";
 import { useEffect, useRef } from "react";
+import Analytics from "../../components/Analytics";
 
 interface BlogPostProps extends PostInformation {
   enableCommento: boolean;
@@ -78,6 +79,7 @@ const BlogPost: NextPage<BlogPostProps> = ({
         <title>{post.title}</title>
       </Head>
       <Content authors={authors} tags={tags} post={post} />
+      <Analytics />
       {enableCommento && (
         <section className="post-comments">
           <div ref={commento} id="commento"></div>

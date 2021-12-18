@@ -26,6 +26,9 @@ def standard_response():
 def lambda_handler(event, context):
     query = event["queryStringParameters"]
 
+    if query is None:
+        return standard_response()
+
     uuid = query.get("uuid", None)
     path = query.get("path", None)
     ua = query.get("ua", None)

@@ -30,10 +30,6 @@ export const Layout: FC<LayoutProps> = ({ navigation, children }) => {
       <script
         async
         src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
-      <script async defer src="https://sa.blakerain.com/app.js"></script>
-      <noscript>
-        <img src="https://sa.blakerain.com/image.gif" alt="" />
-      </noscript>{" "}
     </React.Fragment>
   );
 };

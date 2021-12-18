@@ -23,6 +23,7 @@ import {
 import { Layout } from "../../components/Layout";
 import { PostCards } from "../../components/PostCard";
 import Link from "next/link";
+import Analytics from "../../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async (context) => {
   const slugs = await getAllTagSlugs();
@@ -81,6 +82,7 @@ const Tag: NextPage<TagProps> = ({ tag, posts, authors, tags, navigation }) => {
         </small>
       </h1>
       <PostCards posts={posts} authors={authors} tags={tags} />
+      <Analytics />
     </Layout>
   );
 };
