@@ -79,7 +79,9 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
               });
           } else {
             // We were unable to load the data
-            console.error("Failed to retrieve search data: " + response.statusText);
+            console.error(
+              "Failed to retrieve search data: " + response.statusText
+            );
             reject(response.statusText);
           }
         })
@@ -104,7 +106,9 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
           setSearchVisible(true);
         })
         .catch((err) => {
-          console.log("Search data could not be loaded; setting search box visible");
+          console.log(
+            "Search data could not be loaded; setting search box visible"
+          );
           setSearchVisible(true);
         });
     } else {
@@ -117,7 +121,8 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
 
   const onWindowKeyDown = (event: KeyboardEvent) => {
     const tag = (event.target as Element).tagName;
-    if ((tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") && event.key === "s") {
+    console.log("Received window keydown event in " + tag);
+    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
       return;
     }
 
