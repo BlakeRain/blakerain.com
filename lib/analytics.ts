@@ -27,6 +27,9 @@ export const authenticate = async (
 ): Promise<string> => {
   const res = await fetch(getAnalyticsURL("api/auth/signin"), {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ username, password }),
   });
 
@@ -50,13 +53,13 @@ export interface WeekView {
 }
 
 export const getWeekViews = async (
-  key: string,
+  token: string,
   year: number,
   week: number
 ): Promise<WeekView[]> => {
   const res = await fetch(
     getAnalyticsURL("api/views/week", {
-      key,
+      token,
       year: year.toString(),
       week: week.toString(),
     })
@@ -74,13 +77,13 @@ export interface MonthView {
 }
 
 export const getMonthViews = async (
-  key: string,
+  token: string,
   year: number,
   month: number
 ): Promise<MonthView[]> => {
   const res = await fetch(
     getAnalyticsURL("api/views/month", {
-      key,
+      token,
       year: year.toString(),
       month: month.toString(),
     })

@@ -121,7 +121,6 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
 
   const onWindowKeyDown = (event: KeyboardEvent) => {
     const tag = (event.target as Element).tagName;
-    console.log("Received window keydown event in " + tag);
     if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
       return;
     }

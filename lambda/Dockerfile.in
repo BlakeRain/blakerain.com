@@ -1,0 +1,29 @@
+#
+# Dockerfile.in
+#
+# This is the template Dockerfile for building the lambda functions
+#
+
+# We build from Amazon's lambda image
+FROM --platform=linux/amd64 public.ecr.aws/lambda/python:3.9
+
+# We use the '/app/' working directory
+WORKDIR /app
+
+# Install the zip tool so we can package our lambda function
+RUN yum install -y zip
+
+# Add the requirements.txt file and then install the dependencies. We do this before all the
+# other sources so that we can isolate changes to the dependencies and avoid rebuilding.
+ADD src/requirements.txt /app
+
+# Install all the dependencies
+RUN pip3 install -t dependencies -r requirements.txt --upgrade
+
+# Add the contents of the Lambda function's 'src' directory into the working directory. This
+# directory is constructed by the build infrastructure.
+ADD src /app
+
+# Create the ZIP file for the lambda function
+RUN zip -r @LAMBDA_NAME@.zip * -x requirements.txt
+

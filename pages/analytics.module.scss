@@ -1,0 +1,75 @@
+@import "../styles/colors.scss";
+
+.signInFormContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.signInForm {
+  display: flex;
+  flex-direction: column;
+
+  margin: 5em 10em;
+  padding: 1em;
+
+  background-color: $primary-background;
+
+  button {
+    background-color: $color-blue;
+    color: white;
+    cursor: pointer;
+
+    margin: 0.5em 0;
+    padding: 1em;
+
+    border: none;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: darken($color-blue, 10%);
+    }
+
+    &:disabled {
+      background-color: $color-mid-grey;
+      cursor: inherit;
+      color: darken($color-mid-grey, 10%);
+
+      &:hover {
+        background-color: $color-mid-grey;
+      }
+    }
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: row;
+
+  margin: 0.5em 0;
+
+  label {
+    width: 25%;
+    padding: 1rem 0;
+  }
+
+  input {
+    width: 75%;
+
+    padding: 1rem;
+    border: none;
+    border-radius: 5px;
+
+    &:disabled {
+      background-color: $color-light-grey;
+      color: $color-light-grey;
+    }
+  }
+}
+
+.error {
+  color: $color-red;
+  font-weight: 600;
+  text-align: center;
+  min-height: 1.6em;
+}
