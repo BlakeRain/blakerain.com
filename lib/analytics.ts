@@ -10,12 +10,7 @@ export function getAnalyticsURL(
   path: string,
   parameters?: { [key: string]: string }
 ): string {
-  const host =
-    process.env.ANALYTICS_HOSTNAME || "https://analytics.blakerain.com/";
-
-  while (path.startsWith("/")) {
-    path = path.substr(1);
-  }
+  const host = process.env.ANALYTICS_HOSTNAME || "https://pv.blakerain.com";
 
   const params = parameters
     ? "?" +
@@ -23,14 +18,14 @@ export function getAnalyticsURL(
         .map((key) => `${key}=${encodeURIComponent(parameters[key])}`)
         .join("&")
     : "";
-  return host + path + params;
+  return host + "/" + path + params;
 }
 
 export const authenticate = async (
   username: string,
   password: string
 ): Promise<string> => {
-  const res = await fetch(getAnalyticsURL("auth/signin"), {
+  const res = await fetch(getAnalyticsURL("api/auth/signin"), {
     method: "POST",
     body: JSON.stringify({ username, password }),
   });
@@ -60,7 +55,7 @@ export const getWeekViews = async (
   week: number
 ): Promise<WeekView[]> => {
   const res = await fetch(
-    getAnalyticsURL("views/week", {
+    getAnalyticsURL("api/views/week", {
       key,
       year: year.toString(),
       week: week.toString(),
@@ -84,7 +79,7 @@ export const getMonthViews = async (
   month: number
 ): Promise<MonthView[]> => {
   const res = await fetch(
-    getAnalyticsURL("views/month", {
+    getAnalyticsURL("api/views/month", {
       key,
       year: year.toString(),
       month: month.toString(),
