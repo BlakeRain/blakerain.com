@@ -21,6 +21,20 @@ export function getAnalyticsURL(
   return host + "/" + path + params;
 }
 
+const SESSION_TOKEN_NAME = "blakerain:analytics:token";
+
+export function getSessionToken(): string | null {
+  if (typeof window !== "undefined") {
+    return sessionStorage.getItem(SESSION_TOKEN_NAME);
+  } else {
+    return null;
+  }
+}
+
+export function setSessionToken(token: string) {
+  sessionStorage.setItem(SESSION_TOKEN_NAME, token);
+}
+
 export const authenticate = async (
   username: string,
   password: string

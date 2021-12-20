@@ -73,3 +73,138 @@
   text-align: center;
   min-height: 1.6em;
 }
+
+.reportContainer {
+  margin: 2em 0;
+}
+
+.reportToolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  background-color: $primary-background;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+
+  .left,
+  .right {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .left {
+    padding-left: 10px;
+    padding-top: 8px;
+
+    button + button {
+      margin-left: 0.25em;
+    }
+  }
+
+  .right {
+    padding-top: 4px;
+    padding-right: 5px;
+    padding-bottom: 4px;
+  }
+}
+
+.reportTabButton {
+  display: inline-block;
+
+  background-color: lighten($primary-background, 20%);
+  color: white;
+
+  border: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: lighten($primary-background, 30%);
+  }
+}
+
+.activeTabButton {
+  background-color: white;
+  color: $color-dark-grey;
+
+  &:hover {
+    background-color: white;
+  }
+}
+
+.reportNavButton {
+  display: inline-block;
+
+  background-color: lighten($primary-background, 20%);
+  color: white;
+
+  border: none;
+  cursor: pointer;
+
+  &:first-of-type {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  &:last-of-type {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  &:hover {
+    background-color: lighten($primary-background, 30%);
+  }
+}
+
+.reportDate {
+  background-color: lighten($primary-background, 20%);
+  color: white;
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  margin-right: 4px;
+
+  border-radius: 5px;
+}
+
+.reportContents {
+  border-color: $primary-background;
+  border-width: 1px;
+  border-style: none solid solid solid;
+
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  padding: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reportTabButton {
+    background-color: lighten($primary-background, 10%);
+
+    &:hover {
+      background-color: lighten($primary-background, 20%);
+    }
+  }
+
+  .reportDate {
+    background-color: darken($primary-background, 5%);
+  }
+
+  .activeTabButton {
+    background-color: $dark-mode-background;
+    color: white;
+
+    &:hover {
+      background-color: $dark-mode-background;
+    }
+  }
+
+  .reportNavButton {
+    background-color: lighten($primary-background, 10%);
+  }
+}

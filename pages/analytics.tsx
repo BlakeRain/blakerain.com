@@ -1,9 +1,18 @@
 import React, { FC, useState } from "react";
-import { Layout } from "../components/Layout";
 import { GetStaticProps } from "next";
 import Head from "next/head";
+import cn from "classnames";
+import { getISOWeek } from "date-fns";
+
+import { Layout } from "../components/Layout";
 import { getSiteSettings, SiteNavigation } from "../lib/ghost";
-import { authenticate } from "../lib/analytics";
+
+import {
+  authenticate,
+  getSessionToken,
+  setSessionToken,
+} from "../lib/analytics";
+
 import styles from "./analytics.module.scss";
 
 const SignIn: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
@@ -77,6 +86,120 @@ const SignIn: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
   );
 };
 
+const WeeklyReport: FC<{ token: string }> = ({ token }) => {
+  return <b>Weekly report: {token}</b>;
+};
+
+const MontlyReport: FC<{ token: string }> = ({ token }) => {
+  return <b>Monthly report: {token}</b>;
+};
+
+const Report: FC<{ token: string }> = ({ token }) => {
+  const now = new Date();
+  const [mode, setMode] = useState<"month" | "week">("week");
+  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth());
+  const [week, setWeek] = useState(getISOWeek(now));
+
+  const onPrevDateClick: React.MouseEventHandler<HTMLButtonElement> = (
+    event
+  ) => {
+    switch (mode) {
+      case "week":
+        if (week === 1) {
+          setYear(year - 1);
+          setWeek(52);
+        } else {
+          setWeek(week - 1);
+        }
+        break;
+      case "month":
+        if (month == 0) {
+          setYear(year - 1);
+          setMonth(11);
+        } else {
+          setMonth(month - 1);
+        }
+        break;
+    }
+  };
+
+  const onNextDateClick: React.MouseEventHandler<HTMLButtonElement> = (
+    event
+  ) => {
+    switch (mode) {
+      case "week":
+        if (week === 52) {
+          setYear(year + 1);
+          setWeek(1);
+        } else {
+          setWeek(1 + week);
+        }
+        break;
+      case "month":
+        if (month == 11) {
+          setYear(year + 1);
+          setMonth(0);
+        } else {
+          setMonth(1 + month);
+        }
+        break;
+    }
+  };
+
+  return (
+    <div className={styles.reportContainer}>
+      <div className={styles.reportToolbar}>
+        <div className={styles.left}>
+          <button
+            type="button"
+            className={cn(styles.reportTabButton, {
+              [styles.activeTabButton]: mode === "month",
+            })}
+            onClick={() => setMode("month")}
+          >
+            Month
+          </button>
+          <button
+            type="button"
+            className={cn(styles.reportTabButton, {
+              [styles.activeTabButton]: mode === "week",
+            })}
+            onClick={() => setMode("week")}
+          >
+            Week
+          </button>
+        </div>
+        <div className={styles.right}>
+          <div className={styles.reportDate}>
+            {year.toString()}/
+            {mode === "week"
+              ? "W" + week.toString()
+              : (month < 9 ? "0" : "") + (1 + month).toString()}
+          </div>
+          <button
+            type="button"
+            className={styles.reportNavButton}
+            title={"Previous " + mode}
+            onClick={onPrevDateClick}
+          >
+            &larr;
+          </button>
+          <button
+            type="button"
+            className={styles.reportNavButton}
+            title={"Next " + mode}
+            onClick={onNextDateClick}
+          >
+            &rarr;
+          </button>
+        </div>
+      </div>
+      <div className={styles.reportContents}></div>
+    </div>
+  );
+};
+
 export const getStaticProps: GetStaticProps = async (context) => {
   const settings = await getSiteSettings();
 
@@ -88,14 +211,27 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(getSessionToken());
+
+  if (typeof window === "undefined") {
+    return null;
+  }
 
   return (
     <Layout navigation={navigation}>
       <Head>
         <title>Site Analytics</title>
       </Head>
-      {token ? <b>Okay</b> : <SignIn setToken={setToken} />}
+      {token ? (
+        <Report token={token}>Okay</Report>
+      ) : (
+        <SignIn
+          setToken={(token) => {
+            setToken(token);
+            setSessionToken(token);
+          }}
+        />
+      )}
     </Layout>
   );
 };
