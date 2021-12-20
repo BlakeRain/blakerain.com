@@ -1,16 +1,19 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import cn from "classnames";
-import { getISOWeek } from "date-fns";
+import { format, getISOWeek } from "date-fns";
 
 import { Layout } from "../components/Layout";
+import LineChart, { ChartData } from "../components/analytics/LineChart";
 import { getSiteSettings, SiteNavigation } from "../lib/ghost";
 
 import {
   authenticate,
   getSessionToken,
   setSessionToken,
+  getWeekViews,
+  getMonthViews,
 } from "../lib/analytics";
 
 import styles from "./analytics.module.scss";
@@ -86,66 +89,223 @@ const SignIn: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
   );
 };
 
+const now = new Date();
+const WEEK_LABELS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 const WeeklyReport: FC<{ token: string }> = ({ token }) => {
-  return <b>Weekly report: {token}</b>;
+  const [year, setYear] = useState(now.getFullYear());
+  const [week, setWeek] = useState(getISOWeek(now));
+  const [data, setData] = useState<ChartData[] | null>(null);
+  const [highlight, setHighlight] = useState<ChartData | null>(null);
+
+  useEffect(() => {
+    getWeekViews(token, year, week).then((result) => {
+      setData(
+        result.map((item) => ({
+          label: WEEK_LABELS[item.day],
+          x: item.day,
+          y: item.count,
+        }))
+      );
+    });
+  }, [year, week]);
+
+  const handlePrevClick = () => {
+    if (week === 1) {
+      setYear(year - 1);
+      setWeek(52);
+    } else {
+      setWeek(week - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (week === 52) {
+      setYear(year + 1);
+      setWeek(1);
+    } else {
+      setWeek(week + 1);
+    }
+  };
+
+  return (
+    <div className={styles.reportContents}>
+      <div className={styles.reportControls}>
+        <span>
+          <b>Date:</b> {year.toString()} W{week.toString()}
+        </span>
+        <button type="button" onClick={handlePrevClick}>
+          &larr;
+        </button>
+        <button type="button" onClick={handleNextClick}>
+          &rarr;
+        </button>
+        {highlight ? (
+          <span>
+            <b>{WEEK_LABELS[highlight.x]}:</b>{" "}
+            {highlight.y ? highlight.y.toString() : "no"} visitors
+          </span>
+        ) : null}
+      </div>
+      {data ? (
+        <div>
+          <LineChart
+            data={data}
+            width={300}
+            height={200}
+            gridX={6}
+            gridY={5}
+            onMouseOver={(_, data) => setHighlight(data)}
+            onMouseOut={() => setHighlight(null)}
+          />
+        </div>
+      ) : (
+        <svg viewBox="0 0 300 200">
+          <rect
+            x={0}
+            y={0}
+            width="100%"
+            height="100%"
+            stroke="none"
+            fill="#303030"
+          />
+        </svg>
+      )}
+    </div>
+  );
 };
 
-const MontlyReport: FC<{ token: string }> = ({ token }) => {
-  return <b>Monthly report: {token}</b>;
+const MonthlyReport: FC<{ token: string }> = ({ token }) => {
+  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth());
+  const [data, setData] = useState<ChartData[] | null>(null);
+  const [highlight, setHighlight] = useState<ChartData | null>(null);
+
+  useEffect(() => {
+    getMonthViews(token, year, month).then((result) => {
+      setData(
+        result.map((item) => ({
+          label: item.day.toString(),
+          x: item.day,
+          y: item.count,
+        }))
+      );
+    });
+  }, [year, month]);
+
+  const handlePrevClick = () => {
+    if (month === 0) {
+      setYear(year - 1);
+      setMonth(11);
+    } else {
+      setMonth(month - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (month === 11) {
+      setYear(year + 1);
+      setMonth(0);
+    } else {
+      setMonth(month + 1);
+    }
+  };
+
+  return (
+    <div className={styles.reportContents}>
+      <div className={styles.reportControls}>
+        <span>
+          <b>Date:</b> {format(new Date(year, month), "MM/yyyy")}
+        </span>
+        <button type="button" onClick={handlePrevClick}>
+          &larr;
+        </button>
+        <button type="button" onClick={handleNextClick}>
+          &rarr;
+        </button>
+        {highlight ? (
+          <span>
+            <b>{format(new Date(year, month, highlight.x), "dd/MM/yyyy")}:</b>{" "}
+            {highlight.y ? highlight.y.toString() : "no"} visitors
+          </span>
+        ) : null}
+      </div>
+      {data ? (
+        <div>
+          <LineChart
+            data={data}
+            width={300}
+            height={200}
+            gridY={5}
+            gridX={15}
+            onMouseOver={(_, data) => setHighlight(data)}
+            onMouseOut={() => setHighlight(null)}
+          />
+        </div>
+      ) : (
+        <svg viewBox="0 0 300 200">
+          <rect
+            x={0}
+            y={0}
+            width="100%"
+            height="100%"
+            stroke="none"
+            fill="#303030"
+          />
+        </svg>
+      )}
+    </div>
+  );
 };
 
 const Report: FC<{ token: string }> = ({ token }) => {
   const now = new Date();
   const [mode, setMode] = useState<"month" | "week">("week");
-  const [year, setYear] = useState(now.getFullYear());
-  const [month, setMonth] = useState(now.getMonth());
-  const [week, setWeek] = useState(getISOWeek(now));
 
-  const onPrevDateClick: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
-    switch (mode) {
-      case "week":
-        if (week === 1) {
-          setYear(year - 1);
-          setWeek(52);
-        } else {
-          setWeek(week - 1);
-        }
-        break;
-      case "month":
-        if (month == 0) {
-          setYear(year - 1);
-          setMonth(11);
-        } else {
-          setMonth(month - 1);
-        }
-        break;
-    }
-  };
-
-  const onNextDateClick: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
-    switch (mode) {
-      case "week":
-        if (week === 52) {
-          setYear(year + 1);
-          setWeek(1);
-        } else {
-          setWeek(1 + week);
-        }
-        break;
-      case "month":
-        if (month == 11) {
-          setYear(year + 1);
-          setMonth(0);
-        } else {
-          setMonth(1 + month);
-        }
-        break;
-    }
-  };
+  // const onPrevDateClick: React.MouseEventHandler<HTMLButtonElement> = (
+  //   event
+  // ) => {
+  //   switch (mode) {
+  //     case "week":
+  //       if (week === 1) {
+  //         setYear(year - 1);
+  //         setWeek(52);
+  //       } else {
+  //         setWeek(week - 1);
+  //       }
+  //       break;
+  //     case "month":
+  //       if (month == 0) {
+  //         setYear(year - 1);
+  //         setMonth(11);
+  //       } else {
+  //         setMonth(month - 1);
+  //       }
+  //       break;
+  //   }
+  // };
+  //
+  // const onNextDateClick: React.MouseEventHandler<HTMLButtonElement> = (
+  //   event
+  // ) => {
+  //   switch (mode) {
+  //     case "week":
+  //       if (week === 52) {
+  //         setYear(year + 1);
+  //         setWeek(1);
+  //       } else {
+  //         setWeek(1 + week);
+  //       }
+  //       break;
+  //     case "month":
+  //       if (month == 11) {
+  //         setYear(year + 1);
+  //         setMonth(0);
+  //       } else {
+  //         setMonth(1 + month);
+  //       }
+  //       break;
+  //   }
 
   return (
     <div className={styles.reportContainer}>
@@ -170,7 +330,7 @@ const Report: FC<{ token: string }> = ({ token }) => {
             Week
           </button>
         </div>
-        <div className={styles.right}>
+        {/* <div className={styles.right}>
           <div className={styles.reportDate}>
             {year.toString()}/
             {mode === "week"
@@ -193,9 +353,13 @@ const Report: FC<{ token: string }> = ({ token }) => {
           >
             &rarr;
           </button>
-        </div>
+        </div> */}
       </div>
-      <div className={styles.reportContents}></div>
+      {mode === "week" ? (
+        <WeeklyReport token={token} />
+      ) : (
+        <MonthlyReport token={token} />
+      )}
     </div>
   );
 };

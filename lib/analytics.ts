@@ -6,19 +6,11 @@
 // This module contains the functionality that interfaces with the website analytics.
 //
 
-export function getAnalyticsURL(
-  path: string,
-  parameters?: { [key: string]: string }
-): string {
-  const host = process.env.ANALYTICS_HOSTNAME || "https://pv.blakerain.com";
+import { getDaysInMonth } from "date-fns";
 
-  const params = parameters
-    ? "?" +
-      Object.keys(parameters)
-        .map((key) => `${key}=${encodeURIComponent(parameters[key])}`)
-        .join("&")
-    : "";
-  return host + "/" + path + params;
+export function getAnalyticsURL(path: string): string {
+  const host = process.env.ANALYTICS_HOSTNAME || "https://pv.blakerain.com";
+  return host + "/" + path;
 }
 
 const SESSION_TOKEN_NAME = "blakerain:analytics:token";
@@ -63,23 +55,50 @@ export interface WeekView {
   year: number;
   week: number;
   day: number;
-  count: number;
+  count?: number;
 }
+
+const DAYS_REMAP = [6, 0, 1, 2, 3, 4, 5];
 
 export const getWeekViews = async (
   token: string,
   year: number,
   week: number
 ): Promise<WeekView[]> => {
-  const res = await fetch(
-    getAnalyticsURL("api/views/week", {
+  const res = await fetch(getAnalyticsURL("api/views/week"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       token,
-      year: year.toString(),
-      week: week.toString(),
-    })
-  );
+      year: year,
+      week: week,
+    }),
+  });
 
   var weeks: WeekView[] = await res.json();
+
+  for (let day = 0; day < 7; ++day) {
+    var found = false;
+
+    for (let index = 0; index < weeks.length; ++index) {
+      if (weeks[index].day === day) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      weeks.push({ year, week, day });
+    }
+  }
+
+  // Remap days
+  weeks.forEach((week) => {
+    week.day = DAYS_REMAP[week.day];
+  });
+
   return weeks.sort((a, b) => a.day - b.day);
 };
 
@@ -87,7 +106,7 @@ export interface MonthView {
   year: number;
   month: number;
   day: number;
-  count: number;
+  count?: number;
 }
 
 export const getMonthViews = async (
@@ -95,14 +114,35 @@ export const getMonthViews = async (
   year: number,
   month: number
 ): Promise<MonthView[]> => {
-  const res = await fetch(
-    getAnalyticsURL("api/views/month", {
+  const res = await fetch(getAnalyticsURL("api/views/month"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       token,
-      year: year.toString(),
-      month: month.toString(),
-    })
-  );
+      year: year,
+      month: 1 + month,
+    }),
+  });
 
+  const days = getDaysInMonth(new Date(year, month));
   var months: MonthView[] = await res.json();
+
+  for (let day = 1; day <= days; ++day) {
+    var found = false;
+
+    for (let index = 0; index < months.length; ++index) {
+      if (months[index].day === day) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      months.push({ year, month, day });
+    }
+  }
+
   return months.sort((a, b) => a.day - b.day);
 };

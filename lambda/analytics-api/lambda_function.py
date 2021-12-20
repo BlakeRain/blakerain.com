@@ -87,16 +87,19 @@ def handle_views_week(event):
         return standard_response(400, {"error": "Expected 'token' field to be a string"})
     if not validate_token(token):
         return standard_response(403, {"error": "Invalid authentication token"})
+
     if "year" not in body:
         return standard_response(400, {"error": "Expected 'year' field in request body"})
     year = body["year"]
     if not isinstance(year, int):
         return standard_response(400, {"error": "Expected 'year' field to be a number"})
+
     if "week" not in body:
         return standard_response(400, {"error": "Expected 'week' field in request body"})
     week = body["week"]
     if not isinstance(week, int):
         return standard_response(400, {"error": "Expected 'week' field to be a number"})
+
     res = DDB.query(TableName="PageTable",
                     KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
@@ -112,8 +115,52 @@ def handle_views_week(event):
             "year": int(year),
             "week": int(week),
             "day": int(item["ViewDay"]["S"]),
-            "count": item["ViewCount"]["N"]
+            "count": int(item["ViewCount"]["N"])
         }
+
+    return standard_response(200, [map_item(item) for item in res["Items"]])
+
+
+def handle_views_month(event):
+    body = json.loads(event["body"])
+    if "token" not in body:
+        return standard_response(400, {"error": "Expected 'token' field in request body"})
+    token = body["token"]
+    if not isinstance(token, str):
+        return standard_response(400, {"error": "Expected 'token' field to be a string"})
+    if not validate_token(token):
+        return standard_response(403, {"error": "Invalid authentication token"})
+
+    if "year" not in body:
+        return standard_response(400, {"error": "Expected 'year' field in request body"})
+    year = body["year"]
+    if not isinstance(year, int):
+        return standard_response(400, {"error": "Expected 'year' field to be a number"})
+
+    if "month" not in body:
+        return standard_response(400, {"error": "Expected 'month' field in request body"})
+    month = body["month"]
+    if not isinstance(month, int):
+        return standard_response(400, {"error": "Expected 'month' field to be a number"})
+
+    res = DDB.query(TableName="PageTable",
+                    KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
+                    ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
+                    ExpressionAttributeValues={
+                        ":v1": {"S": "site"},
+                        ":v2": {"S": f"Month-{year}-{month}-"}
+                    })
+    print(res)
+
+    def map_item(item):
+        year, _, month = item["ViewMonth"]["S"].partition("-")
+        return {
+            "year": int(year),
+            "month": int(month),
+            "day": int(item["ViewDay"]["S"]),
+            "count": int(item["ViewCount"]["N"])
+        }
+
     return standard_response(200, [map_item(item) for item in res["Items"]])
 
 
@@ -124,6 +171,8 @@ def lambda_handler(event, context):
             return handle_auth_signin(event)
         if resource == "/api/views/week":
             return handle_views_week(event)
+        if resource == "/api/views/month":
+            return handle_views_month(event)
     except:
         logging.exception(f"Failed to execute request to '{resource}'")
         return standard_response(500, {"error": "Internal server error"})

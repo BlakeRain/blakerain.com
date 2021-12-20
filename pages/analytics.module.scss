@@ -172,6 +172,9 @@
 }
 
 .reportContents {
+  display: flex;
+  flex-direction: column;
+
   border-color: $primary-background;
   border-width: 1px;
   border-style: none solid solid solid;
@@ -180,6 +183,52 @@
   border-bottom-right-radius: 8px;
 
   padding: 1rem;
+}
+
+.reportControls {
+  display: flex;
+  flex-direction: row;
+
+  background-color: $color-dark-grey;
+  padding: 1rem;
+
+  span,
+  button {
+    display: block;
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.75);
+
+    background-color: $primary-background;
+  }
+
+  span {
+    border-radius: 5px;
+  }
+
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($primary-background, 10%);
+    }
+
+    &:first-of-type {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+
+  span + button,
+  button + span {
+    margin-left: 1rem;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
