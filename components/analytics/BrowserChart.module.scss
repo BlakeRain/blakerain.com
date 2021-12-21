@@ -1,0 +1,32 @@
+.browserPalette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.8;
+    color: black;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &.inactive {
+      opacity: 0.2;
+    }
+
+    svg {
+      width: 1em;
+      margin-right: 5px;
+      margin-bottom: -2px;
+    }
+  }
+}
