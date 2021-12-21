@@ -146,3 +146,136 @@ export const getMonthViews = async (
 
   return months.sort((a, b) => a.day - b.day);
 };
+
+export interface BrowserDataItem {
+  day: number;
+  count?: number;
+}
+
+export type BrowserData = { [key: string]: BrowserDataItem[] };
+
+export interface BrowsersWeek {
+  year: number;
+  week: number;
+  browsers: BrowserData;
+}
+
+export const getBrowsersWeek = async (
+  token: string,
+  year: number,
+  week: number
+): Promise<BrowsersWeek> => {
+  const res = await fetch(getAnalyticsURL("api/browsers/week"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token,
+      year,
+      week,
+    }),
+  });
+
+  var data: BrowsersWeek = {
+    year,
+    week,
+    browsers: {},
+  };
+
+  const json: {
+    browser: string;
+    year: number;
+    week: number;
+    day: number;
+    count: number;
+  }[] = await res.json();
+  json.forEach((obj) => {
+    const day = DAYS_REMAP[obj["day"]];
+    const count = obj["count"];
+    const browser = obj["browser"];
+
+    if (browser in data.browsers) {
+      data.browsers[browser].push({ day, count });
+    } else {
+      data.browsers[browser] = [{ day, count }];
+    }
+  });
+
+  for (let day = 0; day < 7; ++day) {
+    Object.keys(data.browsers).forEach((browser) => {
+      const found = data.browsers[browser].find((item) => item.day === day);
+      if (!found) {
+        data.browsers[browser].push({ day });
+      }
+    });
+  }
+
+  Object.keys(data.browsers).forEach((browser) => {
+    data.browsers[browser].sort((a, b) => a.day - b.day);
+  });
+
+  return data;
+};
+
+export interface BrowsersMonth {
+  year: number;
+  month: number;
+  browsers: BrowserData;
+}
+
+export const getBrowsersMonth = async (
+  token: string,
+  year: number,
+  month: number
+): Promise<BrowsersMonth> => {
+  const res = await fetch(getAnalyticsURL("api/browsers/month"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token, year, month: 1 + month }),
+  });
+
+  var data: BrowsersMonth = {
+    year,
+    month,
+    browsers: {},
+  };
+
+  const json: {
+    browser: string;
+    year: number;
+    week: number;
+    day: number;
+    count: number;
+  }[] = await res.json();
+
+  json.forEach((obj) => {
+    const day = obj["day"];
+    const count = obj["count"];
+    const browser = obj["browser"];
+
+    if (browser in data.browsers) {
+      data.browsers[browser].push({ day, count });
+    } else {
+      data.browsers[browser] = [{ day, count }];
+    }
+  });
+
+  const days = getDaysInMonth(new Date(year, month));
+  for (let day = 1; day <= days; ++day) {
+    Object.keys(data.browsers).forEach((browser) => {
+      const found = data.browsers[browser].find((item) => item.day === day);
+      if (!found) {
+        data.browsers[browser].push({ day });
+      }
+    });
+  }
+
+  Object.keys(data.browsers).forEach((browser) => {
+    data.browsers[browser].sort((a, b) => a.day - b.day);
+  });
+
+  return data;
+};

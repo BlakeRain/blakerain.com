@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
 const Axis: FC<{ color: string; points: string }> = ({ color, points }) => (
   <polyline fill="none" stroke={color} strokeWidth="0.5" points={points} />
@@ -97,10 +97,15 @@ const VerticalLabels: FC<{
   return <React.Fragment>{labels}</React.Fragment>;
 };
 
-export interface ChartData {
+export interface ChartPoint {
   label?: string;
   x: number;
   y?: number;
+}
+
+export interface ChartData {
+  color: string;
+  points: ChartPoint[];
 }
 
 function getChartDataBounds(data: ChartData[]): {
@@ -116,17 +121,19 @@ function getChartDataBounds(data: ChartData[]): {
   var max_x = Number.MIN_VALUE;
   var max_y = Number.MIN_VALUE;
 
-  data.forEach((datum, index) => {
-    min_x = Math.min(min_x, datum.x);
-    max_x = Math.max(max_x, datum.x);
+  data.forEach((datum) => {
+    datum.points.forEach((point) => {
+      min_x = Math.min(min_x, point.x);
+      max_x = Math.max(max_x, point.x);
 
-    if (typeof datum.y === "number") {
-      min_y = Math.min(min_y, datum.y);
-      max_y = Math.max(max_y, datum.y);
-    } else {
-      min_y = Math.min(min_y, 0);
-      max_y = Math.max(max_y, 0);
-    }
+      if (typeof point.y === "number") {
+        min_y = Math.min(min_y, point.y);
+        max_y = Math.max(max_y, point.y);
+      } else {
+        min_y = Math.min(min_y, 0);
+        max_y = Math.max(max_y, 0);
+      }
+    });
   });
 
   return {
@@ -145,15 +152,25 @@ const LineChart: FC<{
   height: number;
   gridX?: number;
   gridY?: number;
+  highlight?: number;
   precision?: number;
-  onMouseOver?: (event: React.MouseEvent, data: ChartData) => void;
-  onMouseOut?: (event: React.MouseEvent, data: ChartData) => void;
+  onMouseOver?: (
+    event: React.MouseEvent,
+    data: ChartData,
+    point: ChartPoint
+  ) => void;
+  onMouseOut?: (
+    event: React.MouseEvent,
+    data: ChartData,
+    point: ChartPoint
+  ) => void;
 }> = ({
   data,
   width,
   height,
   gridX,
   gridY,
+  highlight: highlightIn,
   precision,
   onMouseOver,
   onMouseOut,
@@ -165,6 +182,13 @@ const LineChart: FC<{
   const padding = (font_size + y_axis_spacing) * 3;
   const inner_width = width - 2 * padding;
   const inner_height = height - 2 * padding;
+  const [highlightOurs, setHighlight] = useState<number | null>(null);
+  const highlight =
+    typeof highlightOurs === "number"
+      ? highlightOurs
+      : typeof highlightIn === "number"
+      ? highlightIn
+      : null;
 
   const normalize_x = (x: number): number => {
     return (x - min_x) / range_x;
@@ -178,14 +202,15 @@ const LineChart: FC<{
     }
   };
 
-  const points = data
-    .map(
-      (datum) =>
-        `${normalize_x(datum.x) * inner_width + padding},${
-          inner_height - normalize_y(datum.y) * inner_height + padding
-        }`
-    )
-    .join(" ");
+  const generate_points = (data: ChartData) =>
+    data.points
+      .map(
+        (point) =>
+          `${normalize_x(point.x) * inner_width + padding},${
+            inner_height - normalize_y(point.y) * inner_height + padding
+          }`
+      )
+      .join(" ");
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`}>
@@ -200,21 +225,22 @@ const LineChart: FC<{
         points={`${padding},${padding} ${padding},${height - padding}`}
       />
 
-      {data.map((element, index) => (
-        <text
-          key={index.toString()}
-          x={normalize_x(element.x) * inner_width + padding}
-          y={height - padding + font_size * 2}
-          textAnchor="middle"
-          style={{
-            fill: "#808080",
-            fontSize: font_size,
-            fontFamily: "Helvetica",
-          }}
-        >
-          {element.label}
-        </text>
-      ))}
+      {data.length > 0 &&
+        data[0].points.map((point, index) => (
+          <text
+            key={index.toString()}
+            x={normalize_x(point.x) * inner_width + padding}
+            y={height - padding + font_size * 2}
+            textAnchor="middle"
+            style={{
+              fill: "#808080",
+              fontSize: font_size,
+              fontFamily: "Helvetica",
+            }}
+          >
+            {point.label}
+          </text>
+        ))}
 
       {gridY && (
         <VerticalLabels
@@ -250,29 +276,63 @@ const LineChart: FC<{
         />
       )}
 
-      <polyline fill="none" stroke="#0074d9" strokeWidth={1} points={points} />
-
       {data.map((datum, index) => (
-        <React.Fragment key={index.toString()}>
-          <circle
-            cx={normalize_x(datum.x) * inner_width + padding}
-            cy={inner_height - normalize_y(datum.y) * inner_height + padding}
-            r={1.5}
-            strokeWidth={0.5}
-            stroke={typeof datum.y === "number" ? "#f0f0f0" : "#303030"}
-            fill={typeof datum.y === "number" ? "#0074d9" : "#404040"}
-            style={{ cursor: "pointer" }}
-            onMouseOver={(event) => {
-              if (onMouseOver) {
-                onMouseOver(event, datum);
+        <polyline
+          key={index.toString()}
+          fill="none"
+          stroke={
+            index === highlight
+              ? datum.color
+              : typeof highlight === "number"
+              ? "#404040"
+              : datum.color
+          }
+          strokeWidth={1}
+          strokeOpacity={highlight === null || highlight === index ? 1 : 0.2}
+          points={generate_points(datum)}
+        />
+      ))}
+
+      {data.map((datum, datum_index) => (
+        <React.Fragment key={datum_index.toString()}>
+          {datum.points.map((point, index) => (
+            <circle
+              key={index.toString()}
+              cx={normalize_x(point.x) * inner_width + padding}
+              cy={inner_height - normalize_y(point.y) * inner_height + padding}
+              r={1.5}
+              strokeWidth={0.5}
+              stroke={
+                typeof point.y === "number" || highlight === datum_index
+                  ? "#f0f0f0"
+                  : "#303030"
               }
-            }}
-            onMouseOut={(event) => {
-              if (onMouseOut) {
-                onMouseOut(event, datum);
+              fill={
+                typeof point.y === "number" || highlight === datum_index
+                  ? datum.color
+                  : "#404040"
               }
-            }}
-          />
+              fillOpacity={
+                highlight === null || highlight === datum_index ? 1 : 0.2
+              }
+              strokeOpacity={
+                highlight === null || highlight === datum_index ? 1 : 0.2
+              }
+              style={{ cursor: "pointer" }}
+              onMouseOver={(event) => {
+                setHighlight(datum_index);
+                if (onMouseOver) {
+                  onMouseOver(event, datum, point);
+                }
+              }}
+              onMouseOut={(event) => {
+                setHighlight(null);
+                if (onMouseOut) {
+                  onMouseOut(event, datum, point);
+                }
+              }}
+            />
+          ))}
         </React.Fragment>
       ))}
     </svg>
