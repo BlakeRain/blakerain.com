@@ -10,12 +10,16 @@ import os
 from cryptography.fernet import Fernet
 from datetime import datetime
 
-FERNET_KEY = os.getenv("FERNET_KEY")
-if not FERNET_KEY:
-    FERNET_KEY = Fernet.generate_key()
+API_KEY = os.getenv("API_KEY")
+if not API_KEY:
+    API_KEY = Fernet.generate_key()
 else:
-    FERNET_KEY = FERNET_KEY.encode("utf-8")
+    API_KEY = API_KEY.encode("utf-8")
+
+TABLE_NAME = os.getenv("TABLE_NAME", "analytics")
+
 PASSWORD_HASH_ITERATIONS = 100_000
+
 DDB = boto3.client("dynamodb")
 
 
@@ -37,8 +41,8 @@ def standard_response(status: int, body):
 
 def validate_token(token: str) -> bool:
     try:
-        obj = json.loads(Fernet(FERNET_KEY).decrypt(base64.b64decode(token.encode("utf-8"))))
-        res = DDB.get_item(TableName="PageTable", Key={
+        obj = json.loads(Fernet(API_KEY).decrypt(base64.b64decode(token.encode("utf-8"))))
+        res = DDB.get_item(TableName=TABLE_NAME, Key={
             "Path": {"S": "user"},
             "Section": {"S": obj["username"]}
         })
@@ -64,7 +68,7 @@ def handle_auth_signin(event):
     if not isinstance(password, str):
         return standard_response(400, {"error": "Expected 'password' field to be a string"})
 
-    res = DDB.get_item(TableName="PageTable", Key={
+    res = DDB.get_item(TableName=TABLE_NAME, Key={
         "Path": {"S": "user"},
         "Section": {"S": username}
     })
@@ -80,7 +84,7 @@ def handle_auth_signin(event):
     if computed_hash != expected_hash:
         return standard_response(403, {"error": "Invalid username or password"})
 
-    token = Fernet(FERNET_KEY).encrypt(json.dumps({"username": username}).encode("utf-8"))
+    token = Fernet(API_KEY).encrypt(json.dumps({"username": username}).encode("utf-8"))
     return standard_response(200, {"token": base64.b64encode(token).decode("utf-8")})
 
 
@@ -107,7 +111,7 @@ def handle_views_week(event):
     if not isinstance(week, int):
         return standard_response(400, {"error": "Expected 'week' field to be a number"})
 
-    res = DDB.query(TableName="PageTable",
+    res = DDB.query(TableName=TABLE_NAME,
                     KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
@@ -151,7 +155,7 @@ def handle_views_month(event):
     if not isinstance(month, int):
         return standard_response(400, {"error": "Expected 'month' field to be a number"})
 
-    res = DDB.query(TableName="PageTable",
+    res = DDB.query(TableName=TABLE_NAME,
                     KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
@@ -194,7 +198,7 @@ def handle_browsers_week(event):
     if not isinstance(week, int):
         return standard_response(400, {"error": "Expected 'week' field to be a number"})
 
-    res = DDB.query(TableName="PageTable",
+    res = DDB.query(TableName=TABLE_NAME,
                     KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
@@ -240,7 +244,7 @@ def handle_browsers_month(event):
     if not isinstance(month, int):
         return standard_response(400, {"error": "Expected 'month' field to be a number"})
 
-    res = DDB.query(TableName="PageTable",
+    res = DDB.query(TableName=TABLE_NAME,
                     KeyConditionExpression="#P = :v1 AND begins_with(#S, :v2)",
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
