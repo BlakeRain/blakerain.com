@@ -1,0 +1,352 @@
+#
+# analytics.yaml
+#
+# CloudFormation template for analytics functions
+#
+
+Parameters:
+  AnalyticsDomainName:
+    Type: String
+
+  AnalyticsDomainHostedZone:
+    Type: String
+
+  AuthKey:
+    Type: String
+    Description: Authentication Fernet key
+
+Resources:
+  BlakeRainAnalyticsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BlakeRainAnalytics
+      AttributeDefinitions:
+        - AttributeName: Path
+          AttributeType: S
+        - AttributeName: Section
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Path
+          KeyType: HASH
+        - AttributeName: Section
+          KeyType: RANGE
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+
+  BlakeRainAnalyticsTableReadCapacityScalableTarget:
+    Type: AWS::ApplicationAutoScaling:ScalableTarget
+    Properties:
+      MinCapacity: 1
+      MaxCapacity: 10
+      ResourceId:
+        Fn::Join:
+          - "/"
+          - - table
+            - !Ref BlakeRainAnalyticsTable
+      ScalableDimension: "dynamodb:table:ReadCapacityUnits"
+      ServiceNamespace: dynamodb
+      RoleArn:
+        Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+    DependsOn:
+      - BlakeRainAnalyticsTable
+
+  BlakeRainAnalyticsTableReadCapacityScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: ReadAutoScalingPolicy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref BlakeRainAnalyticsTableReadCapacityScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 70
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: DynamoDBReadCapacityUtilization
+
+  BlakeRainAnalyticsTableWriteCapacityScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MinCapacity: 1
+      MaxCapacity: 10
+      ResourceId:
+        Fn::Join:
+          - "/"
+          - - table
+            - !Ref BlakeRainAnalyticsTable
+      ScalableDimension: "dynamodb:table:WriteCapacityUnits"
+      ServiceNamespace: dynamodb
+      RoleARN:
+        Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+    DependsOn:
+      - BlakeRainAnalyticsTable
+
+  BlakeRainAnalyticsTableWriteCapacityScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: WriteAutoScalingPolicy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref BlakeRainAnalyticsTableWriteCapacityScalableTarget
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 70
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: DynamoDBWriteCapacityUtilization
+
+  # -----------------------------------------------------------------------------------------------------------------
+
+  BlakeRainAnalyticsTriggerLoggingPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BlakeRainAnalyticsTriggerLoggingPolicy
+      PolicyDocument:
+        Version: "2012-101-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: !GetAtt BlakeRainAnalyticsTriggerLogGroup.Arn
+      Roles:
+        - !Ref BlakeRainAnalyticsTriggerRole
+
+  BlakeRainAnalyticsTriggerLambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BlakeRainAnalyticsTriggerLambdaPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "ec2:CreateNetworkInterface"
+              - "ec2:DeleteNetworkInterface"
+              - "ec2:DescribeNetworkInterface"
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - "logs:CreateLogGroup"
+            Resouce:
+              Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - "dynamodb:PutItem"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:GetItem"
+            Resource: !GetAtt BlakeRainAnalyticsTable.Arn
+      Roles:
+        - !Ref BlakeRainAnalyticsTriggerRole
+
+  BlakeRainAnalyticsTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+
+  BlakeRainAnalyticsTriggerLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          def lambda_handler(event, context):
+            return { "statusCode": 200, "body": "{}" }
+      Environment:
+        AUTH_KEY: !Ref AuthKey
+        TABLE_NAME: !Ref BlakeRainAnalyticsTable
+      FunctionName: blakerain-analytics-trigger
+      MemorySize: 512
+      Runtime: python3.9
+      Handler: "lambda_function.lambda_handler"
+      Timeout: 30
+      Role: !GetAtt BlakeRainAnalyticsTriggerRole.Arn
+    DependsOn:
+      - BlakeRainAnalyticsTriggerLambdaPolicy
+
+  BlakeRainAnalyticsTableStream:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: !GetAtt BlakeRainAnalyticsTable.StreamArn
+      FunctionName: !GetAtt BlakeRainAnalyticsTriggerLambda.Arn
+      StartingPosition: LATEST
+
+  # -----------------------------------------------------------------------------------------------------------------
+
+  BlakeRainAnalyticsApiLoggingPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BlakeRainAnalyticsApiLoggingPolicy
+      PolicyDocument:
+        Version: "2012-101-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: !GetAtt BlakeRainAnalyticsApiLogGroup.Arn
+      Roles:
+        - !Ref BlakeRainAnalyticsApiRole
+
+  BlakeRainAnalyticsApiLambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: BlakeRainAnalyticsApiLambdaPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "ec2:CreateNetworkInterface"
+              - "ec2:DeleteNetworkInterface"
+              - "ec2:DescribeNetworkInterface"
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - "logs:CreateLogGroup"
+            Resouce:
+              Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - "dynamodb:PutItem"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:GetItem"
+            Resource: !GetAtt BlakeRainAnalyticsTable.Arn
+      Roles:
+        - !Ref BlakeRainAnalyticsApiRole
+
+  BlakeRainAnalyticsApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+
+  BlakeRainAnalyticsApiLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          def lambda_handler(event, context):
+            return { "statusCode": 200, "body": "{}" }
+      Environment:
+        AUTH_KEY: !Ref AuthKey
+        TABLE_NAME: !Ref BlakeRainAnalyticsTable
+      FunctionName: blakerain-analytics-api
+      MemorySize: 512
+      Runtime: python3.9
+      Handler: "lambda_function.lambda_handler"
+      Timeout: 30
+      Role: !GetAtt BlakeRainAnalyticsApiRole.Arn
+    DependsOn:
+      - BlakeRainAnalyticsApiLambdaPolicy
+
+  # -----------------------------------------------------------------------------------------------------------------
+
+  BlakeRainAnalyticsApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: blakerain-analytics
+      ProtocolType: HTTP
+      RouteSelectionExpression: "$request.method $request.path"
+      ApiKeySelectionExpression: "$request.header.x-api-key"
+
+  BlakeRainAnalyticsApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref BlakeRainAnalyticsApi
+      ConnectionType: INTERNET
+      IntegrationMethod: POST
+      IntegrationType: AWS_PROXY
+      TimeoutInMillis: 30000
+      PayloadFormatVersion: "2.0"
+      IntegrationUri: !GetAtt BlakeRainAnalyticsApiLambda.Arn
+
+  BlakeRainAnalyticsApiRouteDefault:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref BlakeRainAnalyticsApi
+      ApiKeyRequired: false
+      RouteKey: "$default"
+      Target:
+        Fn::Join:
+          - "/"
+          - - integrations
+            - !Ref BlakeRainAnalyticsApiIntegration
+
+  BlakeRainAnalyticsApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref BlakeRainAnalyticsApi
+      AutoDeploy: true
+      StageName: $default
+
+  BlakeRainAnalyticsApiPermission:
+    Type: AWS::ApiGatewayV2::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt BlakeRainAnalyticsApiLambda.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ":"
+          - - arn
+            - aws
+            - execute-api
+            - !Sub "${AWS::Region}"
+            - !Sub "${AWS::AccountId}"
+            - Fn::Join:
+                - "/"
+                - - !Ref BlakeRainAnalyticsApi
+                  - "*"
+                  - "$default"
+
+  BlakeRainAnalyticsApiDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: !Ref AnalyticsDomainName
+      DomainNameConfigurations:
+        - EndpointType: REGIONAL
+          CertificateArn: !Ref BlakeRainAnalyticsApiCertificate
+          SecurityPolicy: TLS_1_2
+
+  BlakeRainAnalyticsApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref BlakeRainAnalyticsApi
+      DomainName: !Ref BlakeRainAnalyticsApiDomain
+      Stage: !Ref BlakeRainAnalyticsApiStage
+
+  BlakeRainAnalyticsApiCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref AnalyticsDomainName
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Ref AnalyticsDomainName
+          HostedZoneId: !Ref AnalyticsDomainHostedZone
+
+  BlakeRainAnalyticsApiRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref AnalyticsDomainHostedZone
+      Name: AnalyticsDomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: !GetAtt BlakeRainAnalyticsApiDomain.RegionalHostedZoneId
+        DNSName: !GetAtt BlakeRainAnalyticsApiDomain.RegionalDomainName
