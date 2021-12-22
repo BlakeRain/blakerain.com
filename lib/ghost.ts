@@ -1,4 +1,9 @@
-import GhostContentAPI, { Author, PostOrPage, Tag, TagVisibility } from "@tryghost/content-api";
+import GhostContentAPI, {
+  Author,
+  PostOrPage,
+  Tag,
+  TagVisibility,
+} from "@tryghost/content-api";
 import React from "react";
 
 export function getContentAPI() {
@@ -47,6 +52,7 @@ export interface ListPost {
   authors: AuthorId[];
   readingTime: number;
   publishedAt: string | null;
+  updatedAt: string | null;
 }
 
 export interface DisplayPost extends ListPost {
@@ -97,6 +103,7 @@ function buildListPost(post: PostOrPage): ListPost {
     authors: post.authors?.map((author) => author.id) || [],
     readingTime: post.reading_time || 0,
     publishedAt: post.published_at || null,
+    updatedAt: post.updated_at || null,
   };
 }
 
@@ -117,24 +124,36 @@ export interface SiteSettings {
   enableCommento: boolean;
 }
 
-export const SiteSettingsContext = React.createContext<SiteSettings | null>(null);
+export const SiteSettingsContext = React.createContext<SiteSettings | null>(
+  null
+);
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-  const { title, navigation } = await getContentAPI().settings.browse({ limit: "all" });
+  const { title, navigation } = await getContentAPI().settings.browse({
+    limit: "all",
+  });
   return {
     title: title || "No Title",
-    navigation: navigation?.map((value) => ({ label: value.label, url: value.url })) || [],
+    navigation:
+      navigation?.map((value) => ({ label: value.label, url: value.url })) ||
+      [],
     enableCommento: false,
   };
 }
 
 export async function getAllPostSlugs(): Promise<string[]> {
-  const posts = await getContentAPI().posts.browse({ limit: "all", fields: ["slug"] });
+  const posts = await getContentAPI().posts.browse({
+    limit: "all",
+    fields: ["slug"],
+  });
   return posts.map((post) => post.slug);
 }
 
 export async function getAllPageSlugs(): Promise<string[]> {
-  const pages = await getContentAPI().pages.browse({ limit: "all", fields: ["slug"] });
+  const pages = await getContentAPI().pages.browse({
+    limit: "all",
+    fields: ["slug"],
+  });
   return pages.map((page) => page.slug);
 }
 
@@ -215,7 +234,10 @@ export interface TagPosts extends SimpleTag {
 }
 
 export async function getTagsWithPosts(): Promise<TagPosts[]> {
-  const posts = await getContentAPI().posts.browse({ limit: "all", include: ["tags"] });
+  const posts = await getContentAPI().posts.browse({
+    limit: "all",
+    include: ["tags"],
+  });
   var tags: { [tag_id: string]: TagPosts } = {};
 
   posts.forEach((post) => {
