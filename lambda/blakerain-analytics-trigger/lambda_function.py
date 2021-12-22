@@ -7,12 +7,12 @@ import os
 import user_agents
 
 DDB = boto3.client("dynamodb")
-DDB_TABLE_NAME = os.getenv("DDB_TABLE_NAME", "PageTable")
+TABLE_NAME = os.getenv("TABLE_NAME", "PageTable")
 
 
 def update_path(path: str, time: datetime):
     # Store the "day" count for this page
-    DDB.update_item(TableName=DDB_TABLE_NAME, Key={
+    DDB.update_item(TableName=TABLE_NAME, Key={
         "Path": {"S": path},
         "Section": {"S": f"Day-{time.strftime('%Y-%m-%dT%H')}"}
     },
@@ -24,7 +24,7 @@ def update_path(path: str, time: datetime):
     })
 
     # Store the "week" count for this page
-    DDB.update_item(TableName=DDB_TABLE_NAME, Key={
+    DDB.update_item(TableName=TABLE_NAME, Key={
         "Path": {"S": path},
         "Section": {"S": f"Week-{time.strftime('%Y-%W-%w')}"}
     },
@@ -36,7 +36,7 @@ def update_path(path: str, time: datetime):
     })
 
     # Store the "month" count for this page
-    DDB.update_item(TableName=DDB_TABLE_NAME, Key={
+    DDB.update_item(TableName=TABLE_NAME, Key={
         "Path": {"S": path},
         "Section": {"S": f"Month-{time.strftime('%Y-%m-%d')}"}
     },
@@ -51,7 +51,7 @@ def update_path(path: str, time: datetime):
 def update_user_agent(time: datetime, user_agent_string: str):
     ua = user_agents.parse(user_agent_string)
 
-    DDB.update_item(TableName=DDB_TABLE_NAME, Key={
+    DDB.update_item(TableName=TABLE_NAME, Key={
         "Path": {"S": "browser"},
         "Section": {"S": f"Week-{time.strftime('%Y-%W-%w')}#{ua.browser.family.replace(' ', '-')}"}
     },
@@ -62,7 +62,7 @@ def update_user_agent(time: datetime, user_agent_string: str):
         ":n": {"N": "1"}
     })
 
-    DDB.update_item(TableName=DDB_TABLE_NAME, Key={
+    DDB.update_item(TableName=TABLE_NAME, Key={
         "Path": {"S": "browser"},
         "Section": {"S": f"Month-{time.strftime('%Y-%m-%d')}#{ua.browser.family.replace(' ', '-')}"}
     },
