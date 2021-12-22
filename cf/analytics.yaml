@@ -38,7 +38,7 @@ Resources:
         StreamViewType: NEW_IMAGE
 
   BlakeRainAnalyticsTableReadCapacityScalableTarget:
-    Type: AWS::ApplicationAutoScaling:ScalableTarget
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties:
       MinCapacity: 1
       MaxCapacity: 10
@@ -49,7 +49,7 @@ Resources:
             - !Ref BlakeRainAnalyticsTable
       ScalableDimension: "dynamodb:table:ReadCapacityUnits"
       ServiceNamespace: dynamodb
-      RoleArn:
+      RoleARN:
         Fn::Sub: "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
     DependsOn:
       - BlakeRainAnalyticsTable
@@ -99,12 +99,26 @@ Resources:
 
   # -----------------------------------------------------------------------------------------------------------------
 
+  BlakeRainAnalyticsTriggerLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+          - "/"
+          - - ""
+            - aws
+            - lambda
+            - !Ref BlakeRainAnalyticsTriggerLambda
+      RetentionInDays: 7
+    DependsOn:
+      - BlakeRainAnalyticsTriggerLambda
+
   BlakeRainAnalyticsTriggerLoggingPolicy:
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: BlakeRainAnalyticsTriggerLoggingPolicy
       PolicyDocument:
-        Version: "2012-101-17"
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Action:
@@ -125,12 +139,12 @@ Resources:
             Action:
               - "ec2:CreateNetworkInterface"
               - "ec2:DeleteNetworkInterface"
-              - "ec2:DescribeNetworkInterface"
+              - "ec2:DescribeNetworkInterfaces"
             Resource: "*"
           - Effect: Allow
             Action:
               - "logs:CreateLogGroup"
-            Resouce:
+            Resource:
               Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
@@ -138,7 +152,14 @@ Resources:
               - "dynamodb:Query"
               - "dynamodb:UpdateItem"
               - "dynamodb:GetItem"
-            Resource: !GetAtt BlakeRainAnalyticsTable.Arn
+              - "dynamodb:GetRecords"
+              - "dynamodb:GetShardIterator"
+              - "dynamodb:DescribeStream"
+              - "dynamodb:ListShards"
+              - "dynamodb:ListStreams"
+            Resource:
+              - !GetAtt BlakeRainAnalyticsTable.Arn
+              - !GetAtt BlakeRainAnalyticsTable.StreamArn
       Roles:
         - !Ref BlakeRainAnalyticsTriggerRole
 
@@ -161,8 +182,9 @@ Resources:
           def lambda_handler(event, context):
             return { "statusCode": 200, "body": "{}" }
       Environment:
-        AUTH_KEY: !Ref AuthKey
-        TABLE_NAME: !Ref BlakeRainAnalyticsTable
+        Variables:
+          AUTH_KEY: !Ref AuthKey
+          TABLE_NAME: !Ref BlakeRainAnalyticsTable
       FunctionName: blakerain-analytics-trigger
       MemorySize: 512
       Runtime: python3.9
@@ -183,12 +205,26 @@ Resources:
 
   # -----------------------------------------------------------------------------------------------------------------
 
+  BlakeRainAnalyticsApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+          - "/"
+          - - ""
+            - aws
+            - lambda
+            - !Ref BlakeRainAnalyticsApiLambda
+      RetentionInDays: 7
+    DependsOn:
+      - BlakeRainAnalyticsApi
+
   BlakeRainAnalyticsApiLoggingPolicy:
     Type: AWS::IAM::Policy
     Properties:
       PolicyName: BlakeRainAnalyticsApiLoggingPolicy
       PolicyDocument:
-        Version: "2012-101-17"
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Action:
@@ -209,12 +245,12 @@ Resources:
             Action:
               - "ec2:CreateNetworkInterface"
               - "ec2:DeleteNetworkInterface"
-              - "ec2:DescribeNetworkInterface"
+              - "ec2:DescribeNetworkInterfaces"
             Resource: "*"
           - Effect: Allow
             Action:
               - "logs:CreateLogGroup"
-            Resouce:
+            Resource:
               Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
@@ -245,8 +281,9 @@ Resources:
           def lambda_handler(event, context):
             return { "statusCode": 200, "body": "{}" }
       Environment:
-        AUTH_KEY: !Ref AuthKey
-        TABLE_NAME: !Ref BlakeRainAnalyticsTable
+        Variables:
+          AUTH_KEY: !Ref AuthKey
+          TABLE_NAME: !Ref BlakeRainAnalyticsTable
       FunctionName: blakerain-analytics-api
       MemorySize: 512
       Runtime: python3.9
@@ -297,7 +334,7 @@ Resources:
       StageName: $default
 
   BlakeRainAnalyticsApiPermission:
-    Type: AWS::ApiGatewayV2::Permission
+    Type: AWS::Lambda::Permission
     Properties:
       Action: "lambda:InvokeFunction"
       FunctionName: !GetAtt BlakeRainAnalyticsApiLambda.Arn
