@@ -2,6 +2,7 @@ import dependencies
 
 import base64
 import boto3
+import functools
 import hashlib
 import json
 import logging
@@ -9,7 +10,7 @@ import os
 
 from cryptography.fernet import Fernet
 from datetime import datetime
-from typing import Any, Dict, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 API_KEY = os.getenv("API_KEY")
 if not API_KEY:
@@ -22,6 +23,22 @@ TABLE_NAME = os.getenv("TABLE_NAME", "analytics")
 PASSWORD_HASH_ITERATIONS = 100_000
 
 DDB = boto3.client("dynamodb")
+
+
+def standard_response(status: int, body, content_type: str = "application/json"):
+    return {
+        "statusCode": status,
+        "headers": {
+            "Content-Type": content_type,
+            "Pragma": "no-cache",
+            "Access-Control-Allow-Origin": "*",
+            "Date": datetime.now().strftime("%a, %d %b %Y %H:%M:%S %Z"),
+            "Expires": 0,
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Strict-Transport-Security": "max-age=31536000, includeSubDomains"
+        },
+        "body": json.dumps(body) if body else ""
+    }
 
 
 def decode_body_if_valid(body) -> Tuple[bool, Any]:
@@ -68,20 +85,84 @@ class Request:
                 raise Exception("Failed to decode request JSON")
 
 
-def standard_response(status: int, body, content_type: str = "application/json"):
-    return {
-        "statusCode": status,
-        "headers": {
-            "Content-Type": content_type,
-            "Pragma": "no-cache",
-            "Access-Control-Allow-Origin": "*",
-            "Date": datetime.now().strftime("%a, %d %b %Y %H:%M:%S %Z"),
-            "Expires": 0,
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Strict-Transport-Security": "max-age=31536000, includeSubDomains"
-        },
-        "body": json.dumps(body) if body else ""
-    }
+class Route:
+    def __init__(self, method: str, path: str, handler: Callable[[Request], Dict[str, Any]]):
+        self.method = method.upper()
+        self.path = path
+        self.handler = handler
+
+
+class Router:
+    def __init__(self):
+        self.routes: List[Route] = []
+
+    def route(self, method: str, path: str):
+        def decorator_route(func):
+            self.routes.append(Route(method, path, func))
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                func(*args, **kwargs)
+            return wrapper
+        return decorator_route
+
+    def find_route(self, request: Request) -> Optional[Route]:
+        for route in self.routes:
+            if route.method == request.method and route.path == request.path:
+                return route
+        return None
+
+    def scan_options(self, request: Request) -> str:
+        if request.path == "*":
+            return "OPTIONS, GET, POST"
+        methods = set()
+        for route in self.routes:
+            if route.path == request.path:
+                methods.add(route.method)
+        return ", ".join(methods)
+
+    def dispatch(self, event):
+        try:
+            request = Request(event)
+        except Exception as e:
+            logging.exception("Failed to parse request")
+            return standard_response(400, {"error": f"Failed to parse request: {e}"})
+
+        if request.method == "OPTIONS":
+            methods = self.scan_options(request)
+            headers = {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*"
+            }
+            if methods:
+                headers["Allow"] = methods
+                headers["Access-Control-Allow-Methods"] = methods
+            return {
+                "statusCode": 204,
+                "headers": headers
+            }
+
+        try:
+            route = self.find_route(request)
+        except Exception as e:
+            logging.exception(f"Exception arose finding route for '{request.method}' request to '{request.path}'")
+            return standard_response(500, {"error": "Internal server error"})
+
+        if not route:
+            logging.error(f"Failed to route '{request.method}' request to '{request.path}'")
+            return standard_response(404, {"error": f"Failed to route '{request.method}' request to '{request.path}'"})
+
+        try:
+            res = route.handler(request)
+        except:
+            logging.exception("Exception arose invoking route handler for "
+                              f"'{request.method}' request to '{request.path}'")
+            return standard_response(500, {"error": "Internal server error"})
+
+        return res
+
+
+router = Router()
 
 
 def validate_token(token: str) -> bool:
@@ -99,6 +180,7 @@ def validate_token(token: str) -> bool:
         return False
 
 
+@router.route("GET", "/pv.gif")
 def handle_page_view(request: Request) -> Dict[str, Any]:
     uuid = request.query.get("uuid")
     path = request.query.get("path")
@@ -143,6 +225,7 @@ def handle_page_view(request: Request) -> Dict[str, Any]:
     return standard_response(202, None, "image/gif")
 
 
+@router.route("POST", "/api/auth/signin")
 def handle_auth_signin(request: Request) -> Dict[str, Any]:
     if request.body is None:
         return standard_response(400, {"error": "Missing request body"})
@@ -173,6 +256,7 @@ def handle_auth_signin(request: Request) -> Dict[str, Any]:
     return standard_response(200, {"token": base64.b64encode(token).decode("utf-8")})
 
 
+@router.route("POST", "/api/views/week")
 def handle_views_week(request: Request) -> Dict[str, Any]:
     if request.body is None:
         return standard_response(400, {"error": "Missing request body"})
@@ -209,6 +293,7 @@ def handle_views_week(request: Request) -> Dict[str, Any]:
     return standard_response(200, [map_item(item) for item in res["Items"]])
 
 
+@router.route("POST", "/api/views/month")
 def handle_views_month(request: Request) -> Dict[str, Any]:
     if request.body is None:
         return standard_response(400, {"error": "Missing request body"})
@@ -245,6 +330,7 @@ def handle_views_month(request: Request) -> Dict[str, Any]:
     return standard_response(200, [map_item(item) for item in res["Items"]])
 
 
+@router.route("POST", "/api/browsers/week")
 def handle_browsers_week(request: Request) -> Dict[str, Any]:
     if request.body is None:
         return standard_response(400, {"error": "Missing request body"})
@@ -283,6 +369,7 @@ def handle_browsers_week(request: Request) -> Dict[str, Any]:
     return standard_response(200, [map_item(item) for item in res["Items"]])
 
 
+@router.route("POST", "/api/browsers/month")
 def handle_browsers_month(request: Request) -> Dict[str, Any]:
     if request.body is None:
         return standard_response(400, {"error": "Missing request body"})
@@ -322,27 +409,4 @@ def handle_browsers_month(request: Request) -> Dict[str, Any]:
 
 
 def lambda_handler(event, context):
-    try:
-        request = Request(event)
-    except:
-        return standard_response(400, {"error": "Failed to parse request"})
-
-    try:
-        if request.method == "GET":
-            if request.path == "/pv.gif":
-                return handle_page_view(request)
-        if request.method == "POST":
-            if request.path == "/api/auth/signin":
-                return handle_auth_signin(request)
-            if request.path == "/api/views/week":
-                return handle_views_week(request)
-            if request.path == "/api/views/month":
-                return handle_views_month(request)
-            if request.path == "/api/browsers/week":
-                return handle_browsers_week(request)
-            if request.path == "/api/browsers/month":
-                return handle_browsers_month(request)
-        return standard_response(404, {"error": f"Unrecognized resource: '{request.path}'"})
-    except:
-        logging.exception(f"Failed to execute '{request.method}' request to '{request.path}'")
-        return standard_response(500, {"error": "Internal server error"})
+    return router.dispatch(event)
