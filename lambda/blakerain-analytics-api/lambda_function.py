@@ -12,11 +12,11 @@ from cryptography.fernet import Fernet
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-API_KEY = os.getenv("API_KEY")
-if not API_KEY:
-    API_KEY = Fernet.generate_key()
+AUTH_KEY = os.getenv("AUTH_KEY")
+if not AUTH_KEY:
+    AUTH_KEY = Fernet.generate_key()
 else:
-    API_KEY = API_KEY.encode("utf-8")
+    AUTH_KEY = AUTH_KEY.encode("utf-8")
 
 TABLE_NAME = os.getenv("TABLE_NAME", "analytics")
 
@@ -167,7 +167,7 @@ router = Router()
 
 def validate_token(token: str) -> bool:
     try:
-        obj = json.loads(Fernet(API_KEY).decrypt(base64.b64decode(token.encode("utf-8"))))
+        obj = json.loads(Fernet(AUTH_KEY).decrypt(base64.b64decode(token.encode("utf-8"))))
         res = DDB.get_item(TableName=TABLE_NAME, Key={
             "Path": {"S": "user"},
             "Section": {"S": obj["username"]}
@@ -252,7 +252,7 @@ def handle_auth_signin(request: Request) -> Dict[str, Any]:
     if computed_hash != expected_hash:
         return standard_response(403, {"error": "Invalid username or password"})
 
-    token = Fernet(API_KEY).encrypt(json.dumps({"username": username}).encode("utf-8"))
+    token = Fernet(AUTH_KEY).encrypt(json.dumps({"username": username}).encode("utf-8"))
     return standard_response(200, {"token": base64.b64encode(token).decode("utf-8")})
 
 
