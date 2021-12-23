@@ -37,7 +37,7 @@ def standard_response(status: int, body, content_type: str = "application/json")
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "Strict-Transport-Security": "max-age=31536000, includeSubDomains"
         },
-        "body": json.dumps(body) if body else ""
+        "body": json.dumps(body) if body is not None else ""
     }
 
 
