@@ -382,7 +382,7 @@ Resources:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref AnalyticsDomainHostedZone
-      Name: AnalyticsDomainName
+      Name: !Ref AnalyticsDomainName
       Type: A
       AliasTarget:
         HostedZoneId: !GetAtt BlakeRainAnalyticsApiDomain.RegionalHostedZoneId
