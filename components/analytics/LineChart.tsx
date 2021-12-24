@@ -13,14 +13,13 @@ const VerticalGrid: FC<{
 }> = ({ color, padding, width, height, count }) => {
   const step = (width - padding * 2) / count;
   const lines = [];
+  const attrs = { fill: "none", stroke: color, strokeWidth: 0.5 };
 
   for (let x = padding + step, index = 0; index < count; ++index, x += step) {
     lines.push(
       <polyline
         key={index.toString()}
-        fill="none"
-        stroke={color}
-        strokeWidth="0.5"
+        {...attrs}
         points={`${x},${padding} ${x},${height - padding}`}
       />
     );
@@ -38,6 +37,7 @@ const HorizontalGrid: FC<{
 }> = ({ color, padding, width, height, count }) => {
   const step = height / count;
   const lines = [];
+  const attrs = { fill: "none", stroke: color, strokeWidth: "0.5" };
 
   for (
     let y = height - step + padding, index = 0;
@@ -47,9 +47,7 @@ const HorizontalGrid: FC<{
     lines.push(
       <polyline
         key={index.toString()}
-        fill="none"
-        stroke={color}
-        strokeWidth="0.5"
+        {...attrs}
         points={`${padding},${y} ${width - padding},${y}`}
       />
     );
@@ -68,28 +66,38 @@ const VerticalLabels: FC<{
   start: number;
   end: number;
   precision?: number;
-}> = ({ color, fontSize, x, padding, height, count, end, precision }) => {
+}> = ({
+  color,
+  fontSize,
+  x,
+  padding,
+  height,
+  count,
+  start,
+  end,
+  precision,
+}) => {
   const step = height / count;
+  const distance_step = (end - start) / count;
   const labels = [];
+  const attrs = {
+    x,
+    textAnchor: "end",
+    style: {
+      fill: color,
+      fontSize,
+      fontFamily: "Helvetica",
+    },
+  };
 
   for (
-    let y = height + padding + fontSize / 3, index = 0;
+    let y = height + padding + fontSize / 3, label = start, index = 0;
     index <= count;
-    ++index, y -= step
+    ++index, y -= step, label += distance_step
   ) {
     labels.push(
-      <text
-        key={index.toString()}
-        x={x}
-        y={y}
-        textAnchor="end"
-        style={{
-          fill: color,
-          fontSize,
-          fontFamily: "Helvetica",
-        }}
-      >
-        {(end * (index / count)).toFixed(precision)}
+      <text key={index.toString()} y={y} {...attrs}>
+        {label.toFixed(precision)}
       </text>
     );
   }
