@@ -1,10 +1,22 @@
+.browserInfo {
+  display: flex;
+  flex-direction: row;
+
+  > div {
+    &:first-of-type {
+      width: 25%;
+      margin-right: 1em;
+    }
+  }
+}
+
 .browserPalette {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   column-gap: 1rem;
   row-gap: 1rem;
 
-  > div {
+  > .browserButton {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
