@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 
-import LineChart, { ChartData } from "./LineChart";
+import LineChart, { ChartData, ChartPoint } from "./LineChart";
 import PieChart, { PieChartPoint } from "./PieChart";
 
 import BrowserIcon from "./BrowserIcon";
@@ -9,6 +9,7 @@ import { BrowserData } from "../../lib/analytics";
 
 import styles from "./BrowserChart.module.scss";
 
+const TOP_BROWSERS = 8;
 const BROWSER_COLORS = [
   "#0584A5",
   "#F6C75E",
@@ -28,58 +29,63 @@ export const BrowserReport: FC<{
   browserData: BrowserData;
   labelMapper: (day: number) => string;
 }> = ({ browserData, labelMapper }) => {
-  const [highlight, setHighlight] = useState<string | null>(null);
+  const [highlight, setHighlight] = useState<{
+    browser: BrowserChartData;
+    point?: ChartPoint;
+  } | null>(null);
 
-  const browsers: BrowserChartData[] = Object.keys(browserData)
-    .map((browser) => ({
-      name: browser.replaceAll("-", " "),
-      total: browserData[browser].reduce(
-        (total, item) => total + (item.count || 0),
-        0
-      ),
-      color: "",
-      points: browserData[browser].map((item) => ({
-        label: labelMapper(item.day),
-        x: item.day,
-        y: item.count,
-      })),
-    }))
-    .sort((a, b) => b.total - a.total)
-    .map((obj, index) => {
-      obj.color = BROWSER_COLORS[index % BROWSER_COLORS.length];
-      return obj;
-    });
-
-  const N = 8;
-  const topN: PieChartPoint[] = [];
-  const others: string[] = [];
-  for (let i = 0; i < browsers.length; ++i) {
-    if (i < N - 1) {
-      topN.push({
-        label: browsers[i].name,
-        color: browsers[i].color,
-        ratio: browsers[i].total,
+  const [browsers, topN, others] = useMemo(() => {
+    const browsers: BrowserChartData[] = Object.keys(browserData)
+      .map((browser) => ({
+        name: browser.replaceAll("-", " "),
+        total: browserData[browser].reduce(
+          (total, item) => total + (item.count || 0),
+          0
+        ),
+        color: "",
+        points: browserData[browser].map((item) => ({
+          label: labelMapper(item.day),
+          x: item.day,
+          y: item.count,
+        })),
+      }))
+      .sort((a, b) => b.total - a.total)
+      .map((obj, index) => {
+        obj.color = BROWSER_COLORS[index % BROWSER_COLORS.length];
+        return obj;
       });
-    } else if (i === N - 1) {
-      others.push(browsers[i].name);
-      topN.push({ label: "Others", color: "#444", ratio: browsers[i].total });
-    } else {
-      others.push(browsers[i].name);
-      topN[topN.length - 1].ratio += browsers[i].total;
+
+    const topN: PieChartPoint[] = [];
+    const others: string[] = [];
+    var total = 0;
+
+    for (let i = 0; i < browsers.length; ++i) {
+      total += browsers[i].total;
+      if (i < TOP_BROWSERS - 1) {
+        topN.push({
+          label: browsers[i].name,
+          color: browsers[i].color,
+          ratio: browsers[i].total,
+        });
+      } else if (i === TOP_BROWSERS - 1) {
+        others.push(browsers[i].name);
+        topN.push({ label: "Others", color: "#444", ratio: browsers[i].total });
+      } else {
+        others.push(browsers[i].name);
+        topN[topN.length - 1].ratio += browsers[i].total;
+      }
     }
-  }
 
-  const topN_total = topN.reduce((total, item) => total + item.ratio, 0);
-  topN.forEach((item) => {
-    item.ratio = item.ratio / topN_total;
-  });
+    topN.forEach((item) => (item.ratio = item.ratio / total));
 
-  const pie_highlight =
-    typeof highlight === "string"
-      ? others.indexOf(highlight) !== -1
-        ? "Others"
-        : highlight
-      : undefined;
+    return [browsers, topN, others];
+  }, [browserData]);
+
+  const pie_highlight = highlight
+    ? others.indexOf(highlight.browser.name) !== -1
+      ? "Others"
+      : highlight.browser.name
+    : undefined;
 
   return (
     <React.Fragment>
@@ -92,12 +98,12 @@ export const BrowserReport: FC<{
           gridY={5}
           highlight={
             highlight
-              ? browsers.findIndex((b) => b.name === highlight)
+              ? browsers.findIndex((b) => b.name === highlight.browser.name)
               : undefined
           }
-          onMouseOver={(_event, data, _point) =>
-            setHighlight((data as BrowserChartData).name)
-          }
+          onMouseOver={(_event, data, point) => {
+            setHighlight({ browser: data as BrowserChartData, point: point });
+          }}
           onMouseOut={() => setHighlight(null)}
         />
       </div>
@@ -111,20 +117,26 @@ export const BrowserReport: FC<{
               className={
                 styles.browserButton +
                 " " +
-                (highlight === null || highlight === browser.name
+                (highlight === null || highlight.browser.name === browser.name
                   ? ""
                   : styles.inactive)
               }
               key={index.toString()}
               style={{ backgroundColor: browser.color }}
-              onMouseOver={() => setHighlight(browser.name)}
+              onMouseOver={() => setHighlight({ browser })}
               onMouseOut={() => setHighlight(null)}
             >
               <div>
                 <BrowserIcon name={browser.name} />
                 {browser.name}
               </div>
-              <b>{browser.total}</b>
+              <b>
+                {highlight &&
+                highlight.point &&
+                highlight.browser.name === browser.name
+                  ? highlight.point.y
+                  : browser.total}
+              </b>
             </div>
           ))}
         </div>
