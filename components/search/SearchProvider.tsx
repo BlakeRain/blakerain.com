@@ -122,7 +122,9 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
   const onWindowKeyDown = (event: KeyboardEvent) => {
     const tag = (event.target as Element).tagName;
     if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
-      return;
+      if ((event.target as Element).id !== "search-input") {
+        return;
+      }
     }
 
     if (!event.repeat) {
