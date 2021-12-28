@@ -76,7 +76,7 @@ export const BrowserReport: FC<{
 
   const pie_highlight =
     typeof highlight === "string"
-      ? others.indexOf(highlight)
+      ? others.indexOf(highlight) !== -1
         ? "Others"
         : highlight
       : undefined;
