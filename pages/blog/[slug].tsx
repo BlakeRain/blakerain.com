@@ -24,7 +24,7 @@ interface BlogPostProps extends PostInformation {
   navigation: SiteNavigation[];
 }
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await getAllPostSlugs();
   return {
     paths: slugs.map((slug) => ({ params: { slug } })),
