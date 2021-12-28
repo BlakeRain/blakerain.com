@@ -6,6 +6,15 @@ import GhostContentAPI, {
 } from "@tryghost/content-api";
 import React from "react";
 
+export function shouldEnableCommento(): boolean {
+  const key = process.env.COMMENTO_ENABLED;
+  if (typeof key === "string") {
+    return ["yes", "on", "true", "1"].indexOf(key.toLowerCase().trim()) !== -1;
+  }
+
+  return false;
+}
+
 export function getContentAPI() {
   const key = process.env.GHOST_CONTENT_API_KEY;
   if (typeof key === "undefined") {
@@ -137,7 +146,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     navigation:
       navigation?.map((value) => ({ label: value.label, url: value.url })) ||
       [],
-    enableCommento: false,
+    enableCommento: shouldEnableCommento(),
   };
 }
 
