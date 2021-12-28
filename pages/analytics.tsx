@@ -3,9 +3,9 @@ import { GetStaticProps } from "next";
 import Head from "next/head";
 import cn from "classnames";
 
+import ClientOnly from "../components/ClientOnly";
 import { Layout } from "../components/Layout";
 import { getSiteSettings, SiteNavigation } from "../lib/ghost";
-
 import { getSessionToken, setSessionToken } from "../lib/analytics";
 
 import styles from "../components/analytics/Report.module.scss";
@@ -62,25 +62,23 @@ export const getStaticProps: GetStaticProps = async () => {
 const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
   const [token, setToken] = useState<string | null>(getSessionToken());
 
-  if (typeof window === "undefined") {
-    return null;
-  }
-
   return (
     <Layout navigation={navigation}>
       <Head>
         <title>Site Analytics</title>
       </Head>
-      {token ? (
-        <Report token={token}>Okay</Report>
-      ) : (
-        <SignIn
-          setToken={(token) => {
-            setToken(token);
-            setSessionToken(token);
-          }}
-        />
-      )}
+      <ClientOnly>
+        {token ? (
+          <Report token={token}>Okay</Report>
+        ) : (
+          <SignIn
+            setToken={(token) => {
+              setToken(token);
+              setSessionToken(token);
+            }}
+          />
+        )}
+      </ClientOnly>
     </Layout>
   );
 };
