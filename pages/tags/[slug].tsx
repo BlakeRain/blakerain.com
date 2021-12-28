@@ -25,7 +25,7 @@ import { PostCards } from "../../components/PostCard";
 import Link from "next/link";
 import Analytics from "../../components/Analytics";
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await getAllTagSlugs();
   console.log(slugs);
   return {
@@ -42,7 +42,10 @@ interface TagProps {
   navigation: SiteNavigation[];
 }
 
-export const getStaticProps: GetStaticProps<TagProps, { slug: string }> = async (
+export const getStaticProps: GetStaticProps<
+  TagProps,
+  { slug: string }
+> = async (
   context: GetStaticPropsContext<{ slug: string }>
 ): Promise<GetStaticPropsResult<TagProps>> => {
   if (!context.params) {
@@ -78,7 +81,8 @@ const Tag: NextPage<TagProps> = ({ tag, posts, authors, tags, navigation }) => {
         </Link>{" "}
         / {tag.name}
         <small>
-          There are {posts.length} post{posts.length === 1 ? "" : "s"} with this tag
+          There are {posts.length} post{posts.length === 1 ? "" : "s"} with this
+          tag
         </small>
       </h1>
       <PostCards posts={posts} authors={authors} tags={tags} />

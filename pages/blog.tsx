@@ -15,7 +15,7 @@ import {
   TagDictionary,
 } from "../lib/ghost";
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   const posts = await getAllListPosts();
   const authors = await getAllAuthors();
   const tags = await getAllTags();

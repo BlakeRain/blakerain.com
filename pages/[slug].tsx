@@ -17,7 +17,7 @@ import { Layout } from "../components/Layout";
 import { Content } from "../components/Content";
 import Analytics from "../components/Analytics";
 
-export const getStaticPaths: GetStaticPaths = async (context) => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const slugs = await getAllPageSlugs();
   return {
     paths: slugs.map((slug) => ({ params: { slug } })),
@@ -29,7 +29,10 @@ interface PageProps extends PageInformation {
   navigation: SiteNavigation[];
 }
 
-export const getStaticProps: GetStaticProps<PageProps, { slug: string }> = async (
+export const getStaticProps: GetStaticProps<
+  PageProps,
+  { slug: string }
+> = async (
   context: GetStaticPropsContext<{ slug: string }>
 ): Promise<GetStaticPropsResult<PageProps>> => {
   if (!context.params) {

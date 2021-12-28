@@ -69,14 +69,18 @@ const SearchHighlightControls: FC<{
         Clear
       </button>
       <span className={styles.label}>
-        {current === -1 ? "0" : (current + 1).toString()} / {marks.length.toString()} result
+        {current === -1 ? "0" : (current + 1).toString()} /{" "}
+        {marks.length.toString()} result
         {marks.length === 1 ? "" : "s"}
       </span>
     </div>
   );
 };
 
-export const SearchHighlighter: FC<{ term: string | null }> = ({ term, children }) => {
+export const SearchHighlighter: FC<{ term: string | null }> = ({
+  term,
+  children,
+}) => {
   const router = useRouter();
   const contentRef = useRef<HTMLDivElement>(null);
   const mark = useRef<Mark>();
@@ -116,6 +120,9 @@ export const SearchHighlighter: FC<{ term: string | null }> = ({ term, children 
             contentRef.current?.querySelectorAll("mark") || []
           );
 
+          console.log(
+            `Found ${new_marks} mark element(s) (of ${total} reported)`
+          );
           setMarks(new_marks);
           if (new_marks.length > 0) {
             setCurrent(0);
@@ -133,7 +140,10 @@ export const SearchHighlighter: FC<{ term: string | null }> = ({ term, children 
   }, [term, router.pathname]);
 
   return (
-    <div ref={contentRef} className={marks.length > 0 ? "has-highlight-marks" : ""}>
+    <div
+      ref={contentRef}
+      className={marks.length > 0 ? "has-highlight-marks" : ""}
+    >
       {children}
       <SearchHighlightControls
         current={current}

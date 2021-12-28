@@ -105,7 +105,7 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
           console.log("Search data loaded; setting search box visible");
           setSearchVisible(true);
         })
-        .catch((err) => {
+        .catch(() => {
           console.log(
             "Search data could not be loaded; setting search box visible"
           );

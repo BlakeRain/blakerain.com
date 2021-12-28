@@ -183,8 +183,7 @@ const LineChart: FC<{
   onMouseOver,
   onMouseOut,
 }) => {
-  const { min_x, min_y, max_x, max_y, range_x, range_y } =
-    getChartDataBounds(data);
+  const { min_x, min_y, max_y, range_x, range_y } = getChartDataBounds(data);
   const font_size = width / 50;
   const y_axis_spacing = 1 + max_y.toFixed(precision).length;
   const padding = (font_size + y_axis_spacing) * 3;

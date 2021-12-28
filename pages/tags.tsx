@@ -39,7 +39,8 @@ const Tag: FC<{ tag: TagPosts }> = ({ tag }) => {
       </header>
       <footer>
         <small>
-          Assigned to {tag.posts.length} post{tag.posts.length === 1 ? "" : "s"}:
+          Assigned to {tag.posts.length} post{tag.posts.length === 1 ? "" : "s"}
+          :
         </small>
         <ul>
           {tag.posts.map((post) => (
@@ -51,7 +52,10 @@ const Tag: FC<{ tag: TagPosts }> = ({ tag }) => {
   );
 };
 
-const Tags: FC<{ tags: TagPosts[]; navigation: SiteNavigation[] }> = ({ tags, navigation }) => {
+const Tags: FC<{ tags: TagPosts[]; navigation: SiteNavigation[] }> = ({
+  tags,
+  navigation,
+}) => {
   return (
     <Layout navigation={navigation}>
       <Head>
@@ -71,7 +75,7 @@ const Tags: FC<{ tags: TagPosts[]; navigation: SiteNavigation[] }> = ({ tags, na
 
 export default Tags;
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   const tags = await getTagsWithPosts();
   const settings = await getSiteSettings();
 
