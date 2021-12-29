@@ -1,19 +1,24 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { AuthorDictionary, DisplayPost, TagDictionary } from "../lib/ghost";
 import styles from "./Content.module.scss";
 import { PostDetails } from "./PostDetails";
 import { TagList } from "./TagList";
-import SyntaxHighlighter from "./SyntaxHighlighter";
 import { useRouter } from "next/router";
-import { getHighlightTerm, SearchHighlighter } from "./search/SearchHighlighter";
+import {
+  getHighlightTerm,
+  SearchHighlighter,
+} from "./search/SearchHighlighter";
 import { ScrollToTopButton } from "./ScrollToTop";
+import { RenderDoc } from "./Document";
 
 const ContentHeader: FC<ContentProps> = ({ authors, tags, post }) => {
   return (
     <header className={styles.header}>
       <h1 className={styles.title}>{post.title}</h1>
       <TagList tagsDict={tags} tags={post.tags} large />
-      {post.customExcerpt ? <p className={styles.excerpt}>{post.customExcerpt}</p> : null}
+      {post.customExcerpt ? (
+        <p className={styles.excerpt}>{post.customExcerpt}</p>
+      ) : null}
       <div className={styles.details}>
         <PostDetails authors={authors} post={post} />
       </div>
@@ -27,12 +32,12 @@ const ContentBody: FC<{ post: DisplayPost }> = ({ post }) => {
 
   return (
     <SearchHighlighter term={term}>
-      <SyntaxHighlighter>
-        <div className="post-content">
-          <div className="inner" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="post-content">
+        <div className="inner">
+          <RenderDoc doc={post.doc} />
         </div>
-        <ScrollToTopButton />
-      </SyntaxHighlighter>
+      </div>
+      <ScrollToTopButton />
     </SearchHighlighter>
   );
 };

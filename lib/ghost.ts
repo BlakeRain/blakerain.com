@@ -4,7 +4,14 @@ import GhostContentAPI, {
   Tag,
   TagVisibility,
 } from "@tryghost/content-api";
+import GhostAdminAPI from "@tryghost/admin-api";
 import React from "react";
+
+import { MobileDoc } from "./mobiledoc";
+
+interface PostOrPageExt extends PostOrPage {
+  mobiledoc: string;
+}
 
 export function shouldEnableCommento(): boolean {
   const key = process.env.COMMENTO_ENABLED;
@@ -22,6 +29,19 @@ export function getContentAPI() {
   }
 
   return new GhostContentAPI({
+    url: process.env.GHOST_HOSTNAME || "localhost",
+    key: key,
+    version: "v3",
+  });
+}
+
+export function getAdminAPI() {
+  const key = process.env.GHOST_ADMIN_API_KEY;
+  if (typeof key === "undefined") {
+    throw new Error("Expected environment variable 'GHOST_ADMIN_API_KEY'");
+  }
+
+  return new GhostAdminAPI({
     url: process.env.GHOST_HOSTNAME || "localhost",
     key: key,
     version: "v3",
@@ -65,7 +85,7 @@ export interface ListPost {
 }
 
 export interface DisplayPost extends ListPost {
-  html: string;
+  doc: MobileDoc;
 }
 
 function simplifyAuthor(author: Author): SimpleAuthor {
@@ -116,9 +136,9 @@ function buildListPost(post: PostOrPage): ListPost {
   };
 }
 
-function buildDisplayPost(post: PostOrPage): DisplayPost {
+function buildDisplayPost(post: PostOrPageExt): DisplayPost {
   var obj = buildListPost(post) as DisplayPost;
-  obj.html = post.html || "<b>No Content</b>";
+  obj.doc = JSON.parse(post.mobiledoc);
   return obj;
 }
 
@@ -209,10 +229,18 @@ export interface PostInformation {
 }
 
 export async function getPostWithSlug(slug: string): Promise<PostInformation> {
-  const post = await getContentAPI().posts.read(
+  const post = (await getContentAPI().posts.read(
     { slug: slug },
     { include: ["authors", "tags"] }
+  )) as PostOrPageExt;
+
+  const admin_post = await getAdminAPI().posts.read(
+    { slug: slug },
+    { fields: ["mobiledoc"] }
   );
+
+  post.mobiledoc = admin_post.mobiledoc;
+
   return {
     post: buildDisplayPost(post),
     tags: buildTagDictionary(post.tags || []),
@@ -227,10 +255,18 @@ export interface PageInformation {
 }
 
 export async function getPageWithSlug(slug: string): Promise<PageInformation> {
-  const page = await getContentAPI().pages.read(
+  const page = (await getContentAPI().pages.read(
     { slug: slug },
     { include: ["authors", "tags"] }
+  )) as PostOrPageExt;
+
+  const admin_page = await getAdminAPI().pages.read(
+    { slug: slug },
+    { fields: ["mobiledoc"] }
   );
+
+  page.mobiledoc = admin_page.mobiledoc;
+
   return {
     page: buildDisplayPost(page),
     tags: buildTagDictionary(page.tags || []),
