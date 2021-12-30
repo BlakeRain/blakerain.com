@@ -29,6 +29,281 @@
   padding-top: 2rem;
 }
 
+.content {
+  position: relative;
+
+  margin: 0 auto;
+  padding: 0 70px 6vw;
+  min-height: 230px;
+
+  font-family: $text-font-family;
+  font-size: 2rem;
+  line-height: 1.6em;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    min-width: 100%;
+    color: darken($color-dark-grey, 5%);
+    font-family: $body-font-family;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    + figure {
+      margin-top: 2em;
+    }
+  }
+
+  h1 {
+    margin: 0.5em 0 0.4em;
+
+    font-size: 4.2rem;
+    line-height: 1.25em;
+    font-weight: 600;
+  }
+
+  h2 {
+    margin: 0.5em 0 0.4em;
+
+    font-size: 3.2rem;
+    line-height: 1.25em;
+    font-weight: 600;
+
+    + h3 {
+      margin-top: 0.7em;
+    }
+
+    + h4 {
+      margin-top: 0.7em;
+    }
+  }
+
+  h3 {
+    margin: 0.5em 0 0.2em;
+
+    font-size: 2.5rem;
+    line-height: 1.3em;
+    font-weight: 600;
+
+    + h4 {
+      margin-top: 0;
+    }
+  }
+
+  h4 {
+    margin: 0.5em 0 0.2em;
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+
+  h5 {
+    margin: 0.5em 0;
+    padding: 0.3em 1em 0.9em;
+    font-size: 3.2rem;
+    line-height: 1.35em;
+    text-align: center;
+    color: $color-blue;
+  }
+
+  h6 {
+    margin: 0.5em 0 0.2em 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  a {
+    color: $color-dark-grey;
+    word-break: break-word;
+    box-shadow: $color-dark-grey 0 -1px 0 inset;
+
+    &:hover {
+      color: $color-blue;
+      text-decoration: none;
+      box-shadow: $color-blue 0 -1px 0 inset;
+    }
+  }
+
+  p {
+    margin: 0 0 1.5em 0;
+    min-width: 100%;
+
+    + h1,
+    + h2 {
+      margin-top: 0.8em;
+    }
+  }
+
+  ul,
+  ol,
+  dl {
+    margin: 0 0 1.5em 0;
+    min-width: 100%;
+  }
+
+  li {
+    word-break: break-word;
+    margin: 0.5em 0;
+    padding-left: 0.3em;
+    line-height: 1.6em;
+
+    p {
+      margin: 0;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  pre {
+    margin: 0;
+    padding: 20px;
+
+    overflow-x: auto;
+
+    border: 1px darken($color-light-grey, 10%) solid;
+    border-radius: 5px;
+    color: $color-dark-grey;
+    background-color: lighten($color-light-grey, 15%);
+
+    font-size: 1.4rem;
+    line-height: 1.5em;
+
+    &::selection {
+      color: darken($color-mid-grey, 25%);
+    }
+
+    code {
+      display: block;
+      padding: 0;
+
+      font-size: inherit;
+      line-height: inherit;
+      background: transparent;
+
+      &.language-box-drawing,
+      &:not([class]) {
+        line-height: 1.3em;
+      }
+
+      &:not(span) {
+        color: inherit;
+      }
+    }
+  }
+
+  blockquote {
+    margin: 0 0 1.5em;
+    padding: 0 1.5em;
+    min-width: 100%;
+
+    border-left: 3px solid #3eb0ef;
+    font-style: italic;
+    color: $color-mid-grey;
+
+    p {
+      margin: 0 0 1em 0;
+      color: inherit;
+      font-size: inherit;
+      font-style: italic;
+      line-height: inherit;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  strong,
+  em {
+    color: darken($color-dark-grey, 5%);
+  }
+
+  small {
+    display: inline-block;
+    line-height: 1.6em;
+  }
+
+  video {
+    display: block;
+    margin: 1.5em auto;
+    max-width: 1040px;
+    height: auto;
+  }
+
+  code {
+    padding: 0 5px 2px;
+    font-size: 0.8em;
+    line-height: 1em;
+    font-weight: 400 !important;
+    background-color: lighten($color-light-grey, 15%);
+    border-radius: 3px;
+  }
+
+  hr {
+    margin: 2em 0;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      display: block;
+      margin-left: -10px;
+      width: 1px;
+      height: 30px;
+      background-color: lighten($color-light-grey, 10%);
+      box-shadow: #ffffff 0 0 0 5px;
+      transform: rotate(45deg);
+    }
+
+    + p {
+      margin-top: 1.2em;
+    }
+  }
+
+  table {
+    display: inline-block;
+    overflow-x: auto;
+    margin: 0.5em 0 2.5em;
+    max-width: 100%;
+    width: auto;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-family: $body-font-family;
+    white-space: nowrap;
+    vertical-align: top;
+    -webkit-overflow-scrolling: touch;
+
+    td {
+      padding: 6px 12px;
+      border: 1px desaturate(darken($color-white-grey, 1%), 5%) solid;
+    }
+
+    th {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-align: left;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px desaturate(darken($color-white-grey, 1%), 5%) solid;
+    }
+  }
+}
+
+.contentInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 @media (prefers-color-scheme: dark) {
   .title {
     color: rgba(255, 255, 255, 0.9);
@@ -41,11 +316,60 @@
   .details {
     border-top-color: #3c414a;
   }
+
+  .content {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    a {
+      color: white;
+      box-shadow: inset 0 -1px 0 white;
+    }
+
+    strong,
+    em {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    blockquote {
+      color: lighten($color-mid-grey, 30%);
+    }
+
+    pre {
+      background-color: darken($color-dark-grey, 3%);
+      border-color: darken($color-dark-grey, 10%);
+      color: $color-white-grey;
+    }
+
+    code {
+      color: white;
+      background: black;
+    }
+  }
+}
+
+@media (min-width: 1180px) {
+  .content {
+    h5 {
+      max-width: 1060px;
+      width: 100vw;
+    }
+  }
 }
 
 @media (max-width: 1170px) {
   .header {
     padding: 60px 11vw 50px;
+  }
+
+  .content {
+    padding: 0 11vw;
   }
 }
 
@@ -53,6 +377,67 @@
   .header {
     padding-left: 5vw;
     padding-right: 5vw;
+  }
+
+  .content {
+    padding: 0 5vw;
+    font-size: 1.8rem;
+
+    h1 {
+      font-size: 3.2rem;
+      line-height: 1.25em;
+
+      + figure {
+        margin-top: 0.9em;
+      }
+    }
+
+    h2 {
+      margin-bottom: 0.3em;
+      font-size: 2.8rem;
+      line-height: 1.25em;
+
+      + figure {
+        margin-top: 0.9em;
+      }
+    }
+
+    h3 {
+      margin-bottom: 0.3em;
+      font-size: 2.4rem;
+      line-height: 1.3em;
+
+      + figure {
+        margin-top: 0.9em;
+      }
+    }
+
+    h4 {
+      margin-bottom: 0.3em;
+      font-size: 2.4rem;
+      line-height: 1.3em;
+
+      + figure {
+        margin-top: 0.9em;
+      }
+    }
+
+    h5 {
+      margin-bottom: 1em;
+      margin-left: 1.3em;
+      padding: 0 0 0.5em;
+      font-size: 2.4rem;
+      text-align: initial;
+    }
+
+    h6 {
+      font-size: 1.8rem;
+      line-height: 1.4em;
+    }
+
+    figure {
+      margin: 0.2em 0 1.3em;
+    }
   }
 }
 
@@ -63,5 +448,21 @@
 
   .title {
     font-size: 3.3rem;
+  }
+
+  .content {
+    padding: 0;
+
+    p,
+    ul,
+    ol,
+    dl,
+    pre {
+      margin-bottom: 1.28em;
+    }
+
+    blockquote {
+      padding: 0 1.3em;
+    }
   }
 }

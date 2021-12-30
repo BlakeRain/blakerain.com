@@ -1,15 +1,18 @@
 import React, { FC } from "react";
-import { AuthorDictionary, DisplayPost, TagDictionary } from "../lib/ghost";
-import styles from "./Content.module.scss";
-import { PostDetails } from "./PostDetails";
-import { TagList } from "./TagList";
 import { useRouter } from "next/router";
+
+import { AuthorDictionary, DisplayPost, TagDictionary } from "../lib/ghost";
+
 import {
   getHighlightTerm,
   SearchHighlighter,
 } from "./search/SearchHighlighter";
 import { ScrollToTopButton } from "./ScrollToTop";
 import { RenderDoc } from "./Document";
+import { PostDetails } from "./PostDetails";
+import { TagList } from "./TagList";
+
+import styles from "./Content.module.scss";
 
 const ContentHeader: FC<ContentProps> = ({ authors, tags, post }) => {
   return (
@@ -32,8 +35,8 @@ const ContentBody: FC<{ post: DisplayPost }> = ({ post }) => {
 
   return (
     <SearchHighlighter term={term}>
-      <div className="post-content">
-        <div className="inner">
+      <div className={styles.content}>
+        <div className={styles.contentInner}>
           <RenderDoc doc={post.doc} />
         </div>
       </div>

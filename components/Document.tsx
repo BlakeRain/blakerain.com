@@ -41,23 +41,12 @@ function getMarkupAttributes(markup: Markup): StackItemAttributes {
   return attributes;
 }
 
-function processStackItem(item: StackItem) {
-  if (item.tag === "a") {
-    item.attributes["className"] = styles.documentLink;
-  }
-
-  return item;
-}
-
 function stackItemFromMarkup(markup: Markup): StackItem {
-  const item = {
+  return {
     tag: markup[0],
     attributes: getMarkupAttributes(markup),
     children: [],
   };
-
-  processStackItem(item);
-  return item;
 }
 
 function popStackItems(
