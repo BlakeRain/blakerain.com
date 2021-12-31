@@ -6,6 +6,17 @@
 
 Description: CloudFormation template for blakerain.com
 
+Parameters:
+  Repository:
+    Type: String
+    Description: The repository containing the site sources
+    Default: https://github.com/BlakeRain/blakerain.com
+
+  GitHubPAT:
+    Type: String
+    Description: The GitHub personal access token to create the OAuth token
+    NoEcho: true
+
 Resources:
   BlakeRainAmplifyRole:
     Type: AWS::IAM::Role
@@ -36,6 +47,26 @@ Resources:
           Target: "/index.html"
           Status: "404-200"
       IAMServiceRole: !GetAtt BlakeRainAmplifyRole.Arn
+      Repository: !Ref Repository
+      OauthToken: !Ref GitHubPAT
+      BuildSpec: |-
+        version: 1.0
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - yarn install
+            build:
+              commands:
+                - yarn run build
+                - yarn run export
+          artifacts:
+            baseDirectory: out
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
 
   BlakeRainAmplifyAppBranch:
     Type: AWS::Amplify::Branch
