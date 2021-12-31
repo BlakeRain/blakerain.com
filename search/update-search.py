@@ -239,6 +239,6 @@ for resource in ["posts", "pages"]:
 STORE = Store()
 SEARCH_DATA.encode(STORE)
 
-os.makedirs("out/data", exist_ok=True)
-with open("out/data/search.bin", "wb") as fp:
+os.makedirs("public/data", exist_ok=True)
+with open("public/data/search.bin", "wb") as fp:
     STORE.write(fp)
