@@ -67,7 +67,7 @@ ghost.tags.browse({ limit: "all" }).then((tags) => {
   console.log(`Extracted ${our_tags.length} tags (of ${tags.length})`);
 });
 
-function processMobileDoc(doc) {
+function processMobileDoc(slug, doc) {
   var parts = [];
   var stack = [];
 
@@ -242,9 +242,14 @@ function processMobileDoc(doc) {
       params.set("caption", card.caption);
     }
 
+    const name = path.basename(card.src);
+    download(card.src, path.join("public", "content", slug, name));
+
     const qs = params.toString();
     parts.push(
-      `![${card.caption}](${card.src}${qs.length > 0 ? "?" + qs : ""})\n\n`
+      `![${card.caption}](${path.join("content", slug, name)}${
+        qs.length > 0 ? "?" + qs : ""
+      })\n\n`
     );
   }
 
@@ -306,6 +311,7 @@ function processMobileDoc(doc) {
 
 ghost.pages.browse({ limit: "all" }).then((pages) => {
   pages.forEach((page) => {
+    console.log(`Processing page: ${page.slug}`);
     const front_matter = {
       slug: page.slug,
       title: page.title,
@@ -321,7 +327,7 @@ ghost.pages.browse({ limit: "all" }).then((pages) => {
       "---\n" +
         yaml.stringify(front_matter) +
         "---\n\n" +
-        processMobileDoc(JSON.parse(page.mobiledoc))
+        processMobileDoc(page.slug, JSON.parse(page.mobiledoc))
     );
   });
 });
@@ -330,6 +336,7 @@ ghost.posts.browse({ limit: "all" }).then((posts) => {
   posts
     .filter((post) => post.status === "published")
     .forEach((post) => {
+      console.log(`Processing post: ${post.slug}`);
       const front_matter = {
         slug: post.slug,
         title: post.title,
@@ -354,12 +361,14 @@ ghost.posts.browse({ limit: "all" }).then((posts) => {
         download(post.feature_image, "public/content/" + filename);
       }
 
+      if (!fs.existsSync(path.join("public", "content", post.slug))) {
+        fs.mkdirSync(path.join("public", "content", post.slug));
+      }
+
+      const content = processMobileDoc(post.slug, JSON.parse(post.mobiledoc));
       fs.writeFileSync(
         `content/posts/${post.slug}.md`,
-        "---\n" +
-          yaml.stringify(front_matter) +
-          "---\n\n" +
-          processMobileDoc(JSON.parse(post.mobiledoc))
+        "---\n" + yaml.stringify(front_matter) + "---\n\n" + content
       );
     });
 });

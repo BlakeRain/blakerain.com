@@ -26,7 +26,7 @@ Before the advent of DMA, when a device wanted to write data to memory it would 
 
 DMA was introduced to allow devices to directly access system memory without interrupting the processor. In this model, an additional device (called a DMA engine) would handle the details of memory transfers. Later devices (often called Bus Masters) would integrate the DMA functionality locally, obviating the need for a discrete DMA engine.
 
-In this more recent model of PCI, the [North Bridge](https://en.wikipedia.org/wiki/Northbridge_(computing)) would decode the address and recognize itself as the target of a PCI transaction, and during the data phase of the bus cycle, the data is transferred between the device and the North Bridge, which will in turn issue DRAM bus cycles to communicate with system memory.
+In this more recent model of PCI, the [North Bridge](<https://en.wikipedia.org/wiki/Northbridge_(computing)>) would decode the address and recognize itself as the target of a PCI transaction, and during the data phase of the bus cycle, the data is transferred between the device and the North Bridge, which will in turn issue DRAM bus cycles to communicate with system memory.
 
 > The term _bus mastering_ is still used in PCI to enable a device to initiate DMA. It is often still necessary to enable bus mastering on many devices, and the command register in the PCI [configuration space](https://en.wikipedia.org/wiki/PCI_configuration_space) includes a flag to enable [bus mastering](https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/pci_regs.h#L43).
 
@@ -55,7 +55,7 @@ We understand that a process operates on virtual memory, and that memory is arra
 
 An answer to this lies in the process page map. The page map is a table that provides a correspondence between a virtual page number and the physical address of that page, along with some flags that tell us information about the page's residency. Each entry in the table is a 64-bit value, with bits 63 down through 55 providing the various flags, and bits 54 to 0 giving the page frame number (assuming the page is in RAM).
 
-![Layout of an entry in the page map](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-2-1.png?width=723&height=238&caption=Layout+of+an+entry+in+the+page+map)
+![Layout of an entry in the page map](/content/allocating-memory-for-dma-in-linux/image-2-1.png?width=723&height=238&caption=Layout+of+an+entry+in+the+page+map)
 
 Note that bits 54 through 0 are only the physical page frame number if the page is currently in memory. Under other circumstances it can indicate such things as the swap type and offset. We can ascertain whether the page is actually in RAM by checking if bit 63 is set. If bit 63 is set then the bits 54 through 0 are the page frame number.
 
@@ -113,16 +113,16 @@ static uintptr_t virtual_to_physical(const void *vaddr) {
   auto page_size = sysconf(_SC_PAGESIZE);
   int  fd        = open("/proc/self/pagemap", O_RDONLY);
   assert(fd != -1);
-  
+
   int res = ::lseek64(fd, (uintptr_t)vaddr / page_size * sizeof(uintptr_t), SEEK_SET);
   assert(res != -1);
-  
+
   uintptr_t phy = 0;
   res = read(fd, &phy, sizeof(uintptr_t));
   assert(res == sizeof(uintptr_t));
-  
+
   close(fd);
-  
+
   assert((phy & BIT(63)) != 0);
   return (phy & 0x7fffffffffffffULL) * page_size
          + (uintptr_t)vaddr % page_size;
@@ -214,12 +214,12 @@ namespace fs = std::experimental::file_system;
 
 struct HugePageInfo {
   std::size_t size; // The size of the hugepage (in bytes)
-  
+
   HugePageInfo(const fs::directory_entry &);
-  
+
   // Allocate a huge page in this pool
   HugePage::Ref allocate() const;
-  
+
   // Load all the available huge page pools
   static std::vector<HugePageInfo> load();
 };
@@ -253,7 +253,7 @@ std::vector<HugePageInfo> HugePageInfo::load() {
   for (auto &entry : fs::directory_iterator(SYS_HUGEPAGE_DIR)) {
     huge_pages.emplace_back(entry);
   }
-  
+
   return huge_pages;
 }
 ```
@@ -269,11 +269,11 @@ struct HugePage {
   void *      virt;
   uintptr_t   phy;
   std::size_t size;
-  
+
   HugePage(void *v, uintptr_t p, std::size_t sz)
     : virt(v), phy(p), size(sz) {
   }
-  
+
   ~HugePage();
 };
 ```
@@ -283,14 +283,14 @@ To allocate a huge page we want to use the `mmap` system call with the `MAP_HUGE
 As we are not backing this mapping with a file, we need to use the `MAP_ANONYMOUS` flag. A portable application making use of `MAP_ANONYMOUS` should set the file descriptor to -1 and pass zero as the offset.
 
 ```cpp {"caption": "Allocating a huge page and mapping it into process memory"}
-HugePage::Ref HugePageInfo::allocate() const { 
+HugePage::Ref HugePageInfo::allocate() const {
   // Map a hugepage into memory
   void *vaddr = (void *)mmap(NULL, size,
                              PROT_READ | PROT_WRITE,
                              MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
                              -1, 0);
   assert(vaddr != MAP_FAILED);
-  
+
   return std::make_shared<HugePage>(vaddr, virtual_to_physical(vaddr), size);
 }
 ```
@@ -357,10 +357,10 @@ struct Buffer {
   uint64_t    phy;       // Physical address of the buffer data
   std::size_t size;      // Size of the buffer
   Buffer *    next;      // Next buffer in list (used for free list)
-  
+
   // Other data fields such as packet length, RSS hash and so on
   // can be added here, so long as 'padding' is adjusted accordingly.
-  
+
   uint32_t    padding[8];
 };
 
@@ -383,14 +383,14 @@ struct Layout {
   std::size_t buffer_size;
   std::size_t alignment;
   std::size_t nbuffers;
-  
+
   // Computed layout information
   uint64_t chunk_header_size{0};
   uint64_t buffer0_offset{0};
   uint64_t chunk_slop{0};
   uint64_t buffer_slop{0};
   uint64_t chunk_space{0};
-  
+
   Layout(std::size_t size,
          std::size_t align,
          std::size_t page_size) {
@@ -403,7 +403,7 @@ struct Layout {
 private:
   // Compute the layout information for a given number of buffers
   void compute(std::size_t n);
-               
+
   // Try and find a "best fit" buffer count
   void optimize(std::size_t page_size);
 };
@@ -414,7 +414,7 @@ To compute the layout, we first need to ascertain the chunk header size, which w
 ```cpp
 void Layout::compute(std::size_t n) {
   nbuffers = n;
-  
+
   // Calculate the chunk header size (C + n * H)
   chunk_header_size = sizeof(Chunk) + sizeof(Buffer) * n;
 ```
@@ -447,10 +447,10 @@ Finally we can calculate the amount of space that we use for this chunk. This is
 ```cpp
   // Start off with the chunk header and slop.
   chunk_space = chunk_header_size + chunk_slop;
-  
+
   // Add on the buffer data, where 'n' is the number of buffers.
   chunk_space += n * buffer_size;
-  
+
   // Now accommodate the interstital slop. Bear in mind
   // that there is N-1 interstitials for N buffers.
   chunk_space += (n - 1) * buffer_slop;
@@ -465,7 +465,7 @@ To optimize the number of buffers we want to add buffers to the layout, until we
 void Layout::optimize(std::size_t page_size) {
   std::size_t current_nbuffers = nbuffers;
   std::size_t last_nbuffers    = current_nbuffers;
-  
+
   for (;;) {
 ```
 
@@ -483,7 +483,7 @@ Now we've calculated the size of the required space for `current_nbuffers` buffe
     if (chunk_space > page_size) {
       break;
     }
-    
+
     last_nbuffers = current_nbuffers;
     ++current_nbuffers;
   }
@@ -517,9 +517,9 @@ class DMAPool {
   Layout              _layout;
   Chunk *             _first_chunk{nullptr};
   Buffer *            _free_list{nullptr};
-  
+
   void new_chunk();
-  
+
 public:
   DMAPool(const HugePageInfo *hp,
           std::size_t buffer_size,
@@ -527,7 +527,7 @@ public:
     : _huge_page(hp), _layout(buffer_size, alignment, hp->size) {
   }
   ~DMAPool();
-  
+
   Buffer *allocate();
   void    free(Buffer *);
 };
@@ -539,26 +539,26 @@ The first function we should consider is the `DMAPool::new_chunk` method. This m
 void DMAPool::new_chunk() {
   // Allocate a huge page
   auto page = _huge_page->allocate();
-  
+
   // We need to move around by bytes from the start of the virtual
   // address of the huge page. We'll create a 'start' pointer for
   // this process.
-  
+
   uint8_t *start = (uint8_t *)page.virt;
-  
+
   // Our 'Chunk' starts at the virtual address of the page
   Chunk *chunk = (Chunk *)start;
-  
+
   // Populate some of the fields of the chunk header
   chunk->dma      = page;
   chunk->buf_size = _layout.buffer_size;
-  
+
   // Get a pointer to the first buffer header in the page
   Buffer *buffer = (Buffer *)(start + sizeof(Chunk));
-  
+
   // Set this as the first buffer header in the chunk
   chunk->first_buffer = buffer;
-  
+
   // Get a pointer to the first buffer data in the page
   uint8_t *buffer_data = start + _layout.buffer0_offset;
 ```
@@ -571,12 +571,12 @@ After we have populated each `Buffer` header structure, we chain it onto the fro
   for (std::size_t i = 0; i < _layout.nbuffers;
        ++i, ++buffer,
        buffer_data += (_layout.buffer_size + _layout.buffer_slop)) {
-       
+
     // Set the fields of the buffer header
     buffer->address = buffer_data;
     buffer->phy     = page.phy + (buffer_data - start);
     buffer->size    = _layout.buffer_size;
-    
+
     // Chain this buffer onto the free list
     buffer->next = _free_list;
     _free_list   = buffer;
@@ -602,10 +602,10 @@ Buffer *DMAPool::allocate() {
     new_chunk();
     buffer = _free_list;
   }
-  
+
   _free_list   = buffer->next;
   buffer->next = nullptr;
-  
+
   return buffer;
 }
 ```
@@ -625,7 +625,7 @@ Finally, when we are done with a `DMAPool` it's destructor will be called. This 
 DMAPool::~DMAPool() {
   Chunk *chunk = _first_chunk;
   Chunk *next  = nullptr;
-  
+
   while (chunk) {
     next = chunk->next;
     chunk->dma.free();
@@ -661,8 +661,3 @@ metadata:
     Cover image courtesy of Harrison Broadbent (<a href="https://unsplash.com/@harrisonbroadbent?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">@harrisonbroadbent</a>) on unsplash.
 </small>
 ```
-
-
-
-
-

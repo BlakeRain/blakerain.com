@@ -24,13 +24,13 @@ The second option, where the editing UI is contained in a pane off to one side o
 
 The third option is my favourite, and is reminiscent of applications like Blender.
 
-![Blender showing it's <em>Transform</em> overlay on the right, within the 3D view](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image.png?wide=&width=1266&height=756&caption=Blender+showing+it%27s+%3Cem%3ETransform%3C%2Fem%3E+overlay+on+the+right%2C+within+the+3D+view)
+![Blender showing it's <em>Transform</em> overlay on the right, within the 3D view](/content/overlays-with-custom-widgets-in-gtk/image.png?wide=&width=1266&height=756&caption=Blender+showing+it%27s+%3Cem%3ETransform%3C%2Fem%3E+overlay+on+the+right%2C+within+the+3D+view)
 
 It's interesting to me that we don't often see this kind of UI in many GTK applications, which I worry might lead people to believe that GTK is pretty underwhelming as a UI library.
 
 In this article I thought it would be fun to walk through creating a simple GTK application that uses an [overlay](https://developer.gnome.org/gtk3/stable/GtkOverlay.html) widget to render a set of controls over the top of a custom drawn widget.
 
-![Simple application using an overlay widget](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Collapsible-Controls-Overlay-Demo_2102-1.png?width=800&height=825&caption=Simple+application+using+an+overlay+widget)
+![Simple application using an overlay widget](/content/overlays-with-custom-widgets-in-gtk/Collapsible-Controls-Overlay-Demo_2102-1.png?width=800&height=825&caption=Simple+application+using+an+overlay+widget)
 
 As we're only focusing on the GTK side of things, I decided to use Python instead of C++.
 
@@ -80,7 +80,7 @@ Gtk.main()
 
 We can now run our Python script and we should get a nice square window with nothing in it.
 
-![Showing the main window with no content](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-2.png?width=876&height=901&caption=Showing+the+main+window+with+no+content)
+![Showing the main window with no content](/content/overlays-with-custom-widgets-in-gtk/image-2.png?width=876&height=901&caption=Showing+the+main+window+with+no+content)
 
 Now that we have our main window in place we can move on to our custom drawn control. We're going to use a [`Gtk.DrawingArea`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/DrawingArea.html) that contains a simple grid. Later we'll add some interaction to allow us to pan the grid around by holding down the right mouse button.
 
@@ -120,7 +120,7 @@ class MainWindow(Gtk.Window):
 
 With these changes in place, when we run our Python script we will get a window with the dark-grey background we rendered in our `MapEditor.on_draw` method.
 
-![](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-3.png?width=800&height=825&caption=)
+![](/content/overlays-with-custom-widgets-in-gtk/image-3.png?width=800&height=825&caption=)
 
 No doubt your are now as overwhelmed by excitement as I am that we changed the background color of the window.
 
@@ -199,7 +199,7 @@ class MapEditor(Gtk.DrawingArea):
 
 Running our script again we will see that the terminal is filled with motion events when the mouse passes over the `MapEditor` widget in our window. When we press and release the mouse buttons with the mouse pointer over our `MapEditor` widget we also see press and release events.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-4.png?width=758&height=344)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-4.png?width=758&height=344)
 
 To implement our panning we first want to keep track of the mouse motion and the currently held mouse button. We'll do so using three fields:
 
@@ -280,19 +280,19 @@ def on_draw(self, widget, context):
 
 With these changes in place we should see messages in our terminal when we drag the cursor over our `MapEditor` that show the camera updating.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-5.png?width=453&height=391)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-5.png?width=453&height=391)
 
 However, we're not getting anything in our widget yet, as the camera coordinates are not being used in our rendering.
 
 Next we'll add the grid rendering to our `MapEditor` widget. We'll draw two grids: a minor grid that draws a line every 10 pixels and a major grid every 100 pixels:
 
-![The major and minor grid lines](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-6.png?width=800&height=825&caption=The+major+and+minor+grid+lines)
+![The major and minor grid lines](/content/overlays-with-custom-widgets-in-gtk/image-6.png?width=800&height=825&caption=The+major+and+minor+grid+lines)
 
 A fairly nice approach to rendering this grid is to offset the start position of the grid lines by the camera coordinates, modulus the size of each grid line. This way, as the camera moves, the top-left corner of the grid follows the camera until it reaches the next grid line step before resetting. By doing so we are limiting the number of grid lines we have to draw to the size of the viewport.
 
 This may be somewhat hard to understand, so here is an animation that shows the camera position being updated by dragging the mouse. The start corner of the major grid is rendered with a green square and the minor grid with a red square.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/recording1.gif?width=506&height=400)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/recording1.gif?width=506&height=400)
 
 The grid appears to be panning as the mouse moves, however we can see that all we're actually doing is slightly offsetting the starting point for the rendering of the grid.
 
@@ -317,7 +317,7 @@ for color, step in [(0.2, 10), (0.3, 100)]:
 
 Another useful thing to note is that the start X and Y coordinates are clamped to an integer and then offset by half a pixel. The reason for this half-pixel offset is to make sure that the grid lines are always cleanly rendered with little to no aliasing visible. If we rendered the grid using fractional values instead, we would end up with heavy aliasing as shown in the animation below.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/recording2.gif?width=506&height=400)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/recording2.gif?width=506&height=400)
 
 You can see how the grid is almost moving in and out of focus as it pans. This is [because](https://www.cairographics.org/FAQ/#sharp_lines) Cairo renders a line with a thickness of one pixel centered on the line. Therefore, we offset all our lines by half a pixel to keep them relatively clean.
 
@@ -404,7 +404,7 @@ In the constructor for the `ControlPanel` class we invoke the [`Gtk.Box`](https:
 
 Now we'll define the class for our control panel groups. Each group is presented as an [expandable](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Expander.html) widget with a title. Much like our `ControlPanel` widget, we support adding child widgets as rows.
 
-![A <code>ControlPanelGroup</code> with some controls](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-7.png?width=202&height=182&caption=A+%3Ccode%3EControlPanelGroup%3C%2Fcode%3E+with+some+controls)
+![A <code>ControlPanelGroup</code> with some controls](/content/overlays-with-custom-widgets-in-gtk/image-7.png?width=202&height=182&caption=A+%3Ccode%3EControlPanelGroup%3C%2Fcode%3E+with+some+controls)
 
 ```python
 class ControlPanelGroup(Gtk.Expander):
@@ -480,11 +480,11 @@ class MainWindow(Gtk.Window):
 
 When we run our Python script we will see that the expanders and their widgets are indeed rendered over the top of our map editor. Unfortunately, when expanded, they cover far too much of the editor viewport!
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-8.png?width=800&height=825)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-8.png?width=800&height=825)
 
 What we want to do now is to tell the [`Gtk.Overlay`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Overlay.html) widget where to place the `MyControlPanel` widget. The [`Gtk.Overlay`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Overlay.html) widget arranges overlays using the [`halign`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.props.halign) and [`valign`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.props.valign) properties of the overlaid widget. There are a number of options for these properties, which change where they are placed:
 
-![Various <code>halign</code> and <code>valign</code> options and their effects on overlay placement](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-9.png?width=400&height=425&caption=Various+%3Ccode%3Ehalign%3C%2Fcode%3E+and+%3Ccode%3Evalign%3C%2Fcode%3E+options+and+their+effects+on+overlay+placement)
+![Various <code>halign</code> and <code>valign</code> options and their effects on overlay placement](/content/overlays-with-custom-widgets-in-gtk/image-9.png?width=400&height=425&caption=Various+%3Ccode%3Ehalign%3C%2Fcode%3E+and+%3Ccode%3Evalign%3C%2Fcode%3E+options+and+their+effects+on+overlay+placement)
 
 We want to position our control panel in the top-right of the window. To do this we want to call the [`set_halign()`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.set_halign) and [`set_valign()`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.set_valign) methods in our `ControlPanel` constructor.
 
@@ -503,7 +503,7 @@ class ControlPanel(Gtk.Box):
 
 This arranges the panel in the top-right of the window, which is much better. However we can see that there is a new problem: the size of the control panel changes when we expand and collapse each of the `ControlPanelGroup` widgets.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Peek-2021-01-14-20-14.gif?width=291&height=333)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/Peek-2021-01-14-20-14.gif?width=291&height=333)
 
 Of course this is perfectly natural behaviour for a GTK application. However, we want to fix the width of the control panel. We'll do this by specifying the width in the size request for each `ControlPanelGroup` by calling the [`set_size_request`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.set_size_request) method. We'll leave the height at minus one so it's calculated based on the children of the group.
 
@@ -525,7 +525,7 @@ class ControlPanelGroup(Gtk.Expander):
 
 With this change our control panel seems a bit more sane. Well, it doesn't jump around as much as it did before.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Peek-2021-01-14-20-18.gif?width=291&height=333)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/Peek-2021-01-14-20-18.gif?width=291&height=333)
 
 We still have a problem that the control panel has no background to it. To understand why this is we can dive into the CSS nodes of our application using the [GTK inspector](https://wiki.gnome.org/action/show/Projects/GTK/Inspector?action=show&redirect=Projects%2FGTK%2B%2FInspector).
 
@@ -537,31 +537,31 @@ GTK_DEBUG=interactive python3 collapse-controls.py
 
 This will bring up the GTK inspector alongside our application:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-10-1.png?width=841&height=853)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-10-1.png?width=841&height=853)
 
 We can now navigate through the object tree until we get to our `MyControlPanel` widget.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-11-1.png?width=460&height=270)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-11-1.png?width=460&height=270)
 
 With this selected we can switch to the CSS nodes by selecting the light-bulb in the top-left of the inspector window to change to properties view (the icon will change from a light-bulb to a list icon). We can then select _CSS nodes_ from the dropdown beneath it.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-12.png?width=598&height=389)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-12.png?width=598&height=389)
 
 Taking a look at the CSS properties for the `MyControlPanel` widget on the right side of the inspector we can see that there is no background color or image specified:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-13.png?width=359&height=150)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-13.png?width=359&height=150)
 
 We want to change that, so we'll edit the CSS for our application. To apply out CSS we'll add a `control-panel` class to our `MyControlPanel` widget from within the GTK inspector. To add a class, double-click in the _Style Classes_ column for the current widget. This brings up the `Style Classes` popover where we can add our new class:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-14.png?wide=&width=846&height=593)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-14.png?wide=&width=846&height=593)
 
 Click the `+` button in the `Style Classes` popover to add a new class, and enter the name `control-panel`.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image_o-15.png?wide=&width=846&height=593)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image_o-15.png?wide=&width=846&height=593)
 
 We can now edit the inline CSS for by selecting the _CSS_ tab in the top of the inspector. This presents us with an editor in which we can write some CSS.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-16.png?wide=&width=846&height=593)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-16.png?wide=&width=846&height=593)
 
 We're going to add the following CSS to set the background color of our control panel widget – to which we've just applied the `control-panel` class. We'll set the background color to the standard background color for the current GTK theme.
 
@@ -573,7 +573,7 @@ We're going to add the following CSS to set the background color of our control 
 
 Immediately after making this change you should see that our control panel now has a background color:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-18.png?width=231&height=320)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-18.png?width=231&height=320)
 
 Whilst we're live editing the CSS we might as well add some padding to the control panel too.
 
@@ -586,11 +586,11 @@ Whilst we're live editing the CSS we might as well add some padding to the contr
 
 This will nudge our control groups away from the edges of the control panel, and make the UI a little cleaner looking.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-19.png?width=232&height=320)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-19.png?width=232&height=320)
 
 Looking closely at the bottom-left corner of the control panel, we can see quite a sharp corner:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-20.png?width=506&height=426)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-20.png?width=506&height=426)
 
 Let's update our stylesheet a bit more to round off the bottom-left corner with a four pixel radius.
 
@@ -602,7 +602,7 @@ Let's update our stylesheet a bit more to round off the bottom-left corner with 
 }
 ```
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-22.png?width=506&height=400)
+![undefined](/content/overlays-with-custom-widgets-in-gtk/image-22.png?width=506&height=400)
 
 Now that we're happier with the appearance of our control panel we can add the CSS to our Python script. To do this we need to load our CSS into a [`Gtk.CssProvider`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/CssProvider.html) and then add the provider to the [`Gtk.StyleContext`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/StyleContext.html#Gtk.StyleContext) for the current screen. We can do this in a function that we'll call `install_css`, which we'll call before we create our window:
 

@@ -19,7 +19,7 @@ I decided to re-visit the search functionality that I [had added](http://localho
 
 The search function that I added is triggered either by clicking on the search icon in the top-right of the navigation bar or by pressing either the `Tab` or `s` key. Text entered into the displayed search pop-up is immediately applied to the search system and the results update dynamically.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/recording1-1.gif?width=1068&height=514)
+![undefined](/content/updated-site-search/recording1-1.gif?width=1068&height=514)
 
 The new search comprises two main components: a front-end interface and a back-end. The back-end runs as a [GitHub Action](https://docs.github.com/en/free-pro-team@latest/actions), which generates the search data from the site contents. The front-end is a small amount of [React](https://reactjs.org/) code that is built along with the rest of the theme. The front-end provides the interactive search.
 
@@ -45,7 +45,7 @@ In this search tree I wanted to be able to link any recognized word with an occu
 
 We then assemble this data into a search tree. Each node of the search tree can represent a word we recognize, and the edges of the tree represent the letters:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.48.42.png?width=508&height=796)
+![undefined](/content/updated-site-search/Screenshot-2021-07-30-at-17.48.42.png?width=508&height=796)
 
 Typically the power of a trie like this is in being able to find all the matches for a given prefix. For example, given the input sequence `"be"` we can infer that this is either: `"ben"` or `"bell"`. For this reason, ties can often be used when implementing prefix-oriented searches such as auto-complete in text editors.
 
@@ -74,7 +74,7 @@ find_occurrences(node):
 
 Using our simple prefix tree, if we were given the search term `"be"` we would descend the tree until we get to the following node:
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.49.29.png?width=329&height=527)
+![undefined](/content/updated-site-search/Screenshot-2021-07-30-at-17.49.29.png?width=329&height=527)
 
 Searching for occurrences from this node, the first leaf we reach is for the word `"ben"` which has one occurrence in _Document 1_ and two occurrences in _Document 2_. The next leaf we encounter is for the word `"bell"`, which has four occurrences in _Document 2_. This gives us the following tally:
 
@@ -129,11 +129,11 @@ Decoded 3 posts, 4804 term trie nodes in 6 milliseconds from 29.09 Kb
 
 The implementation of the search interface allows a user to enter a search term. As the term is entered it is tested against the search trie, with each word tested as a prefix. The tally of matching documents is displayed as a simple list. The list is sorted by the number of occurrences, in descending order. The user can click on each link to visit the page.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/image-2-2.png?width=791&height=263)
+![undefined](/content/updated-site-search/image-2-2.png?width=791&height=263)
 
 When a link is clicked in the search results, the page opened. The link contains a query-string that includes the search term in a `highlight` key. This is detected by some JavaScript in the site theme code which uses [mark.js](https://markjs.io/) to highlight any matching keywords.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Selection_2056.png?width=1015&height=692)
+![undefined](/content/updated-site-search/Selection_2056.png?width=1015&height=692)
 
 ### Conclusion
 

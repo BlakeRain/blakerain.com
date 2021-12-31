@@ -24,9 +24,9 @@ Tri-color marking describes a process that walks the heap and assigns each objec
 - Grey objects are ones that we've found have pointers to, but we've yet to scan them for pointers to other objects.
 - Objects that are marked black are ones that we've discovered pointers to and which contain no pointers into white objects. We keep these objects.
 
-An important feature of the tri-color marking process is the _tri-color invariant – _no objects in the black set reference objects in the white set.
+An important feature of the tri-color marking process is the \_tri-color invariant – \_no objects in the black set reference objects in the white set.
 
-To perform the tri-color marking process we need to begin at the _roots. _A root is a pointer into the heap that we use to initialize the marking process. Roots are typically found on the stack or in registers.
+To perform the tri-color marking process we need to begin at the \_roots. \_A root is a pointer into the heap that we use to initialize the marking process. Roots are typically found on the stack or in registers.
 
 When we start our marking process we take all the roots and place the objects into the grey set. The rest of the objects go into the white set and the black set starts off empty.
 
@@ -58,7 +58,7 @@ struct Node {
   int   value;
   Node *left{nullptr};
   Node *right{nullptr};
-  
+
   Node(int v): value(v) {
   }
 };
@@ -76,49 +76,49 @@ first->right = first->left->right;
 
 We can visualize the heap now as a graph of `Node` objects that refer to each other in a tree structure.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.42.29.png?width=353&height=360)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.42.29.png?width=353&height=360)
 
 Let's now work through the tri-color marking process. We first establish our initial colored sets of objects.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.43.04.png?width=689&height=126)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.04.png?width=689&height=126)
 
 Our grey set contains our single root, being the object pointed to by the `first` variable: `Node(1)`. Our white set contains all the other objects.
 
 The first pass of the tri-color marking process will see that the grey set is not empty: it contains the first node we allocated, which is pointed to by our root. We move it to the black set, as we want to preserve it.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.43.32.png?width=688&height=125)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.32.png?width=688&height=125)
 
 We then scan the object and find any pointers to objects in the white set. We find that it does indeed have two such a pointers in it's `left` and `right` fields.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.43.57.png?width=684&height=204)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.57.png?width=684&height=204)
 
 We have now established that these objects are live, so we no longer want them in the white (condemned) set. We move these two pointed-to objects from the white set to the grey set.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.44.21.png?width=585&height=197)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.21.png?width=585&height=197)
 
 At this point the first pass of the tri-color marking process has moved our initial root object into the black set to keep and marked two other objects for scanning.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.44.50.png?width=594&height=128)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.50.png?width=594&height=128)
 
 In the second iteration we see that the grey set is not empty, so we continue with our marking by taking an object from the grey set and moving it to the black set before scanning. We'll take the `Node(2)` node first, moving it to the black set.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.45.13.png?width=588&height=128)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.13.png?width=588&height=128)
 
 We then scan the `Node(2)` object for any pointers to objects in the white set. We find one such an object: `Node(3)`. Note that the object `Node(4)` is pointed to by `Node(2)`, but it is not in the white set.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.45.43.png?width=586&height=195)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.43.png?width=586&height=195)
 
 We move the object `Node(3)` from the white set to the grey set for processing.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.46.09.png?width=677&height=193)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.09.png?width=677&height=193)
 
 For the third pass we find that the grey set is still not empty, so we take an object from the grey set and move it to the black set. The next node we'll process is `Node(4)`. This node is moved to the black set and then scanned for pointers.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.46.36.png?width=679&height=123)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.36.png?width=679&height=123)
 
 We scan `Node(4)` and find no pointers into the white set. The fourth pass discovers the grey set is still not empty. We'll pick the next grey node `Node(3)` and move it to the black set.
 
-![undefined](https://s3-eu-west-1.amazonaws.com/static.blakerain.com/media/content/images/2021/07/Screenshot-2021-07-30-at-17.47.06.png?width=777&height=120)
+![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.47.06.png?width=777&height=120)
 
 We scan `Node(3)` and find no pointers. With the final pass complete the grey set is empty. The objects that we want to keep are in the black set and the white set is empty. We have nothing that we want to free.
 
@@ -187,7 +187,7 @@ class BlockSet {
 public:
   block_iterator begin();
   block_iterator end();
-  
+
   // Given a pointer, find the block in which the pointer resides
   BlockInfo *block_for(const void *);
 };
@@ -205,15 +205,15 @@ void populate(const PointerSet &roots, BlockSet &blocks) {
   for (Pointer p : roots) {
     // Get the block that the root pointer points into
     block = blocks.block_for(p->ptr);
-    
+
     // Get the allocation region being pointed to
     region = block->allocations.get_region(p->ptr);
-    
+
     // Fill the bits in the grey bitmap corresponding to the
     // region pointed to by the root.
     block->grey_bitmap.fill(region, 1);
   }
-  
+
   // Iterate over all the blocks
   for (BlockInfo *block : blocks) {
     // Iterate over this block's remembered pointers
@@ -257,7 +257,7 @@ We'll say that our roots each contain a pointer at the end which point to the tw
   roots:
     0x7f7d31941000
     0x7f7d31941040
-    
+
   remembered set:
     0x7f7d31941038 -> 0x7f7d31941080
     0x7f7d31941058 -> 0x7f7d319410A0
@@ -272,7 +272,7 @@ We'll add a final pointer at the start of the third allocation that points to th
   roots:
     0x7f7d31941000
     0x7f7d31941040
-    
+
   remembered set:
     0x7f7d31941038 -> 0x7f7d31941080
     0x7f7d31941058 -> 0x7f7d319410a0
@@ -289,7 +289,7 @@ grey bitmap  TTTTTTTT TTTT---- -------- --------
   roots:
     0x7f7d31941000
     0x7f7d31941040
-    
+
   remembered set:
     0x7f7d31941038 -> 0x7f7d31941080
     0x7f7d31941058 -> 0x7f7d319410a0
@@ -307,7 +307,7 @@ white bitmap -------T ---T---- T------- --------
   roots:
     0x7f7d31941000
     0x7f7d31941040
-    
+
   remembered set:
     0x7f7d31941038 -> 0x7f7d31941080
     0x7f7d31941058 -> 0x7f7d319410a0
@@ -328,13 +328,13 @@ Once this set has been found, it clears the block's grey bitmap. Then, given the
 void mark_block(BlockInfo *block, BlockSet &blocks) {
   // Merge the grey bitmap into the black bitmap
   block->black_set = block->black_set.union_with(block->grey_set);
-  
+
   // Intersect the white bitmap with the grey bitmap
   marked = block->white_set.intersect_with(grey);
-  
+
   // Clear the block's grey bitmap
   block->grey_set.clear();
-  
+
   // Iterate over the marked white pointers and promote them
   for (Pointer q : marked) {
     promote(q, block, blocks);
@@ -384,13 +384,13 @@ The `promote` function takes a pointer that we want to promote (called `q`) and 
 void promote(Pointer q, BlockInfo *block, BlockSet &blocks) {
   // Find the block that is being pointed to by 'q'
   target = blocks.block_for(q.ptr);
-  
+
   // Get the region that is being pointed to by 'q'
   region = target->allocations.get_region(q.ptr);
-  
+
   // Fill the region in on the target block's grey bitmap
   target->grey_set.fill(region, 1);
-  
+
   // Clear the bit in the white bitmap corresponding to 'q'
   block->white_set[q] = 0;
 }
@@ -598,4 +598,3 @@ The upshot of this is that objects which are retained beyond an initial one or t
 I think that the bitmap based marking is a nice approach to tri-color, as the marking process is quite efficient. It requires virtually no memory allocation beyond a few bitmaps, and those can be allocated along with the block and reused for each pass. The main bottleneck ended up being the promotion of white pointers.
 
 I may visit some of my other disasterous attempts to write a GC and some of the things I've learned along the way in subsequent posts. There are a few things that I think might be useful to document.
-
