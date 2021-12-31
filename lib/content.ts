@@ -70,6 +70,17 @@ export async function loadTags(): Promise<Tags> {
   return LOADED_TAGS;
 }
 
+export async function getTagWithSlug(slug: string): Promise<Tag> {
+  const tags = await loadTags();
+  for (let tag_id in tags) {
+    if (tags[tag_id].slug === slug) {
+      return tags[tag_id];
+    }
+  }
+
+  return Promise.reject("Unable to find tag");
+}
+
 export interface Tagged {
   tags: TagId[];
 }

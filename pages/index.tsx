@@ -38,7 +38,7 @@ const Home: NextPage<{
       <Head>
         <title>Blake Rain</title>
       </Head>
-      <PostCards posts={posts} tags={tags} />
+      <PostCards feature posts={posts} tags={tags} />
       <Analytics />
     </Layout>
   );

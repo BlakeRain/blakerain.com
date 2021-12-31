@@ -40,14 +40,15 @@ export const PostCard: FC<{
 export const PostCards: FC<{
   tags: Tags;
   posts: PostInfo[];
-}> = ({ tags, posts }) => {
+  feature?: boolean;
+}> = ({ tags, posts, feature }) => {
   return (
     <div className={styles.postCards}>
       {posts.map((post, index) => (
         <PostCard
           key={index.toString()}
           post={post}
-          large={index === 0}
+          large={Boolean(feature) && index === 0 && posts.length > 2}
           tags={post.tags.map((tag) => tags[tag])}
         />
       ))}

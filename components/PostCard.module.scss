@@ -49,6 +49,9 @@
 
 @media (min-width: 795px) {
   .postCardLarge {
+    grid-column-start: 1;
+    grid-column-end: 4;
+
     flex: 1 1 100%;
     flex-direction: row;
     min-height: 280px;
@@ -82,7 +85,9 @@
 }
 
 .postCards {
-  display: flex;
-  flex-wrap: wrap;
+  // display: flex;
+  // flex-wrap: wrap;
   margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
