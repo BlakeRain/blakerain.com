@@ -4,45 +4,41 @@ import React from "react";
 import Analytics from "../components/Analytics";
 import { Layout } from "../components/Layout";
 import { PostCards } from "../components/PostCard";
+
 import {
-  AuthorDictionary,
-  getAllAuthors,
-  getAllListPosts,
-  getAllTags,
-  getSiteSettings,
-  ListPost,
   SiteNavigation,
-  TagDictionary,
-} from "../lib/ghost";
+  loadNavigation,
+  Tags,
+  loadTags,
+  PostInfo,
+  loadPostInfos,
+} from "../lib/content";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const posts = await getAllListPosts();
-  const authors = await getAllAuthors();
-  const tags = await getAllTags();
-  const settings = await getSiteSettings();
+  const tags = await loadTags();
+  const navigation = await loadNavigation();
+  const posts = await loadPostInfos();
 
   return {
     props: {
-      posts: posts,
-      tags: tags,
-      authors: authors,
-      navigation: settings.navigation,
+      navigation,
+      tags,
+      posts,
     },
   };
 };
 
 const Blog: NextPage<{
-  posts: ListPost[];
-  authors: AuthorDictionary;
-  tags: TagDictionary;
   navigation: SiteNavigation[];
-}> = ({ posts, authors, tags, navigation }) => {
+  tags: Tags;
+  posts: PostInfo[];
+}> = ({ navigation, tags, posts }) => {
   return (
     <Layout navigation={navigation}>
       <Head>
-        <title>Blog</title>
+        <title>Blake Rain</title>
       </Head>
-      <PostCards posts={posts} authors={authors} tags={tags} />
+      <PostCards posts={posts} tags={tags} />
       <Analytics />
     </Layout>
   );

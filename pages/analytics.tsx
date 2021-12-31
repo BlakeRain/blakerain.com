@@ -5,7 +5,7 @@ import cn from "classnames";
 
 import ClientOnly from "../components/ClientOnly";
 import { Layout } from "../components/Layout";
-import { getSiteSettings, SiteNavigation } from "../lib/ghost";
+import { loadNavigation, SiteNavigation } from "../lib/content";
 import { getSessionToken, setSessionToken } from "../lib/analytics";
 
 import styles from "../components/analytics/Report.module.scss";
@@ -50,11 +50,11 @@ const Report: FC<{ token: string }> = ({ token }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const settings = await getSiteSettings();
+  const navigation = await loadNavigation();
 
   return {
     props: {
-      navigation: settings.navigation,
+      navigation,
     },
   };
 };

@@ -1,18 +1,11 @@
 import React, { FC } from "react";
 import { parseISO } from "date-fns";
-import { AuthorDictionary, ListPost, TagDictionary } from "../lib/ghost";
+import { PostInfo, Tag } from "../lib/content";
 
 const PostMetadata: FC<{
-  post: ListPost;
-  authors: AuthorDictionary;
-  tags: TagDictionary;
-}> = ({ post, authors, tags }) => {
-  const resolved_authors = post.authors
-    .map((author_id) => authors[author_id])
-    .filter((author) => typeof author !== "undefined");
-  const resolved_tags = post.tags
-    .map((tag_id) => tags[tag_id])
-    .filter((tag) => typeof tag !== "undefined" && tag.visibility === "public");
+  post: PostInfo;
+  tags: Tag[];
+}> = ({ post, tags }) => {
   const ld: { [key: string]: any } = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -27,35 +20,23 @@ const PostMetadata: FC<{
     },
     headline: post.title,
     url: `https://www.blakerain.com/blog/${post.slug}`,
-    keywords: resolved_tags.map((tag) => tag.name).join(", "),
+    keywords: tags.map((tag) => tag.name).join(", "),
+    author: {
+      "@type": "Person",
+      name: "Blake Rain",
+      image: {
+        "@type": "ImageObject",
+        url: "https://www.blakerain.com/media/profile.png",
+      },
+    },
   };
 
-  if (post.publishedAt) {
-    ld["datePublished"] = parseISO(post.publishedAt).toISOString();
+  if (post.published) {
+    ld["datePublished"] = parseISO(post.published).toISOString();
   }
 
-  if (post.updatedAt) {
-    ld["dateModified"] = parseISO(post.updatedAt).toISOString();
-  }
-
-  if (post.customExcerpt) {
-    ld["description"] = post.customExcerpt;
-  }
-
-  if (resolved_authors.length > 0) {
-    const author = resolved_authors[0];
-
-    ld["author"] = {
-      "@type": "Person",
-      name: author.name,
-    };
-
-    if (author.profileImage) {
-      ld["author"]["image"] = {
-        "@type": "ImageObject",
-        url: author.profileImage,
-      };
-    }
+  if (post.excerpt) {
+    ld["description"] = post.excerpt;
   }
 
   return (
@@ -64,26 +45,20 @@ const PostMetadata: FC<{
       <meta property="og:site_name" content="Blake Rain" />
       <meta property="og:type" content="article" />
       <meta property="og:title" content={post.title} />
-      {post.customExcerpt && (
-        <meta property="og:description" content={post.customExcerpt} />
+      {post.excerpt && (
+        <meta property="og:description" content={post.excerpt} />
       )}
       <meta
         property="og:url"
         content={"https://blakerain.com/post/" + post.slug}
       />
-      {post.publishedAt && (
+      {post.published && (
         <meta
           property="article:published_time"
-          content={parseISO(post.publishedAt).toISOString()}
+          content={parseISO(post.published).toISOString()}
         />
       )}
-      {post.updatedAt && (
-        <meta
-          property="article:modified_time"
-          content={parseISO(post.updatedAt).toISOString()}
-        />
-      )}
-      {resolved_tags.map((tag, index) => (
+      {tags.map((tag, index) => (
         <meta
           key={index.toString()}
           property="article:tag"
@@ -96,31 +71,27 @@ const PostMetadata: FC<{
       <meta name="twitter:title" content={post.title} />
       <meta name="twitter:site" content="@HalfWayMan" />
       <meta name="twitter:creator" content="@HalfWayMan" />
-      {post.customExcerpt && (
-        <meta name="twitter:description" content={post.customExcerpt} />
+      {post.excerpt && (
+        <meta name="twitter:description" content={post.excerpt} />
       )}
       <meta
         name="twitter:url"
         content={`https://www.blakerain.com/blog/${post.slug}`}
       />
-      {post.featureImage && (
-        <meta name="twitter:image" content={post.featureImage} />
+      {post.coverImage && (
+        <meta
+          name="twitter:image"
+          content={`https://www.blakerain.com/content/${post.coverImage}`}
+        />
       )}
-      {resolved_authors.map((author, index) => (
-        <React.Fragment key={index.toString()}>
-          <meta name={`twitter:label${1 + index}`} content="Written by" />
-          <meta name={`twitter:data${1 + index}`} content={author.name} />
-        </React.Fragment>
-      ))}
-      {resolved_tags.length > 0 && (
+      <meta name="twitter:label1" content="Writte by" />
+      <meta name="twitter:data1" content="Blake Rain" />
+      {tags.length > 0 && (
         <React.Fragment>
+          <meta name="twitter:label2" content="Filed under" />
           <meta
-            name={`twitter:label${1 + post.authors.length}`}
-            content="Filed under"
-          />
-          <meta
-            name={`twitter:data${1 + post.authors.length}`}
-            content={resolved_tags.map((tag) => tag.name).join(", ")}
+            name="twitter:data2"
+            content={tags.map((tag) => tag.name).join(", ")}
           />
         </React.Fragment>
       )}

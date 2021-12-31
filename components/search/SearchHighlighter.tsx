@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { FC, useEffect, useRef, useState } from "react";
-import Mark from "mark.js";
 import styles from "./SearchHighlighter.module.scss";
 
 export const getHighlightTerm = (search: ParsedUrlQuery): string | null => {
@@ -83,61 +82,61 @@ export const SearchHighlighter: FC<{ term: string | null }> = ({
 }) => {
   const router = useRouter();
   const contentRef = useRef<HTMLDivElement>(null);
-  const mark = useRef<Mark>();
+  // const mark = useRef<Mark>();
   const [marks, setMarks] = useState<HTMLElement[]>([]);
   const [current, setCurrent] = useState<number>(-1);
 
-  const getMarkInstance = () => {
-    if (mark.current) {
-      return mark.current;
-    } else {
-      if (contentRef.current) {
-        return (mark.current = new Mark(contentRef.current));
-      } else {
-        throw new Error("Cannot find content div reference");
-      }
-    }
-  };
+  // const getMarkInstance = () => {
+  //   if (mark.current) {
+  //     return mark.current;
+  //   } else {
+  //     if (contentRef.current) {
+  //       return (mark.current = new Mark(contentRef.current));
+  //     } else {
+  //       throw new Error("Cannot find content div reference");
+  //     }
+  //   }
+  // };
 
   const onClearHighlight = () => {
     setMarks([]);
     setCurrent(-1);
 
-    if (mark.current) {
-      mark.current.unmark();
-    }
+    // if (mark.current) {
+    //   mark.current.unmark();
+    // }
   };
 
-  useEffect(() => {
-    if (term) {
-      const instance = getMarkInstance();
-
-      instance.unmark();
-      instance.mark(term, {
-        separateWordSearch: true,
-        done: (total: number) => {
-          const new_marks: HTMLElement[] = Array.prototype.slice.call(
-            contentRef.current?.querySelectorAll("mark") || []
-          );
-
-          console.log(
-            `Found ${new_marks} mark element(s) (of ${total} reported)`
-          );
-          setMarks(new_marks);
-          if (new_marks.length > 0) {
-            setCurrent(0);
-            new_marks[0].className = "current";
-            new_marks[0].scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          } else {
-            setCurrent(-1);
-          }
-        },
-      });
-    }
-  }, [term, router.pathname]);
+  // useEffect(() => {
+  //   if (term) {
+  //     const instance = getMarkInstance();
+  //
+  //     instance.unmark();
+  //     instance.mark(term, {
+  //       separateWordSearch: true,
+  //       done: (total: number) => {
+  //         const new_marks: HTMLElement[] = Array.prototype.slice.call(
+  //           contentRef.current?.querySelectorAll("mark") || []
+  //         );
+  //
+  //         console.log(
+  //           `Found ${new_marks} mark element(s) (of ${total} reported)`
+  //         );
+  //         setMarks(new_marks);
+  //         if (new_marks.length > 0) {
+  //           setCurrent(0);
+  //           new_marks[0].className = "current";
+  //           new_marks[0].scrollIntoView({
+  //             behavior: "smooth",
+  //             block: "center",
+  //           });
+  //         } else {
+  //           setCurrent(-1);
+  //         }
+  //       },
+  //     });
+  //   }
+  // }, [term, router.pathname]);
 
   return (
     <div
