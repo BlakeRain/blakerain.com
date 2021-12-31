@@ -86,6 +86,15 @@ const RenderText: FC<{ node: Text }> = ({ node }) => {
   return <React.Fragment>{(node as Text).value}</React.Fragment>;
 };
 
+const RenderInlineCode: FC<{ node: InlineCode }> = ({ node }) => {
+  const highlight = useContext(HighlightContext);
+  if (highlight) {
+    return <code>{renderHighlight(highlight, node.value)}</code>;
+  }
+
+  return <code>{node.value}</code>;
+};
+
 const RenderParagraph: FC<{ node: Paragraph }> = ({ node }) => {
   // Handle a special-case where an image is in a paragraph on it's own
   if (node.children.length === 1 && node.children[0].type === "image") {
@@ -305,7 +314,7 @@ export const RenderNode: FC<{ node: Node }> = ({ node }) => {
       );
 
     case "inlineCode":
-      return <code>{(node as InlineCode).value}</code>;
+      return <RenderInlineCode node={node as InlineCode} />;
     case "emphasis":
       return (
         <em>
