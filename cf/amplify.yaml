@@ -60,6 +60,8 @@ Resources:
               commands:
                 - yarn run build
                 - yarn run export
+                - pip3 install -r search/requirements.txt
+                - python3 search/update-search.py
           artifacts:
             baseDirectory: out
             files:
