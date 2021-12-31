@@ -19,7 +19,7 @@ import Analytics from "../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const pages = await loadPages();
-  console.log(`Pages: ${pages.map((p) => p.slug)}`);
+
   return {
     paths: pages.map((page) => ({ params: { slug: page.slug } })),
     fallback: false,
