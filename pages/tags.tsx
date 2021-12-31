@@ -58,7 +58,6 @@ const TagList: FC<{
   posts: PostInfo[];
   navigation: SiteNavigation[];
 }> = ({ tags, posts, navigation }) => {
-  console.log(tags, posts);
   const binned_tags: { tag: Tag; posts: PostInfo[] }[] = Object.keys(tags)
     .map((key) => tags[key])
     .map((tag) => ({
