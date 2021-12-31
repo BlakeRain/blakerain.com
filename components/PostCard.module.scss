@@ -4,11 +4,8 @@
 .postCard {
   display: flex;
   flex-direction: column;
-  flex: 1 1 300px;
 
   min-height: 220px;
-  margin: 0 0 40px;
-  padding: 0 20px 40px;
 
   a img {
     width: 100%;
@@ -47,19 +44,20 @@
   }
 }
 
-@media (min-width: 795px) {
+@media (min-width: 1070px) {
   .postCardLarge {
     grid-column-start: 1;
     grid-column-end: 4;
 
-    flex: 1 1 100%;
     flex-direction: row;
-    min-height: 280px;
 
-    a img {
-      width: 100%;
-      height: 100%;
-      max-height: 240px;
+    a {
+      flex-shrink: 0;
+      img {
+        width: 100%;
+        height: 100%;
+        max-height: 240px;
+      }
     }
 
     .postCardInner {
@@ -85,9 +83,9 @@
 }
 
 .postCards {
-  // display: flex;
-  // flex-wrap: wrap;
-  margin-top: 40px;
+  margin: 40px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-row-gap: 80px;
+  grid-column-gap: 40px;
 }
