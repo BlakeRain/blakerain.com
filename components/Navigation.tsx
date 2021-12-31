@@ -111,7 +111,7 @@ const SearchNavigation: FC<{ terms?: string }> = ({ terms }) => {
       found[0].className = "active";
       found[0].scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [terms]);
+  }, [router.asPath, terms]);
 
   const gotoNext: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     if (current < marks.length - 1) {
