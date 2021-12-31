@@ -99,6 +99,8 @@ export interface Page extends DocInfo {
 }
 
 interface ProxyNode {
+  type: string;
+  value?: string;
   position?: any;
   children?: ProxyNode[];
 }
@@ -113,6 +115,21 @@ function stripPositions(node: ProxyNode) {
       stripPositions(child);
     }
   }
+}
+
+function countWords(node: ProxyNode): number {
+  var count = 0;
+  if (typeof node.value === "string") {
+    count = node.value.split(/\s+/).length;
+  }
+
+  if (node.children) {
+    for (let child of node.children) {
+      count += countWords(child);
+    }
+  }
+
+  return count;
 }
 
 var LOADED_PAGES: Page[] = [];
@@ -252,7 +269,7 @@ export async function loadPosts(): Promise<Post[]> {
         return true;
       }),
       root: loaded,
-      readingTime: 0,
+      readingTime: Math.ceil(countWords(loaded) / 200),
     } as Post & { draft: boolean };
   });
 
