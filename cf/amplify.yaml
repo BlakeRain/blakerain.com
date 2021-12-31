@@ -78,6 +78,7 @@ Resources:
       AppId: !GetAtt BlakeRainAmplifyApp.AppId
       DomainName: blakerain.com
       SubDomainSettings:
-        - BranchName: !GetAtt BlakeRainAmplifyAppBranch.BranchName
+        - Prefix: ""
+          BranchName: !GetAtt BlakeRainAmplifyAppBranch.BranchName
         - Prefix: www
           BranchName: !GetAtt BlakeRainAmplifyAppBranch.BranchName
