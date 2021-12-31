@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import cn from "classnames";
 import YAML from "yaml";
 
@@ -10,7 +10,6 @@ import {
   InlineCode,
   Link,
   List,
-  ListItem,
   Paragraph,
   Parent,
   Table,
@@ -21,14 +20,70 @@ import {
 import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
 import styles from "./Document.module.scss";
 
+const HighlightContext = React.createContext<RegExp | null>(null);
+
+function renderHighlight(terms: RegExp, text: string): React.ReactElement {
+  let match;
+  let parts = [];
+  let last = 0;
+
+  while ((match = terms.exec(text)) !== null) {
+    const match_end = match.index + match[0].length;
+
+    if (match.index > 0) {
+      // Split off the left-half of the string
+      parts.push(
+        <React.Fragment key={parts.length.toString()}>
+          {text.substring(last, match.index)}
+        </React.Fragment>
+      );
+    }
+
+    // Create the highlighted section
+    parts.push(
+      <mark key={parts.length.toString()}>
+        {text.substring(match.index, match_end)}
+      </mark>
+    );
+
+    // Update our start offset
+    last = match_end;
+  }
+
+  // If we have any remainder, then add it
+  if (last < text.length) {
+    parts.push(
+      <React.Fragment key={parts.length.toString()}>
+        {text.substring(last)}
+      </React.Fragment>
+    );
+  }
+
+  // If we ended up matching something, then we can return the compound; otherwise just return the text
+  if (parts.length > 0) {
+    return <React.Fragment>{parts}</React.Fragment>;
+  } else {
+    return <React.Fragment>{text}</React.Fragment>;
+  }
+}
+
 const RenderChildren: FC<{ node: Parent }> = ({ node }) => {
   return (
     <React.Fragment>
       {node.children.map((child, index) => (
-        <Render key={index.toString()} node={child} />
+        <RenderNode key={index.toString()} node={child} />
       ))}
     </React.Fragment>
   );
+};
+
+const RenderText: FC<{ node: Text }> = ({ node }) => {
+  const highlight = useContext(HighlightContext);
+  if (highlight) {
+    return renderHighlight(highlight, node.value);
+  }
+
+  return <React.Fragment>{(node as Text).value}</React.Fragment>;
 };
 
 const RenderParagraph: FC<{ node: Paragraph }> = ({ node }) => {
@@ -212,12 +267,12 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
   );
 };
 
-export const Render: FC<{ node: Node }> = ({ node }) => {
+export const RenderNode: FC<{ node: Node }> = ({ node }) => {
   switch (node.type) {
     case "root":
       return <RenderChildren node={node as Parent} />;
     case "text":
-      return <React.Fragment>{(node as Text).value}</React.Fragment>;
+      return <RenderText node={node as Text} />;
     case "paragraph":
       return <RenderParagraph node={node as Paragraph} />;
     case "heading":
@@ -275,4 +330,20 @@ export const Render: FC<{ node: Node }> = ({ node }) => {
 
       return null;
   }
+};
+
+export const Render: FC<{ node: Node; highlight?: string[] }> = ({
+  node,
+  highlight,
+}) => {
+  const highlight_regex =
+    typeof highlight !== "undefined" && highlight.length > 0
+      ? new RegExp(highlight.join("|"), "mig")
+      : null;
+
+  return (
+    <HighlightContext.Provider value={highlight_regex}>
+      <RenderNode node={node} />
+    </HighlightContext.Provider>
+  );
 };

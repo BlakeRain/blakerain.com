@@ -1,4 +1,6 @@
 import React, { FC } from "react";
+import { ParsedUrlQuery } from "querystring";
+import { useRouter } from "next/router";
 
 import { Root } from "mdast";
 import { DocInfo, Tag } from "../lib/content";
@@ -23,12 +25,25 @@ const ContentHeader: FC<{ tags?: Tag[]; doc: DocInfo }> = ({ tags, doc }) => {
   );
 };
 
+function getHighlightTerms(search: ParsedUrlQuery): string[] {
+  if ("highlight" in search) {
+    const term = search["highlight"];
+    if (typeof term === "string" && term.length > 0) {
+      return term.split(" ");
+    }
+  }
+
+  return [];
+}
 const ContentBody: FC<{ root: Root }> = ({ root }) => {
+  const router = useRouter();
+  const highlight = getHighlightTerms(router.query);
+
   return (
     <React.Fragment>
       <div className={styles.content}>
         <div className={styles.contentInner}>
-          <Render node={root} />
+          <Render node={root} highlight={highlight} />
         </div>
       </div>
       <ScrollToTopButton />
