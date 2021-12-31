@@ -1,23 +1,24 @@
 import { FC } from "react";
-import { AuthorDictionary, ListPost, TagDictionary } from "../lib/ghost";
 import cn from "classnames";
 import Link from "next/link";
-import styles from "./PostCard.module.scss";
+
+import { PostInfo, Tag, Tags } from "../lib/content";
 import { PostDetails } from "./PostDetails";
 import { TagList } from "./TagList";
 
+import styles from "./PostCard.module.scss";
+
 export const PostCard: FC<{
-  post: ListPost;
+  post: PostInfo;
   large: boolean;
-  tags: TagDictionary;
-  authors: AuthorDictionary;
-}> = ({ post, large, tags, authors }) => {
+  tags: Tag[];
+}> = ({ post, large, tags }) => {
   return (
     <article className={cn(styles.postCard, { [styles.postCardLarge]: large })}>
-      {post.featureImage ? (
+      {post.coverImage ? (
         <Link href={"/blog/" + post.slug}>
           <a>
-            <img src={post.featureImage} alt={post.title} />
+            <img src={post.coverImage} alt={post.title} />
           </a>
         </Link>
       ) : null}
@@ -25,11 +26,11 @@ export const PostCard: FC<{
         <Link href={"/blog/" + post.slug}>
           <a>
             <header>{post.title}</header>
-            {post.customExcerpt ? <section>{post.customExcerpt}</section> : null}
+            {post.excerpt ? <section>{post.excerpt}</section> : null}
           </a>
         </Link>
-        <PostDetails post={post} authors={authors}>
-          <TagList tagsDict={tags} tags={post.tags} />
+        <PostDetails doc={post}>
+          <TagList tags={tags} />
         </PostDetails>
       </div>
     </article>
@@ -37,14 +38,19 @@ export const PostCard: FC<{
 };
 
 export const PostCards: FC<{
-  authors: AuthorDictionary;
-  tags: TagDictionary;
-  posts: ListPost[];
-}> = ({ authors, tags, posts }) => {
+  tags: Tags;
+  posts: PostInfo[];
+  feature?: boolean;
+}> = ({ tags, posts, feature }) => {
   return (
     <div className={styles.postCards}>
       {posts.map((post, index) => (
-        <PostCard key={post.id} post={post} large={index === 0} tags={tags} authors={authors} />
+        <PostCard
+          key={index.toString()}
+          post={post}
+          large={Boolean(feature) && index === 0 && posts.length > 2}
+          tags={post.tags.map((tag) => tags[tag])}
+        />
       ))}
     </div>
   );

@@ -7,26 +7,28 @@ import {
 } from "next";
 import Head from "next/head";
 import {
-  getAllPageSlugs,
+  Page,
+  loadPages,
   getPageWithSlug,
-  getSiteSettings,
-  PageInformation,
   SiteNavigation,
-} from "../lib/ghost";
+  loadNavigation,
+} from "../lib/content";
 import { Layout } from "../components/Layout";
 import { Content } from "../components/Content";
 import Analytics from "../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getAllPageSlugs();
+  const pages = await loadPages();
+  console.log(`Pages: ${pages.map((p) => p.slug)}`);
   return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
+    paths: pages.map((page) => ({ params: { slug: page.slug } })),
     fallback: false,
   };
 };
 
-interface PageProps extends PageInformation {
+interface PageProps {
   navigation: SiteNavigation[];
+  page: Page;
 }
 
 export const getStaticProps: GetStaticProps<
@@ -39,27 +41,27 @@ export const getStaticProps: GetStaticProps<
     throw new Error("Context missing parameters");
   }
 
-  const settings = await getSiteSettings();
+  const navigation = await loadNavigation();
   const page = await getPageWithSlug(context.params?.slug);
 
   return {
     props: {
-      navigation: settings.navigation,
-      ...page,
+      navigation,
+      page,
     },
   };
 };
 
-const Page: NextPage<PageProps> = ({ page, authors, tags, navigation }) => {
+const PageView: NextPage<PageProps> = ({ navigation, page }) => {
   return (
     <Layout navigation={navigation}>
       <Head>
         <title>{page.title}</title>
       </Head>
-      <Content authors={authors} tags={tags} post={page} />
+      <Content doc={page} root={page.root} />
       <Analytics />
     </Layout>
   );
 };
 
-export default Page;
+export default PageView;

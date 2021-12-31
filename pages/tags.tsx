@@ -5,46 +5,47 @@ import React, { FC } from "react";
 import { DateSpan } from "../components/DateSpan";
 import { Layout } from "../components/Layout";
 import {
-  getSiteSettings,
-  getTagsWithPosts,
-  ListPost,
   SiteNavigation,
-  TagPosts,
-} from "../lib/ghost";
+  loadNavigation,
+  PostInfo,
+  loadPostInfos,
+  Tag,
+  Tags,
+  loadTags,
+} from "../lib/content";
 import styles from "./tags.module.scss";
 
-const TagPost: FC<{ post: ListPost }> = ({ post }) => {
+const TagPost: FC<{ post: PostInfo }> = ({ post }) => {
   return (
     <li>
       <Link href={"/blog/" + post.slug}>
         <a>{post.title}</a>
       </Link>
       <div className={styles.postDateAndTime}>
-        <DateSpan date={post.publishedAt || "1970-01-01T00:00:00.000Z"} />
+        <DateSpan date={post.published || "1970-01-01T00:00:00.000Z"} />
         <span className={styles.readingTime}>{post.readingTime} min read</span>
       </div>
     </li>
   );
 };
 
-const Tag: FC<{ tag: TagPosts }> = ({ tag }) => {
+const TagInfo: FC<{ tag: Tag; posts: PostInfo[] }> = ({ tag, posts }) => {
   return (
     <article className={styles.tag}>
       <header>
         <h1>
           <Link href={"/tags/" + tag.slug}>{tag.name}</Link>
-          <small>({tag.posts.length})</small>
+          <small>({posts.length})</small>
         </h1>
         <p className={styles.description}>{tag.description}</p>
       </header>
       <footer>
         <small>
-          Assigned to {tag.posts.length} post{tag.posts.length === 1 ? "" : "s"}
-          :
+          Assigned to {posts.length} post{posts.length === 1 ? "" : "s"}:
         </small>
         <ul>
-          {tag.posts.map((post) => (
-            <TagPost key={post.id} post={post} />
+          {posts.map((post, index) => (
+            <TagPost key={index.toString()} post={post} />
           ))}
         </ul>
       </footer>
@@ -52,10 +53,21 @@ const Tag: FC<{ tag: TagPosts }> = ({ tag }) => {
   );
 };
 
-const Tags: FC<{ tags: TagPosts[]; navigation: SiteNavigation[] }> = ({
-  tags,
-  navigation,
-}) => {
+const TagList: FC<{
+  tags: Tags;
+  posts: PostInfo[];
+  navigation: SiteNavigation[];
+}> = ({ tags, posts, navigation }) => {
+  console.log(tags, posts);
+  const binned_tags: { tag: Tag; posts: PostInfo[] }[] = Object.keys(tags)
+    .map((key) => tags[key])
+    .map((tag) => ({
+      tag,
+      posts: posts.filter((post) => post.tags.indexOf(tag.slug) !== -1),
+    }))
+    .filter((tag) => tag.posts.length > 0)
+    .sort((a, b) => b.posts.length - a.posts.length);
+
   return (
     <Layout navigation={navigation}>
       <Head>
@@ -63,26 +75,26 @@ const Tags: FC<{ tags: TagPosts[]; navigation: SiteNavigation[] }> = ({
       </Head>
       <h1>There are {tags.length} tags on this site</h1>
       <div className={styles.list}>
-        {tags
-          .sort((a, b) => b.posts.length - a.posts.length)
-          .map((tag) => (
-            <Tag key={tag.id} tag={tag} />
-          ))}
+        {binned_tags.map((tag, index) => (
+          <TagInfo key={index.toString()} {...tag} />
+        ))}
       </div>
     </Layout>
   );
 };
 
-export default Tags;
+export default TagList;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const tags = await getTagsWithPosts();
-  const settings = await getSiteSettings();
+  const tags = await loadTags();
+  const posts = await loadPostInfos();
+  const navigation = await loadNavigation();
 
   return {
     props: {
-      tags: tags,
-      navigation: settings.navigation,
+      tags,
+      posts,
+      navigation,
     },
   };
 };

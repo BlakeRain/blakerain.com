@@ -8,37 +8,35 @@ import {
 } from "next";
 import Head from "next/head";
 import {
-  AuthorDictionary,
-  getAllAuthors,
-  getAllTags,
-  getAllTagSlugs,
-  getPostsWithTag,
-  getSiteSettings,
-  getTagWithSlug,
-  ListPost,
-  SimpleTag,
   SiteNavigation,
-  TagDictionary,
-} from "../../lib/ghost";
+  loadNavigation,
+  Tag,
+  Tags,
+  loadTags,
+  PostInfo,
+  loadPostInfos,
+  getTagWithSlug,
+} from "../../lib/content";
 import { Layout } from "../../components/Layout";
 import { PostCards } from "../../components/PostCard";
 import Link from "next/link";
 import Analytics from "../../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getAllTagSlugs();
-  console.log(slugs);
+  const tags = await loadTags();
+
   return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
+    paths: Object.keys(tags)
+      .map((tag_id) => tags[tag_id])
+      .map((tag) => ({ params: { slug: tag.slug } })),
     fallback: false,
   };
 };
 
 interface TagProps {
-  tag: SimpleTag;
-  posts: ListPost[];
-  authors: AuthorDictionary;
-  tags: TagDictionary;
+  tag: Tag;
+  posts: PostInfo[];
+  tags: Tags;
   navigation: SiteNavigation[];
 }
 
@@ -53,23 +51,21 @@ export const getStaticProps: GetStaticProps<
   }
 
   const tag = await getTagWithSlug(context.params?.slug);
-  const posts = await getPostsWithTag(tag.slug);
-  const authors = await getAllAuthors();
-  const tags = await getAllTags();
-  const settings = await getSiteSettings();
+  const posts = await loadPostInfos();
+  const tags = await loadTags();
+  const navigation = await loadNavigation();
 
   return {
     props: {
-      tag: tag,
-      posts: posts,
-      tags: tags,
-      authors: authors,
-      navigation: settings.navigation,
+      tag,
+      tags,
+      navigation,
+      posts: posts.filter((post) => post.tags.indexOf(tag.slug) !== -1),
     },
   };
 };
 
-const Tag: NextPage<TagProps> = ({ tag, posts, authors, tags, navigation }) => {
+const TagPosts: NextPage<TagProps> = ({ tag, posts, tags, navigation }) => {
   return (
     <Layout navigation={navigation}>
       <Head>
@@ -85,10 +81,10 @@ const Tag: NextPage<TagProps> = ({ tag, posts, authors, tags, navigation }) => {
           tag
         </small>
       </h1>
-      <PostCards posts={posts} authors={authors} tags={tags} />
+      <PostCards posts={posts} tags={tags} />
       <Analytics />
     </Layout>
   );
 };
 
-export default Tag;
+export default TagPosts;

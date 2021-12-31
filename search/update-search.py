@@ -1,54 +1,52 @@
-from typing import Any, Dict, List, Optional
-from html.parser import HTMLParser
+from typing import Any, Dict, List, Optional, Tuple
 
+import io
+import mistletoe
+import mistletoe.block_token as B
+import mistletoe.span_token as S
 import os
 import re
-import requests
 import struct
+import yaml
 
 
-class ExtractorParser(HTMLParser):
+class MarkdownExtractor(mistletoe.BaseRenderer):
     def __init__(self):
         super().__init__()
-        self.stack: List[str] = []
-        self.current: Optional[str] = None
         self.text: List[str] = []
-        self.code: List[str] = []
 
-    def handle_starttag(self, tag, attrs):
-        if tag in ["img", "br", "source"]:
-            return
-        if self.current:
-            self.stack.append(self.current)
-        self.current = tag
-
-    def handle_endtag(self, tag):
-        assert tag == self.current, f"Expected end of '{self.current}', but found '{tag}'"
-        if len(self.stack) > 0:
-            self.current = self.stack.pop()
-        else:
-            self.current = None
-
-    def handle_data(self, data):
-        if self.current == "code":
-            self.code.append(data)
-        elif self.current in ["emphasis", "strong", "a", "p", "li", "h1", "h2", "h3", "h4", "h5", "h6"]:
-            self.text.append(data)
+    def render_raw_text(self, token: S.RawText):
+        self.text.append(token.content)
+        return ""
 
 
 TEXT_WORD_RE = re.compile(r"\w[\w-]{2,}")
-CODE_WORD_RE = re.compile(r"\w[\w_]{2,}")
 
 
-def extract_content(source):
-    extractor = ExtractorParser()
-    extractor.feed(source)
+def extract_content(source: List[str]) -> List[str]:
+    markdown = mistletoe.Document(source)
+    extractor = MarkdownExtractor()
+    extractor.render(markdown)
     words = []
     for text in extractor.text:
         words.extend(TEXT_WORD_RE.findall(text))
-    for code in extractor.code:
-        words.extend(CODE_WORD_RE.findall(code))
     return words
+
+
+def split_frontmatter(file_path: str, lines: List[str]) -> Tuple[Dict[str, Any], List[str]]:
+    front_matter = {}
+    if len(lines) > 2 and lines[0].strip() == "---":
+        lines = lines[1:]
+        fm_source = []
+        for line in lines:
+            if line.strip() == "---":
+                break
+            fm_source.append(line)
+        lines = lines[1 + len(fm_source):]
+        stream = io.StringIO('\n'.join(fm_source))
+        stream.__setattr__("name", file_path)
+        front_matter = yaml.load(stream, Loader=yaml.SafeLoader)
+    return front_matter, lines
 
 
 class Store:
@@ -202,11 +200,11 @@ class SearchData:
         self.terms[text] = term
         return term
 
-    def add_post(self, is_page, data):
+    def add_post(self, is_page, data: Dict[str, Any], content: List[str]):
         post = SearchPost(is_page, len(self.posts),
                           data["title"], data["slug"])
         self.posts[post.id] = post
-        words = extract_content(data["html"])
+        words = extract_content(content)
         for word in words:
             term = self.get_term(word)
             if term is not None:
@@ -227,48 +225,16 @@ class SearchData:
         print(f"Total search database: {len(store.buffer)} bytes")
 
 
-DOMAIN = os.environ.get("DOMAIN", "blakerain.com")
-API_KEY = os.environ.get("API_KEY")
-URL_BASE = f"{DOMAIN}/ghost/api/v2/content/"
-
-PARAMS = {
-    "key": API_KEY,
-    "fields": "id,title,html,slug",
-    "include": "tags",
-    "page": 1
-}
-
-TAG_MATCHER = {
-    "posts": lambda post: True,
-    "pages": lambda page: "#searchable" in [tag["name"] for tag in page["tags"]]
-}
-
 SEARCH_DATA = SearchData()
 
 for resource in ["posts", "pages"]:
-    page = 1
-    while True:
-        print(
-            f"Fetching page of {resource} from Ghost content API (page {page})")
-        PARAMS["page"] = page
-        r = requests.get(url=URL_BASE + resource, params=PARAMS)
-        if r.status_code != 200:
-            print(f"  Failed to fetch results: {r.status_code}")
-            break
-        data = r.json()
-        for post in data[resource]:
-            print(
-                f"  Found {resource} {post['id']}: {post['title']} ({post['slug']})")
-            if not TAG_MATCHER[resource](post):
-                print(f"    Does not match required tags")
-                continue
-            content = extract_content(post["html"])
-            post["content"] = content
-            SEARCH_DATA.add_post(resource == "pages", post)
-        if data["meta"]["pagination"]["pages"] <= page:
-            print(f"  This is the last page")
-            break
-        page += 1
+    for file in os.listdir(os.path.join("content", resource)):
+        if file.endswith(".md"):
+            path = os.path.join("content", resource, file)
+            with open(path, "rt") as fp:
+                source = fp.readlines()
+            post, content = split_frontmatter(path, source)
+            SEARCH_DATA.add_post(resource == "pages", post, content)
 
 STORE = Store()
 SEARCH_DATA.encode(STORE)

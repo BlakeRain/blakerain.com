@@ -7,27 +7,32 @@ import {
 } from "next";
 import Head from "next/head";
 import {
-  getAllPostSlugs,
-  getPostWithSlug,
-  getSiteSettings,
-  PostInformation,
   SiteNavigation,
-} from "../../lib/ghost";
+  loadNavigation,
+  Post,
+  loadPostInfos,
+  getPostWithSlug,
+  Tag,
+  loadTags,
+} from "../../lib/content";
 import { Layout } from "../../components/Layout";
 import { Content } from "../../components/Content";
 import { useEffect, useRef } from "react";
 import Analytics from "../../components/Analytics";
 import Metadata from "../../components/Metadata";
 
-interface BlogPostProps extends PostInformation {
+interface BlogPostProps {
   enableCommento: boolean;
   navigation: SiteNavigation[];
+  tags: Tag[];
+  post: Post;
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getAllPostSlugs();
+  const posts = await loadPostInfos();
+
   return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
+    paths: posts.map((post) => ({ params: { slug: post.slug } })),
     fallback: false,
   };
 };
@@ -42,21 +47,22 @@ export const getStaticProps: GetStaticProps<
     throw new Error("Context missing parameters");
   }
 
-  const settings = await getSiteSettings();
+  const navigation = await loadNavigation();
+  const tags = await loadTags();
   const post = await getPostWithSlug(context.params?.slug);
 
   return {
     props: {
-      enableCommento: settings.enableCommento,
-      navigation: settings.navigation,
-      ...post,
+      enableCommento: false,
+      navigation: navigation,
+      tags: post.tags.map((tag) => tags[tag]),
+      post,
     },
   };
 };
 
 const BlogPost: NextPage<BlogPostProps> = ({
   post,
-  authors,
   tags,
   navigation,
   enableCommento,
@@ -83,9 +89,9 @@ const BlogPost: NextPage<BlogPostProps> = ({
     <Layout navigation={navigation}>
       <Head>
         <title>{post.title}</title>
-        <Metadata post={post} authors={authors} tags={tags} />
+        <Metadata post={post} tags={tags} />
       </Head>
-      <Content authors={authors} tags={tags} post={post} />
+      <Content tags={tags} doc={post} root={post.root} />
       <Analytics />
       {enableCommento && (
         <section className="post-comments">

@@ -1,39 +1,29 @@
 import { FC } from "react";
-import { AuthorDictionary, ListPost, SimpleAuthor } from "../lib/ghost";
+import { DocInfo } from "../lib/content";
 import { DateSpan } from "./DateSpan";
+
 import styles from "./PostDetails.module.scss";
 
-const AuthorImages: FC<{ authors: SimpleAuthor[] }> = ({ authors }) => {
-  return (
-    <div>
-      {authors.map((author) =>
-        author.profileImage ? (
-          <img key={author.id} className={styles.authorImage} src={author.profileImage} />
-        ) : null
-      )}
-    </div>
-  );
-};
-
-export const PostDetails: FC<{ authors: AuthorDictionary; post: ListPost }> = ({
-  authors,
-  post,
+export const PostDetails: FC<{ doc: DocInfo & { readingTime?: number } }> = ({
+  doc,
   children,
 }) => {
-  const post_authors = post.authors.map((author_id) => authors[author_id]);
-
   return (
     <div className={styles.postDetails}>
-      <AuthorImages authors={post_authors} />
+      <div>
+        <img className={styles.authorImage} src="/media/profile.png" />
+      </div>
       <div className={styles.postDetailsInner}>
         <ul>
-          {post_authors.map((author) => (
-            <li key={author.id}>{author.name}</li>
-          ))}
+          <li>Blake Rain</li>
         </ul>
         <div className={styles.dateAndTime}>
-          <DateSpan date={post.publishedAt || "1970-01-01T00:00:00.000Z"} />
-          <span className={styles.readingTime}>{post.readingTime} min read</span>
+          <DateSpan date={doc.published || "1970-01-01T00:00:00.000Z"} />
+          {typeof doc.readingTime === "number" && (
+            <span className={styles.readingTime}>
+              {doc.readingTime} min read
+            </span>
+          )}
         </div>
         {children}
       </div>

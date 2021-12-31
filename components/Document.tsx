@@ -1,195 +1,204 @@
 import React, { FC, useContext } from "react";
 import cn from "classnames";
+import YAML from "yaml";
 
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Node } from "unist";
+import {
+  Code,
+  Heading,
+  Image,
+  InlineCode,
+  Link,
+  List,
+  Paragraph,
+  Parent,
+  Table,
+  TableRow,
+  Text,
+} from "mdast";
 
 import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
-
-import {
-  AtomMarker,
-  Marker,
-  MobileDoc,
-  Section,
-  MarkupSection,
-  ImageSection,
-  ListSection,
-  CardSection,
-  TextMarker,
-  emptyMobileDoc,
-  Markup,
-} from "../lib/mobiledoc";
-
 import styles from "./Document.module.scss";
 
-type StackItemAttributes = { [key: string]: string };
+const HighlightContext = React.createContext<RegExp | null>(null);
 
-interface StackItem {
-  tag: string;
-  attributes: StackItemAttributes;
-  children: React.ReactElement[];
-}
+function renderHighlight(terms: RegExp, text: string): React.ReactElement {
+  let match;
+  let parts = [];
+  let last = 0;
 
-function getMarkupAttributes(markup: Markup): StackItemAttributes {
-  const attr_list = markup[1] || [];
-  const attributes: StackItemAttributes = {};
+  while ((match = terms.exec(text)) !== null) {
+    const match_end = match.index + match[0].length;
 
-  for (let i = 0; i < attr_list.length; i += 2) {
-    attributes[attr_list[i]] = attr_list[i + 1];
-  }
-
-  return attributes;
-}
-
-function stackItemFromMarkup(markup: Markup): StackItem {
-  return {
-    tag: markup[0],
-    attributes: getMarkupAttributes(markup),
-    children: [],
-  };
-}
-
-function popStackItems(
-  stack: StackItem[],
-  count: number
-): React.ReactElement | null {
-  var element = null;
-
-  while (count-- > 0) {
-    const top = stack.pop();
-
-    if (!top) {
-      console.error(`Attempt to pop empty render stack`);
-      return null;
+    if (match.index > 0) {
+      // Split off the left-half of the string
+      parts.push(
+        <React.Fragment key={parts.length.toString()}>
+          {text.substring(last, match.index)}
+        </React.Fragment>
+      );
     }
 
-    const next = stack.length > 0 ? stack[stack.length - 1] : null;
-
-    element = React.createElement(
-      top.tag,
-      { key: next ? next.children.length.toString() : "", ...top.attributes },
-      top.children
+    // Create the highlighted section
+    parts.push(
+      <mark key={parts.length.toString()}>
+        {text.substring(match.index, match_end)}
+      </mark>
     );
 
-    if (next) {
-      next.children.push(element);
-      element = null;
-    }
+    // Update our start offset
+    last = match_end;
   }
 
-  return element;
-}
-
-interface MobileDocContextValue {
-  doc: MobileDoc;
-  stack: StackItem[];
-}
-
-const MobileDocContext = React.createContext<MobileDocContextValue>({
-  doc: emptyMobileDoc,
-  stack: [],
-});
-
-const useMobileDoc: () => MobileDocContextValue = () => {
-  return useContext(MobileDocContext);
-};
-
-const RenderTextMarker: FC<{ marker: TextMarker }> = ({ marker }) => {
-  const { doc, stack } = useMobileDoc();
-
-  for (let opener of marker[1]) {
-    const opener_markup = doc.markups[opener];
-    stack.push(stackItemFromMarkup(opener_markup));
-  }
-
-  const top = stack.length > 0 ? stack[stack.length - 1] : null;
-  if (top) {
-    top.children.push(
-      <React.Fragment key={top.children.length.toString()}>
-        {marker[3]}
+  // If we have any remainder, then add it
+  if (last < text.length) {
+    parts.push(
+      <React.Fragment key={parts.length.toString()}>
+        {text.substring(last)}
       </React.Fragment>
     );
-  } else {
-    return <React.Fragment>{marker[3]}</React.Fragment>;
   }
 
-  return popStackItems(stack, marker[2]);
-};
+  // If we ended up matching something, then we can return the compound; otherwise just return the text
+  if (parts.length > 0) {
+    return <React.Fragment>{parts}</React.Fragment>;
+  } else {
+    return <React.Fragment>{text}</React.Fragment>;
+  }
+}
 
-const RenderAtomMarker: FC<{ marker: AtomMarker }> = ({ marker }) => {
-  return <b>Atom: {marker[3]}</b>;
-};
-
-const RenderMarkers: FC<{ markers: Marker[] }> = ({ markers }) => {
+const RenderChildren: FC<{ node: Parent }> = ({ node }) => {
   return (
     <React.Fragment>
-      {markers.map((marker, index) => {
-        switch (marker[0]) {
-          case 0:
-            return <RenderTextMarker key={index.toString()} marker={marker} />;
-          case 1:
-            return <RenderAtomMarker key={index.toString()} marker={marker} />;
-          default:
-            console.error(`Unrecognized marker code: ${marker[0]}`);
-            return null;
-        }
-      })}
+      {node.children.map((child, index) => (
+        <RenderNode key={index.toString()} node={child} />
+      ))}
     </React.Fragment>
   );
 };
 
-const RenderMarkupSection: FC<{ section: MarkupSection }> = ({ section }) => {
-  switch (section[1]) {
-    case "h1":
-    case "h2":
-    case "h3":
-    case "h4":
-    case "h5":
-    case "h6":
-    case "blockquote":
-      return React.createElement(
-        section[1],
-        null,
-        <RenderMarkers markers={section[2]} />
-      );
-    case "p":
-      return (
-        <p>
-          <RenderMarkers markers={section[2]} />
-        </p>
-      );
-
-    default:
-      console.error(`Unrecognized markup section tag name '${section[1]}'`);
-      console.log(section);
-      return null;
+const RenderText: FC<{ node: Text }> = ({ node }) => {
+  const highlight = useContext(HighlightContext);
+  if (highlight) {
+    return renderHighlight(highlight, node.value);
   }
+
+  return <React.Fragment>{(node as Text).value}</React.Fragment>;
 };
 
-const RenderImageSection: FC<{ section: ImageSection }> = ({ section }) => {
-  return null;
-};
-
-const RenderListSection: FC<{ section: ListSection }> = ({ section }) => {
-  switch (section[1]) {
-    case "ol":
-    case "ul": {
-      const items = section[2].map((markers, index) => (
-        <li key={index.toString()}>
-          <RenderMarkers markers={markers} />
-        </li>
-      ));
-
-      return React.createElement(section[1], null, items);
-    }
-
-    default:
-      console.error(`Unrecognized list section tag name '${section[0]}'`);
-      return null;
+const RenderParagraph: FC<{ node: Paragraph }> = ({ node }) => {
+  // Handle a special-case where an image is in a paragraph on it's own
+  if (node.children.length === 1 && node.children[0].type === "image") {
+    return <RenderImage node={node.children[0] as Image} />;
   }
+
+  return (
+    <p>
+      <RenderChildren node={node} />
+    </p>
+  );
 };
 
-interface BookmarkCardProps {
+const RenderHeading: FC<{ node: Heading }> = ({ node }) => {
+  return React.createElement(
+    `h${node.depth}`,
+    null,
+    <RenderChildren node={node} />
+  );
+};
+
+const RenderTableRow: FC<{ node: TableRow; head?: boolean }> = ({
+  node,
+  head,
+}) => {
+  return (
+    <tr>
+      {node.children.map((cell, index) =>
+        React.createElement(
+          head ? "th" : "td",
+          { key: index.toString() },
+          <RenderChildren node={cell} />
+        )
+      )}
+    </tr>
+  );
+};
+
+const RenderTable: FC<{ node: Table }> = ({ node }) => {
+  const [head_row, ...rows] = node.children;
+
+  const head = (
+    <thead>
+      <RenderTableRow node={head_row as TableRow} head />
+    </thead>
+  );
+
+  const body = (
+    <tbody>
+      {rows.map((row, index) => (
+        <RenderTableRow key={index.toString()} node={row as TableRow} />
+      ))}
+    </tbody>
+  );
+
+  return (
+    <table>
+      {head}
+      {body}
+    </table>
+  );
+};
+
+const RenderList: FC<{ node: List }> = ({ node }) => {
+  const attrs = { start: node.start };
+  return React.createElement(
+    node.ordered ? "ol" : "ul",
+    attrs,
+    <RenderChildren node={node} />
+  );
+};
+
+const RenderLink: FC<{ node: Link }> = ({ node }) => {
+  return (
+    <a href={node.url} title={node.title || undefined}>
+      <RenderChildren node={node} />
+    </a>
+  );
+};
+
+const RenderImage: FC<{ node: Image }> = ({ node }) => {
+  const query_index = node.url.indexOf("?");
+  const params = new URLSearchParams(
+    query_index === -1
+      ? undefined
+      : new URLSearchParams(node.url.substr(query_index))
+  );
+  const wide = Boolean(params.get("wide"));
+  const full = Boolean(params.get("full"));
+  const width = params.get("width");
+  const height = params.get("height");
+  const caption = params.get("caption");
+
+  return (
+    <figure
+      className={cn(styles.imageCard, {
+        [styles.imageCardWide]: wide,
+        [styles.imageCardFull]: full,
+        [styles.imageCardWithCaption]: Boolean(caption),
+      })}
+    >
+      <img
+        loading="lazy"
+        width={width || undefined}
+        height={height || undefined}
+        src={node.url}
+      />
+      {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
+    </figure>
+  );
+};
+
+interface BookmarkProps {
   url: string;
   metadata: {
     url: string;
@@ -202,7 +211,9 @@ interface BookmarkCardProps {
   };
 }
 
-const RenderBookmarkCard: FC<BookmarkCardProps> = ({ url, metadata }) => {
+const RenderBookmark: FC<{ node: Code }> = ({ node }) => {
+  const { url, metadata } = YAML.parse(node.value) as BookmarkProps;
+
   return (
     <figure className={styles.bookmark}>
       <a className={styles.bookmarkContainer} href={url}>
@@ -227,14 +238,11 @@ const RenderBookmarkCard: FC<BookmarkCardProps> = ({ url, metadata }) => {
   );
 };
 
-interface CodeCardProps {
-  code: string;
-  language?: string;
-  caption?: string;
-}
-
-const RenderCodeCard: FC<CodeCardProps> = ({ code, language, caption }) => {
-  const highlight = typeof language === "string" && language !== "box-drawing";
+const RenderCode: FC<{ node: Code }> = ({ node }) => {
+  const meta = typeof node.meta === "string" ? JSON.parse(node.meta) : {};
+  const caption = meta["caption"];
+  const highlight =
+    typeof node.lang === "string" && node.lang !== "box-drawing";
 
   return (
     <figure
@@ -243,12 +251,15 @@ const RenderCodeCard: FC<CodeCardProps> = ({ code, language, caption }) => {
       })}
     >
       {highlight ? (
-        <SyntaxHighlighter useInlineStyles={false} language={language}>
-          {code}
+        <SyntaxHighlighter
+          useInlineStyles={false}
+          language={node.lang || undefined}
+        >
+          {node.value}
         </SyntaxHighlighter>
       ) : (
         <pre>
-          <code>{code}</code>
+          <code>{node.value}</code>
         </pre>
       )}
       {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
@@ -256,93 +267,83 @@ const RenderCodeCard: FC<CodeCardProps> = ({ code, language, caption }) => {
   );
 };
 
-interface ImageCardProps {
-  src: string;
-  width: number;
-  height: number;
-  caption?: string;
-  cardWidth?: string;
-}
-
-const RenderImageCard: FC<ImageCardProps> = ({
-  src,
-  width,
-  height,
-  caption,
-  cardWidth,
-}) => {
-  return (
-    <figure
-      className={cn(styles.imageCard, {
-        [styles.imageCardWide]: cardWidth === "wide",
-        [styles.imageCardFull]: cardWidth === "full",
-        [styles.imageCardWithCaption]: Boolean(caption),
-      })}
-    >
-      <img loading="lazy" width={width} height={height} src={src} />
-      {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
-    </figure>
-  );
-};
-
-interface MarkdownCardProps {
-  markdown: string;
-}
-
-const RenderMarkdownCard: FC<MarkdownCardProps> = ({ markdown }) => {
-  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>;
-};
-
-interface HtmlCardProps {
-  html: string;
-}
-
-const RenderHtmlCard: FC<HtmlCardProps> = ({ html }) => {
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
-};
-
-const RenderCardSection: FC<{ section: CardSection }> = ({ section }) => {
-  const { doc } = useMobileDoc();
-  const card = doc.cards[section[1]];
-
-  switch (card[0]) {
-    case "bookmark":
-      return <RenderBookmarkCard {...(card[1] as BookmarkCardProps)} />;
-    case "code":
-      return <RenderCodeCard {...(card[1] as CodeCardProps)} />;
-    case "html":
-      return <RenderHtmlCard {...(card[1] as HtmlCardProps)} />;
+export const RenderNode: FC<{ node: Node }> = ({ node }) => {
+  switch (node.type) {
+    case "root":
+      return <RenderChildren node={node as Parent} />;
+    case "text":
+      return <RenderText node={node as Text} />;
+    case "paragraph":
+      return <RenderParagraph node={node as Paragraph} />;
+    case "heading":
+      return <RenderHeading node={node as Heading} />;
+    case "table":
+      return <RenderTable node={node as Table} />;
+    case "list":
+      return <RenderList node={node as List} />;
+    case "link":
+      return <RenderLink node={node as Link} />;
     case "image":
-      return <RenderImageCard {...(card[1] as ImageCardProps)} />;
-    case "markdown":
-      return <RenderMarkdownCard {...(card[1] as MarkdownCardProps)} />;
+      return <RenderImage node={node as Image} />;
+    case "code":
+      switch ((node as Code).lang) {
+        case "bookmark":
+          return <RenderBookmark node={node as Code} />;
+        case "raw_html":
+          return (
+            <div dangerouslySetInnerHTML={{ __html: (node as Code).value }} />
+          );
+        default:
+          return <RenderCode node={node as Code} />;
+      }
+
+    case "listItem":
+      return (
+        <li>
+          <RenderChildren node={node as Parent} />
+        </li>
+      );
+
+    case "inlineCode":
+      return <code>{(node as InlineCode).value}</code>;
+    case "emphasis":
+      return (
+        <em>
+          <RenderChildren node={node as Parent} />
+        </em>
+      );
+    case "strong":
+      return (
+        <strong>
+          <RenderChildren node={node as Parent} />
+        </strong>
+      );
+    case "blockquote":
+      return (
+        <blockquote>
+          <RenderChildren node={node as Parent} />
+        </blockquote>
+      );
+
     default:
-      console.error(`Unrecognized card type '${card[0]}'`);
-      console.log(card[1]);
+      console.warn(`Unrecognized node type: '${node.type}'`);
+
       return null;
   }
 };
 
-const RenderSection: FC<{ section: Section }> = ({ section }) => {
-  switch (section[0]) {
-    case 1:
-      return <RenderMarkupSection section={section} />;
-    case 3:
-      return <RenderListSection section={section} />;
-    case 10:
-      return <RenderCardSection section={section} />;
-    default:
-      console.error(`Unrecognized section tag ${section[0]}`);
-      return null;
-  }
-};
+export const Render: FC<{ node: Node; highlight?: string[] }> = ({
+  node,
+  highlight,
+}) => {
+  const highlight_regex =
+    typeof highlight !== "undefined" && highlight.length > 0
+      ? new RegExp(highlight.join("|"), "mig")
+      : null;
 
-export const RenderDoc: FC<{ doc: MobileDoc }> = ({ doc }) => {
   return (
-    <MobileDocContext.Provider value={{ doc, stack: [] }}>
-      {doc.sections.map((section, index) => (
-        <RenderSection key={index.toString()} section={section} />
-      ))}
-    </MobileDocContext.Provider>
+    <HighlightContext.Provider value={highlight_regex}>
+      <RenderNode node={node} />
+    </HighlightContext.Provider>
   );
 };

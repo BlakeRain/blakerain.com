@@ -124,6 +124,8 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
     if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") {
       if ((event.target as Element).id !== "search-input") {
         return;
+      } else if (event.key === "s") {
+        return;
       }
     }
 
