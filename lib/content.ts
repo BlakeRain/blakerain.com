@@ -51,12 +51,6 @@ export async function loadTags(): Promise<Tags> {
   const tagsSrc = await fs.readFile(tagsPath, "utf-8");
   LOADED_TAGS = YAML.parse(tagsSrc) as Tags;
 
-  console.log(
-    `Loaded ${Object.keys(LOADED_TAGS).length} tag(s): ${Object.keys(
-      LOADED_TAGS
-    ).join(", ")}`
-  );
-
   Object.keys(LOADED_TAGS).forEach((tag_id) => {
     const tag = (LOADED_TAGS as Tags)[tag_id];
 
@@ -93,11 +87,27 @@ export interface Page extends DocInfo {
   root: Root;
 }
 
+interface ProxyNode {
+  position?: any;
+  children?: ProxyNode[];
+}
+
+function stripPositions(node: ProxyNode) {
+  if (node.position) {
+    delete node.position;
+  }
+
+  if (node.children) {
+    for (let child of node.children) {
+      stripPositions(child);
+    }
+  }
+}
+
 var LOADED_PAGES: Page[] = [];
 
 export async function loadPages(): Promise<Page[]> {
   if (SHOULD_CACHE && LOADED_PAGES.length > 0) {
-    console.log(`Using cached pages data (${LOADED_PAGES.length} pages)`);
     return LOADED_PAGES;
   }
 
@@ -106,7 +116,6 @@ export async function loadPages(): Promise<Page[]> {
 
   const pages = filenames.map(async (filename) => {
     // Load the contets of this page file
-    console.log(`Loading: ${filename}`);
     const content = await fs.readFile(path.join(pagesDir, filename), "utf-8");
 
     // Parse the contents of the post
@@ -115,6 +124,8 @@ export async function loadPages(): Promise<Page[]> {
       .use(remarkFrontmatter)
       .use(remarkGfm)
       .parse(content);
+
+    stripPositions(loaded);
 
     var preamble:
       | {
@@ -151,7 +162,6 @@ export async function loadPages(): Promise<Page[]> {
   const loaded_pages = await Promise.all(pages);
 
   LOADED_PAGES = loaded_pages.filter((page) => !page.draft);
-  console.log(`Loaded ${LOADED_PAGES.length} post(s)`);
   return LOADED_PAGES;
 }
 
@@ -170,7 +180,6 @@ var LOADED_POSTS: Post[] = [];
 
 export async function loadPosts(): Promise<Post[]> {
   if (SHOULD_CACHE && LOADED_POSTS.length > 0) {
-    console.log(`Using cached posts data (${LOADED_POSTS.length} posts)`);
     return LOADED_POSTS;
   }
 
@@ -180,7 +189,6 @@ export async function loadPosts(): Promise<Post[]> {
 
   const posts = filenames.map(async (filename) => {
     // Load the contets of this post file
-    console.log(`Loading: ${filename}`);
     const content = await fs.readFile(path.join(postsDir, filename), "utf-8");
 
     // Parse the contents of the post
@@ -189,6 +197,8 @@ export async function loadPosts(): Promise<Post[]> {
       .use(remarkFrontmatter)
       .use(remarkGfm)
       .parse(content);
+
+    stripPositions(loaded);
 
     var preamble:
       | {
@@ -242,7 +252,6 @@ export async function loadPosts(): Promise<Post[]> {
     (a, b) => parseISO(b.published).getTime() - parseISO(a.published).getTime()
   );
 
-  console.log(`Loaded ${LOADED_POSTS.length} post(s)`);
   return LOADED_POSTS;
 }
 
