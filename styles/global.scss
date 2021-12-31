@@ -10,8 +10,6 @@ html {
 }
 
 body {
-  overflow-x: hidden;
-
   color: darken($color-mid-grey, 30%);
 
   font-family: $body-font-family;
@@ -68,5 +66,11 @@ h6 {
     small {
       color: lighten($color-mid-grey, 10%);
     }
+  }
+}
+
+mark {
+  &.active {
+    background-color: rgb(255, 191, 51);
   }
 }

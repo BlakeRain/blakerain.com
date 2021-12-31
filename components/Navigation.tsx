@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { SiteNavigation } from "../lib/content";
 import { SearchContainer } from "./search/SearchContainer";
 import { SearchChildProps, SearchProvider } from "./search/SearchProvider";
 import styles from "./Navigation.module.scss";
+import { useRouter } from "next/router";
 
 const trimTrailingSlash = (str: string): string => {
   return str.length > 0 && str.endsWith("/")
@@ -89,6 +90,73 @@ const TwitterLink: FC = () => {
   );
 };
 
+const SearchNavigation: FC<{ terms?: string }> = ({ terms }) => {
+  const router = useRouter();
+  const [marks, setMarks] = useState<HTMLElement[]>([]);
+  const [current, setCurrent] = useState<number>(0);
+
+  const focusMark = (index: number) => {
+    marks[current].className = "";
+    marks[index].className = "active";
+    marks[index].scrollIntoView({ behavior: "smooth", block: "center" });
+    setCurrent(index);
+  };
+
+  useEffect(() => {
+    const found = Array.prototype.slice.call(document.querySelectorAll("mark"));
+
+    setMarks(found);
+    setCurrent(0);
+    if (found.length > 0) {
+      found[0].className = "active";
+      found[0].scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [terms]);
+
+  const gotoNext: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (current < marks.length - 1) {
+      focusMark(current + 1);
+    }
+  };
+
+  const gotoPrev: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (current > 0) {
+      focusMark(current - 1);
+    }
+  };
+
+  const clearHighlight: React.MouseEventHandler<HTMLButtonElement> = (
+    event
+  ) => {
+    router.replace(location.pathname);
+  };
+
+  if (marks.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={styles.highlightControls}>
+      <div>
+        {1 + current} of {marks.length} matching terms
+      </div>
+      <button type="button" disabled={current === 0} onClick={gotoPrev}>
+        &uarr; Previous
+      </button>
+      <button
+        type="button"
+        disabled={current === marks.length - 1}
+        onClick={gotoNext}
+      >
+        &darr; Next
+      </button>
+      <button type="button" onClick={clearHighlight}>
+        Clear
+      </button>
+    </div>
+  );
+};
+
 const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
   props
 ) => {
@@ -123,9 +191,14 @@ const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
 const NavigationInner: FC<
   SearchChildProps & { navigation: SiteNavigation[] }
 > = (props) => {
+  const router = useRouter();
+  const highlight = router.query["highlight"];
+  const terms = typeof highlight === "string" ? highlight : undefined;
+
   return (
     <React.Fragment>
       <NavigationBar {...props} />
+      <SearchNavigation terms={terms} />
       <SearchContainer {...props} />
     </React.Fragment>
   );
