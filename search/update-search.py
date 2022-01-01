@@ -20,7 +20,7 @@ class MarkdownExtractor(mistletoe.BaseRenderer):
         return ""
 
 
-TEXT_WORD_RE = re.compile(r"\S[\S-]{2,}")
+TEXT_WORD_RE = re.compile(r"[\w_][\w_-]{2,}")
 
 
 def extract_content(source: List[str]) -> List[str]:
@@ -114,11 +114,25 @@ class SearchPost:
         output.store(f">{len(url_enc)}s", url_enc)
 
 
+def dot_key(key: int):
+    if key == 0:
+        return "root"
+    if key == 34:
+        return "\\\""
+    if key == 92:
+        return "\\\\"
+    return chr(key)
+
+
 class TrieNode:
     def __init__(self, key: int):
         self.key = key
         self.children: Dict[int, TrieNode] = {}
         self.occurrences: List[SearchTermOccurrence] = []
+
+    @property
+    def dot_label(self) -> str:
+        return f"{dot_key(self.key)}"
 
     def visit(self, visitor):
         visitor.enter_node(self)
@@ -173,6 +187,20 @@ class Trie:
         self.root.visit(visitor)
         visitor.finish()
         return visitor.node_count
+
+    def dot(self) -> str:
+        content = ["digraph {"]
+
+        def visit(node: TrieNode):
+            content.append(f"node{node.__hash__()}[label=\"{node.dot_label}\"];")
+            for edge, child in node.children.items():
+                visit(child)
+                content.append(f"node{node.__hash__()} -> node{child.__hash__()} "
+                               f"[label=\"{dot_key(edge)}\"];")
+
+        visit(self.root)
+        content.append("}")
+        return "\n".join(content)
 
 
 class SuffixNode:
@@ -253,3 +281,9 @@ if __name__ == "__main__":
     os.makedirs("public/data", exist_ok=True)
     with open("public/data/search.bin", "wb") as fp:
         store.write(fp)
+
+    with open("output.dot", "wt") as fp:
+        trie = Trie()
+        for term in search_data.terms.values():
+            trie.insert_term(term)
+        fp.write(trie.dot())
