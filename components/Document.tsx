@@ -262,6 +262,7 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
       {highlight ? (
         <SyntaxHighlighter
           useInlineStyles={false}
+          showLineNumbers={true}
           language={node.lang || undefined}
         >
           {node.value}

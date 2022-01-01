@@ -169,8 +169,8 @@
 
     border: 1px darken($color-light-grey, 10%) solid;
     border-radius: 5px;
-    color: $color-dark-grey;
-    background-color: lighten($color-light-grey, 15%);
+    color: #383a42;
+    background-color: #fafafa;
 
     font-size: 1.4rem;
     line-height: 1.5em;
@@ -342,9 +342,9 @@
     }
 
     pre {
-      background-color: darken($color-dark-grey, 3%);
+      background-color: #282c34;
       border-color: darken($color-dark-grey, 10%);
-      color: $color-white-grey;
+      color: #c8ced7;
     }
 
     code {
