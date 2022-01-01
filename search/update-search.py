@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
 import io
 import mistletoe
@@ -63,7 +63,7 @@ class Store:
 
     def store7(self, *args):
         for n in args:
-            assert isinstance(n, int)
+            assert isinstance(n, int), f"Cannot store non-integral value: {n} ({type(n)})"
             assert n >= 0
             while n > 0x80:
                 self.store("B", (n & 0x7f) | 0x80)
@@ -75,9 +75,9 @@ class Store:
 
 
 class SearchTermOccurrence:
-    def __init__(self, post_id: int):
+    def __init__(self, post_id: int, count: int = 1):
         self.post: int = post_id
-        self.count: int = 1
+        self.count: int = count
 
     def encode(self, output: Store):
         output.store7(self.post, self.count)
@@ -116,7 +116,7 @@ class SearchPost:
 
 class TrieNode:
     def __init__(self, key: int):
-        self.key: int = key
+        self.key = key
         self.children: Dict[int, TrieNode] = {}
         self.occurrences: List[SearchTermOccurrence] = []
 
@@ -175,6 +175,13 @@ class Trie:
         return visitor.node_count
 
 
+class SuffixNode:
+    def __init__(self):
+        self.children: Dict[int, SuffixNode] = {}
+        self.suffix: Optional[SuffixNode] = None
+        self.index: int = -1
+
+
 class SearchData:
     def __init__(self):
         self.stop_words: List[str] = []
@@ -225,20 +232,24 @@ class SearchData:
         print(f"Total search database: {len(store.buffer)} bytes")
 
 
-SEARCH_DATA = SearchData()
+def build_search() -> SearchData:
+    search_data = SearchData()
+    for resource in ["posts", "pages"]:
+        for file in os.listdir(os.path.join("content", resource)):
+            if file.endswith(".md"):
+                path = os.path.join("content", resource, file)
+                with open(path, "rt") as fp:
+                    source = fp.readlines()
+                post, content = split_frontmatter(path, source)
+                search_data.add_post(resource == "pages", post, content)
+    return search_data
 
-for resource in ["posts", "pages"]:
-    for file in os.listdir(os.path.join("content", resource)):
-        if file.endswith(".md"):
-            path = os.path.join("content", resource, file)
-            with open(path, "rt") as fp:
-                source = fp.readlines()
-            post, content = split_frontmatter(path, source)
-            SEARCH_DATA.add_post(resource == "pages", post, content)
 
-STORE = Store()
-SEARCH_DATA.encode(STORE)
+if __name__ == "__main__":
+    store = Store()
+    search_data = build_search()
+    search_data.encode(store)
 
-os.makedirs("public/data", exist_ok=True)
-with open("public/data/search.bin", "wb") as fp:
-    STORE.write(fp)
+    os.makedirs("public/data", exist_ok=True)
+    with open("public/data/search.bin", "wb") as fp:
+        store.write(fp)
