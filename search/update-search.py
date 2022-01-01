@@ -20,7 +20,7 @@ class MarkdownExtractor(mistletoe.BaseRenderer):
         return ""
 
 
-TEXT_WORD_RE = re.compile(r"\w[\w-]{2,}")
+TEXT_WORD_RE = re.compile(r"\S[\S-]{2,}")
 
 
 def extract_content(source: List[str]) -> List[str]:
