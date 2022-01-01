@@ -29,13 +29,13 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
     const searchData = props.searchData;
 
     // Sanitise the search input: we only care about letters really.
-    let term_words = term
-      .toLowerCase()
-      .replace(/[^a-z\s]/g, "")
-      .split(/\s+/);
+    let term_words = term.toLowerCase().split(/\s+/);
 
     // If we have no search term, then there are no results
-    if (term_words.length < 1 || (term_words.length === 1 && term_words[0].length < 1)) {
+    if (
+      term_words.length < 1 ||
+      (term_words.length === 1 && term_words[0].length < 1)
+    ) {
       setSearchResults([]);
       setHighlight("");
       return;
@@ -47,7 +47,9 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
     // For each of the search terms, perform a search, recording the occurrences in our list
     var occurrences: SearchOccurrence[] = [];
     term_words.forEach((word) => {
-      searchData.trie.findString(word).forEach((occurrence) => occurrences.push(occurrence));
+      searchData.trie
+        .findString(word)
+        .forEach((occurrence) => occurrences.push(occurrence));
     });
 
     // Gather up all the results (as posts), counting their relevance
@@ -73,7 +75,9 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
 
     // Filter out the match for the current page, if any
     const current = sorted.find((result) => result.current);
-    const remaining = current ? sorted.filter((result) => !result.current) : sorted;
+    const remaining = current
+      ? sorted.filter((result) => !result.current)
+      : sorted;
 
     // Assign the index to all the results
     if (current) {
@@ -129,11 +133,11 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       </div>
     );
   } else {
-    const SearchLink: FC<{ post: SearchPost; relevance: number; index: number }> = ({
-      post,
-      relevance,
-      index,
-    }) => {
+    const SearchLink: FC<{
+      post: SearchPost;
+      relevance: number;
+      index: number;
+    }> = ({ post, relevance, index }) => {
       return (
         <Link href={post.url + query}>
           <a
@@ -142,7 +146,8 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
             })}
             onClick={() => {
               props.setSearchVisible(false);
-            }}>
+            }}
+          >
             <div className={styles.column}>{post.title}</div>
             <div className={cn(styles.column, styles.relevance)}>
               {relevance.toString()} match{relevance !== 1 ? "es" : ""}
@@ -166,7 +171,10 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
         return (
           <div
             key={index.toString()}
-            className={cn(styles.currentPage, { [styles.others]: searchResults.length > 1 })}>
+            className={cn(styles.currentPage, {
+              [styles.others]: searchResults.length > 1,
+            })}
+          >
             {link}
           </div>
         );
@@ -181,7 +189,8 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
         <div className={cn(styles.row, styles.center)}>
           <p>
             <b>
-              {searchResults.length} post{searchResults.length !== 1 ? "s" : ""} match
+              {searchResults.length} post{searchResults.length !== 1 ? "s" : ""}{" "}
+              match
             </b>
           </p>
         </div>
@@ -194,7 +203,8 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       <div className={styles.row}>
         <div className={styles.column}>Search Blog Posts and Pages</div>
         <div className={cn(styles.column, styles.hints)}>
-          <span className={styles.tag}>Tab</span>/<span className={styles.tag}>S</span>
+          <span className={styles.tag}>Tab</span>/
+          <span className={styles.tag}>S</span>
           to search,
           <span className={styles.tag}>Esc</span>
           to close
