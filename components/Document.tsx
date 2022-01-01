@@ -247,6 +247,64 @@ const RenderBookmark: FC<{ node: Code }> = ({ node }) => {
   );
 };
 
+interface HighlightRow {
+  properties: any;
+  type: "text" | "element";
+  tagName?: string;
+  value?: string;
+  children?: HighlightRow[];
+}
+
+function createCodeElement(
+  highlight: RegExp | null,
+  { properties, type, tagName: TagName, value, children }: HighlightRow,
+  index: number
+): React.ReactNode {
+  if (type === "text") {
+    if (highlight && value) {
+      return (
+        <React.Fragment key={index.toString()}>
+          {renderHighlight(highlight, value)}
+        </React.Fragment>
+      );
+    }
+
+    return value;
+  }
+
+  if (TagName) {
+    let props = {
+      ...properties,
+      key: index.toString(),
+      className: properties.className.join(" "),
+    };
+
+    return (
+      <TagName {...props}>
+        {(children || []).map((child, index) =>
+          createCodeElement(highlight, child, index)
+        )}
+      </TagName>
+    );
+  }
+
+  return null;
+}
+
+type CodeRenderer = (input: {
+  rows: HighlightRow[];
+  stylesheet: any;
+  useInlineStyles: boolean;
+}) => React.ReactNode;
+
+function getCodeRenderer(): CodeRenderer {
+  const search = useContext(HighlightContext);
+
+  return ({ rows }): React.ReactNode => {
+    return rows.map((node, index) => createCodeElement(search, node, index));
+  };
+}
+
 const RenderCode: FC<{ node: Code }> = ({ node }) => {
   const meta = typeof node.meta === "string" ? JSON.parse(node.meta) : {};
   const caption = meta["caption"];
@@ -264,6 +322,7 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
           useInlineStyles={false}
           showLineNumbers={true}
           language={node.lang || undefined}
+          renderer={getCodeRenderer()}
         >
           {node.value}
         </SyntaxHighlighter>
