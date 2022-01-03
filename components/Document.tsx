@@ -297,19 +297,17 @@ type CodeRenderer = (input: {
   useInlineStyles: boolean;
 }) => React.ReactNode;
 
-function getCodeRenderer(): CodeRenderer {
-  const search = useContext(HighlightContext);
-
+function getCodeRenderer(search: RegExp | null): CodeRenderer {
   return ({ rows }): React.ReactNode => {
     return rows.map((node, index) => createCodeElement(search, node, index));
   };
 }
 
 const RenderCode: FC<{ node: Code }> = ({ node }) => {
+  const highlight = useContext(HighlightContext);
   const meta = typeof node.meta === "string" ? JSON.parse(node.meta) : {};
   const caption = meta["caption"];
-  const highlight =
-    typeof node.lang === "string" && node.lang !== "box-drawing";
+  const syntax = typeof node.lang === "string" && node.lang !== "box-drawing";
 
   return (
     <figure
@@ -317,12 +315,12 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
         [styles.codeCardWithCaption]: Boolean(caption),
       })}
     >
-      {highlight ? (
+      {syntax ? (
         <SyntaxHighlighter
           useInlineStyles={false}
           showLineNumbers={true}
           language={node.lang || undefined}
-          renderer={getCodeRenderer()}
+          renderer={getCodeRenderer(highlight)}
         >
           {node.value}
         </SyntaxHighlighter>
