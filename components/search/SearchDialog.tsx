@@ -4,19 +4,17 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { SearchChildProps } from "./SearchProvider";
 import styles from "./SearchDialog.module.scss";
-import { SearchOccurrence, SearchPost } from "./SearchData";
+import { SearchResult, SearchPost } from "./SearchData";
 
-interface SearchResult {
-  relevance: number;
+interface ExtSearchResult extends SearchResult {
   current: boolean;
-  post: SearchPost;
   index: number;
 }
 
 export const SearchDialog: FC<SearchChildProps> = (props) => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<ExtSearchResult[]>([]);
   const [highlight, setHighlight] = useState<string>("");
   const [active, setActive] = useState<number>(-1);
   const query = `?highlight=${highlight}`;
@@ -29,13 +27,10 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
     const searchData = props.searchData;
 
     // Sanitise the search input: we only care about letters really.
-    let term_words = term.toLowerCase().split(/\s+/);
+    let terms = term.toLowerCase().split(/\s+/);
 
     // If we have no search term, then there are no results
-    if (
-      term_words.length < 1 ||
-      (term_words.length === 1 && term_words[0].length < 1)
-    ) {
+    if (terms.length < 1 || (terms.length === 1 && terms[0].length < 1)) {
       setSearchResults([]);
       setHighlight("");
       return;
@@ -44,42 +39,25 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
     // We highlight the user's input, not the search term
     setHighlight(encodeURIComponent(term));
 
-    // For each of the search terms, perform a search, recording the occurrences in our list
-    var occurrences: SearchOccurrence[] = [];
-    term_words.forEach((word) => {
-      searchData.trie
-        .findString(word)
-        .forEach((occurrence) => occurrences.push(occurrence));
-    });
+    // Perform the search, but fill in the missing fields (current and index)
+    const results = searchData.search(terms).map(
+      (result, index) =>
+        ({
+          ...result,
+          index,
+          current: result.post.url === location.pathname,
+        } as ExtSearchResult)
+    );
 
-    // Gather up all the results (as posts), counting their relevance
-    let post_results: { [key: string]: SearchResult } = {};
-    occurrences.forEach((occ) => {
-      if (occ.post in post_results) {
-        post_results[occ.post].relevance += occ.count;
-      } else {
-        const post = searchData.posts[occ.post];
-        post_results[occ.post] = {
-          current: post.url === location.pathname,
-          relevance: occ.count,
-          post: post,
-          index: 0,
-        };
-      }
-    });
+    // Find a result that matches the current page (if there is one)
+    const current = results.find((result) => result.current);
 
-    // Sort the search results by their relevance (number of occurrences)
-    const sorted = Object.keys(post_results)
-      .map((key) => post_results[key])
-      .sort((a, b) => b.relevance - a.relevance);
-
-    // Filter out the match for the current page, if any
-    const current = sorted.find((result) => result.current);
+    // Filter out the remaining search results if we have a match on the current page
     const remaining = current
-      ? sorted.filter((result) => !result.current)
-      : sorted;
+      ? results.filter((result) => !result.current)
+      : results;
 
-    // Assign the index to all the results
+    // If there is a match on the current page, add that result first, then the result of the results.
     if (current) {
       current.index = 0;
       remaining.forEach((result, index) => {
@@ -92,7 +70,6 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       });
     }
 
-    // Store the results and reset the current selection
     setSearchResults(remaining);
     setActive(-1);
   };
@@ -135,9 +112,8 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
   } else {
     const SearchLink: FC<{
       post: SearchPost;
-      relevance: number;
       index: number;
-    }> = ({ post, relevance, index }) => {
+    }> = ({ post, index }) => {
       return (
         <Link href={post.url + query}>
           <a
@@ -149,9 +125,6 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
             }}
           >
             <div className={styles.column}>{post.title}</div>
-            <div className={cn(styles.column, styles.relevance)}>
-              {relevance.toString()} match{relevance !== 1 ? "es" : ""}
-            </div>
           </a>
         </Link>
       );
@@ -162,7 +135,6 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
         <SearchLink
           key={index.toString()}
           post={result.post}
-          relevance={result.relevance}
           index={result.index}
         />
       );

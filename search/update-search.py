@@ -9,6 +9,21 @@ import re
 import struct
 import yaml
 
+STEM_WORDS = {
+    'that', 'been', 'him', 'us', 'would', 'own', 'or', 'yourselves', 'new', 'no', 'such', 'below', 'did', 'if',
+    'myself', 'against', 'do', 'because', 'am', 'back', 'his', 'to', 'what', 'people', 'make', 'who', 'but', 'on',
+    'there', 'between', 'way', 'other', 'than', 'which', 'while', 'see', 'all', 'I', 'was', 'them', 'of', 'just',
+    'good', 'she', 'whom', 'day', 'only', 'two', 'first', 'know', 'ourselves', 'come', 'he', 'from', 'why', 'few',
+    'for', 'their', 'one', 'the', 'this', 'any', 'down', 'more', 'ours', 'we', 'think', 'will', 'about', 'above',
+    'were', 'be', 'our', 'themselves', 'having', 'they', 'time', 'say', 'under', 'once', 'doing', 'further', 'yours',
+    'look', 'with', 'want', 'in', 'how', 'like', 'has', 'had', 'give', 'by', 'it', 'during', 'nor', 't', 'a', 'could',
+    'very', 'some', 'well', 'have', 'your', 'is', 'so', 'you', 'i', 'after', 'yourself', 'even', 'should', 'when',
+    'himself', 'at', 'its', 'and', 'too', 'same', 'until', 'hers', 'as', 'don', 'most', 'also', 'herself', 'take',
+    'again', 'before', 'these', 'through', 'both', 'theirs', 'use', 'her', 'those', 'where', 'year', 'being', 'does',
+    'off', 'are', 's', 'over', 'here', 'me', 'go', 'into', 'each', 'work', 'up', 'an', 'itself', 'my', 'get', 'out',
+    'can', 'then', 'not', 'now'
+}
+
 
 class MarkdownExtractor(mistletoe.BaseRenderer):
     def __init__(self):
@@ -30,7 +45,7 @@ def extract_content(source: List[str]) -> List[str]:
     words = []
     for text in extractor.text:
         words.extend(TEXT_WORD_RE.findall(text))
-    return words
+    return [word for word in words if word not in STEM_WORDS]
 
 
 def split_frontmatter(file_path: str, lines: List[str]) -> Tuple[Dict[str, Any], List[str]]:
@@ -252,12 +267,14 @@ class SearchData:
             post = self.posts[post_id]
             post.encode(store)
         term_trie = Trie()
-        for term_text in self.terms:
-            term = self.terms[term_text]
+        for term in self.terms.values():
             term_trie.insert_term(term)
         node_count = term_trie.encode(store)
-        print(f"Stored {len(self.terms)} terms in {node_count} trie nodes")
-        print(f"Total search database: {len(store.buffer)} bytes")
+        total_occ = sum([sum([occ.count for occ in term.occurrences]) for term in self.terms.values()])
+        print("Total terms               : {}".format(len(self.terms)))
+        print("Total occurrences         : {}".format(total_occ))
+        print("Stored term trie nodes    : {}".format(node_count))
+        print("Total search database size: {:.2f} Kb".format(len(store.buffer) / 1024.0))
 
 
 def build_search() -> SearchData:

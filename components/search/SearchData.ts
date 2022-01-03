@@ -66,12 +66,10 @@ export class SearchOccurrence {
 }
 
 export interface SearchStats {
-  noccurrences: number;
   count: number;
   maxDepth: number;
   maxPopDistance: number;
   totalPopDistance: number;
-  nterms: number;
 }
 
 /**
@@ -145,10 +143,6 @@ export class TrieNode {
       for (var i = 0; i < noccurrences; ++i) {
         const occurrence = new SearchOccurrence(decoder);
         this.occurrences.push(occurrence);
-
-        if (stats) {
-          stats.noccurrences += occurrence.count;
-        }
       }
     }
 
@@ -330,7 +324,6 @@ export class Trie {
         if (stats) {
           stats.maxPopDistance = Math.max(stats.maxPopDistance, pop);
           stats.totalPopDistance += pop;
-          ++stats.nterms;
         }
 
         while (pop-- > 0) {
@@ -373,6 +366,11 @@ export class SearchPost {
   }
 }
 
+export interface SearchResult {
+  post: SearchPost;
+  score: number;
+}
+
 /**
  * The search data
  *
@@ -380,7 +378,7 @@ export class SearchPost {
  * the search trie.
  */
 export class SearchData {
-  public posts: { [key: number]: SearchPost };
+  public posts: { [key: string]: SearchPost };
   public trie: Trie;
 
   /**
@@ -422,8 +420,6 @@ export class SearchData {
       maxDepth: 0,
       maxPopDistance: 0,
       totalPopDistance: 0,
-      nterms: 0,
-      noccurrences: 0,
     };
 
     this.trie = new Trie();
@@ -432,21 +428,75 @@ export class SearchData {
     // Record how long it too us to decode
     let t1 = performance.now();
     console.log(
-      `Decoded ${num_posts} posts and ${
-        term_stats.count
-      } term trie nodes covering ${term_stats.nterms} terms occurring ${
-        term_stats.noccurrences
-      } times, in ${(t1 - t0).toFixed(2)} milliseconds from ${(
-        encoded.byteLength / 1024.0
-      ).toFixed(2)} Kb search database`
+      `Decoded ${num_posts} posts and ${term_stats.count} term trie nodes in ${(
+        t1 - t0
+      ).toFixed(2)} milliseconds from ${(encoded.byteLength / 1024.0).toFixed(
+        2
+      )} Kb search database`
     );
 
     console.log(
-      `Term trie decoding had a maximum stack depth of ${
-        term_stats.maxDepth
-      }, popping at most ${term_stats.maxPopDistance} nodes (avg. ${(
-        term_stats.totalPopDistance / term_stats.nterms
-      ).toFixed(2)} per term)`
+      `Term trie decoding had a maximum stack depth of ${term_stats.maxDepth}, popping at most ${term_stats.maxPopDistance} nodes`
     );
+  }
+
+  public search(terms: string[]): SearchResult[] {
+    interface DocResult {
+      postId: number;
+      termFreqs: { [key: string]: number };
+    }
+
+    const term_posts: { [post_id: string]: DocResult } = {};
+    terms.forEach((term) => {
+      this.trie.findString(term).forEach((occ) => {
+        if (occ.post in term_posts) {
+          term_posts[occ.post].termFreqs[term] += occ.count;
+        } else {
+          term_posts[occ.post] = {
+            postId: occ.post,
+            termFreqs: terms.reduce((freqs, t) => {
+              freqs[t] = t === term ? occ.count : 0;
+              return freqs;
+            }, {} as { [key: string]: number }),
+          };
+        }
+      });
+    });
+
+    const term_freqs = terms.reduce((freqs, term) => {
+      freqs[term] = 0;
+      return freqs;
+    }, {} as { [term: string]: number });
+
+    Object.keys(term_posts).forEach((post_id) => {
+      const post = term_posts[post_id];
+      for (let term of terms) {
+        term_freqs[term] += post.termFreqs[term];
+      }
+    });
+
+    const post_count = Object.keys(this.posts).length;
+    terms.forEach((term) => {
+      term_freqs[term] = Math.log10(post_count / term_freqs[term]);
+    });
+
+    return Object.keys(term_posts)
+      .reduce((results, post_id) => {
+        const post = term_posts[post_id];
+        let score = 0;
+
+        for (let term of terms) {
+          const freq = post.termFreqs[term];
+          if (freq === 0) {
+            return results;
+          }
+
+          score += freq * term_freqs[term];
+        }
+
+        results.push({ post: this.posts[post_id], score });
+        return results;
+      }, [] as SearchResult[])
+      .sort((a, b) => b.score - a.score);
   }
 }
