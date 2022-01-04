@@ -34,6 +34,9 @@ class MarkdownExtractor(mistletoe.BaseRenderer):
         self.text.append(token.content)
         return ""
 
+    def render_line_break(self, token: S.LineBreak):
+        return ""
+
 
 TEXT_WORD_RE = re.compile(r"[\w_][\w_-]{2,}")
 
