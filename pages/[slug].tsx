@@ -6,6 +6,7 @@ import {
   NextPage,
 } from "next";
 import Head from "next/head";
+import { NextSeo } from "next-seo";
 import {
   Page,
   loadPages,
@@ -53,11 +54,26 @@ export const getStaticProps: GetStaticProps<
 };
 
 const PageView: NextPage<PageProps> = ({ navigation, page }) => {
+  const seo_index = page.preamble.seo?.index;
+  const seo_follow = page.preamble.seo?.follow;
+
   return (
     <Layout navigation={navigation} wrap>
       <Head>
         <title>{page.title}</title>
       </Head>
+      <NextSeo
+        noindex={typeof seo_index === "boolean" ? !seo_index : false}
+        nofollow={typeof seo_follow === "boolean" ? !seo_follow : false}
+        title={page.title}
+        description={page.excerpt || undefined}
+        canonical={`https://www.blakerain.com/${page.slug}`}
+        openGraph={{
+          url: `https://www.blakerain.com/${page.slug}`,
+          title: page.title,
+          description: page.excerpt || undefined,
+        }}
+      />
       <Content doc={page} root={page.root} />
       <Analytics />
     </Layout>

@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import { GetStaticProps } from "next";
 import Head from "next/head";
+import { NextSeo } from "next-seo";
 import cn from "classnames";
 
 import ClientOnly from "../components/ClientOnly";
@@ -67,6 +68,7 @@ const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
       <Head>
         <title>Site Analytics</title>
       </Head>
+      <NextSeo noindex nofollow />
       <ClientOnly>
         {token ? (
           <Report token={token}>Okay</Report>

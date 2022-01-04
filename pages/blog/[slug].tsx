@@ -6,6 +6,7 @@ import {
   NextPage,
 } from "next";
 import Head from "next/head";
+import { NextSeo } from "next-seo";
 import {
   SiteNavigation,
   loadNavigation,
@@ -19,7 +20,7 @@ import { Layout } from "../../components/Layout";
 import { Content } from "../../components/Content";
 import { useEffect, useRef } from "react";
 import Analytics from "../../components/Analytics";
-import Metadata from "../../components/Metadata";
+// import Metadata from "../../components/Metadata";
 
 interface BlogPostProps {
   enableCommento: boolean;
@@ -89,8 +90,31 @@ const BlogPost: NextPage<BlogPostProps> = ({
     <Layout navigation={navigation}>
       <Head>
         <title>{post.title}</title>
-        <Metadata post={post} tags={tags} />
       </Head>
+      <NextSeo
+        title={post.title}
+        description={post.excerpt || undefined}
+        canonical={`https://www.blakerain.com/blog/${post.slug}`}
+        openGraph={{
+          url: `https://www.blakerain.com/blog/${post.slug}`,
+          title: post.title,
+          type: "article",
+          description: post.excerpt || undefined,
+          images: post.coverImage
+            ? [
+                {
+                  url: post.coverImage,
+                  alt: post.title,
+                },
+              ]
+            : [],
+          article: {
+            publishedTime: post.published,
+            authors: ["Blake Rain"],
+            tags: tags.map((tag) => tag.name),
+          },
+        }}
+      />
       <Content
         tags={tags}
         doc={post}

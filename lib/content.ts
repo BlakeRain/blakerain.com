@@ -92,10 +92,32 @@ export interface PostInfo extends DocInfo, Tagged {
 
 export interface Post extends PostInfo {
   root: Root;
+  preamble: PostPreamble;
 }
 
 export interface Page extends DocInfo {
   root: Root;
+  preamble: PagePreamble;
+}
+
+export interface Preamble {
+  draft?: boolean;
+  slug?: boolean;
+  title?: string;
+  published?: string;
+  excerpt?: string;
+}
+
+export interface PostPreamble extends Preamble {
+  cover?: string;
+  tags?: TagId[];
+}
+
+export interface PagePreamble extends Preamble {
+  seo?: {
+    index?: boolean;
+    follow?: boolean;
+  };
 }
 
 interface ProxyNode {
@@ -155,15 +177,7 @@ export async function loadPages(): Promise<Page[]> {
 
     stripPositions(loaded);
 
-    var preamble:
-      | {
-          draft?: boolean;
-          slug?: string;
-          title?: string;
-          published?: string;
-          excerpt?: string;
-        }
-      | undefined = undefined;
+    var preamble: PagePreamble | undefined = undefined;
 
     if (loaded.children.length > 0 && loaded.children[0].type === "yaml") {
       try {
@@ -184,6 +198,7 @@ export async function loadPages(): Promise<Page[]> {
       published: preamble?.published || "2000-01-01T00:00:00.000Z",
       excerpt: preamble?.excerpt || null,
       root: loaded,
+      preamble: preamble,
     } as Page & { draft: boolean };
   });
 
@@ -228,17 +243,7 @@ export async function loadPosts(): Promise<Post[]> {
 
     stripPositions(loaded);
 
-    var preamble:
-      | {
-          draft?: boolean;
-          slug?: string;
-          title?: string;
-          published?: string;
-          excerpt?: string;
-          cover?: string;
-          tags?: TagId[];
-        }
-      | undefined = undefined;
+    var preamble: PostPreamble | undefined = undefined;
 
     if (loaded.children.length > 0 && loaded.children[0].type === "yaml") {
       try {
@@ -270,6 +275,7 @@ export async function loadPosts(): Promise<Post[]> {
       }),
       root: loaded,
       readingTime: Math.ceil(countWords(loaded) / 200),
+      preamble: preamble,
     } as Post & { draft: boolean };
   });
 
