@@ -1,14 +1,46 @@
 @import "../styles/colors.scss";
 
 .button {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  background-color: lighten($primary-background, 25%);
+
+  cursor: pointer;
+
+  color: white;
+  font-size: 80%;
+
   border: none;
   border-radius: 5px;
-  color: white;
-  background-color: lighten($primary-background, 25%);
-  cursor: pointer;
-  font-size: 80%;
+
+  position: fixed;
   z-index: 50;
+
+  width: 10rem;
+  height: 3rem;
+
+  bottom: 2em;
+  right: 2em;
+
+  opacity: 0;
+  transform: translateY(100px);
+
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: lighten($primary-background, 35%);
+  }
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &.skipFooter {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 800px) {
+  .button {
+    display: none;
+  }
 }
