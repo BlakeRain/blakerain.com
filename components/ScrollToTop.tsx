@@ -7,41 +7,35 @@ export const ScrollToTopButton: FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [footerVisible, setFooterVisible] = useState<boolean>(false);
 
-  const onDocumentScroll = () => {
-    if (window.pageYOffset > 300) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  };
-
   const onFooterIntersection: IntersectionObserverCallback = (entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        setFooterVisible(true);
-      } else {
-        setFooterVisible(false);
+      switch (entry.target.tagName) {
+        case "NAV":
+          setVisible(!entry.isIntersecting);
+          break;
+        case "FOOTER":
+          setFooterVisible(entry.isIntersecting);
+          break;
       }
     });
   };
 
   useEffect(() => {
-    document.addEventListener("scroll", onDocumentScroll);
-
+    const header = document.querySelector("nav:first-of-type");
     const footer = document.querySelector("footer");
-    let observer: IntersectionObserver | null = null;
+    let observer = new IntersectionObserver(onFooterIntersection);
+
+    if (header) {
+      observer.observe(header);
+    }
 
     if (footer) {
-      observer = new IntersectionObserver(onFooterIntersection);
       observer.observe(footer);
       footerRef.current = footer;
     }
 
     return () => {
-      document.removeEventListener("scroll", onDocumentScroll);
-      if (observer) {
-        observer.disconnect();
-      }
+      observer.disconnect();
     };
   }, []);
 
