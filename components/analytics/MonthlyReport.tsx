@@ -61,12 +61,14 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
         <span>
           <b>Date:</b> {format(new Date(year, month), "MM/yyyy")}
         </span>
-        <button type="button" onClick={handlePrevClick}>
-          &larr;
-        </button>
-        <button type="button" onClick={handleNextClick}>
-          &rarr;
-        </button>
+        <div className="buttonGroup">
+          <button type="button" onClick={handlePrevClick}>
+            &larr;
+          </button>
+          <button type="button" onClick={handleNextClick}>
+            &rarr;
+          </button>
+        </div>
         {data && (
           <span>
             <b>Total:</b>{" "}

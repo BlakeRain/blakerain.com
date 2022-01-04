@@ -16,30 +16,34 @@
   background-color: $primary-background;
 
   button {
-    background-color: $color-blue;
-    color: white;
-    cursor: pointer;
-
     margin: 0.5em 0;
-    padding: 1em;
-
-    border: none;
-    border-radius: 5px;
-
-    &:hover {
-      background-color: darken($color-blue, 10%);
-    }
-
-    &:disabled {
-      background-color: $color-mid-grey;
-      cursor: inherit;
-      color: darken($color-mid-grey, 10%);
-
-      &:hover {
-        background-color: $color-mid-grey;
-      }
-    }
   }
+
+  // button {
+  //   background-color: $color-blue;
+  //   color: white;
+  //   cursor: pointer;
+  //
+  //   margin: 0.5em 0;
+  //   padding: 1em;
+  //
+  //   border: none;
+  //   border-radius: 5px;
+  //
+  //   &:hover {
+  //     background-color: darken($color-blue, 10%);
+  //   }
+  //
+  //   &:disabled {
+  //     background-color: $color-mid-grey;
+  //     cursor: inherit;
+  //     color: darken($color-mid-grey, 10%);
+  //
+  //     &:hover {
+  //       background-color: $color-mid-grey;
+  //     }
+  //   }
+  // }
 }
 
 .field {
@@ -55,15 +59,6 @@
 
   input {
     width: 75%;
-
-    padding: 1rem;
-    border: none;
-    border-radius: 5px;
-
-    &:disabled {
-      background-color: $color-light-grey;
-      color: $color-light-grey;
-    }
   }
 }
 

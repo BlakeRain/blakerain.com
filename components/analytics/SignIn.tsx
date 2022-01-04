@@ -50,6 +50,7 @@ const SignIn: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
             type="text"
             id="username"
             name="username"
+            placeholder="Username"
             disabled={processing}
             value={username}
             onChange={handleUsernameChange}
@@ -61,6 +62,7 @@ const SignIn: FC<{ setToken: (token: string) => void }> = ({ setToken }) => {
             type="password"
             id="password"
             name="password"
+            placeholder="Password"
             disabled={processing}
             value={password}
             onChange={handlePasswordChange}

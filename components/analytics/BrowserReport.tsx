@@ -81,6 +81,10 @@ export const BrowserReport: FC<{
     return [browsers, topN, others];
   }, [browserData]);
 
+  if (browsers.length === 0) {
+    return null;
+  }
+
   const pie_highlight = highlight
     ? others.indexOf(highlight.browser.name) !== -1
       ? "Others"

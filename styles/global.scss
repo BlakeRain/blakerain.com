@@ -56,6 +56,64 @@ h6 {
   }
 }
 
+button {
+  background-color: lighten($primary-background, 25%);
+
+  cursor: pointer;
+
+  color: white;
+
+  padding: 1rem 2rem;
+
+  border: none;
+  border-radius: 5px;
+
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: lighten($primary-background, 35%);
+  }
+
+  &:disabled {
+    background-color: lighten($primary-background, 15%);
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+div.buttonGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  button {
+    border-radius: 0;
+
+    &:first-of-type {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+}
+
+input {
+  padding: 1rem;
+
+  color: $color-dark-grey;
+  background-color: white;
+
+  border: none;
+  border-radius: 5px;
+
+  &:disabled {
+    background-color: $color-light-grey;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   h1,
   h2,

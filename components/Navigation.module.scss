@@ -126,25 +126,8 @@
   z-index: 100;
 
   div {
-    padding: 0.5rem;
-  }
-
-  button {
-    background-color: lighten($primary-background, 10%);
-    border: none;
-    border-radius: 5px;
-    color: rgba(255, 255, 255, 0.9);
-    padding: 0 2rem;
-    cursor: pointer;
-
-    &:hover {
-      background-color: lighten($primary-background, 20%);
-    }
-
-    &:disabled {
-      background-color: darken($primary-background, 10%);
-      color: rgba(255, 255, 255, 0.25);
-    }
+    padding: 1rem;
+    line-height: 1.15;
   }
 
   div + button,
