@@ -301,9 +301,3 @@ if __name__ == "__main__":
     os.makedirs("public/data", exist_ok=True)
     with open("public/data/search.bin", "wb") as fp:
         store.write(fp)
-
-    with open("output.dot", "wt") as fp:
-        trie = Trie()
-        for term in search_data.terms.values():
-            trie.insert_term(term)
-        fp.write(trie.dot())
