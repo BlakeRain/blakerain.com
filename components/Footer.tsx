@@ -29,7 +29,6 @@ export const Footer: FC = () => {
               <a>Analytics</a>
             </Link>
             <a href="https://twitter.com/HalfWayMan">Twitter</a>
-            <a href="https://ghost.org/">Ghost CMS</a>
           </nav>
           <div className={styles.badges}>
             <a
