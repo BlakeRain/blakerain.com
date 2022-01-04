@@ -63,7 +63,7 @@ const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
   const [token, setToken] = useState<string | null>(getSessionToken());
 
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={navigation} wrap>
       <Head>
         <title>Site Analytics</title>
       </Head>

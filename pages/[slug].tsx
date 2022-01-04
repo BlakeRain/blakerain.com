@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<
 
 const PageView: NextPage<PageProps> = ({ navigation, page }) => {
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={navigation} wrap>
       <Head>
         <title>{page.title}</title>
       </Head>

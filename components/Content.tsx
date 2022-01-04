@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import cn from "classnames";
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 
@@ -12,14 +13,29 @@ import { Render } from "./Document";
 
 import styles from "./Content.module.scss";
 
-const ContentHeader: FC<{ tags?: Tag[]; doc: DocInfo }> = ({ tags, doc }) => {
+const ContentHeader: FC<{
+  tags?: Tag[];
+  doc: DocInfo;
+  featureImage?: string;
+}> = ({ tags, doc, featureImage }) => {
   return (
-    <header className={styles.header}>
-      <h1 className={styles.title}>{doc.title}</h1>
-      {tags && <TagList tags={tags} large />}
-      {doc.excerpt ? <p className={styles.excerpt}>{doc.excerpt}</p> : null}
-      <div className={styles.details}>
-        <PostDetails doc={doc} />
+    <header
+      className={cn(styles.header, styles.outer, {
+        [styles.headerWithImage]: Boolean(featureImage),
+      })}
+      style={{
+        backgroundImage: featureImage
+          ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${featureImage})`
+          : undefined,
+      }}
+    >
+      <div className={cn(styles.headerInner, styles.inner)}>
+        <h1 className={styles.title}>{doc.title}</h1>
+        {doc.excerpt ? <p className={styles.excerpt}>{doc.excerpt}</p> : null}
+        <div className={styles.details}>
+          <PostDetails doc={doc} />
+          {tags && <TagList tags={tags} large />}
+        </div>
       </div>
     </header>
   );
@@ -41,8 +57,8 @@ const ContentBody: FC<{ root: Root }> = ({ root }) => {
 
   return (
     <React.Fragment>
-      <div className={styles.content}>
-        <div className={styles.contentInner}>
+      <div className={cn(styles.content, styles.outer)}>
+        <div className={cn(styles.contentInner, styles.inner)}>
           <Render node={root} highlight={highlight} />
         </div>
       </div>
@@ -54,13 +70,19 @@ const ContentBody: FC<{ root: Root }> = ({ root }) => {
 export interface ContentProps {
   tags?: Tag[];
   doc: DocInfo;
+  featureImage?: string;
   root: Root;
 }
 
-export const Content: FC<ContentProps> = ({ tags, doc, root }) => {
+export const Content: FC<ContentProps> = ({
+  tags,
+  doc,
+  featureImage,
+  root,
+}) => {
   return (
     <article className="post">
-      <ContentHeader tags={tags} doc={doc} />
+      <ContentHeader tags={tags} doc={doc} featureImage={featureImage} />
       <ContentBody root={root} />
     </article>
   );

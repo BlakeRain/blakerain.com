@@ -229,3 +229,11 @@
     }
   }
 }
+
+@media (max-width: 1170px) {
+  .imageCard {
+    img {
+      max-width: 100%;
+    }
+  }
+}

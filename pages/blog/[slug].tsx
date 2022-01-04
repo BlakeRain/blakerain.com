@@ -91,7 +91,12 @@ const BlogPost: NextPage<BlogPostProps> = ({
         <title>{post.title}</title>
         <Metadata post={post} tags={tags} />
       </Head>
-      <Content tags={tags} doc={post} root={post.root} />
+      <Content
+        tags={tags}
+        doc={post}
+        root={post.root}
+        featureImage={post.coverImage || undefined}
+      />
       <Analytics />
       {enableCommento && (
         <section className="post-comments">

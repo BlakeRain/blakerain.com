@@ -7,9 +7,10 @@ import { Navigation } from "./Navigation";
 
 export interface LayoutProps {
   navigation: SiteNavigation[];
+  wrap?: boolean;
 }
 
-export const Layout: FC<LayoutProps> = ({ navigation, children }) => {
+export const Layout: FC<LayoutProps> = ({ navigation, children, wrap }) => {
   return (
     <React.Fragment>
       <Head>
@@ -37,9 +38,13 @@ export const Layout: FC<LayoutProps> = ({ navigation, children }) => {
         <meta name="theme-color" content="#12304e" />
       </Head>
       <Navigation navigation={navigation} />
-      <div className={styles.content}>
-        <div className={styles.inner}>{children}</div>
-      </div>
+      {wrap ? (
+        <div className={styles.outer}>
+          <div className={styles.inner}>{children}</div>
+        </div>
+      ) : (
+        children
+      )}
       <Footer />
       <script
         async

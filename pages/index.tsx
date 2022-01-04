@@ -34,7 +34,7 @@ const Home: NextPage<{
   posts: PostInfo[];
 }> = ({ navigation, tags, posts }) => {
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={navigation} wrap>
       <Head>
         <title>Blake Rain</title>
       </Head>

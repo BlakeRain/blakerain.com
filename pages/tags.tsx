@@ -68,7 +68,7 @@ const TagList: FC<{
     .sort((a, b) => b.posts.length - a.posts.length);
 
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={navigation} wrap>
       <Head>
         <title>Tags</title>
       </Head>

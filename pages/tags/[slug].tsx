@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps<
 
 const TagPosts: NextPage<TagProps> = ({ tag, posts, tags, navigation }) => {
   return (
-    <Layout navigation={navigation}>
+    <Layout navigation={navigation} wrap>
       <Head>
         <title>{tag.name} Tag</title>
       </Head>
