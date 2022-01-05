@@ -38,35 +38,6 @@ function download(url, filename) {
     .end();
 }
 
-ghost = getAdminAPI();
-
-ghost.tags.browse({ limit: "all" }).then((tags) => {
-  const our_tags = tags
-    .filter((tag) => !tag.name.startsWith("#"))
-    .map((tag) => {
-      const our_tag = {
-        slug: tag.slug,
-        name: tag.name,
-        visibility: "public",
-      };
-
-      if (tag.description) {
-        our_tag.description = tag.description;
-      }
-
-      return our_tag;
-    });
-
-  const tags_dict = {};
-  our_tags.forEach((tag) => {
-    tags_dict[tag.slug] = tag;
-  });
-
-  const content = yaml.stringify(tags_dict);
-  fs.writeFileSync("content/tags.yaml", "#\n# tags.yaml\n#\n\n" + content);
-  console.log(`Extracted ${our_tags.length} tags (of ${tags.length})`);
-});
-
 function processMobileDoc(slug, doc) {
   var parts = [];
   var stack = [];
@@ -309,66 +280,135 @@ function processMobileDoc(slug, doc) {
   return parts.join("");
 }
 
-ghost.pages.browse({ limit: "all" }).then((pages) => {
-  pages.forEach((page) => {
-    console.log(`Processing page: ${page.slug}`);
-    const front_matter = {
-      slug: page.slug,
-      title: page.title,
-      published: page.published_at,
-    };
+const args = process.argv.slice(2);
 
-    if (page.custom_excerpt) {
-      front_matter.excerpt = page.custom_excerpt;
-    }
+if (args[0] === "post") {
+  if (args.length !== 2) {
+    console.error("Expected path to JSON file after 'post' argument");
+  }
 
-    fs.writeFileSync(
-      `content/pages/${page.slug}.md`,
-      "---\n" +
-        yaml.stringify(front_matter) +
-        "---\n\n" +
-        processMobileDoc(page.slug, JSON.parse(page.mobiledoc))
-    );
+  const post = JSON.parse(fs.readFileSync(args[1]));
+  console.log(`Processing post: ${post.slug}`);
+
+  const front_matter = {
+    slug: post.slug,
+    title: post.title,
+    tags: [],
+  };
+
+  if (post.custom_excerpt) {
+    front_matter.excerpt = post.custom_excerpt;
+  }
+
+  if (post.published_at) {
+    front_matter.published = post.published_at;
+  } else {
+    front_matter.draft = true;
+  }
+
+  const content = processMobileDoc(
+    post.slug,
+    JSON.parse(post.mobiledoc),
+    false
+  );
+  process.stdout.write(
+    "---\n" + yaml.stringify(front_matter) + "---\n\n" + content
+  );
+} else if (args[0] === "ghost") {
+  ghost = getAdminAPI();
+
+  ghost.tags.browse({ limit: "all" }).then((tags) => {
+    const our_tags = tags
+      .filter((tag) => !tag.name.startsWith("#"))
+      .map((tag) => {
+        const our_tag = {
+          slug: tag.slug,
+          name: tag.name,
+          visibility: "public",
+        };
+
+        if (tag.description) {
+          our_tag.description = tag.description;
+        }
+
+        return our_tag;
+      });
+
+    const tags_dict = {};
+    our_tags.forEach((tag) => {
+      tags_dict[tag.slug] = tag;
+    });
+
+    const content = yaml.stringify(tags_dict);
+    fs.writeFileSync("content/tags.yaml", "#\n# tags.yaml\n#\n\n" + content);
+    console.log(`Extracted ${our_tags.length} tags (of ${tags.length})`);
   });
-});
 
-ghost.posts.browse({ limit: "all" }).then((posts) => {
-  posts
-    .filter((post) => post.status === "published")
-    .forEach((post) => {
-      console.log(`Processing post: ${post.slug}`);
+  ghost.pages.browse({ limit: "all" }).then((pages) => {
+    pages.forEach((page) => {
+      console.log(`Processing page: ${page.slug}`);
       const front_matter = {
-        slug: post.slug,
-        title: post.title,
-        tags: post.tags
-          .filter((tag) => !tag.slug.startsWith("hash-"))
-          .map((tag) => tag.slug),
+        slug: page.slug,
+        title: page.title,
+        published: page.published_at,
       };
 
-      if (post.custom_excerpt) {
-        front_matter.excerpt = post.custom_excerpt;
+      if (page.custom_excerpt) {
+        front_matter.excerpt = page.custom_excerpt;
       }
 
-      if (post.published_at) {
-        front_matter.published = post.published_at;
-      } else {
-        front_matter.draft = true;
-      }
-
-      if (post.feature_image) {
-        const filename = path.basename(url.parse(post.feature_image).pathname);
-        front_matter.cover = "/content/" + filename;
-        download(post.feature_image, "public/content/" + filename);
-      }
-
-      if (!fs.existsSync(path.join("public", "content", post.slug))) {
-        fs.mkdirSync(path.join("public", "content", post.slug));
-      }
-
-      const content = processMobileDoc(post.slug, JSON.parse(post.mobiledoc));
       fs.writeFileSync(
-        `content/posts/${post.slug}.md`,
-        "---\n" + yaml.stringify(front_matter) + "---\n\n" + content
+        `content/pages/${page.slug}.md`,
+        "---\n" +
+          yaml.stringify(front_matter) +
+          "---\n\n" +
+          processMobileDoc(page.slug, JSON.parse(page.mobiledoc))
       );
     });
-});
+  });
+
+  ghost.posts.browse({ limit: "all" }).then((posts) => {
+    posts
+      .filter((post) => post.status === "published")
+      .forEach((post) => {
+        console.log(`Processing post: ${post.slug}`);
+        const front_matter = {
+          slug: post.slug,
+          title: post.title,
+          tags: post.tags
+            .filter((tag) => !tag.slug.startsWith("hash-"))
+            .map((tag) => tag.slug),
+        };
+
+        if (post.custom_excerpt) {
+          front_matter.excerpt = post.custom_excerpt;
+        }
+
+        if (post.published_at) {
+          front_matter.published = post.published_at;
+        } else {
+          front_matter.draft = true;
+        }
+
+        if (post.feature_image) {
+          const filename = path.basename(
+            url.parse(post.feature_image).pathname
+          );
+          front_matter.cover = "/content/" + filename;
+          download(post.feature_image, "public/content/" + filename);
+        }
+
+        if (!fs.existsSync(path.join("public", "content", post.slug))) {
+          fs.mkdirSync(path.join("public", "content", post.slug));
+        }
+
+        const content = processMobileDoc(post.slug, JSON.parse(post.mobiledoc));
+        fs.writeFileSync(
+          `content/posts/${post.slug}.md`,
+          "---\n" + yaml.stringify(front_matter) + "---\n\n" + content
+        );
+      });
+  });
+} else {
+  console.error("Expected either 'ghost' or 'post' argument");
+}
