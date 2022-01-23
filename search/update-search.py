@@ -289,6 +289,7 @@ def build_search() -> SearchData:
                 with open(path, "rt") as fp:
                     source = fp.readlines()
                 post, content = split_frontmatter(path, source)
+                post["slug"] = file.replace(".md", "")
                 search_data.add_post(resource == "pages", post, content)
     return search_data
 
