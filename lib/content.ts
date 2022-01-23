@@ -1,84 +1,19 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { parseISO } from "date-fns";
-import { Root } from "mdast";
-import YAML from "yaml";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkGfm from "remark-gfm";
-
-const SHOULD_CACHE =
-  typeof process.env.NO_DATA_CACHE === undefined ? true : false;
-
-export interface SiteNavigation {
-  label: string;
-  url: string;
-}
-
-export async function loadNavigation(): Promise<SiteNavigation[]> {
-  const navPath = path.join(process.cwd(), "content", "navigation.yaml");
-  const navSrc = await fs.readFile(navPath, "utf-8");
-  return YAML.parse(navSrc) as SiteNavigation[];
-}
+import { Node } from "unist";
+import * as hast from "hast";
+import * as mdast from "mdast";
+import { TagId } from "./tags";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
+import matter from "gray-matter";
 
 export interface DocInfo {
   slug: string;
   title: string;
   excerpt: string | null;
   published: string;
-}
-
-export interface Tag {
-  slug: TagId;
-  name: string;
-  visibility?: "public" | "private";
-  description?: string;
-}
-
-export type TagId = string;
-
-export type Tags = { [id: string]: Tag };
-
-var LOADED_TAGS: Tags | undefined = undefined;
-
-export async function loadTags(): Promise<Tags> {
-  if (SHOULD_CACHE && LOADED_TAGS) {
-    return LOADED_TAGS;
-  }
-
-  const tagsPath = path.join(process.cwd(), "content", "tags.yaml");
-  const tagsSrc = await fs.readFile(tagsPath, "utf-8");
-  LOADED_TAGS = YAML.parse(tagsSrc) as Tags;
-
-  Object.keys(LOADED_TAGS).forEach((tag_id) => {
-    const tag = (LOADED_TAGS as Tags)[tag_id];
-
-    if (!tag.slug) {
-      tag.slug = tag_id;
-    }
-
-    if (!tag.name) {
-      tag.name = tag_id;
-    }
-
-    if (!tag.visibility) {
-      tag.visibility = "public";
-    }
-  });
-
-  return LOADED_TAGS;
-}
-
-export async function getTagWithSlug(slug: string): Promise<Tag> {
-  const tags = await loadTags();
-  for (let tag_id in tags) {
-    if (tags[tag_id].slug === slug) {
-      return tags[tag_id];
-    }
-  }
-
-  return Promise.reject("Unable to find tag");
 }
 
 export interface Tagged {
@@ -91,18 +26,17 @@ export interface PostInfo extends DocInfo, Tagged {
 }
 
 export interface Post extends PostInfo {
-  root: Root;
+  content: MDXRemoteSerializeResult;
   preamble: PostPreamble;
 }
 
 export interface Page extends DocInfo {
-  root: Root;
+  content: MDXRemoteSerializeResult;
   preamble: PagePreamble;
 }
 
 export interface Preamble {
   draft?: boolean;
-  slug?: boolean;
   title?: string;
   published?: string;
   excerpt?: string;
@@ -120,197 +54,216 @@ export interface PagePreamble extends Preamble {
   };
 }
 
-interface ProxyNode {
-  type: string;
-  value?: string;
-  position?: any;
-  children?: ProxyNode[];
-}
-
-function stripPositions(node: ProxyNode) {
-  if (node.position) {
-    delete node.position;
+function remarkPlugin() {
+  function transformChildren(node: mdast.Parent) {
+    node.children = node.children.map((child) =>
+      walkNode(child)
+    ) as mdast.Content[];
   }
 
-  if (node.children) {
-    for (let child of node.children) {
-      stripPositions(child);
+  function walkNode(node: Node): Node {
+    switch (node.type) {
+      case "root":
+        transformChildren(node as mdast.Root);
+      case "paragraph": {
+        const paragraph = node as mdast.Paragraph;
+        if (
+          paragraph.children.length === 1 &&
+          paragraph.children[0].type === "image"
+        ) {
+          return walkNode(paragraph.children[0]);
+        } else {
+          transformChildren(paragraph);
+        }
+        break;
+      }
     }
+
+    return node;
   }
+
+  return (tree: Node) => {
+    return walkNode(tree);
+  };
 }
 
-function countWords(node: ProxyNode): number {
-  var count = 0;
-  if (typeof node.value === "string") {
-    count = node.value.split(/\s+/).length;
+function rehypePlugin() {
+  function transformChildren(node: hast.Parent) {
+    node.children = node.children.map((child) =>
+      walkNode(child)
+    ) as hast.Content[];
   }
 
-  if (node.children) {
-    for (let child of node.children) {
-      count += countWords(child);
+  function walkNode(node: Node): Node {
+    switch (node.type) {
+      case "root": {
+        transformChildren(node as hast.Root);
+      }
+
+      case "element": {
+        const element = node as hast.Element;
+        switch (element.tagName) {
+        }
+      }
     }
+
+    return node;
   }
 
-  return count;
+  return (tree: Node) => {
+    walkNode(tree);
+  };
 }
 
-var LOADED_PAGES: Page[] = [];
+const WORD_RE = /[a-zA-Z0-9_-]\w+/;
 
-export async function loadPages(): Promise<Page[]> {
-  if (SHOULD_CACHE && LOADED_PAGES.length > 0) {
-    return LOADED_PAGES;
+function countWords(source: string) {
+  return source.split(/\s+/).filter((word) => WORD_RE.exec(word)).length;
+}
+
+async function loadDocSource<P extends Preamble>(
+  filename: string
+): Promise<{ preamble: P; source: string }> {
+  const source = await fs.readFile(filename, "utf-8");
+  const { content, data } = matter(source, {});
+  return {
+    preamble: data as P,
+    source: content,
+  };
+}
+
+async function loadDoc<P extends Preamble>(
+  filename: string
+): Promise<{
+  preamble: P;
+  wordCount: number;
+  content: MDXRemoteSerializeResult;
+}> {
+  const { preamble, source } = await loadDocSource<P>(filename);
+  return {
+    preamble,
+    wordCount: countWords(source),
+    content: await serialize(source, {
+      scope: preamble as Record<string, any>,
+      mdxOptions: {
+        remarkPlugins: [remarkPlugin],
+        rehypePlugins: [rehypePlugin],
+      },
+    }),
+  };
+}
+
+function processDate(date: string | Date | undefined): string {
+  if (typeof date === "string") {
+    return date;
+  } else if (typeof date === "undefined") {
+    return "2020-01-01T09:00:00.000Z";
+  } else {
+    return date.toISOString();
   }
+}
 
+function processDates(obj: Record<string, any>): Record<string, any> {
+  Object.keys(obj).forEach((key) => {
+    let value = obj[key];
+
+    if (value instanceof Date) {
+      obj[key] = value.toISOString();
+    } else if (typeof value === "object") {
+      obj[key] = processDates(value);
+    }
+  });
+
+  return obj;
+}
+
+function extractDocInfo(filename: string, preamble: PagePreamble): DocInfo {
+  return {
+    slug: path.basename(filename).replace(".md", ""),
+    title: preamble.title || "Untitled",
+    excerpt: preamble.excerpt || null,
+    published: processDate(preamble.published),
+  };
+}
+
+function extractPostInfo(
+  filename: string,
+  preamble: PostPreamble,
+  wordCount: number
+): PostInfo {
+  const obj = extractDocInfo(filename, preamble) as PostInfo;
+  obj.coverImage = preamble.cover || null;
+  obj.readingTime = Math.trunc(wordCount / 200);
+  obj.tags = preamble.tags || [];
+  return obj;
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+
+export async function loadPage(filename: string): Promise<Page> {
+  const { preamble, content } = await loadDoc<PagePreamble>(filename);
+  return {
+    ...extractDocInfo(filename, preamble),
+    preamble: processDates(preamble),
+    content,
+  };
+}
+
+export async function loadPageSlugs(): Promise<string[]> {
   const pagesDir = path.join(process.cwd(), "content", "pages");
   const filenames = await fs.readdir(pagesDir);
 
-  const pages = filenames.map(async (filename) => {
-    // Load the contets of this page file
-    const content = await fs.readFile(path.join(pagesDir, filename), "utf-8");
-
-    // Parse the contents of the post
-    const loaded = unified()
-      .use(remarkParse)
-      .use(remarkFrontmatter)
-      .use(remarkGfm)
-      .parse(content);
-
-    stripPositions(loaded);
-
-    var preamble: PagePreamble | undefined = undefined;
-
-    if (loaded.children.length > 0 && loaded.children[0].type === "yaml") {
-      try {
-        preamble = YAML.parse(loaded.children[0].value);
-      } catch (exc) {
-        console.error(`Failed to parse preamble in ${filename} (${exc}):`);
-        console.log(loaded.children[0].value);
-        throw exc;
-      }
-
-      loaded.children.shift();
-    }
-
-    return {
-      slug: preamble?.slug || path.basename(filename).replace(".md", ""),
-      draft: preamble?.draft || false,
-      title: preamble?.title || "Untitled",
-      published: preamble?.published || "2000-01-01T00:00:00.000Z",
-      excerpt: preamble?.excerpt || null,
-      root: loaded,
-      preamble: preamble,
-    } as Page & { draft: boolean };
-  });
-
-  const loaded_pages = await Promise.all(pages);
-
-  LOADED_PAGES = loaded_pages.filter((page) => !page.draft);
-  return LOADED_PAGES;
+  return filenames.map((filename) =>
+    path.basename(filename).replace(".md", "")
+  );
 }
 
-export async function getPageWithSlug(slug: string): Promise<Page> {
-  const pages = await loadPages();
-  for (let page of pages) {
-    if (page.slug === slug) {
-      return page;
-    }
-  }
-
-  return Promise.reject("Unable to find page");
+export async function loadPageWithSlug(slug: string): Promise<Page> {
+  const pagePath = path.join(process.cwd(), "content", "pages", slug + ".md");
+  return await loadPage(pagePath);
 }
 
-var LOADED_POSTS: Post[] = [];
+// --------------------------------------------------------------------------------------------------------------------
 
-export async function loadPosts(): Promise<Post[]> {
-  if (SHOULD_CACHE && LOADED_POSTS.length > 0) {
-    return LOADED_POSTS;
-  }
+export async function loadPost(filename: string): Promise<Post> {
+  const { preamble, wordCount, content } = await loadDoc<PostPreamble>(
+    filename
+  );
+  return {
+    ...extractPostInfo(filename, preamble, wordCount),
+    preamble: processDates(preamble),
+    content,
+  };
+}
 
-  const tags = await loadTags();
+export async function loadPostSlugs(): Promise<string[]> {
   const postsDir = path.join(process.cwd(), "content", "posts");
   const filenames = await fs.readdir(postsDir);
 
-  const posts = filenames.map(async (filename) => {
-    // Load the contets of this post file
-    const content = await fs.readFile(path.join(postsDir, filename), "utf-8");
-
-    // Parse the contents of the post
-    const loaded = unified()
-      .use(remarkParse)
-      .use(remarkFrontmatter)
-      .use(remarkGfm)
-      .parse(content);
-
-    stripPositions(loaded);
-
-    var preamble: PostPreamble | undefined = undefined;
-
-    if (loaded.children.length > 0 && loaded.children[0].type === "yaml") {
-      try {
-        preamble = YAML.parse(loaded.children[0].value);
-      } catch (exc) {
-        console.error(`Failed to parse preamble in ${filename} (${exc}):`);
-        console.log(loaded.children[0].value);
-        throw exc;
-      }
-
-      loaded.children.shift();
-    }
-
-    return {
-      slug: preamble?.slug || path.basename(filename).replace(".md", ""),
-      draft: preamble?.draft || false,
-      title: preamble?.title || "Untitled",
-      published: preamble?.published || "2000-01-01T00:00:00.000Z",
-      excerpt: preamble?.excerpt || null,
-      coverImage: preamble?.cover || null,
-      tags: preamble?.tags?.filter((tag_id) => {
-        if (!(tag_id in tags)) {
-          console.warn(
-            `Cannot find tag with ID '${tag_id}' in post '${filename}'`
-          );
-          return false;
-        }
-        return true;
-      }),
-      root: loaded,
-      readingTime: Math.ceil(countWords(loaded) / 200),
-      preamble: preamble,
-    } as Post & { draft: boolean };
-  });
-
-  const loaded_posts = await Promise.all(posts);
-
-  LOADED_POSTS = loaded_posts.filter((post) => !post.draft);
-  LOADED_POSTS.sort(
-    (a, b) => parseISO(b.published).getTime() - parseISO(a.published).getTime()
+  return filenames.map((filename) =>
+    path.basename(filename).replace(".md", "")
   );
-
-  return LOADED_POSTS;
 }
 
 export async function loadPostInfos(): Promise<PostInfo[]> {
-  const posts = await loadPosts();
-  return posts.map(
-    ({ slug, title, excerpt, tags, published, readingTime, coverImage }) => ({
-      slug,
-      title,
-      excerpt,
-      tags,
-      published,
-      readingTime,
-      coverImage,
+  const postsDir = path.join(process.cwd(), "content", "posts");
+  const filenames = await fs.readdir(postsDir);
+
+  const posts = await Promise.all(
+    filenames.map(async (filename) => {
+      const { preamble, source } = await loadDocSource<PostPreamble>(
+        path.join(postsDir, filename)
+      );
+      return extractPostInfo(filename, preamble, countWords(source));
     })
+  );
+
+  return posts.sort(
+    (a, b) => parseISO(b.published).getTime() - parseISO(a.published).getTime()
   );
 }
 
-export async function getPostWithSlug(slug: string): Promise<Post> {
-  const posts = await loadPosts();
-  for (let post of posts) {
-    if (post.slug === slug) {
-      return post;
-    }
-  }
-
-  return Promise.reject("Unable to find post");
+export async function loadPostWithSlug(slug: string): Promise<Post> {
+  const postPath = path.join(process.cwd(), "content", "posts", slug + ".md");
+  return await loadPost(postPath);
 }

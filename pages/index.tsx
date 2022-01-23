@@ -5,14 +5,9 @@ import Analytics from "../components/Analytics";
 import { Layout } from "../components/Layout";
 import { PostCards } from "../components/PostCard";
 
-import {
-  SiteNavigation,
-  loadNavigation,
-  Tags,
-  loadTags,
-  PostInfo,
-  loadPostInfos,
-} from "../lib/content";
+import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { Tags, loadTags } from "../lib/tags";
+import { PostInfo, loadPostInfos } from "../lib/content";
 
 export const getStaticProps: GetStaticProps = async () => {
   const tags = await loadTags();

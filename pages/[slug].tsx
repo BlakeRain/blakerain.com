@@ -7,22 +7,17 @@ import {
 } from "next";
 import Head from "next/head";
 import { NextSeo } from "next-seo";
-import {
-  Page,
-  loadPages,
-  getPageWithSlug,
-  SiteNavigation,
-  loadNavigation,
-} from "../lib/content";
+import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { Page, loadPageSlugs, loadPageWithSlug } from "../lib/content";
 import { Layout } from "../components/Layout";
 import { Content } from "../components/Content";
 import Analytics from "../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const pages = await loadPages();
+  const slugs = await loadPageSlugs();
 
   return {
-    paths: pages.map((page) => ({ params: { slug: page.slug } })),
+    paths: slugs.map((slug) => ({ params: { slug } })),
     fallback: false,
   };
 };
@@ -43,7 +38,7 @@ export const getStaticProps: GetStaticProps<
   }
 
   const navigation = await loadNavigation();
-  const page = await getPageWithSlug(context.params?.slug);
+  const page = await loadPageWithSlug(context.params?.slug);
 
   return {
     props: {
@@ -74,7 +69,7 @@ const PageView: NextPage<PageProps> = ({ navigation, page }) => {
           description: page.excerpt || undefined,
         }}
       />
-      <Content doc={page} root={page.root} />
+      <Content doc={page} content={page.content} />
       <Analytics />
     </Layout>
   );

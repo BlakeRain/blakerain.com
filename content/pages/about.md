@@ -1,5 +1,4 @@
 ---
-slug: about
 title: About Me
 published: 2018-10-22T07:21:38.000Z
 excerpt: Some information about me, what I do and have done.

@@ -7,16 +7,9 @@ import {
   NextPage,
 } from "next";
 import Head from "next/head";
-import {
-  SiteNavigation,
-  loadNavigation,
-  Tag,
-  Tags,
-  loadTags,
-  PostInfo,
-  loadPostInfos,
-  getTagWithSlug,
-} from "../../lib/content";
+import { SiteNavigation, loadNavigation } from "../../lib/utils";
+import { Tag, Tags, loadTags, getTagWithSlug } from "../../lib/tags";
+import { PostInfo, loadPostInfos } from "../../lib/content";
 import { Layout } from "../../components/Layout";
 import { PostCards } from "../../components/PostCard";
 import Link from "next/link";

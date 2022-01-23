@@ -1,5 +1,4 @@
 ---
-slug: overlays-with-custom-widgets-in-gtk
 title: Overlays with Custom Widgets in GTK
 tags:
   - python
@@ -298,7 +297,7 @@ The grid appears to be panning as the mouse moves, however we can see that all w
 
 The grid rendering code is quite simple:
 
-```python {"caption": ""}
+```python
 context.set_line_width(1)
 for color, step in [(0.2, 10), (0.3, 100)]:
     context.set_source_rgb(color, color, color)

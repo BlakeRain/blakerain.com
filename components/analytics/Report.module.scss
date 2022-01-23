@@ -42,44 +42,7 @@
 }
 
 .activeTabButton {
-  background-color: white;
-  color: $color-dark-grey;
-}
-
-.reportNavButton {
-  display: inline-block;
-
-  background-color: lighten($primary-background, 20%);
-  color: white;
-
-  border: none;
-  cursor: pointer;
-
-  &:first-of-type {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-  }
-
-  &:last-of-type {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  &:hover {
-    background-color: lighten($primary-background, 30%);
-  }
-}
-
-.reportDate {
-  background-color: lighten($primary-background, 20%);
-  color: white;
-
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-
-  margin-right: 4px;
-
-  border-radius: 5px;
+  background-color: $button-active-background;
 }
 
 .reportContents {
@@ -113,7 +76,7 @@
     padding: 1rem 2rem;
     color: rgba(255, 255, 255, 0.75);
 
-    background-color: $primary-background;
+    background-color: $button-background;
   }
 
   span {
@@ -128,23 +91,6 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .reportDate {
-    background-color: darken($primary-background, 5%);
-  }
-
-  .activeTabButton {
-    background-color: $dark-mode-background;
-    color: white;
-
-    &:hover {
-      background-color: $dark-mode-background;
-    }
-  }
-
-  .reportNavButton {
-    background-color: lighten($primary-background, 10%);
-  }
-
   .reportControls {
     background-color: $color-mid-grey;
   }

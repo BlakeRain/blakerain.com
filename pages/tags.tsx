@@ -4,15 +4,9 @@ import Link from "next/link";
 import React, { FC } from "react";
 import { DateSpan } from "../components/DateSpan";
 import { Layout } from "../components/Layout";
-import {
-  SiteNavigation,
-  loadNavigation,
-  PostInfo,
-  loadPostInfos,
-  Tag,
-  Tags,
-  loadTags,
-} from "../lib/content";
+import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { PostInfo, loadPostInfos } from "../lib/content";
+import { Tag, Tags, loadTags } from "../lib/tags";
 import styles from "./tags.module.scss";
 
 const TagPost: FC<{ post: PostInfo }> = ({ post }) => {

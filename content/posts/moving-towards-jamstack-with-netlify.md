@@ -1,5 +1,4 @@
 ---
-slug: moving-towards-jamstack-with-netlify
 title: Moving Towards JamStack with Netlify
 tags:
   - ghost-tag
@@ -115,6 +114,3 @@ metadata:
   thumbnail: https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70
   icon: https://github.com/fluidicon.png
 ```
-
-
-

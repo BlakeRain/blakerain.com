@@ -1,5 +1,4 @@
 ---
-slug: bitmap-tri-color-marking
 title: Bitmap Tri-Color Marking
 tags:
   - gc

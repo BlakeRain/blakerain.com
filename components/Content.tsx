@@ -2,9 +2,10 @@ import React, { FC } from "react";
 import cn from "classnames";
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 
-import { Root } from "mdast";
-import { DocInfo, Tag } from "../lib/content";
+import { DocInfo } from "../lib/content";
+import { Tag } from "../lib/tags";
 
 import { ScrollToTopButton } from "./ScrollToTop";
 import { PostDetails } from "./PostDetails";
@@ -51,7 +52,10 @@ function getHighlightTerms(search: ParsedUrlQuery): string[] {
 
   return [];
 }
-const ContentBody: FC<{ root: Root }> = ({ root }) => {
+
+const ContentBody: FC<{ content: MDXRemoteSerializeResult }> = ({
+  content,
+}) => {
   const router = useRouter();
   const highlight = getHighlightTerms(router.query);
 
@@ -59,7 +63,7 @@ const ContentBody: FC<{ root: Root }> = ({ root }) => {
     <React.Fragment>
       <div className={cn(styles.content, styles.outer)}>
         <div className={cn(styles.contentInner, styles.inner)}>
-          <Render node={root} highlight={highlight} />
+          <Render content={content} highlight={highlight} />
         </div>
       </div>
       <ScrollToTopButton />
@@ -71,19 +75,19 @@ export interface ContentProps {
   tags?: Tag[];
   doc: DocInfo;
   featureImage?: string;
-  root: Root;
+  content: MDXRemoteSerializeResult;
 }
 
 export const Content: FC<ContentProps> = ({
   tags,
   doc,
   featureImage,
-  root,
+  content,
 }) => {
   return (
     <article className="post">
       <ContentHeader tags={tags} doc={doc} featureImage={featureImage} />
-      <ContentBody root={root} />
+      <ContentBody content={content} />
     </article>
   );
 };

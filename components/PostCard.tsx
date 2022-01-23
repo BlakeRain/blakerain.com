@@ -2,7 +2,8 @@ import { FC } from "react";
 import cn from "classnames";
 import Link from "next/link";
 
-import { PostInfo, Tag, Tags } from "../lib/content";
+import { Tag, Tags } from "../lib/tags";
+import { PostInfo } from "../lib/content";
 import { PostDetails } from "./PostDetails";
 import { TagList } from "./TagList";
 

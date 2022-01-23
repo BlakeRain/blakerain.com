@@ -1,5 +1,4 @@
 ---
-slug: allocating-memory-for-dma-in-linux
 title: Allocating Memory for DMA in Linux
 tags:
   - pci

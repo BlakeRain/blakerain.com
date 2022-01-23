@@ -14,3 +14,7 @@ $color-white-grey: rgb(229, 239, 245);
 $primary-background: rgb(19, 48, 78);
 $dark-mode-primary: rgb(34, 41, 61);
 $dark-mode-background: lighten($color-dark-grey, 2%);
+
+$button-background: lighten($primary-background, 10%);
+$button-active-background: lighten($primary-background, 20%);
+$button-disabled-background: lighten($primary-background, 15%);

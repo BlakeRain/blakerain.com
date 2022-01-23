@@ -1,5 +1,4 @@
 ---
-slug: updated-site-search
 title: Updated Site Search
 tags:
   - ghost-tag

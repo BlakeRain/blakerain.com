@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React, { FC } from "react";
-import { SiteNavigation } from "../lib/content";
+import { SiteNavigation } from "../lib/utils";
 import { Footer } from "./Footer";
 import styles from "./Layout.module.scss";
 import { Navigation } from "./Navigation";

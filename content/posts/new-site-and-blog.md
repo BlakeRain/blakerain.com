@@ -1,5 +1,4 @@
 ---
-slug: new-site-and-blog
 title: New Site and Blog
 tags:
   - ghost-tag

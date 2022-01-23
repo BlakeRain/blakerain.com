@@ -2,21 +2,7 @@ import React, { FC, useContext } from "react";
 import cn from "classnames";
 import YAML from "yaml";
 
-import { Node } from "unist";
-import {
-  Code,
-  Heading,
-  Image,
-  InlineCode,
-  Link,
-  List,
-  Paragraph,
-  Parent,
-  Table,
-  TableRow,
-  Text,
-} from "mdast";
-
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
 import styles from "./Document.module.scss";
 
@@ -67,126 +53,115 @@ function renderHighlight(terms: RegExp, text: string): React.ReactElement {
   }
 }
 
-const RenderChildren: FC<{ node: Parent }> = ({ node }) => {
-  return (
-    <React.Fragment>
-      {node.children.map((child, index) => (
-        <RenderNode key={index.toString()} node={child} />
-      ))}
-    </React.Fragment>
-  );
-};
-
-const RenderText: FC<{ node: Text }> = ({ node }) => {
+const RenderPhrasingChildren: FC = ({ children }) => {
   const highlight = useContext(HighlightContext);
   if (highlight) {
-    return renderHighlight(highlight, node.value);
+    if (typeof children === "undefined") {
+      return null;
+    } else if (typeof children === "string") {
+      return renderHighlight(highlight, children);
+    } else if (children instanceof Array) {
+      return (
+        <>
+          {children.map((child, index) => {
+            if (typeof child === "string") {
+              return (
+                <React.Fragment key={index.toString()}>
+                  {renderHighlight(highlight, child)}
+                </React.Fragment>
+              );
+            } else if (
+              typeof child === "object" &&
+              child.props &&
+              child.props.originalType === "inlineCode"
+            ) {
+              return (
+                <code key={index.toString()}>
+                  {renderHighlight(highlight, child.props.children)}
+                </code>
+              );
+            } else {
+              return child;
+            }
+          })}
+        </>
+      );
+    } else {
+      return <>{children}</>;
+    }
+  } else {
+    return <>{children}</>;
   }
-
-  return <React.Fragment>{(node as Text).value}</React.Fragment>;
 };
 
-const RenderInlineCode: FC<{ node: InlineCode }> = ({ node }) => {
-  const highlight = useContext(HighlightContext);
-  if (highlight) {
-    return <code>{renderHighlight(highlight, node.value)}</code>;
-  }
-
-  return <code>{node.value}</code>;
-};
-
-const RenderParagraph: FC<{ node: Paragraph }> = ({ node }) => {
-  // Handle a special-case where an image is in a paragraph on it's own
-  if (node.children.length === 1 && node.children[0].type === "image") {
-    return <RenderImage node={node.children[0] as Image} />;
-  }
-
+const RenderEmphasis: FC = ({ children }) => {
   return (
-    <p>
-      <RenderChildren node={node} />
-    </p>
+    <em>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+    </em>
   );
 };
 
-const RenderHeading: FC<{ node: Heading }> = ({ node }) => {
-  return React.createElement(
-    `h${node.depth}`,
-    null,
-    <RenderChildren node={node} />
-  );
-};
-
-const RenderTableRow: FC<{ node: TableRow; head?: boolean }> = ({
-  node,
-  head,
-}) => {
+const RenderStrong: FC = ({ children }) => {
   return (
-    <tr>
-      {node.children.map((cell, index) =>
-        React.createElement(
-          head ? "th" : "td",
-          { key: index.toString() },
-          <RenderChildren node={cell} />
-        )
-      )}
-    </tr>
+    <em>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+    </em>
   );
 };
 
-const RenderTable: FC<{ node: Table }> = ({ node }) => {
-  const [head_row, ...rows] = node.children;
-
-  const head = (
-    <thead>
-      <RenderTableRow node={head_row as TableRow} head />
-    </thead>
-  );
-
-  const body = (
-    <tbody>
-      {rows.map((row, index) => (
-        <RenderTableRow key={index.toString()} node={row as TableRow} />
-      ))}
-    </tbody>
-  );
-
+const RenderListItem: FC = ({ children }) => {
   return (
-    <table>
-      {head}
-      {body}
-    </table>
+    <li>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+    </li>
   );
 };
 
-const RenderList: FC<{ node: List }> = ({ node }) => {
-  const attrs = { start: node.start };
-  return React.createElement(
-    node.ordered ? "ol" : "ul",
-    attrs,
-    <RenderChildren node={node} />
-  );
-};
-
-const RenderLink: FC<{ node: Link }> = ({ node }) => {
+const RenderLink: FC<{ href: string }> = ({ href, children }) => {
   return (
-    <a href={node.url} title={node.title || undefined}>
-      <RenderChildren node={node} />
+    <a href={href}>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
     </a>
   );
 };
 
-const RenderImage: FC<{ node: Image }> = ({ node }) => {
-  const query_index = node.url.indexOf("?");
-  const params = new URLSearchParams(
-    query_index === -1
-      ? undefined
-      : new URLSearchParams(node.url.substr(query_index))
+const RenderParagraph: FC = ({ children }) => {
+  return (
+    <p>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+    </p>
   );
-  const wide = Boolean(params.get("wide"));
-  const full = Boolean(params.get("full"));
+};
+
+const RenderBlockQuote: FC = ({ children }) => {
+  return (
+    <blockquote>
+      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+    </blockquote>
+  );
+};
+
+function createHeading(level: number): FC {
+  return function headingFunction(props) {
+    return React.createElement(
+      `h${level}`,
+      null,
+      <RenderPhrasingChildren>{props.children}</RenderPhrasingChildren>
+    );
+  };
+}
+
+const RenderImage: FC<{ src: string }> = (props) => {
+  const query_index = props.src.indexOf("?");
+  const params = new URLSearchParams(
+    query_index === -1 ? undefined : props.src.substring(query_index)
+  );
   const width = params.get("width");
   const height = params.get("height");
   const caption = params.get("caption");
+  const wide = Boolean(params.get("wide"));
+  const full = Boolean(params.get("full"));
 
   return (
     <figure
@@ -200,7 +175,7 @@ const RenderImage: FC<{ node: Image }> = ({ node }) => {
         loading="lazy"
         width={width || undefined}
         height={height || undefined}
-        src={node.url}
+        src={props.src}
       />
       {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
     </figure>
@@ -220,8 +195,10 @@ interface BookmarkProps {
   };
 }
 
-const RenderBookmark: FC<{ node: Code }> = ({ node }) => {
-  const { url, metadata } = YAML.parse(node.value) as BookmarkProps;
+const RenderBookmark: FC = (props) => {
+  const { url, metadata } = YAML.parse(
+    props.children as string
+  ) as BookmarkProps;
 
   return (
     <figure className={styles.bookmark}>
@@ -303,11 +280,15 @@ function getCodeRenderer(search: RegExp | null): CodeRenderer {
   };
 }
 
-const RenderCode: FC<{ node: Code }> = ({ node }) => {
+const RenderCode: FC<{ className: string; metastring?: string }> = (props) => {
   const highlight = useContext(HighlightContext);
-  const meta = typeof node.meta === "string" ? JSON.parse(node.meta) : {};
+  const meta =
+    typeof props.metastring === "string" ? JSON.parse(props.metastring) : {};
   const caption = meta["caption"];
-  const syntax = typeof node.lang === "string" && node.lang !== "box-drawing";
+  const syntax =
+    typeof props.className === "string" &&
+    props.className !== "language-box-drawing";
+  const content = props.children as string;
 
   return (
     <figure
@@ -319,14 +300,16 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
         <SyntaxHighlighter
           useInlineStyles={false}
           showLineNumbers={true}
-          language={node.lang || undefined}
+          language={props.className.replace("language-", "") || undefined}
           renderer={getCodeRenderer(highlight)}
         >
-          {node.value}
+          {content.endsWith("\n")
+            ? content.substring(0, content.length - 1)
+            : content}
         </SyntaxHighlighter>
       ) : (
         <pre>
-          <code>{node.value}</code>
+          <code>{props.children}</code>
         </pre>
       )}
       {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
@@ -334,75 +317,27 @@ const RenderCode: FC<{ node: Code }> = ({ node }) => {
   );
 };
 
-export const RenderNode: FC<{ node: Node }> = ({ node }) => {
-  switch (node.type) {
-    case "root":
-      return <RenderChildren node={node as Parent} />;
-    case "text":
-      return <RenderText node={node as Text} />;
-    case "paragraph":
-      return <RenderParagraph node={node as Paragraph} />;
-    case "heading":
-      return <RenderHeading node={node as Heading} />;
-    case "table":
-      return <RenderTable node={node as Table} />;
-    case "list":
-      return <RenderList node={node as List} />;
-    case "link":
-      return <RenderLink node={node as Link} />;
-    case "image":
-      return <RenderImage node={node as Image} />;
-    case "code":
-      switch ((node as Code).lang) {
-        case "bookmark":
-          return <RenderBookmark node={node as Code} />;
-        case "raw_html":
-          return (
-            <div dangerouslySetInnerHTML={{ __html: (node as Code).value }} />
-          );
-        default:
-          return <RenderCode node={node as Code} />;
-      }
-
-    case "listItem":
+const SelectCodeBlock: FC<{ className: string }> = (props) => {
+  switch (props.className) {
+    case "language-bookmark":
+      return <RenderBookmark {...props} />;
+    case "language-raw_html":
       return (
-        <li>
-          <RenderChildren node={node as Parent} />
-        </li>
+        <div dangerouslySetInnerHTML={{ __html: props.children as string }} />
       );
-
-    case "inlineCode":
-      return <RenderInlineCode node={node as InlineCode} />;
-    case "emphasis":
-      return (
-        <em>
-          <RenderChildren node={node as Parent} />
-        </em>
-      );
-    case "strong":
-      return (
-        <strong>
-          <RenderChildren node={node as Parent} />
-        </strong>
-      );
-    case "blockquote":
-      return (
-        <blockquote>
-          <RenderChildren node={node as Parent} />
-        </blockquote>
-      );
-
     default:
-      console.warn(`Unrecognized node type: '${node.type}'`);
-
-      return null;
+      return <RenderCode {...props} />;
   }
 };
 
-export const Render: FC<{ node: Node; highlight?: string[] }> = ({
-  node,
-  highlight,
-}) => {
+const SelectPre: FC = (props) => {
+  return <>{props.children}</>;
+};
+
+export const Render: FC<{
+  content: MDXRemoteSerializeResult;
+  highlight?: string[];
+}> = ({ content, highlight }) => {
   const highlight_regex =
     typeof highlight !== "undefined" && highlight.length > 0
       ? new RegExp(highlight.join("|"), "mig")
@@ -410,7 +345,27 @@ export const Render: FC<{ node: Node; highlight?: string[] }> = ({
 
   return (
     <HighlightContext.Provider value={highlight_regex}>
-      <RenderNode node={node} />
+      {" "}
+      <MDXRemote
+        {...content}
+        components={{
+          code: SelectCodeBlock,
+          pre: SelectPre,
+          img: RenderImage,
+          p: RenderParagraph,
+          blockquote: RenderBlockQuote,
+          em: RenderEmphasis,
+          strong: RenderStrong,
+          li: RenderListItem,
+          a: RenderLink,
+          h1: createHeading(1),
+          h2: createHeading(2),
+          h3: createHeading(3),
+          h4: createHeading(4),
+          h5: createHeading(5),
+          h6: createHeading(6),
+        }}
+      />
     </HighlightContext.Provider>
   );
 };

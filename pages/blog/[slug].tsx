@@ -7,20 +7,13 @@ import {
 } from "next";
 import Head from "next/head";
 import { NextSeo } from "next-seo";
-import {
-  SiteNavigation,
-  loadNavigation,
-  Post,
-  loadPostInfos,
-  getPostWithSlug,
-  Tag,
-  loadTags,
-} from "../../lib/content";
+import { SiteNavigation, loadNavigation } from "../../lib/utils";
+import { Post, loadPostSlugs, loadPostWithSlug } from "../../lib/content";
+import { Tag, loadTags } from "../../lib/tags";
 import { Layout } from "../../components/Layout";
 import { Content } from "../../components/Content";
 import { useEffect, useRef } from "react";
 import Analytics from "../../components/Analytics";
-// import Metadata from "../../components/Metadata";
 
 interface BlogPostProps {
   enableCommento: boolean;
@@ -30,10 +23,10 @@ interface BlogPostProps {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await loadPostInfos();
+  const slugs = await loadPostSlugs();
 
   return {
-    paths: posts.map((post) => ({ params: { slug: post.slug } })),
+    paths: slugs.map((slug) => ({ params: { slug } })),
     fallback: false,
   };
 };
@@ -50,7 +43,7 @@ export const getStaticProps: GetStaticProps<
 
   const navigation = await loadNavigation();
   const tags = await loadTags();
-  const post = await getPostWithSlug(context.params?.slug);
+  const post = await loadPostWithSlug(context.params?.slug);
 
   return {
     props: {
@@ -118,7 +111,7 @@ const BlogPost: NextPage<BlogPostProps> = ({
       <Content
         tags={tags}
         doc={post}
-        root={post.root}
+        content={post.content}
         featureImage={post.coverImage || undefined}
       />
       <Analytics />

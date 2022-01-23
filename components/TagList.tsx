@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Link from "next/link";
-import { Tag } from "../lib/content";
+import { Tag } from "../lib/tags";
 import cn from "classnames";
 import styles from "./TagList.module.scss";
 

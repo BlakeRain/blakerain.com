@@ -57,7 +57,7 @@ h6 {
 }
 
 button {
-  background-color: lighten($primary-background, 25%);
+  background-color: $button-background;
 
   cursor: pointer;
 
@@ -71,7 +71,7 @@ button {
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: lighten($primary-background, 35%);
+    background-color: $button-active-background;
   }
 
   &:disabled {

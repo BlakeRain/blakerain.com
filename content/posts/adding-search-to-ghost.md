@@ -1,5 +1,4 @@
 ---
-slug: adding-search-to-ghost
 title: Adding Search to Ghost
 tags:
   - ghost-tag

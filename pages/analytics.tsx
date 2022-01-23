@@ -6,7 +6,7 @@ import cn from "classnames";
 
 import ClientOnly from "../components/ClientOnly";
 import { Layout } from "../components/Layout";
-import { loadNavigation, SiteNavigation } from "../lib/content";
+import { loadNavigation, SiteNavigation } from "../lib/utils";
 import { getSessionToken, setSessionToken } from "../lib/analytics";
 
 import styles from "../components/analytics/Report.module.scss";
