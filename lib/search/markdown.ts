@@ -9,7 +9,6 @@ export class MarkdownExtractor {
     }
 
     if (block.length > 0) {
-      console.log(`Adding block: ${block}`);
       this.blocks.push(block);
     }
   }
