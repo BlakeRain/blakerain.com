@@ -33,6 +33,7 @@
     "@types/classnames": "^2.3.1",
     "@types/mark.js": "^8.11.7",
     "@types/mdast": "^3.0.10",
+    "@types/node": "^17.0.13",
     "@types/react": "17.0.38",
     "@types/react-syntax-highlighter": "^13.5.2",
     "eslint": "8.7.0",
