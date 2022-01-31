@@ -8,6 +8,7 @@ import { TagId } from "./tags";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 import matter from "gray-matter";
+import { IndexBuilder, PreparedIndex } from "./search";
 
 export interface DocInfo {
   slug: string;
@@ -136,12 +137,14 @@ async function loadDoc<P extends Preamble>(
   filename: string
 ): Promise<{
   preamble: P;
+  source: string;
   wordCount: number;
   content: MDXRemoteSerializeResult;
 }> {
   const { preamble, source } = await loadDocSource<P>(filename);
   return {
     preamble,
+    source,
     wordCount: countWords(source),
     content: await serialize(source, {
       scope: preamble as Record<string, any>,
@@ -266,4 +269,32 @@ export async function loadPostInfos(): Promise<PostInfo[]> {
 export async function loadPostWithSlug(slug: string): Promise<Post> {
   const postPath = path.join(process.cwd(), "content", "posts", slug + ".md");
   return await loadPost(postPath);
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+
+export async function buildSearchIndex(): Promise<PreparedIndex> {
+  const index = new IndexBuilder();
+
+  const pagesDir = path.join(process.cwd(), "content", "pages");
+  for (let filename of await fs.readdir(pagesDir)) {
+    const { preamble, source } = await loadDocSource(
+      path.join(pagesDir, filename)
+    );
+
+    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
+    index.addDocument(true, slug, title, excerpt || "", source);
+  }
+
+  const postsDir = path.join(process.cwd(), "content", "posts");
+  for (let filename of await fs.readdir(postsDir)) {
+    const { preamble, source } = await loadDocSource(
+      path.join(postsDir, filename)
+    );
+
+    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
+    index.addDocument(false, slug, title, excerpt || "", source);
+  }
+
+  return index.prepare();
 }
