@@ -7,7 +7,6 @@ import { PreparedIndex } from "../lib/search/index";
 import { buildSearchIndex } from "../lib/content";
 
 async function writeIndex(filename: string, index: PreparedIndex) {
-  index.describe();
   const encoder = new Encoder();
   index.encode(encoder);
   return fs.writeFile(
