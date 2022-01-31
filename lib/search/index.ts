@@ -1,7 +1,7 @@
 import { Decoder, Encoder } from "./store";
 import { IndexTerm } from "./term";
 import { Trie, TrieNode, TrieNodeVisitor } from "./trie";
-import { STEM_WORDS } from "./stem";
+import { stemmer, STEM_WORDS } from "./stem";
 import { MarkdownExtractor } from "./markdown";
 
 const MAGIC = 0x53524348;
@@ -13,6 +13,10 @@ export class IndexDocument {
   public slug: string;
   public title: string;
   public excerpt: string;
+
+  public get url(): string {
+    return this.page ? `/${this.slug}` : `/blog/${this.slug}`;
+  }
 
   constructor(
     page: boolean,
@@ -67,7 +71,11 @@ export class IndexBuilder {
 
   public addTermsFrom(input: string, key: number) {
     for (let match of [...input.matchAll(WORD_RE)]) {
-      const term = match[0].toLowerCase();
+      const term = stemmer(match[0].toLowerCase());
+
+      if (term.length === 0) {
+        continue;
+      }
 
       if (STEM_WORDS.includes(term)) {
         continue;
@@ -125,6 +133,10 @@ export class PreparedIndex {
       docId: number;
       termFreqs: { [key: string]: number };
     }
+
+    terms = terms
+      .map((term) => stemmer(term))
+      .filter((term) => term.length > 0 && !STEM_WORDS.includes(term));
 
     const term_docs: { [doc_id: string]: DocResult } = {};
     terms.forEach((term) => {

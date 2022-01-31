@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { SearchChildProps } from "./SearchProvider";
 import styles from "./SearchDialog.module.scss";
-import { SearchResult, SearchPost } from "./SearchData";
+import {
+  SearchResult,
+  PreparedIndex,
+  IndexDocument,
+} from "../../lib/search/index";
 
 interface ExtSearchResult extends SearchResult {
   current: boolean;
@@ -45,7 +49,7 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
         ({
           ...result,
           index,
-          current: result.post.url === location.pathname,
+          current: result.document.url === location.pathname,
         } as ExtSearchResult)
     );
 
@@ -91,7 +95,7 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       event.preventDefault();
       if (active !== -1) {
         props.setSearchVisible(false);
-        router.push(searchResults[active].post.url + query);
+        router.push(searchResults[active].document.url + query);
       }
     }
   };
@@ -111,7 +115,7 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
     );
   } else {
     const SearchLink: FC<{
-      post: SearchPost;
+      post: IndexDocument;
       index: number;
     }> = ({ post, index }) => {
       return (
@@ -124,7 +128,10 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
               props.setSearchVisible(false);
             }}
           >
-            <div className={styles.column}>{post.title}</div>
+            <div className={styles.column}>
+              <div className={styles.postTitle}>{post.title}</div>
+              <div className={styles.postExcerpt}>{post.excerpt}</div>
+            </div>
           </a>
         </Link>
       );
@@ -134,7 +141,7 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       const link = (
         <SearchLink
           key={index.toString()}
-          post={result.post}
+          post={result.document}
           index={result.index}
         />
       );
