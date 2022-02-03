@@ -53,8 +53,7 @@ Resources:
                 - yarn install
             build:
               commands:
-                - pip3 install -r search/requirements.txt
-                - python3 search/update-search.py
+                - yarn run index
                 - yarn run build
                 - yarn run export
           artifacts:

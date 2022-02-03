@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { SearchData } from "./SearchData";
+import { Decoder } from "../../lib/search/store";
+import { PreparedIndex } from "../../lib/search/index";
 
 // The URL from which we load the search data.
 const SEARCH_DATA_URL = "/data/search.bin";
@@ -8,7 +9,7 @@ const SEARCH_DATA_URL = "/data/search.bin";
  * Properties for a child of SearchProvider
  */
 export interface SearchChildProps {
-  searchData: SearchData | null;
+  searchData: PreparedIndex | null;
   searchVisible: boolean;
   setSearchVisible: (visible: boolean) => void;
 }
@@ -48,7 +49,7 @@ type SearchProviderType<CP> = FC<SearchProviderProps<CP>>;
  */
 export const SearchProvider: SearchProviderType<any> = (props) => {
   const Child = props.child;
-  const searchData = useRef<SearchData | null>(null);
+  const searchData = useRef<PreparedIndex | null>(null);
   const [searchVisible, setSearchVisible] = useState(false);
 
   // Load the search data from the URL, decode it and store the result in 'searchData'. This
@@ -69,7 +70,9 @@ export const SearchProvider: SearchProviderType<any> = (props) => {
                 // We have the search data as an 'ArrayBuffer', so we can construct a new
                 // 'SearchData' which will parse the data. We assign this as the current value
                 // of the 'searchData' reference, which means we won't try and load again.
-                searchData.current = new SearchData(buffer);
+                searchData.current = new PreparedIndex();
+                searchData.current.decode(new Decoder(buffer));
+
                 resolve();
               })
               .catch((err) => {
