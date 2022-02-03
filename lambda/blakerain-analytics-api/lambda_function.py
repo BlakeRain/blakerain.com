@@ -25,6 +25,15 @@ PASSWORD_HASH_ITERATIONS = 100_000
 DDB = boto3.client("dynamodb")
 
 
+def zero_pad(value, length: int = 2) -> str:
+    if isinstance(value, str):
+        if len(value) < length:
+            return ("0" * (length - len(value))) + value
+    elif isinstance(value, int):
+        return zero_pad(str(value), length)
+    return value
+
+
 def standard_response(status: int, body, content_type: str = "application/json"):
     return {
         "statusCode": status,
@@ -278,7 +287,7 @@ def handle_views_week(request: Request) -> Dict[str, Any]:
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
                         ":v1": {"S": "site"},
-                        ":v2": {"S": f"Week-{year}-{week}-"}
+                        ":v2": {"S": f"Week-{year}-{zero_pad(week)}-"}
                     })
 
     def map_item(item):
@@ -315,7 +324,7 @@ def handle_views_month(request: Request) -> Dict[str, Any]:
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
                         ":v1": {"S": "site"},
-                        ":v2": {"S": f"Month-{year}-{month}-"}
+                        ":v2": {"S": f"Month-{year}-{zero_pad(month)}-"}
                     })
 
     def map_item(item):
@@ -352,7 +361,7 @@ def handle_browsers_week(request: Request) -> Dict[str, Any]:
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
                         ":v1": {"S": "browser"},
-                        ":v2": {"S": f"Week-{year}-{week}-"}
+                        ":v2": {"S": f"Week-{year}-{zero_pad(week)}-"}
                     })
 
     def map_item(item):
@@ -391,7 +400,7 @@ def handle_browsers_month(request: Request) -> Dict[str, Any]:
                     ExpressionAttributeNames={"#P": "Path", "#S": "Section"},
                     ExpressionAttributeValues={
                         ":v1": {"S": "browser"},
-                        ":v2": {"S": f"Month-{year}-{month}-"}
+                        ":v2": {"S": f"Month-{year}-{zero_pad(month)}-"}
                     })
 
     def map_item(item):
