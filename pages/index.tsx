@@ -6,7 +6,7 @@ import { Layout } from "../components/Layout";
 import { PostCards } from "../components/PostCard";
 
 import { SiteNavigation, loadNavigation } from "../lib/utils";
-import { Tags, loadTags } from "../lib/tags";
+import { Tag, Tags, loadTags } from "../lib/tags";
 import { PostInfo, loadPostInfos } from "../lib/content";
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -17,7 +17,7 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       navigation,
-      tags,
+      tags: Object.fromEntries(tags),
       posts,
     },
   };
@@ -25,7 +25,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
 const Home: NextPage<{
   navigation: SiteNavigation[];
-  tags: Tags;
+  tags: { [slug: string]: Tag };
   posts: PostInfo[];
 }> = ({ navigation, tags, posts }) => {
   return (
@@ -33,7 +33,7 @@ const Home: NextPage<{
       <Head>
         <title>Blake Rain</title>
       </Head>
-      <PostCards feature posts={posts} tags={tags} />
+      <PostCards feature posts={posts} tags={new Map(Object.entries(tags))} />
       <Analytics />
     </Layout>
   );

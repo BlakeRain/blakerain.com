@@ -11,12 +11,13 @@ export interface Tag {
   description?: string;
 }
 
-export type Tags = { [id: string]: Tag };
+export type Tags = Map<string, Tag>;
 
 export async function loadTags(): Promise<Tags> {
   const tagsPath = path.join(process.cwd(), "content", "tags.yaml");
   const tagsSrc = await fs.readFile(tagsPath, "utf-8");
-  const tags = yaml.parse(tagsSrc) as Tags;
+  const tags = yaml.parse(tagsSrc) as { [key: string]: Tag };
+  const res: Tags = new Map();
 
   Object.keys(tags).forEach((tag_id) => {
     const tag = tags[tag_id];
@@ -32,16 +33,18 @@ export async function loadTags(): Promise<Tags> {
     if (!tag.visibility) {
       tag.visibility = "public";
     }
+
+    res.set(tag_id, tag);
   });
 
-  return tags;
+  return res;
 }
 
 export async function getTagWithSlug(slug: string): Promise<Tag> {
   const tags = await loadTags();
-  for (let tag_id in tags) {
-    if (tags[tag_id].slug === slug) {
-      return tags[tag_id];
+  for (let tag of tags.values()) {
+    if (tag.slug === slug) {
+      return tag;
     }
   }
 

@@ -6,7 +6,7 @@ import { DateSpan } from "../components/DateSpan";
 import { Layout } from "../components/Layout";
 import { SiteNavigation, loadNavigation } from "../lib/utils";
 import { PostInfo, loadPostInfos } from "../lib/content";
-import { Tag, Tags, loadTags } from "../lib/tags";
+import { Tag, loadTags } from "../lib/tags";
 import styles from "./tags.module.scss";
 
 const TagPost: FC<{ post: PostInfo }> = ({ post }) => {
@@ -48,17 +48,20 @@ const TagInfo: FC<{ tag: Tag; posts: PostInfo[] }> = ({ tag, posts }) => {
 };
 
 const TagList: FC<{
-  tags: Tags;
+  tags: { [slug: string]: Tag };
   posts: PostInfo[];
   navigation: SiteNavigation[];
 }> = ({ tags, posts, navigation }) => {
-  const binned_tags: { tag: Tag; posts: PostInfo[] }[] = Object.keys(tags)
-    .map((key) => tags[key])
-    .map((tag) => ({
+  let binned_tags: { tag: Tag; posts: PostInfo[] }[] = [];
+  for (const tag of new Map(Object.entries(tags)).values()) {
+    binned_tags.push({
       tag,
-      posts: posts.filter((post) => post.tags.indexOf(tag.slug) !== -1),
-    }))
-    .filter((tag) => tag.posts.length > 0)
+      posts: posts.filter((post) => post.tags.includes(tag.slug)),
+    });
+  }
+
+  binned_tags = binned_tags
+    .filter((bin) => bin.posts.length > 0)
     .sort((a, b) => b.posts.length - a.posts.length);
 
   return (
@@ -66,7 +69,7 @@ const TagList: FC<{
       <Head>
         <title>Tags</title>
       </Head>
-      <h1>There are {tags.length} tags on this site</h1>
+      <h1>There are {tags.size} tags on this site</h1>
       <div className={styles.list}>
         {binned_tags.map((tag, index) => (
           <TagInfo key={index.toString()} {...tag} />

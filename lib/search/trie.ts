@@ -9,7 +9,7 @@ import { IndexTerm } from "./term";
  *
  * This is used to represent the number of times that a given term occurrs in a particular document.
  */
-export type Occurrences = { [key: string]: number };
+export type Occurrences = Map<number, number>;
 
 /**
  * A node in an index trie
@@ -19,8 +19,8 @@ export type Occurrences = { [key: string]: number };
  */
 export class TrieNode {
   public key: number;
-  public children: { [code: string]: TrieNode } = {};
-  public occurrences: Occurrences = {};
+  public children: Map<number, TrieNode> = new Map();
+  public occurrences: Occurrences = new Map();
 
   constructor(key: number) {
     this.key = key;
@@ -34,9 +34,11 @@ export class TrieNode {
    */
   visit(visitor: TrieNodeVisitor) {
     visitor.enterNode(this);
-    Object.keys(this.children).forEach((child_key) => {
-      this.children[child_key].visit(visitor);
-    });
+
+    for (const child of this.children.values()) {
+      child.visit(visitor);
+    }
+
     visitor.leaveNode(this);
   }
 
@@ -63,10 +65,10 @@ export class TrieNode {
     this.key = key >> 2;
 
     if (key & 0x02) {
-      const noccurrences = decoder.decode7();
-      for (var i = 0; i < noccurrences; ++i) {
+      let noccurrences = decoder.decode7();
+      while (noccurrences-- > 0) {
         const documentKey = decoder.decode7();
-        this.occurrences[documentKey] = decoder.decode7();
+        this.occurrences.set(documentKey, decoder.decode7());
       }
     }
 
@@ -103,14 +105,16 @@ export class Trie {
   insertTerm(term: IndexTerm) {
     var node = this.root;
     for (let cp of term.term) {
-      if (!(cp in node.children)) {
-        node.children[cp] = new TrieNode(cp);
+      let child = node.children.get(cp);
+      if (!child) {
+        child = new TrieNode(cp);
+        node.children.set(cp, child);
       }
 
-      node = node.children[cp];
+      node = child;
     }
 
-    node.occurrences = Object.assign({}, term.occurrences);
+    node.occurrences = term.occurrences;
   }
 
   /**
@@ -124,22 +128,23 @@ export class Trie {
    * @param prefix The prefix to search for
    * @returns A collection of term occurrences for the given prefix
    */
-  findTerm(prefix: string): Occurrences {
+  findTerm(prefix: string): Occurrences | undefined {
     var node = this.root;
 
     for (let code of new TextEncoder().encode(prefix)) {
-      if (node && code in node.children) {
-        node = node.children[code];
-      } else {
-        return {};
+      const child = node.children.get(code);
+      if (!child) {
+        return undefined;
       }
+
+      node = child;
     }
 
     if (!node) {
-      return {};
+      return undefined;
     }
 
-    var occurrences = {};
+    const occurrences = new Map();
     this.findOccurrences(node, occurrences);
     return occurrences;
   }
@@ -154,16 +159,17 @@ export class Trie {
    * @param occurrs The set of occurrences to update
    */
   findOccurrences(node: TrieNode, occurrs: Occurrences) {
-    Object.keys(node.occurrences).forEach((key) => {
-      if (key in occurrs) {
-        occurrs[key] += node.occurrences[key];
+    for (const [key, value] of node.occurrences) {
+      const count = occurrs.get(key);
+      if (!count) {
+        occurrs.set(key, value);
       } else {
-        occurrs[key] = node.occurrences[key];
+        occurrs.set(key, count + value);
       }
-    });
+    }
 
-    for (var code in node.children) {
-      this.findOccurrences(node.children[code], occurrs);
+    for (const child of node.children.values()) {
+      this.findOccurrences(child, occurrs);
     }
   }
 
@@ -258,7 +264,7 @@ export class Trie {
       }
 
       if (parent) {
-        parent.children[node.key] = node;
+        parent.children.set(node.key, node);
       }
 
       if (!hasChildren) {
@@ -308,12 +314,11 @@ class StorageTrieNodeVisitor implements TrieNodeVisitor {
     // Tag the TrieNode key with some flags
     var key = node.key << 2;
 
-    if (Object.keys(node.children).length > 0) {
+    if (node.children.size > 0) {
       key |= 0x01;
     }
 
-    const occurrKeys = Object.keys(node.occurrences);
-    if (occurrKeys.length > 0) {
+    if (node.occurrences.size > 0) {
       key |= 0x02;
     }
 
@@ -321,11 +326,11 @@ class StorageTrieNodeVisitor implements TrieNodeVisitor {
     this.encoder.encode7(key);
 
     // If this node has occurrences, store them
-    if (occurrKeys.length > 0) {
-      this.encoder.encode7(occurrKeys.length);
-      for (let occurrKey of occurrKeys) {
-        this.encoder.encode7(parseInt(occurrKey));
-        this.encoder.encode7(node.occurrences[occurrKey]);
+    if (node.occurrences.size > 0) {
+      this.encoder.encode7(node.occurrences.size);
+      for (const [key, value] of node.occurrences) {
+        this.encoder.encode7(key);
+        this.encoder.encode7(value);
       }
     }
   }

@@ -50,7 +50,13 @@ export const PostCards: FC<{
           key={index.toString()}
           post={post}
           large={Boolean(feature) && index === 0 && posts.length > 2}
-          tags={post.tags.map((tag) => tags[tag])}
+          tags={post.tags.reduce((acc, tag_slug) => {
+            const tag = tags.get(tag_slug);
+            if (tag) {
+              acc.push(tag);
+            }
+            return acc;
+          }, [] as Tag[])}
         />
       ))}
     </div>

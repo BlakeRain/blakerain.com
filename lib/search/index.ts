@@ -56,7 +56,7 @@ export class IndexDocument {
 }
 
 export class IndexBuilder {
-  public documents: { [id: string]: IndexDocument } = {};
+  public documents: Map<number, IndexDocument> = new Map();
   public terms: Map<string, IndexTerm> = new Map();
 
   public addTerm(term: string, key: number) {
@@ -92,10 +92,10 @@ export class IndexBuilder {
     excerpt: string,
     content: string
   ): IndexDocument {
-    const id = Object.keys(this.documents).length;
+    const id = this.documents.size;
     const doc = new IndexDocument(page, id, slug, title, excerpt);
 
-    this.documents[id] = doc;
+    this.documents.set(id, doc);
     this.addTermsFrom(doc.excerpt, id);
 
     for (let block of MarkdownExtractor.extract(content)) {
@@ -116,12 +116,12 @@ export interface SearchResult {
 }
 
 export class PreparedIndex {
-  private documents: { [id: string]: IndexDocument } = {};
+  private documents: Map<number, IndexDocument> = new Map();
   private trie: Trie = new Trie();
 
   constructor(builder?: IndexBuilder) {
     if (builder) {
-      this.documents = Object.assign({}, builder.documents);
+      this.documents = builder.documents;
       for (let [_, value] of builder.terms) {
         this.trie.insertTerm(value);
       }
@@ -131,74 +131,84 @@ export class PreparedIndex {
   search(terms: string[]): SearchResult[] {
     interface DocResult {
       docId: number;
-      termFreqs: { [key: string]: number };
+      termFreqs: Map<string, number>;
     }
 
     terms = terms
       .map((term) => stemmer(term))
       .filter((term) => term.length > 0 && !STEM_WORDS.includes(term));
 
-    const term_docs: { [doc_id: string]: DocResult } = {};
+    const term_docs: Map<number, DocResult> = new Map();
     terms.forEach((term) => {
+      // See if we have any occurrences for this term
       const occs = this.trie.findTerm(term);
-      Object.keys(occs).forEach((doc_id) => {
-        if (doc_id in term_docs) {
-          term_docs[doc_id].termFreqs[term] += occs[doc_id];
-        } else {
-          term_docs[doc_id] = {
-            docId: parseInt(doc_id),
-            termFreqs: terms.reduce((freqs, t) => {
-              freqs[t] = t === term ? occs[doc_id] : 0;
-              return freqs;
-            }, {} as { [key: string]: number }),
-          };
+
+      if (occs) {
+        // Iterate over the occurrence results and merge them into 'term_docs'
+        for (const [doc_id, occ] of occs) {
+          // Get the current aggregated occurrences
+          let doc_res = term_docs.get(doc_id);
+
+          // If we don't have a 'DocResult' for this document, create a new
+          // one, and add it to 'term_docs'.
+          if (!doc_res) {
+            doc_res = { docId: doc_id, termFreqs: new Map() };
+            for (let term of terms) {
+              doc_res.termFreqs.set(term, 0);
+            }
+
+            term_docs.set(doc_id, doc_res);
+          }
+
+          // Add the occurrence of this term into this 'DocResult'
+          const freq = doc_res.termFreqs.get(term);
+          doc_res.termFreqs.set(term, occ + (freq || 0));
         }
-      });
-    });
-
-    const term_freqs = terms.reduce((freqs, term) => {
-      freqs[term] = 0;
-      return freqs;
-    }, {} as { [term: string]: number });
-
-    Object.keys(term_docs).forEach((doc_id) => {
-      const doc = term_docs[doc_id];
-      for (let term of terms) {
-        term_freqs[term] += doc.termFreqs[term];
       }
     });
 
-    const doc_count = Object.keys(this.documents).length;
+    const term_freqs = terms.reduce((freqs, term) => {
+      freqs.set(term, 0);
+      return freqs;
+    }, new Map<string, number>());
+
+    for (const doc of term_docs.values()) {
+      for (let term of terms) {
+        const count = term_freqs.get(term);
+        term_freqs.set(term, (count || 0) + (doc.termFreqs.get(term) || 0));
+      }
+    }
+
+    const doc_count = this.documents.size;
     terms.forEach((term) => {
-      term_freqs[term] = Math.log10(doc_count / term_freqs[term]);
+      const count = term_freqs.get(term) || 0;
+      term_freqs.set(term, Math.log10(doc_count / count));
     });
 
-    return Object.keys(term_docs)
-      .reduce((results, doc_id) => {
-        const doc = term_docs[doc_id];
-        let score = 0;
+    const results: SearchResult[] = [];
+    for (const [doc_id, doc_res] of term_docs) {
+      let score = 0;
 
-        for (let term of terms) {
-          const freq = doc.termFreqs[term];
-          if (freq === 0) {
-            return results;
-          }
+      for (let term of terms) {
+        const freq = doc_res.termFreqs.get(term) || 0;
+        score += freq * (term_freqs.get(term) || 0);
+      }
 
-          score += freq * term_freqs[term];
-        }
+      const doc = this.documents.get(doc_id);
+      if (doc) {
+        results.push({ document: doc, score });
+      }
+    }
 
-        results.push({ document: this.documents[doc_id], score });
-        return results;
-      }, [] as SearchResult[])
-      .sort((a, b) => b.score - a.score);
+    return results.sort((a, b) => b.score - a.score);
   }
 
   encode(encoder: Encoder) {
     encoder.encode32(MAGIC);
-    encoder.encode7(Object.keys(this.documents).length);
+    encoder.encode7(this.documents.size);
 
-    for (let id in this.documents) {
-      this.documents[id].encode(encoder);
+    for (let doc of this.documents.values()) {
+      doc.encode(encoder);
     }
 
     this.trie.encode(encoder);
@@ -215,9 +225,10 @@ export class PreparedIndex {
     }
 
     let ndocuments = decoder.decode7();
+    console.log(`Loaded ${ndocuments} document(s) from search data`);
     while (ndocuments-- > 0) {
       const doc = IndexDocument.decode(decoder);
-      this.documents[doc.id] = doc;
+      this.documents.set(doc.id, doc);
     }
 
     this.trie.decode(decoder);
@@ -237,20 +248,21 @@ export class PreparedIndex {
       }
 
       leaveNode(node: TrieNode) {
-        const occ_keys = Object.keys(node.occurrences);
-
-        if (occ_keys.length > 0) {
+        if (node.occurrences.size > 0) {
           console.log(
             `Term '${new TextDecoder("utf-8").decode(
               new Uint8Array(this.codes)
             )}':`
           );
 
-          occ_keys.forEach((doc_id) => {
+          for (const doc_id of node.occurrences.keys()) {
+            const doc = this.index.documents.get(doc_id);
             console.log(
-              `  ${doc_id}: ${node.occurrences[doc_id]} time(s) (${this.index.documents[doc_id].slug})`
+              `  ${doc_id}: ${node.occurrences.get(doc_id)} time(s) (${
+                doc ? doc.slug : "???"
+              })`
             );
-          });
+          }
         }
 
         this.codes.pop();

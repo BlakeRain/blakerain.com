@@ -49,7 +49,13 @@ export const getStaticProps: GetStaticProps<
     props: {
       enableCommento: false,
       navigation: navigation,
-      tags: post.tags.map((tag) => tags[tag]),
+      tags: post.tags.reduce((acc, tag_slug) => {
+        const tag = tags.get(tag_slug);
+        if (tag) {
+          acc.push(tag);
+        }
+        return acc;
+      }, [] as Tag[]),
       post,
     },
   };

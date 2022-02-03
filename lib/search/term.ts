@@ -10,7 +10,7 @@ import { Occurrences } from "./trie";
  */
 export class IndexTerm {
   public term: Uint8Array;
-  public occurrences: Occurrences = {};
+  public occurrences: Occurrences = new Map();
 
   constructor(term: string) {
     this.term = new TextEncoder().encode(term);
@@ -22,10 +22,11 @@ export class IndexTerm {
    * @param key The numerical ID of the document
    */
   addOccurrence(key: number) {
-    if (key in this.occurrences) {
-      this.occurrences[key]++;
+    const count = this.occurrences.get(key);
+    if (!count) {
+      this.occurrences.set(key, 1);
     } else {
-      this.occurrences[key] = 1;
+      this.occurrences.set(key, 1 + count);
     }
   }
 }

@@ -17,11 +17,14 @@ import Analytics from "../../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const tags = await loadTags();
+  const paths = [];
+
+  for (const tag of tags.values()) {
+    paths.push({ params: { slug: tag.slug } });
+  }
 
   return {
-    paths: Object.keys(tags)
-      .map((tag_id) => tags[tag_id])
-      .map((tag) => ({ params: { slug: tag.slug } })),
+    paths,
     fallback: false,
   };
 };
@@ -29,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 interface TagProps {
   tag: Tag;
   posts: PostInfo[];
-  tags: Tags;
+  tags: { [slug: string]: Tag };
   navigation: SiteNavigation[];
 }
 
@@ -51,8 +54,8 @@ export const getStaticProps: GetStaticProps<
   return {
     props: {
       tag,
-      tags,
       navigation,
+      tags: Object.fromEntries(tags),
       posts: posts.filter((post) => post.tags.indexOf(tag.slug) !== -1),
     },
   };
@@ -74,7 +77,7 @@ const TagPosts: NextPage<TagProps> = ({ tag, posts, tags, navigation }) => {
           tag
         </small>
       </h1>
-      <PostCards posts={posts} tags={tags} />
+      <PostCards posts={posts} tags={new Map(Object.entries(tags))} />
       <Analytics />
     </Layout>
   );
