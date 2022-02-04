@@ -181,14 +181,15 @@ Resources:
         ZipFile: |
           def lambda_handler(event, context):
             return { "statusCode": 200, "body": "{}" }
+      Architectures: arm64
       Environment:
         Variables:
           AUTH_KEY: !Ref AuthKey
           TABLE_NAME: !Ref BlakeRainAnalyticsTable
       FunctionName: blakerain-analytics-trigger
       MemorySize: 512
-      Runtime: python3.9
-      Handler: "lambda_function.lambda_handler"
+      Runtime: provided.al2
+      Handler: unused
       Timeout: 30
       Role: !GetAtt BlakeRainAnalyticsTriggerRole.Arn
     DependsOn:
@@ -280,14 +281,15 @@ Resources:
         ZipFile: |
           def lambda_handler(event, context):
             return { "statusCode": 200, "body": "{}" }
+      Architectures: arm64
       Environment:
         Variables:
           AUTH_KEY: !Ref AuthKey
           TABLE_NAME: !Ref BlakeRainAnalyticsTable
       FunctionName: blakerain-analytics-api
       MemorySize: 512
-      Runtime: python3.9
-      Handler: "lambda_function.lambda_handler"
+      Runtime: provided.al2
+      Handler: unused
       Timeout: 30
       Role: !GetAtt BlakeRainAnalyticsApiRole.Arn
     DependsOn:
