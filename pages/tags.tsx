@@ -88,7 +88,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      tags,
+      tags: Object.fromEntries(tags),
       posts,
       navigation,
     },
