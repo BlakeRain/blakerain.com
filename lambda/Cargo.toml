@@ -1,0 +1,14 @@
+[package]
+name = "blakerain-analytics-lambdas"
+version = "0.1.0"
+authors = ["Blake Rain <blakerain@blakerain.com>"]
+edition = "2021"
+license = "BSD-3-Clause"
+description = "Analytics lambdas for my site"
+homepage = "https://www.blakerain.com/"
+repository = "https://github.com/BlakeRain/blakerain.com"
+publish = false
+
+[dependencies]
+lambda_http = "0.4.1"
+lambda_runtime = "0.4.1"
