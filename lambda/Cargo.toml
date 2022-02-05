@@ -14,7 +14,12 @@ publish = false
 aws-config = "0.6.0"
 aws-sdk-dynamodb = "0.6.0"
 
+fernet = "0.1.4"
+http = "0.2"
+
 lambda_http = "0.4.1"
 lambda_runtime = "0.4.1"
 
 tokio = { version = "1", features = ["full"] }
+
+serde_json = "1.0"
