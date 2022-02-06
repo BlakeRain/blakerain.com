@@ -22,4 +22,8 @@ lambda_runtime = "0.4.1"
 
 tokio = { version = "1", features = ["full"] }
 
+pbkdf2 = "0.10"
+rand_core = { version = "0.6", features = ["std"] }
+
+serde = "1.0"
 serde_json = "1.0"

@@ -178,10 +178,10 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
-          def lambda_handler(event, context):
-            return { "statusCode": 200, "body": "{}" }
-      Architectures: arm64
+        S3Bucket: s3.blakerain.com
+        S3Key: data/lambda/trigger/lambda.zip
+      Architectures:
+        - arm64
       Environment:
         Variables:
           AUTH_KEY: !Ref AuthKey
@@ -278,10 +278,10 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
-          def lambda_handler(event, context):
-            return { "statusCode": 200, "body": "{}" }
-      Architectures: arm64
+        S3Bucket: s3.blakerain.com
+        S3Key: data/lambda/api/lambda.zip
+      Architectures:
+        - arm64
       Environment:
         Variables:
           AUTH_KEY: !Ref AuthKey
@@ -302,8 +302,13 @@ Resources:
     Properties:
       Name: blakerain-analytics
       ProtocolType: HTTP
-      RouteSelectionExpression: "$request.method $request.path"
-      ApiKeySelectionExpression: "$request.header.x-api-key"
+      CorsConfiguration:
+        AllowMethods:
+          - GET
+          - POST
+        AllowOrigins:
+          - "https://www.blakerain.com"
+          - "https://blakerain.com"
 
   BlakeRainAnalyticsApiIntegration:
     Type: AWS::ApiGatewayV2::Integration
