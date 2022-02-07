@@ -2,7 +2,6 @@ use aws_sdk_dynamodb::model::AttributeValue;
 use fernet::Fernet;
 use lambda_runtime::Error;
 
-
 pub struct Env {
     pub auth_key: Fernet,
     pub table_name: String,
