@@ -4,7 +4,7 @@ tags:
   - aws
   - rust
 excerpt: |
-  My experience changing the AWS Lambda functions for this website from Python to Rust.
+  My experience changed the AWS Lambda functions for this website from Python to Rust.
 published: 2022-02-07T20:04:44.000Z
 cover: /content/moving-lambdas-to-rust/jay-heike-Fc-0gi4YylM-unsplash.jpg
 ---
@@ -52,13 +52,13 @@ point for a few reasons:
 
 1. The API function is behind an API Gateway proxy, and so I could make use of the [lambda-http]
    crate to handle HTTP requests and responses.
-2. The trigger function processes events from a DynamoDB stream, which is a fairly nice use-case
-   for a Lambda function.
+2. The trigger function processes events from a DynamoDB stream, which is another fairly nice
+   use-case for a Lambda function.
 3. There's little pressure for these to be performant or stable, as it only effects this site 😆
 
 ## Building Rust for AWS Lambda
 
-I had a number of issues building Rust for AWS Lambda using the method described in the
+I initially had a number of issues compiling Rust code for AWS Lambda using the method described in the
 [README](https://github.com/awslabs/aws-lambda-rust-runtime#deployment) in the AWS Lambda Rust
 runtime repository. The main issue I came across was a segfault from LLVM when compiling the `regex-syntax`
 crate. This seemed to only arise when I compiled in Docker on the M1 when targeting x86-64. As AWS
@@ -104,7 +104,8 @@ functions.
 ## Implementing the API
 
 The initial implementation of the API in Rust has gone very easily, mostly due to the structures
-provided in various crates available to Rust, including the [lambda-http] crate.
+provided in various crates available to Rust, including the [lambda-http] crate. I was able to
+finish most of the API code on one Sunday morning.
 
 Making the calls to DynamoDB in Rust was a very nice experience. The AWS client crate makes use of
 "builder" syntax, which works quite nicely. For example, to build a query for a particlar path and
@@ -144,17 +145,16 @@ Unfortunately I'm making a lot of assumptions in the above code, such as:
 4. There is an `N` attribute in the `ViewCount` dictionary, and
 5. The value can be parsed as an integer with `int()`.
 
-Rust forces me to be more aware of this: Each item is a `HashMap` mapping a `String` key to an
-[AttributeValue]. The Rust code `item["ViewCount"]` makes use of the `Index` trait for `HashMap`
-which will panic if the given key is not found in the mapping
-([see here](https://doc.rust-lang.org/std/collections/struct.HashMap.html#method.index)). This
-encouraged me to use the
-[`get`](https://doc.rust-lang.org/std/collections/struct.HashMap.html#method.get) method to access
-the attributes of an item returned from DynamoDB. The `AttributeValue` enumeration provides a
-number of methods that help with unwrapping the enumeration, which all return a `Result`, which we
-need to match against (or just lazily `unwrap`).
+Rust forced me to be more aware of this: Each item from DynamoDB is a `HashMap` mapping a `String`
+key to an [AttributeValue]. The equivalent Rust code `item["ViewCount"]` makes use of the `Index`
+trait for `HashMap` which will panic if the given key is not found in the mapping ([see
+here](https://doc.rust-lang.org/std/collections/struct.HashMap.html#method.index)). This encouraged
+me to use the [`get`](https://doc.rust-lang.org/std/collections/struct.HashMap.html#method.get)
+method to access the attributes of an item returned from DynamoDB. The `AttributeValue` enumeration
+provides a number of methods that help with unwrapping the enumeration, which all return a
+`Result`, which we need to match against (or just lazily `unwrap`).
 
-```rust
+```rust {"caption": "Sensibly decoding a response from DynamoDB"}
 if let Some(view_count_attr) = item.get("ViewCount") {
     match view_count_attr.as_n() {
         Ok(view_count) => {
@@ -177,7 +177,7 @@ if let Some(view_count_attr) = item.get("ViewCount") {
 This results in somewhat cleaner code. That being said, there are times where I felt justified in
 using `unwrap` and `expect` and allowing the Lambda function to panic.
 
-```rust
+```rust {"caption": "Lazily unwrapping values"}
 i32::from_str_radix(item["ViewCount"].as_n().unwrap(), 10).unwrap() // 😤
 ```
 
@@ -195,6 +195,14 @@ I was somewhat worried about the parsing of user agent strings: in Python I did 
 use case.
 
 ## Conclusion
+
+I was pleasantly suprised at how well the process went. Apart from the somewhat slow start getting
+Rust code compiled for AWS Lambda on ARM, once I had my bearings it was quite easy going.
+
+I am somewhat worried that the error handling is not as graceful as it should be. I'm somewhat
+nervous of cases where I'm using the `Index` trait of a `HashMap`, or just `unwrap`-ing or
+`expect`-ing a value where I should be using `match` and `if let`. I think I'd better go over the
+Lambda functions again some other time to round off the edges.
 
 As before, all code is available on [GitHub](https://github.com/BlakeRain/blakerain.com), with the
 Rust Lambda functions found in the
