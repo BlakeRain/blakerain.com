@@ -65,7 +65,8 @@ yesod:
   slug: yesod
   name: Yesod
   visibility: public
-  description: Posts which feature the Yesod web application development framework
+  description:
+    Posts which feature the Yesod web application development framework
     for the Haskell programming language.
 ethernet:
   slug: ethernet
@@ -107,3 +108,8 @@ intel-i350:
   name: Intel i350
   visibility: public
   description: Blog posts about programming the Intel i350 NIC and related models.
+rust:
+  slug: rust
+  name: Rust
+  visibility: public
+  description: Blog posts related to the Rust programming language
