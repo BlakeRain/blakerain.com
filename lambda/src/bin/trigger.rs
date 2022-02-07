@@ -173,7 +173,7 @@ async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
                             keys.get("Section").and_then(|v| v.get("S")).and_then(|v| v.as_str()),
                         ) {
                             (Some(path), Some(section)) => {
-                                let path = if path.starts_with("/") {
+                                let path = if path.starts_with('/') {
                                     path.to_string()
                                 } else {
                                     format!("/{}", path)

@@ -21,7 +21,7 @@ impl Env {
             auth_key: Fernet::new(&key).expect("Unable to generate Fernet key"),
             table_name: std::env::var("TABLE_NAME")
                 .ok()
-                .unwrap_or("analytics".to_owned()),
+                .unwrap_or_else(|| "analytics".to_owned()),
             ddb: aws_sdk_dynamodb::Client::new(&cfg),
         }
     }

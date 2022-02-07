@@ -190,7 +190,7 @@ async fn handle_auth_signin(env: &Env, request: &Request) -> Result<Response<Bod
         )
     } else {
         println!("Unable to find user with username '{}'", body.username);
-        return Err("Invalid username or password".into());
+        Err("Invalid username or password".into())
     }
 }
 
@@ -258,7 +258,7 @@ struct MonthBrowserRes {
 
 fn i32_from_s_attr(item: &HashMap<String, AttributeValue>, name: &str) -> i32 {
     match item[name].as_s() {
-        Ok(str) => match i32::from_str_radix(str, 10) {
+        Ok(str) => match str.parse::<i32>() {
             Ok(n) => n,
             Err(err) => {
                 println!("Failed to parse '{}' attribute as integer: {}", name, err);
@@ -274,7 +274,7 @@ fn i32_from_s_attr(item: &HashMap<String, AttributeValue>, name: &str) -> i32 {
 
 fn i32_from_n_attr(item: &HashMap<String, AttributeValue>, name: &str) -> i32 {
     match item[name].as_n() {
-        Ok(str) => match i32::from_str_radix(str, 10) {
+        Ok(str) => match str.parse::<i32>() {
             Ok(n) => n,
             Err(err) => {
                 println!("Failed to parse '{}' attribute as integer: {}", name, err);
