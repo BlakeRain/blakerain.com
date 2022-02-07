@@ -341,6 +341,7 @@ version = "0.1.0"
 dependencies = [
  "aws-config",
  "aws-sdk-dynamodb",
+ "base64",
  "fernet",
  "http",
  "lambda_http",
@@ -349,6 +350,7 @@ dependencies = [
  "rand_core",
  "serde",
  "serde_json",
+ "time",
  "tokio",
 ]
 
@@ -1392,6 +1394,7 @@ version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "004cbc98f30fa233c61a38bc77e96a9106e65c88f2d3bef182ae952027e5753d"
 dependencies = [
+ "itoa 1.0.1",
  "libc",
  "num_threads",
 ]

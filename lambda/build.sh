@@ -25,8 +25,8 @@ for EXECUTABLE in $(cargo metadata --no-deps --format-version=1 | jq -r '.packag
   OUTPUT_DIR="$CARGO_TARGET_DIR/release/output/$EXECUTABLE"
 
   # Remove any old output directory and zip file
-  rm -r "$OUTPUT_DIR" > 2&>/dev/null || true
-  rm "$CARGO_TARGET_DIR/release/$EXECUTABLE.zip" > 2&>/dev/null || true
+  rm -r "$OUTPUT_DIR" 2>/dev/null || true
+  rm "$CARGO_TARGET_DIR/release/$EXECUTABLE.zip" 2>/dev/null || true
 
   # Copy the executable to the output directory
   mkdir -p "$OUTPUT_DIR"
@@ -43,6 +43,5 @@ for EXECUTABLE in $(cargo metadata --no-deps --format-version=1 | jq -r '.packag
 
   # Create the zip file
   cd "$OUTPUT_DIR" && zip -r "$CARGO_TARGET_DIR/release/$EXECUTABLE.zip" .
-  # zip -r "$CARGO_TARGET_DIR/release/$EXECUTABLE.zip" "$OUTPUT_DIR"
 done
 
