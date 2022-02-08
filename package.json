@@ -9,13 +9,15 @@
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
-    "index": "ts-node tools/build-indices.ts"
+    "index": "ts-node tools/build-indices.ts",
+    "rss": "ts-node tools/generate-rss.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^1.6.22",
     "@next/mdx": "^12.0.8",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
+    "feed": "^4.2.2",
     "gray-matter": "^4.0.3",
     "marked": "^4.0.12",
     "next": "12.0.9",
