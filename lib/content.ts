@@ -196,6 +196,9 @@ function extractPostInfo(
 ): PostInfo {
   const obj = extractDocInfo(filename, preamble) as PostInfo;
   obj.coverImage = preamble.cover || null;
+  if (typeof obj.coverImage === "string" && !obj.coverImage.startsWith("/")) {
+    obj.coverImage = "/" + obj.coverImage;
+  }
   obj.readingTime = Math.trunc(wordCount / 200);
   obj.tags = preamble.tags || [];
   return obj;
