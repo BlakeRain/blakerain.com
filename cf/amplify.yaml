@@ -53,8 +53,6 @@ Resources:
                 - yarn install
             build:
               commands:
-                - yarn run index
-                - yarn run rss
                 - yarn run build
                 - yarn run export
           artifacts:

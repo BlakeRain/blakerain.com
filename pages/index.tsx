@@ -9,7 +9,13 @@ import { SiteNavigation, loadNavigation } from "../lib/utils";
 import { Tag, Tags, loadTags } from "../lib/tags";
 import { PostInfo, loadPostInfos } from "../lib/content";
 
+import { generateIndices } from "../lib/indices";
+import { generateFeeds } from "../lib/feeds";
+
 export const getStaticProps: GetStaticProps = async () => {
+  await generateIndices();
+  await generateFeeds();
+
   const tags = await loadTags();
   const navigation = await loadNavigation();
   const posts = await loadPostInfos();

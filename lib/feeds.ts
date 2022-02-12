@@ -7,7 +7,7 @@ import { loadPostInfos } from "../lib/content";
 
 const BASE_URL = "https://www.blakerain.com";
 
-async function main() {
+export async function generateFeeds() {
   const now = new Date();
   const feed = new Feed({
     title: "Blake Rain",
@@ -59,10 +59,10 @@ async function main() {
     feed.addItem(item);
   }
 
-  await fs.mkdir(path.join("public", "feeds"), { recursive: true });
-  await fs.writeFile(path.join("public", "feeds", "feed.xml"), feed.rss2());
-  await fs.writeFile(path.join("public", "feeds", "feed.json"), feed.json1());
-  await fs.writeFile(path.join("public", "feeds", "atom.xml"), feed.atom1());
-}
+  const feedsDir = path.join(process.cwd(), "public", "feeds");
 
-main();
+  await fs.mkdir(feedsDir, { recursive: true });
+  await fs.writeFile(path.join(feedsDir, "feed.xml"), feed.rss2());
+  await fs.writeFile(path.join(feedsDir, "feed.json"), feed.json1());
+  await fs.writeFile(path.join(feedsDir, "atom.xml"), feed.atom1());
+}

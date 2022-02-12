@@ -8,9 +8,7 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "export": "next export",
-    "index": "ts-node tools/build-indices.ts",
-    "rss": "ts-node tools/generate-rss.ts"
+    "export": "next export"
   },
   "dependencies": {
     "@types/hast": "^2.3.4",
