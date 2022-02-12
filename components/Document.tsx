@@ -1,4 +1,10 @@
-import React, { FC, useContext } from "react";
+import React, {
+  DetailedHTMLProps,
+  DetailsHTMLAttributes,
+  FC,
+  HTMLAttributes,
+  useContext,
+} from "react";
 import cn from "classnames";
 import YAML from "yaml";
 
@@ -94,7 +100,9 @@ const RenderPhrasingChildren: FC = ({ children }) => {
   }
 };
 
-const RenderEmphasis: FC = ({ children }) => {
+const RenderEmphasis: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+) => JSX.Element = ({ children }) => {
   return (
     <em>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -102,7 +110,9 @@ const RenderEmphasis: FC = ({ children }) => {
   );
 };
 
-const RenderStrong: FC = ({ children }) => {
+const RenderStrong: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+) => JSX.Element = ({ children }) => {
   return (
     <em>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -110,7 +120,9 @@ const RenderStrong: FC = ({ children }) => {
   );
 };
 
-const RenderListItem: FC = ({ children }) => {
+const RenderListItem: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLLIElement>, HTMLLIElement>
+) => JSX.Element = ({ children }) => {
   return (
     <li>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -118,7 +130,12 @@ const RenderListItem: FC = ({ children }) => {
   );
 };
 
-const RenderLink: FC<{ href: string }> = ({ href, children }) => {
+const RenderLink: (
+  props: DetailedHTMLProps<
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    HTMLAnchorElement
+  >
+) => JSX.Element = ({ href, children }) => {
   return (
     <a href={href}>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -126,7 +143,12 @@ const RenderLink: FC<{ href: string }> = ({ href, children }) => {
   );
 };
 
-const RenderParagraph: FC = ({ children }) => {
+const RenderParagraph: (
+  props: DetailedHTMLProps<
+    HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  >
+) => JSX.Element = ({ children }) => {
   return (
     <p>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -134,7 +156,12 @@ const RenderParagraph: FC = ({ children }) => {
   );
 };
 
-const RenderBlockQuote: FC = ({ children }) => {
+const RenderBlockQuote: (
+  props: DetailedHTMLProps<
+    React.BlockquoteHTMLAttributes<HTMLElement>,
+    HTMLElement
+  >
+) => JSX.Element = ({ children }) => {
   return (
     <blockquote>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
@@ -142,7 +169,14 @@ const RenderBlockQuote: FC = ({ children }) => {
   );
 };
 
-function createHeading(level: number): FC {
+function createHeading(
+  level: number
+): (
+  props: DetailedHTMLProps<
+    HTMLAttributes<HTMLHeadingElement>,
+    HTMLHeadingElement
+  >
+) => JSX.Element {
   return function headingFunction(props) {
     return React.createElement(
       `h${level}`,
@@ -152,10 +186,17 @@ function createHeading(level: number): FC {
   };
 }
 
-const RenderImage: FC<{ src: string }> = (props) => {
-  const query_index = props.src.indexOf("?");
+const RenderImage: (
+  props: DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  >
+) => JSX.Element = (props) => {
+  const query_index = props?.src?.indexOf("?");
   const params = new URLSearchParams(
-    query_index === -1 ? undefined : props.src.substring(query_index)
+    typeof query_index === "undefined" || query_index === -1
+      ? undefined
+      : props?.src?.substring(query_index)
   );
   const width = params.get("width");
   const height = params.get("height");
@@ -280,11 +321,15 @@ function getCodeRenderer(search: RegExp | null): CodeRenderer {
   };
 }
 
-const RenderCode: FC<{ className: string; metastring?: string }> = (props) => {
+const RenderCode: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
+    caption?: string;
+    lineNumbers?: boolean;
+    lineNumberStart?: number;
+  }
+) => JSX.Element = (props) => {
   const highlight = useContext(HighlightContext);
-  const meta =
-    typeof props.metastring === "string" ? JSON.parse(props.metastring) : {};
-  const caption = meta["caption"];
+  const caption = props.caption;
   const syntax =
     typeof props.className === "string" &&
     props.className !== "language-box-drawing";
@@ -299,8 +344,9 @@ const RenderCode: FC<{ className: string; metastring?: string }> = (props) => {
       {syntax ? (
         <SyntaxHighlighter
           useInlineStyles={false}
-          showLineNumbers={true}
-          language={props.className.replace("language-", "") || undefined}
+          showLineNumbers={props.lineNumbers}
+          startingLineNumber={props.lineNumberStart}
+          language={props?.className?.replace("language-", "") || undefined}
           renderer={getCodeRenderer(highlight)}
         >
           {content.endsWith("\n")
@@ -317,21 +363,37 @@ const RenderCode: FC<{ className: string; metastring?: string }> = (props) => {
   );
 };
 
-const SelectCodeBlock: FC<{ className: string }> = (props) => {
-  switch (props.className) {
-    case "language-bookmark":
-      return <RenderBookmark {...props} />;
-    case "language-raw_html":
-      return (
-        <div dangerouslySetInnerHTML={{ __html: props.children as string }} />
-      );
-    default:
-      return <RenderCode {...props} />;
+const SelectPre: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement>
+) => JSX.Element = (props) => {
+  if (!props.children) {
+    console.warn("SelectPre has no children");
+    return <b>Empty Code</b>;
   }
-};
 
-const SelectPre: FC = (props) => {
-  return <>{props.children}</>;
+  if (
+    props.children &&
+    typeof props.children === "object" &&
+    "props" in props.children
+  ) {
+    switch (props.children?.props.className) {
+      case "language-bookmark":
+        return <RenderBookmark {...props.children.props} />;
+      case "language-raw_html":
+        return (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: props.children.props.children as string,
+            }}
+          />
+        );
+      default:
+        return <RenderCode {...{ ...props, ...props.children.props }} />;
+    }
+  }
+
+  console.log("Failed to interpret SelectPre");
+  return <b>Empty Code</b>;
 };
 
 export const Render: FC<{
@@ -349,7 +411,6 @@ export const Render: FC<{
       <MDXRemote
         {...content}
         components={{
-          code: SelectCodeBlock,
           pre: SelectPre,
           img: RenderImage,
           p: RenderParagraph,

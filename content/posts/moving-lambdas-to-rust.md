@@ -94,7 +94,7 @@ same folder structure can be used to provide [library dependencies] in a zip pac
 evil trick I use is to invoke `ldd` to find the resolved library for `libssl` on the Docker
 container and copy that file into a `lib` directory in the zip package.
 
-```bash {"caption": "Hacky fix for missing libssl on Lambda"}
+```bash caption="Hacky fix for missing libssl on Lambda"
 cp $(ldd "$EXE_PATH" | grep ssl | awk '{print $3}') "$OUTPUT_DIR/lib/"
 ```
 
@@ -154,7 +154,7 @@ method to access the attributes of an item returned from DynamoDB. The `Attribut
 provides a number of methods that help with unwrapping the enumeration, which all return a
 `Result`, which we need to match against (or just lazily `unwrap`).
 
-```rust {"caption": "Sensibly decoding a response from DynamoDB"}
+```rust caption="Sensibly decoding a response from DynamoDB"
 if let Some(view_count_attr) = item.get("ViewCount") {
     match view_count_attr.as_n() {
         Ok(view_count) => {
@@ -177,7 +177,7 @@ if let Some(view_count_attr) = item.get("ViewCount") {
 This results in somewhat cleaner code. That being said, there are times where I felt justified in
 using `unwrap` and `expect` and allowing the Lambda function to panic.
 
-```rust {"caption": "Lazily unwrapping values"}
+```rust caption="Lazily unwrapping values"
 i32::from_str_radix(item["ViewCount"].as_n().unwrap(), 10).unwrap() // 😤
 ```
 

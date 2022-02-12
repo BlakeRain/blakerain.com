@@ -322,7 +322,7 @@ You can see how the grid is almost moving in and out of focus as it pans. This i
 
 Putting this all together gives us our complete `MapEditor` widget.
 
-```python {"caption": "The complete <code>MapEditor</code> widget"}
+```python caption="The complete <code>MapEditor</code> widget"
 class MapEditor(Gtk.DrawingArea):
     def __init__(self):
         super().__init__()

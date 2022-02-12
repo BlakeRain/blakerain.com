@@ -23,9 +23,9 @@ Tri-color marking describes a process that walks the heap and assigns each objec
 - Grey objects are ones that we've found have pointers to, but we've yet to scan them for pointers to other objects.
 - Objects that are marked black are ones that we've discovered pointers to and which contain no pointers into white objects. We keep these objects.
 
-An important feature of the tri-color marking process is the \_tri-color invariant – \_no objects in the black set reference objects in the white set.
+An important feature of the tri-color marking process is the _tri-color invariant_ – no objects in the black set reference objects in the white set.
 
-To perform the tri-color marking process we need to begin at the \_roots. \_A root is a pointer into the heap that we use to initialize the marking process. Roots are typically found on the stack or in registers.
+To perform the tri-color marking process we need to begin at the _roots_. A root is a pointer into the heap that we use to initialize the marking process. Roots are typically found on the stack or in registers.
 
 When we start our marking process we take all the roots and place the objects into the grey set. The rest of the objects go into the white set and the black set starts off empty.
 
@@ -38,7 +38,7 @@ The process of tricolour marking is quite simple:
 
 The process continues until the grey set is empty. Expressed in pseudo-code, the process is even easier to describe:
 
-```undefined
+```
 while grey_set is not empty:
   grey = grey_set.pop()
   black_set.insert(grey)
@@ -52,7 +52,7 @@ At the end of the marking process the grey set should be empty. The black set co
 
 As an example, let's consider a structure that we're going to allocate on our heap. We're going to use a simple binary tree, where each element in the tree maintains three fields: one of some parameter type and two pointers to each of the left and right child nodes. We'll describe this as the following structure:
 
-```cpp {"caption": "A simple binary tree node"}
+```cpp caption="A simple binary tree node"
 struct Node {
   int   value;
   Node *left{nullptr};
@@ -142,7 +142,7 @@ During collection we populate a _white bitmap_ with the pointers from the rememb
 
 To describe this process, let's start off by defining our block GC information structure. We'll call this structure `BlockInfo`.
 
-```cpp {"caption": "The GC block information structure"}
+```cpp caption="The GC block information structure"
 struct BlockInfo {
   PointerSet  remembered;      // The remembered pointers in the page
   Allocations allocations;     // Allocated cell bitmaps
@@ -154,7 +154,7 @@ struct BlockInfo {
 
 The first field in the `BlockInfo` structure is the remembered set. This can be defined quite simply as an `std::set` of pointers to our pointer type.
 
-```cpp {"caption": "The Pointer structure and the PointerSet"}
+```cpp caption="The Pointer structure and the PointerSet"
 struct Pointer {
   void *ptr;
 };
@@ -168,7 +168,7 @@ The next field in the `BlockInfo` structure is the `allocations` structure. This
 
 For example, consider the following allocation bitmaps:
 
-```undefined
+```
 regions: TT--TTTT----TTTT
 starts : T---T-------T-T-
 ```
@@ -181,7 +181,7 @@ The last three fields of the `BlockInfo` structure are the white, grey and black
 
 The first step to performing our tri-color marking is to populate the white and grey bitmaps for every block. We maintain all our blocks in a `BlockSet` structure. This structure has `begin` and `end` methods that let us iterate over the blocks in the set.
 
-```cpp {"caption": "The BlockSet class"}
+```cpp caption="The BlockSet class"
 class BlockSet {
 public:
   block_iterator begin();
@@ -198,7 +198,7 @@ The first step to populating the `BlockInfo` structures and performing our tri-c
 
 Once the root objects have been filled into their corresponding block's grey bitmaps we scan the remembered sets of each block. Each remembered set contains pointers within the block. These pointers may point to other regions within the block or in other blocks. These are our initial white pointers. For each pointer in the remembered set of a block we set the corresponding bit in the block's white bitmap.
 
-```cpp {"caption": "Populating the grey and white bitmaps"}
+```cpp caption="Populating the grey and white bitmaps"
 void populate(const PointerSet &roots, BlockSet &blocks) {
   // Iterate over the pointers in the root set
   for (Pointer p : roots) {
@@ -226,19 +226,19 @@ void populate(const PointerSet &roots, BlockSet &blocks) {
 
 As an example, imagine that we had a block that starts at the address `0x7f7d31941000`. For simplicity we'll say that the block is 256 bytes in size. We can visualize the block as follows, where each dot represents a pointer-sized number of bytes in the block, where a pointer is eight bytes in size.
 
-```undefined
+```
 7f7d31941000 ........ ........ ........ ........
 ```
 
 Now we will populate our block with a number of allocations. Each allocation starts with a `^` character, with the rest of the allocated pointer-sized regions indicated by `#` characters.
 
-```undefined
+```
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 ```
 
 We'll say that the first two allocations are our roots. We can depict this on our diagram by indicating them with a capital `R`.
 
-```undefined
+```
              R        R
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 
@@ -249,7 +249,7 @@ We'll say that the first two allocations are our roots. We can depict this on ou
 
 We'll say that our roots each contain a pointer at the end which point to the two subsequent allocations. As these are pointers within the block, these are tracked in the block's remembered set. We'll mark these with a lower-case `r` in our diagram.
 
-```undefined
+```
              R      r R  r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 
@@ -264,7 +264,7 @@ We'll say that our roots each contain a pointer at the end which point to the tw
 
 We'll add a final pointer at the start of the third allocation that points to the very last allocation in the block. This also becomes a remembered pointer.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 
@@ -280,7 +280,7 @@ We'll add a final pointer at the start of the third allocation that points to th
 
 The first step of the initialisation of the tri-color marking takes all the roots and fills them in to the grey bitmap of the block. We have two roots, the first is a 64-byte region and the second is a 32-byte region. We fill in the grey bitmap for the block with these regions.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  TTTTTTTT TTTT---- -------- --------
@@ -297,7 +297,7 @@ grey bitmap  TTTTTTTT TTTT---- -------- --------
 
 The next step of the initial population of the bitmaps marks the remembered pointers in the white bitmap of each block. This sets the bit in the white bitmap corresponding to the position of a remembered pointer. We can add this to our diagram.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  TTTTTTTT TTTT---- -------- --------
@@ -323,7 +323,7 @@ The process then intersects the white and grey bitmaps to find the pointers that
 
 Once this set has been found, it clears the block's grey bitmap. Then, given the set of pointers that need promoting, iterate through each pointer in the bitmap and promote it to the grey set.
 
-```cpp {"caption": "Marking the pointers in a block"}
+```cpp caption="Marking the pointers in a block"
 void mark_block(BlockInfo *block, BlockSet &blocks) {
   // Merge the grey bitmap into the black bitmap
   block->black_set = block->black_set.union_with(block->grey_set);
@@ -343,7 +343,7 @@ void mark_block(BlockInfo *block, BlockSet &blocks) {
 
 Let's work through this process with our example block. The first step is to union the grey bitmap into our grey bitmap. Our black bitmap was originally empty, so it just assumes the values of the grey bitmap.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  TTTTTTTT TTTT---- -------- --------
@@ -353,7 +353,7 @@ black bitmap TTTTTTTT TTTT---- -------- --------
 
 We then take the intersection of the white and grey bitmaps to find which pointers we should promote to grey. This creates a new bitmap that is called `marked` in the code above.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  TTTTTTTT TTTT---- -------- --------
@@ -366,7 +366,7 @@ This has marked the pointers in the remembered set that reside within the region
 
 We next clear the grey bitmap for the block.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- --------
@@ -379,7 +379,7 @@ Next we iterate over the pointers in the `marked` bitmap and promote them to the
 
 The `promote` function takes a pointer that we want to promote (called `q`) and the block we found it in. The promotion first finds the block that the pointer points to and fills in the allocated region in the target block's grey bitmap. This marks the region as grey in the target block. We then clear the corresponding bit in the originating block's white bitmap to indicate that the pointer has been processed and is no longer in the white set.
 
-```cpp {"caption": "Promoting a white pointer into the grey set"}
+```cpp caption="Promoting a white pointer into the grey set"
 void promote(Pointer q, BlockInfo *block, BlockSet &blocks) {
   // Find the block that is being pointed to by 'q'
   target = blocks.block_for(q.ptr);
@@ -397,7 +397,7 @@ void promote(Pointer q, BlockInfo *block, BlockSet &blocks) {
 
 Let's work through this process using our example block. We have two pointers to promote, indicated by the bits in the `marked` bitmap we established in the `mark_block` function.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- --------
@@ -413,7 +413,7 @@ marked       -------T ---T---- -------- --------
 
 The first pointer is located at `0x7f7d31941038`. This is one of our remembered pointers, which points to the allocated region of 32 bytes at `0x7f7d31941080` within the same block. We mark this region in the grey bitmap and then clear the bit in the white bitmap corresponding to the pointer at `0x7f7d31941038`.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- TTTT---- --------
@@ -429,7 +429,7 @@ marked       -------T ---T---- -------- --------
 
 The next pointer indicated in the `marked` set is located at `0x7f7d31941058` and points to the 32-byte allocation starting at `0x7f7d319410a0`. Again we mark this region in our grey bitmap and clear the bit corresponding to the pointer at `0x7f7d31941058` in the white bitmap.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- TTTTTTTT --------
@@ -445,7 +445,7 @@ marked       -------T ---T---- -------- --------
 
 At the end of the first pass of the tri-color marking process the black bitmap contains our root objects and two of the white objects have been promoted to the grey set, removing the pointers from the white bitmap.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- TTTTTTTT --------
@@ -460,7 +460,7 @@ black bitmap TTTTTTTT TTTT---- -------- --------
 
 Now the tri-color marking process can commence again, as the grey bitmap is not empty. As before we first union the black and grey bitmaps to mark the grey regions for retention.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- TTTTTTTT --------
@@ -470,7 +470,7 @@ black bitmap TTTTTTTT TTTT---- TTTTTTTT --------
 
 We then take a union of the grey and white bitmaps to find the white pointers that we want to promote. We then clear the grey bitmap.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- --------
@@ -481,7 +481,7 @@ marked       -------- -------- T------- --------
 
 Finally we iterate through the white pointers indicated in the marked bitmap and promote them to the grey bitmap. We only have a single pointer now, being the pointer at `0x7f7d319410a0` which points to the 16-byte allocation at `0x7f7d319410f0`.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- ------TT
@@ -497,7 +497,7 @@ marked       -------- -------- T------- --------
 
 At the end of the second pass we have the last allocation in our grey bitmap and our black bitmap has been expanded with two more allocations. Our white set is now empty.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- ------TT
@@ -512,7 +512,7 @@ black bitmap TTTTTTTT TTTT---- TTTTTTTT --------
 
 One final pass of the tri-color marking is performed as the grey bitmap is not yet empty. As before we union the grey bitmap into the black bitmap to mark the grey allocations for retention. We then intersect the white and grey bitmaps to find pointers that we want to promote and clear the grey bitmap. This results in an empty mark set, as there are no more white pointers that intersect with the grey bitmap.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 grey bitmap  -------- -------- -------- --------
@@ -525,7 +525,7 @@ As there are no marked pointers there's nothing left to promote, and the tri-col
 
 After the marking process has completed we begin our sweep. This process iterates through the allocations in the all the blocks and check them against the black bitmap. Any allocation that cannot be found in the black bitmap is deallocated.
 
-```cpp {"caption": "Final sweep of allocations in each block"}
+```cpp caption="Final sweep of allocations in each block"
 void sweep(BlockSet &blocks) {
   for (BlockInfo *block : blocks) {
     for (Region alloc : block->allocations) {
@@ -539,7 +539,7 @@ void sweep(BlockSet &blocks) {
 
 Taking a look at our black bitmap at the end of the tri-color marking process we can see that one of our allocations will be freed.
 
-```undefined
+```
              R      r R  r     r
 7f7d31941000 ^####### ^###.... ^###^### ^###..^#
 black bitmap TTTTTTTT TTTT---- TTTTTTTT ------TT

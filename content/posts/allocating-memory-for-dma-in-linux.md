@@ -60,7 +60,7 @@ Note that bits 54 through 0 are only the physical page frame number if the page 
 
 The page map is found under the `/proc` sub-directory for each process. A process is able to access this table by opening the `/proc/self/pagemap` file.
 
-```cpp {"caption": "Opening the process page map"}
+```cpp caption="Opening the process page map"
 int fd = open("/proc/self/pagemap", O_RDONLY);
 assert(fd != -1);
 ```
@@ -69,7 +69,7 @@ Given a virtual address, we need to calculate the page in which the address resi
 
 Once we have the virtual page number we can look up our virtual page in the page map. Each entry in the page map is a 64-bit integer, so we need to multiply our virtual page number by eight to find the corresponding entry for the virtual address.
 
-```cpp {"caption": "Seeking to an entry in the page map"}
+```cpp caption="Seeking to an entry in the page map"
 int res = lseek64(fd,
                   (uintptr_t)vaddr / page_size * sizeof(uintptr_t),
                   SEEK_SET);
@@ -78,7 +78,7 @@ assert(res != -1);
 
 With the file handle in `fd` pointing to the correct location in the page map, we can read the 64-bit integer at that address. We will read this into a `uintptr_t`, after which we can close the file.
 
-```cpp {"caption": "Reading the entry from the page map"}
+```cpp caption="Reading the entry from the page map"
 uintptr_t phy = 0;
 
 res = read(fd, &phy, sizeof(uintptr_t));
@@ -107,7 +107,7 @@ physical_address = PFN * page_size + (vaddr % page_size)
 
 Putting this all together we get a function `virtual_to_physical` that maps an address in the virtual address space of the process to a physical address.
 
-```cpp {"caption": "Converting a virtual address to a physical address"}
+```cpp caption="Converting a virtual address to a physical address"
 static uintptr_t virtual_to_physical(const void *vaddr) {
   auto page_size = sysconf(_SC_PAGESIZE);
   int  fd        = open("/proc/self/pagemap", O_RDONLY);
@@ -152,7 +152,7 @@ For example, the number of 2Mib huge pages reserved under NUMA node 0 is found i
 
 Writing to this file will dynamically change the number of huge pages allocated for the corresponding NUMA node. For example, to allocate 32 2Mib huge pages per NUMA node on a system with 8 NUMA nodes you could run the following shell script:
 
-```bash {"caption": "Allocating 32 huge pages over eight NUMA nodes"}
+```bash caption="Allocating 32 huge pages over eight NUMA nodes"
 NUMA_DIR="/sys/devices/system/node"
 HUGEPAGE_DIR="hugepages/hugepages-2048kB"
 
@@ -176,7 +176,7 @@ hugepages-1048576kB hugepages-2048kB
 
 Each huge page directory contains a number of files that yield information about the number of reserved huge pages in the pool, the free count, and so on:
 
-```undefined {"caption": "Files and Directories under /sys/kernel/mm/hugepages"}
+```undefined caption="Files and Directories under /sys/kernel/mm/hugepages"
 $ tree /sys/kernel/mm/hugepages
 /sys/kernel/mm/hugepages/
 ├── hugepages-1048576kB
@@ -208,7 +208,7 @@ You can use these files to establish information such as whether an allocation w
 
 In order for our program to comprehend the available huge pages we'll load some information from the `/sys/kernel/mm/hugepages` directory and encapsulate it in a `HugePageInfo` structure.
 
-```cpp {"caption": "HugePageInfo Structure"}
+```cpp caption="HugePageInfo Structure"
 namespace fs = std::experimental::file_system;
 
 struct HugePageInfo {
@@ -228,7 +228,7 @@ The structure retains the size of the huge page in bytes along with the path to 
 
 When we construct a `HugePageInfo` structure we pass in a [`directory_entry`](https://en.cppreference.com/w/cpp/experimental/fs/directory_entry) that represents the sub-directory under `/sys/kernel/mm/hugepages`. This sub-directory will have a name that includes the size of the huge-pages that can be allocated within that huge page table. We'll use a regular expression to extract the page size from the directory name before we parse it.
 
-```cpp {"caption": "HugePageInfo Constructor"}
+```cpp caption="HugePageInfo Constructor"
 static const std::regex HUGEPAGE_RE{"hugepages-([0-9]+[kKmMgG])[bB]"};
 
 HugePageInfo::HugePageInfo(const fs::directory_entry &entry) {
@@ -244,7 +244,7 @@ HugePageInfo::HugePageInfo(const fs::directory_entry &entry) {
 
 To load all the available huge pages we can scan the `/sys/kernel/mm/hugepages` directory and construct a `HugePageInfo` instance for each sub-directory. This task is performed by the `HugePageInfo::load` method.
 
-```cpp {"caption": "Loading the available huge page information from /sys/kernel/mm/hugepages"}
+```cpp caption="Loading the available huge page information from /sys/kernel/mm/hugepages"
 static const fs::path SYS_HUGEPAGE_DIR = "/sys/kernel/mm/hugepages";
 
 std::vector<HugePageInfo> HugePageInfo::load() {
@@ -261,7 +261,7 @@ std::vector<HugePageInfo> HugePageInfo::load() {
 
 Each huge page allocation is described by a `HugePage` structure. This structure encapsulates the virtual and physical address of an allocated huge page along with the size of the page in bytes.
 
-```cpp {"caption": "The HugePageAlloc structure"}
+```cpp caption="The HugePageAlloc structure"
 struct HugePage {
   using Ref = std::shared_ptr<HugePage>;
 
@@ -281,7 +281,7 @@ To allocate a huge page we want to use the `mmap` system call with the `MAP_HUGE
 
 As we are not backing this mapping with a file, we need to use the `MAP_ANONYMOUS` flag. A portable application making use of `MAP_ANONYMOUS` should set the file descriptor to -1 and pass zero as the offset.
 
-```cpp {"caption": "Allocating a huge page and mapping it into process memory"}
+```cpp caption="Allocating a huge page and mapping it into process memory"
 HugePage::Ref HugePageInfo::allocate() const {
   // Map a hugepage into memory
   void *vaddr = (void *)mmap(NULL, size,
@@ -302,7 +302,7 @@ Once we no longer wish to retain a huge page we need to release it back into the
 
 The `HugePage` destructor will use the `munmap` syscall to un-map the huge page from the process.
 
-```cpp {"caption": "Releasing a HugePage back to the OS"}
+```cpp caption="Releasing a HugePage back to the OS"
 HugePage::~HugePage() {
   int rc = munmap(virt, size);
   assert(rc != -1);
@@ -335,7 +335,7 @@ There are two kinds of padding in this diagram:
 
 Each huge page starts with a `Chunk` structure describing the buffers that are contained in the page. This structure retains the `HugePage::Ref` that we receive from the `HugePageInfo::allocate()` function, along with the size of the buffers and a pointer to the first buffer header. The `Chunk` structure is padded to a multiple of 64 bytes to ease alignment.
 
-```cpp {"caption": "The Chunk header at the start of a huge page"}
+```cpp caption="The Chunk header at the start of a huge page"
 struct Chunk {
   HugePage::Ref dma;
   std::size_t   buf_size;
@@ -350,7 +350,7 @@ static_assert(sizeof(Chunk) % 64 == 0);
 
 The `Buffer` structure describes the buffer header, and contains various information about the contents of the buffer. Again, this header is padded to a multiple of 64 bytes.
 
-```cpp {"caption": "The Buffer structure describing a buffer header"}
+```cpp caption="The Buffer structure describing a buffer header"
 struct Buffer {
   void       *address;   // Virtual address of the buffer data
   uint64_t    phy;       // Physical address of the buffer data
@@ -376,7 +376,7 @@ In order to divide up a huge page we will need to populate the `Chunk` header at
 
 To calculate this we use a structure called `ChunkLayout` which takes the parameters for our huge page and buffers and computes the best alignment and packing of the data.
 
-```cpp {"caption": "The Layout structure, used to compute our buffer layout"}
+```cpp caption="The Layout structure, used to compute our buffer layout"
 struct Layout {
   // Our arguments/input variables
   std::size_t buffer_size;
@@ -510,7 +510,7 @@ Now that we are able to calculate the layout of a series of identically sized bu
 
 The `DMAPool` class keeps track of a list of free buffers by linking together the `Buffer::next` fields into a single linked list. This forms a free list from which buffers can be allocated. When we exhaust this list, the `DMAPool` will request a new `HugePageAlloc` from it's `HugePageInfo`, set up all the `Buffer` headers and chain them onto the free list.
 
-```cpp {"caption": "The DMAPool class"}
+```cpp caption="The DMAPool class"
 class DMAPool {
   const HugePageInfo *_huge_page;
   Layout              _layout;
@@ -594,7 +594,7 @@ An important point to note is that we're computing the physical address of a buf
 
 When we want to allocate a `Buffer` from the `DMAPool` we call the `DMAPool::allocate` method. This will first try and return a `Buffer` from the head of the buffer free list. If the free list is empty, it will call the `DMAPool::new_chunk` method to create a new `Chunk`. This method will also chain all the buffer headers onto the free list. The `allocate` method may then return a newly allocated buffer.
 
-```cpp {"caption": "Allocating a Buffer from a DMAPool"}
+```cpp caption="Allocating a Buffer from a DMAPool"
 Buffer *DMAPool::allocate() {
   Buffer *buffer = _free_list;
   if (!buffer) {
@@ -611,7 +611,7 @@ Buffer *DMAPool::allocate() {
 
 When we want to free a `Buffer` we simply append it to the free list in the `DMAPool`.
 
-```cpp {"caption": "Freeing a Buffer back to the DMAPool"}
+```cpp caption="Freeing a Buffer back to the DMAPool"
 void DMAPool::free(Buffer *buffer) {
   buffer->next = _free_list;
   _free_list   = buffer;
@@ -620,7 +620,7 @@ void DMAPool::free(Buffer *buffer) {
 
 Finally, when we are done with a `DMAPool` it's destructor will be called. This destructor needs to free all the `HugePageAlloc` information in each `Chunk`.
 
-```cpp {"caption": "DMAPool destructor"}
+```cpp caption="DMAPool destructor"
 DMAPool::~DMAPool() {
   Chunk *chunk = _first_chunk;
   Chunk *next  = nullptr;

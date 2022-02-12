@@ -7,6 +7,8 @@ import * as mdast from "mdast";
 import { TagId } from "./tags";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
+import { remarkMdxCodeMeta } from "remark-mdx-code-meta";
+import remarkGfm from "remark-gfm";
 import matter from "gray-matter";
 import { IndexBuilder, PreparedIndex } from "./search";
 
@@ -149,7 +151,7 @@ async function loadDoc<P extends Preamble>(
     content: await serialize(source, {
       scope: preamble as Record<string, any>,
       mdxOptions: {
-        remarkPlugins: [remarkPlugin],
+        remarkPlugins: [remarkPlugin, remarkMdxCodeMeta, remarkGfm],
         rehypePlugins: [rehypePlugin],
       },
     }),
