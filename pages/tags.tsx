@@ -69,7 +69,7 @@ const TagList: FC<{
       <Head>
         <title>Tags</title>
       </Head>
-      <h1>There are {tags.size} tags on this site</h1>
+      <h1>There are {binned_tags.length} tags on this site</h1>
       <div className={styles.list}>
         {binned_tags.map((tag, index) => (
           <TagInfo key={index.toString()} {...tag} />
