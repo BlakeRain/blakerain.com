@@ -187,7 +187,8 @@
   ol,
   dl {
     margin: 0 0 1.5em 0;
-    min-width: 100%;
+    max-width: 100%;
+    align-self: flex-start;
   }
 
   li {
@@ -519,6 +520,14 @@
 
   .title {
     font-size: 3.3rem;
+  }
+
+  .headerWithImage {
+    .headerInner {
+      .details {
+        padding: 0;
+      }
+    }
   }
 
   .details {
