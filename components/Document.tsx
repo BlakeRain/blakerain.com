@@ -180,7 +180,7 @@ function createHeading(
   return function headingFunction(props) {
     return React.createElement(
       `h${level}`,
-      null,
+      { id: props.id },
       <RenderPhrasingChildren>{props.children}</RenderPhrasingChildren>
     );
   };
