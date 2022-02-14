@@ -10,6 +10,7 @@ import { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { remarkMdxCodeMeta } from "remark-mdx-code-meta";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import matter from "gray-matter";
 import { IndexBuilder, PreparedIndex } from "./search";
 
@@ -153,7 +154,7 @@ async function loadDoc<P extends Preamble>(
       scope: preamble as Record<string, any>,
       mdxOptions: {
         remarkPlugins: [remarkPlugin, remarkMdxCodeMeta, remarkGfm],
-        rehypePlugins: [rehypePlugin, rehypeSlug],
+        rehypePlugins: [rehypePlugin, rehypeSlug, rehypeAutolinkHeadings],
       },
     }),
   };
