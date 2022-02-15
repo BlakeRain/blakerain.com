@@ -118,10 +118,7 @@ async fn update_user_agent(env: &Env, time: &OffsetDateTime, ua: &str) -> Result
                 ":w",
                 AttributeValue::S(format!("{}-{:02}", time.year(), time.iso_week())),
             )
-            .expression_attribute_values(
-                ":d",
-                AttributeValue::S(map_weekday(time).to_string()),
-            )
+            .expression_attribute_values(":d", AttributeValue::S(map_weekday(time).to_string()))
             .expression_attribute_values(":n", AttributeValue::N("1".to_string()))
             .send()
             .await?;
@@ -169,8 +166,12 @@ async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
                             .and_then(|v| v.as_object())
                             .unwrap_or(&fallback);
                         match (
-                            keys.get("Path").and_then(|v| v.get("S")).and_then(|v| v.as_str()),
-                            keys.get("Section").and_then(|v| v.get("S")).and_then(|v| v.as_str()),
+                            keys.get("Path")
+                                .and_then(|v| v.get("S"))
+                                .and_then(|v| v.as_str()),
+                            keys.get("Section")
+                                .and_then(|v| v.get("S"))
+                                .and_then(|v| v.as_str()),
                         ) {
                             (Some(path), Some(section)) => {
                                 let path = if path.starts_with('/') {
@@ -208,7 +209,9 @@ async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
                                         {
                                             update_user_agent(env, &time, ua).await?;
                                         } else {
-                                            println!("No user agent specified in analytics request");
+                                            println!(
+                                                "No user agent specified in analytics request"
+                                            );
                                         }
                                     } else {
                                         println!("No 'NewImage' specified in DynamoDB event");

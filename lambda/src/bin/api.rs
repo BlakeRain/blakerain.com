@@ -190,7 +190,20 @@ async fn handle_auth_signin(env: &Env, request: &Request) -> Result<Response<Bod
         )
     } else {
         println!("Unable to find user with username '{}'", body.username);
-        Err("Invalid username or password".into())
+        let body = json!({
+            "error": "Invalid username or password"
+        });
+
+        Ok(
+            add_standard_headers(Response::builder(), "application/json")
+                .status(403)
+                .body(
+                    serde_json::to_string(&body)
+                        .expect("Unable to serialize JSON")
+                        .into(),
+                )
+                .expect("Unable to build response"),
+        )
     }
 }
 
