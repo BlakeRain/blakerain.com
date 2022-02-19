@@ -6,7 +6,7 @@ import {
   NextPage,
 } from "next";
 import Head from "next/head";
-import { NextSeo } from "next-seo";
+import { NextSeo, ArticleJsonLd } from "next-seo";
 import { SiteNavigation, loadNavigation } from "../../lib/utils";
 import { Post, loadPostSlugs, loadPostWithSlug } from "../../lib/content";
 import { Tag, loadTags } from "../../lib/tags";
@@ -113,6 +113,17 @@ const BlogPost: NextPage<BlogPostProps> = ({
             tags: tags.map((tag) => tag.name),
           },
         }}
+      />
+      <ArticleJsonLd
+        type="Blog"
+        title={post.title}
+        description={post.excerpt || ""}
+        url={`https://www.blakerain.com/blog/${post.slug}`}
+        images={post.coverImage ? [post.coverImage] : []}
+        datePublished={post.published}
+        authorName={"Blake Rain"}
+        publisherName="blakerain.com"
+        publisherLogo="https://www.blakerain.com/media/logo-text.png"
       />
       <Content
         tags={tags}
