@@ -133,7 +133,7 @@ Now I needed to set up the place where the database would reside on the server. 
 
 With that out of the way I copied the Python script to the server, placing that too in the `/var/www/blakerain` directory and then added a crontab entry to run the script every hour:
 
-```undefined
+```
 0 * * * * DB_PATH=/var/www/blakerain/ghost-search.db API_KEY=... /var/www/blakerain/populate-db.py
 ```
 

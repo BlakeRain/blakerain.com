@@ -50,7 +50,7 @@ Typically the power of a trie like this is in being able to find all the matches
 
 I decided to leverage this for the search mechanism. When an input sequence like `"be"` is entered, we descend the tree and tally all occurrences for each leaf we encounter. First we want to take a search term and walk along the tree, following the edge that corresponds to each character in the search term. Once we have found the node for the last letter of the search term, we move on to searching for all occurrences.
 
-```undefined
+```
 find_string(prefix):
   node = root
   for ch in prefix:
@@ -63,7 +63,7 @@ find_string(prefix):
 
 When we want to find the occurrences from a given node we simply walk the tree starting at the given node until we find a leaf. Once the leaf is found we add it's occurrences to our tally:
 
-```undefined
+```
 find_occurrences(node):
   if node has occurrences:
     add_to_tally(node)
@@ -122,7 +122,7 @@ This data is then loaded and parsed by the search front-end.
 
 The search interface is a small amount of React code that is complied along with the customized Casper theme for the site. The interface loads and parses the search data from S3. For profiling it outputs a console message indicating how many posts and trie nodes were loaded from the search data, and the time it took:
 
-```undefined
+```
 Decoded 3 posts, 4804 term trie nodes in 6 milliseconds from 29.09 Kb
 ```
 
@@ -142,16 +142,11 @@ Something to note is that this search implementation – whilst very simple to i
 
 As mentioned earlier, you can find all the source in the GitHub repository:
 
-```bookmark
-type: bookmark
-url: https://github.com/BlakeRain/blakerain.com
-metadata:
-  url: https://github.com/BlakeRain/blakerain.com
-  title: BlakeRain/blakerain.com
-  description: Repository for the Ghost theme of my blog. Contribute to
-    BlakeRain/blakerain.com development by creating an account on GitHub.
-  author: BlakeRain
-  publisher: GitHub
-  thumbnail: https://avatars2.githubusercontent.com/u/8750438?s=400&v=4
-  icon: https://github.githubassets.com/favicons/favicon.svg
-```
+<Bookmark
+  url="https://github.com/BlakeRain/blakerain.com"
+  title="BlakeRain/blakerain.com"
+  description="Repository for the Ghost theme of my blog. Contribute to BlakeRain/blakerain.com development by creating an account on GitHub."
+  author="BlakeRain"
+  publisher="GitHub"
+  thumbnail="https://avatars2.githubusercontent.com/u/8750438?s=400&v=4"
+  icon="https://github.githubassets.com/favicons/favicon.svg" />

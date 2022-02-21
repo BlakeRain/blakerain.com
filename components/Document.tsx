@@ -1,12 +1,10 @@
 import React, {
   DetailedHTMLProps,
-  DetailsHTMLAttributes,
   FC,
   HTMLAttributes,
   useContext,
 } from "react";
 import cn from "classnames";
-import YAML from "yaml";
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -225,41 +223,44 @@ const RenderImage: (
 
 interface BookmarkProps {
   url: string;
-  metadata: {
-    url: string;
-    title: string;
-    author: string;
-    description: string;
-    icon: string;
-    publisher: string;
-    thumbnail: string;
-  };
+  title: string;
+  author: string;
+  description: string;
+  icon?: string;
+  publisher?: string;
+  thumbnail?: string;
 }
 
-const RenderBookmark: FC = (props) => {
-  const { url, metadata } = YAML.parse(
-    props.children as string
-  ) as BookmarkProps;
-
+const Bookmark: (props: BookmarkProps) => JSX.Element = ({
+  url,
+  title,
+  author,
+  description,
+  icon,
+  publisher,
+  thumbnail,
+}) => {
   return (
     <figure className={styles.bookmark}>
       <a className={styles.bookmarkContainer} href={url}>
         <div className={styles.bookmarkContent}>
-          <div className={styles.bookmarkTitle}>{metadata.title}</div>
-          <div className={styles.bookmarkDescription}>
-            {metadata.description}
-          </div>
+          <div className={styles.bookmarkTitle}>{title}</div>
+          {description && (
+            <div className={styles.bookmarkDescription}>{description}</div>
+          )}
           <div className={styles.bookmarkMetadata}>
-            <img className={styles.bookmarkIcon} src={metadata.icon} />
-            <span className={styles.bookmarkPublisher}>
-              {metadata.publisher}
-            </span>
-            <span className={styles.bookmarkAuthor}>{metadata.author}</span>
+            {icon && <img className={styles.bookmarkIcon} src={icon} />}
+            {publisher && (
+              <span className={styles.bookmarkPublisher}>{publisher}</span>
+            )}
+            {author && <span className={styles.bookmarkAuthor}>{author}</span>}
           </div>
         </div>
-        <div className={styles.bookmarkThumbnail}>
-          <img src={metadata.thumbnail} />
-        </div>
+        {thumbnail && (
+          <div className={styles.bookmarkThumbnail}>
+            <img src={thumbnail} />
+          </div>
+        )}
       </a>
     </figure>
   );
@@ -377,8 +378,6 @@ const SelectPre: (
     "props" in props.children
   ) {
     switch (props.children?.props.className) {
-      case "language-bookmark":
-        return <RenderBookmark {...props.children.props} />;
       case "language-raw_html":
         return (
           <div
@@ -425,6 +424,8 @@ export const Render: FC<{
           h4: createHeading(4),
           h5: createHeading(5),
           h6: createHeading(6),
+
+          Bookmark: Bookmark,
         }}
       />
     </HighlightContext.Provider>
