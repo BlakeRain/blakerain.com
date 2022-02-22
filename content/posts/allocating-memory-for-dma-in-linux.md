@@ -176,7 +176,7 @@ hugepages-1048576kB hugepages-2048kB
 
 Each huge page directory contains a number of files that yield information about the number of reserved huge pages in the pool, the free count, and so on:
 
-```undefined caption="Files and Directories under /sys/kernel/mm/hugepages"
+```plain caption="Files and Directories under /sys/kernel/mm/hugepages"
 $ tree /sys/kernel/mm/hugepages
 /sys/kernel/mm/hugepages/
 ├── hugepages-1048576kB
