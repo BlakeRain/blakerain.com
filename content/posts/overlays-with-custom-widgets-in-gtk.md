@@ -645,15 +645,11 @@ After this final change to the `ControlPanel` widget we should have a demo that 
 
 If you want to download the source code for this demo you can find it at the following GitHub Gist:
 
-```bookmark
-type: bookmark
-url: https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b
-metadata:
-  url: https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b
-  title: collapse-controls.py
-  description: "GitHub Gist: instantly share code, notes, and snippets."
-  author: "262588213843476"
-  publisher: Gist
-  thumbnail: https://github.githubassets.com/images/modules/gists/gist-og-image.png
-  icon: https://github.githubassets.com/favicons/favicon.svg
-```
+<Bookmark
+  url="https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b"
+  title="collapse-controls.py"
+  description="GitHub Gist: instantly share code, notes, and snippets."
+  author="262588213843476"
+  publisher="Gist"
+  thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
+  icon="https://github.githubassets.com/favicons/favicon.svg" />

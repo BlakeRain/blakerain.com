@@ -22,20 +22,14 @@ See here for adding search: [https://blakerain.com/blog/adding-search-to-ghost](
 
 I've used [Ghost](https://ghost.org) to create this website. Ghost is a CMS, written in JavaScript, that provides a nice set of features without seeming to be too bloated.
 
-```bookmark
-type: bookmark
-url: https://ghost.org
-metadata:
-  url: https://ghost.org
-  title: "Ghost: The #1 open source headless Node.js CMS"
-  description: The world’s most popular modern open source publishing platform. A
-    headless Node.js CMS used by Apple, Sky News, Tinder and thousands more. MIT
-    licensed, with 30k+ stars on Github.
-  author: Albert Henk van Urkalberthenk.com
-  publisher: Ghost
-  thumbnail: https://ghost.org/images/meta/Ghost.png
-  icon: https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5
-```
+<Bookmark
+  url="https://ghost.org"
+  title="Ghost: The #1 open source headless Node.js CMS"
+  description="The world’s most popular modern open source publishing platform. A headless Node.js CMS used by Apple, Sky News, Tinder and thousands more. MIT licensed, with 30k+ stars on Github."
+  author="Albert Henk van Urkalberthenk.com"
+  publisher="Ghost"
+  thumbnail="https://ghost.org/images/meta/Ghost.png"
+  icon="https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5" />
 
 Apart from it's small size and not being built in PHP, some of the features that attracted me to Ghost are:
 
@@ -51,20 +45,14 @@ Apart from it's small size and not being built in PHP, some of the features that
 
 For the most part, installation of Ghost required following the instructions on the Ghost website. I roughly followed the guide for Ubuntu, as that is the distribution I chose:
 
-```bookmark
-type: bookmark
-url: https://ghost.org/docs/install/ubuntu/
-metadata:
-  url: https://ghost.org/docs/install/ubuntu/
-  title: How to install & setup Ghost on Ubuntu 16.04 + 18.04
-  description: A full production install guide for how to install the Ghost
-    professional publishing platform on a production server running Ubuntu 16.04
-    or 18.04.
-  author: Ghost
-  publisher: Ghost
-  thumbnail: https://ghost.org/images/meta/Ghost-Docs.jpg
-  icon: https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5
-```
+<Bookmark
+  url="https://ghost.org/docs/install/ubuntu/"
+  title="How to install & setup Ghost on Ubuntu 16.04 + 18.04"
+  description="A full production install guide for how to install the Ghost professional publishing platform on a production server running Ubuntu 16.04 or 18.04."
+  author="Ghost"
+  publisher="Ghost"
+  thumbnail="https://ghost.org/images/meta/Ghost-Docs.jpg"
+  icon="https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5" />
 
 To deploy Ghost I first created an AWS instance with Ubuntu 18.04 and attached an EIP to it. I used an EIP in case I needed to replace the instance (such as if it entered a degraded state), or I wanted to use an ELB or some other magic. I configured the security group for the instance's sole network interface to allow SSH from my own IP along with HTTP and HTTPS from anywhere else:
 
@@ -115,39 +103,24 @@ Once the site was private I felt more confident playing around with the Ghost se
 
 There are a lot of integrations that can work with Ghost, which are listed on the Ghost website:
 
-```bookmark
-type: bookmark
-url: https://ghost.org/integrations/
-metadata:
-  url: https://ghost.org/integrations/
-  title: Ghost Integrations – Connect your favourite Tools & Apps to your site
-  description: "Keep your stack aligned and integrate your most used tools & apps
-    with your Ghost site: automation, analytics, marketing, support and much
-    more! 👉"
-  author: null
-  publisher: Ghost
-  thumbnail: https://ghost.org/images/meta/Ghost-Integrations.jpg
-  icon: https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5
-```
+<Bookmark
+  url="https://ghost.org/integrations/"
+  title="Ghost Integrations – Connect your favourite Tools & Apps to your site"
+  description="Keep your stack aligned and integrate your most used tools & apps with your Ghost site: automation, analytics, marketing, support and much more! 👉"
+  publisher="Ghost"
+  thumbnail="https://ghost.org/images/meta/Ghost-Integrations.jpg"
+  icon="https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5" />
 
 I've really only used the built-in [Unsplash](https://ghost.org/integrations/unsplash/) integration along with [Commento](https://ghost.org/integrations/commento/) to provide embedded comment threads.
 
 After messing around with the tags, routing and other settings it was time to settle on a theme. Ghost has a large set of themes available on their [marketplace](https://ghost.org/marketplace/), many of which are free to use if you're so inclined.
 
-```bookmark
-type: bookmark
-url: https://ghost.org/marketplace/
-metadata:
-  url: https://ghost.org/marketplace/
-  title: Ghost Themes - The Marketplace
-  description: Discover beautiful professional themes for the Ghost publishing
-    platform. Custom templates for magazines, blogs, news websites, content
-    marketing & more!
-  author: null
-  publisher: Ghost
-  thumbnail: null
-  icon: https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5
-```
+<Bookmark
+  url="https://ghost.org/marketplace/"
+  title="Ghost Themes - The Marketplace"
+  description="Discover beautiful professional themes for the Ghost publishing platform. Custom templates for magazines, blogs, news websites, content marketing & more!"
+  author="Ghost"
+  icon="https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5" />
 
 After much indecision I decided to settle on the default theme for Ghost, which is called [Casper](https://demo.ghost.io). The theme that I am using is actually a slightly modified version. I only made a few minor changes, mostly relating to colors and to add a few custom templates. You can find the sources for my customization here:
 

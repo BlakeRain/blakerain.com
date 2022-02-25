@@ -95,13 +95,13 @@ assert((phy & BIT(63)) != 0);
 
 Now we can compute the physical address. The value given in the lower 55 bits of `phy` is the page frame number. The physical memory is divided into contigous regions of the system page size, thus we can multiply the page frame number by the system page size to obtain the physical address.
 
-```undefined
+```
 physical_address = PFN * page_size
 ```
 
 To make our virtual to physical mapping complete, we should take into account the case where our virtual address is offset from the start of a page. Therefore we need to make sure to add that offset to the computed physical address. The offset from the start of the page to the virtual pointer can be obtained by taking the modulus with the system page size. We can then add this on to our computed physical address.
 
-```undefined
+```
 physical_address = PFN * page_size + (vaddr % page_size)
 ```
 
@@ -146,7 +146,7 @@ Allocated huge pages are reserved by the Linux kernel in a huge page pool. These
 
 For example, the number of 2Mib huge pages reserved under NUMA node 0 is found in the file at the following location:
 
-```undefined
+```
 /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages
 ```
 
@@ -169,14 +169,14 @@ Huge pages provide a rather nice solution to our problem of obtaining large cont
 
 The first step towards allocating huge pages is to establish what huge pages are available to us. To do so we're going to query some files in the `/sys/kernel/mm/hugepages` directory. If any huge pages are configured, this directory will contain sub-directories for each huge page size:
 
-```undefined
+```
 $ ls /sys/kernel/mm/hugepages
 hugepages-1048576kB hugepages-2048kB
 ```
 
 Each huge page directory contains a number of files that yield information about the number of reserved huge pages in the pool, the free count, and so on:
 
-```undefined caption="Files and Directories under /sys/kernel/mm/hugepages"
+```plain caption="Files and Directories under /sys/kernel/mm/hugepages"
 $ tree /sys/kernel/mm/hugepages
 /sys/kernel/mm/hugepages/
 ├── hugepages-1048576kB
@@ -641,19 +641,14 @@ Preparing memory for use with DMA may seem a bit more complex than necessary. As
 
 I hope that this post may be of some use to those of you that need to communicate memory with devices connected to the PCI bus. You can find the complete listing as a GitHub gist:
 
-```bookmark
-type: bookmark
-url: https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595
-metadata:
-  url: https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595
-  title: Allocation of hugepages for DMA in Linux
-  description: "Allocation of hugepages for DMA in Linux. GitHub Gist: instantly
-    share code, notes, and snippets."
-  author: "262588213843476"
-  publisher: Gist
-  thumbnail: https://github.githubassets.com/images/modules/gists/gist-og-image.png
-  icon: https://github.githubassets.com/favicons/favicon.svg
-```
+<Bookmark
+  url="https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595"
+  title="Allocation of hugepages for DMA in Linux"
+  description="Allocation of hugepages for DMA in Linux. GitHub Gist: instantly share code, notes, and snippets."
+  author="262588213843476"
+  publisher="Gist"
+  thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
+  icon="https://github.githubassets.com/favicons/favicon.svg" />
 
 ```raw_html
 <small>
