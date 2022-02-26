@@ -92,6 +92,7 @@ Resources:
         Enabled: true
         DefaultRootObject: index.html
         DefaultCacheBehavior:
+          Compress: true
           AllowedMethods:
             - DELETE
             - GET
