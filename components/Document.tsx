@@ -6,6 +6,8 @@ import React, {
 } from "react";
 import cn from "classnames";
 
+import Image from "next/image";
+
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import styles from "./Document.module.scss";
@@ -206,33 +208,20 @@ const RenderImage: (
     HTMLImageElement
   >
 ) => JSX.Element = (props) => {
-  const query_index = props?.src?.indexOf("?");
-  const params = new URLSearchParams(
-    typeof query_index === "undefined" || query_index === -1
-      ? undefined
-      : props?.src?.substring(query_index)
-  );
-  const width = params.get("width");
-  const height = params.get("height");
-  const caption = params.get("caption");
-  const wide = Boolean(params.get("wide"));
-  const full = Boolean(params.get("full"));
+  const caption = props.alt && props.alt !== "" ? props.alt : undefined;
+  console.log(caption);
 
   return (
-    <figure
-      className={cn(styles.imageCard, {
-        [styles.imageCardWide]: wide,
-        [styles.imageCardFull]: full,
-        [styles.imageCardWithCaption]: Boolean(caption),
-      })}
-    >
-      <img
-        loading="lazy"
-        width={width || undefined}
-        height={height || undefined}
-        src={props.src}
-      />
-      {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
+    <figure className={styles.imageCard}>
+      <div className={styles.imageCardImage}>
+        <Image
+          src={props.src || ""}
+          width={props.width}
+          height={props.height}
+          alt={props.alt}
+        />
+      </div>
+      {caption && <figcaption>{caption}</figcaption>}
     </figure>
   );
 };
@@ -274,7 +263,7 @@ const Bookmark: (props: BookmarkProps) => JSX.Element = ({
         </div>
         {thumbnail && (
           <div className={styles.bookmarkThumbnail}>
-            <img src={thumbnail} />
+            <img src={thumbnail} alt={title} />
           </div>
         )}
       </a>
