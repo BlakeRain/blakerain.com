@@ -209,7 +209,6 @@ const RenderImage: (
   >
 ) => JSX.Element = (props) => {
   const caption = props.alt && props.alt !== "" ? props.alt : undefined;
-  console.log(caption);
 
   return (
     <figure className={styles.imageCard}>
