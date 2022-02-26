@@ -75,49 +75,49 @@ first->right = first->left->right;
 
 We can visualize the heap now as a graph of `Node` objects that refer to each other in a tree structure.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.42.29.png?width=353&height=360)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.42.29.png)
 
 Let's now work through the tri-color marking process. We first establish our initial colored sets of objects.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.04.png?width=689&height=126)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.04.png)
 
 Our grey set contains our single root, being the object pointed to by the `first` variable: `Node(1)`. Our white set contains all the other objects.
 
 The first pass of the tri-color marking process will see that the grey set is not empty: it contains the first node we allocated, which is pointed to by our root. We move it to the black set, as we want to preserve it.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.32.png?width=688&height=125)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.32.png)
 
 We then scan the object and find any pointers to objects in the white set. We find that it does indeed have two such a pointers in it's `left` and `right` fields.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.57.png?width=684&height=204)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.43.57.png)
 
 We have now established that these objects are live, so we no longer want them in the white (condemned) set. We move these two pointed-to objects from the white set to the grey set.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.21.png?width=585&height=197)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.21.png)
 
 At this point the first pass of the tri-color marking process has moved our initial root object into the black set to keep and marked two other objects for scanning.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.50.png?width=594&height=128)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.44.50.png)
 
 In the second iteration we see that the grey set is not empty, so we continue with our marking by taking an object from the grey set and moving it to the black set before scanning. We'll take the `Node(2)` node first, moving it to the black set.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.13.png?width=588&height=128)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.13.png)
 
 We then scan the `Node(2)` object for any pointers to objects in the white set. We find one such an object: `Node(3)`. Note that the object `Node(4)` is pointed to by `Node(2)`, but it is not in the white set.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.43.png?width=586&height=195)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.45.43.png)
 
 We move the object `Node(3)` from the white set to the grey set for processing.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.09.png?width=677&height=193)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.09.png)
 
 For the third pass we find that the grey set is still not empty, so we take an object from the grey set and move it to the black set. The next node we'll process is `Node(4)`. This node is moved to the black set and then scanned for pointers.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.36.png?width=679&height=123)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.46.36.png)
 
 We scan `Node(4)` and find no pointers into the white set. The fourth pass discovers the grey set is still not empty. We'll pick the next grey node `Node(3)` and move it to the black set.
 
-![undefined](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.47.06.png?width=777&height=120)
+![](/content/bitmap-tri-color-marking/Screenshot-2021-07-30-at-17.47.06.png)
 
 We scan `Node(3)` and find no pointers. With the final pass complete the grey set is empty. The objects that we want to keep are in the black set and the white set is empty. We have nothing that we want to free.
 

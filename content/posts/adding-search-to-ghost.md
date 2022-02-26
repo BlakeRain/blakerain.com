@@ -77,11 +77,11 @@ conn.commit()
 
 With the database set up I then moved on to querying the posts from the Content API. You can add API keys to Ghost very simply, by selecting **Integrations** under the settings panel. Here you can manage current integrations and add new ones:
 
-![undefined](/content/adding-search-to-ghost/image-15.png?width=842&height=214)
+![](/content/adding-search-to-ghost/image-15.png)
 
 When you add a new integration, you are presented with two API keys: one for the Content API and another for the Administration API. For this search feature I was only interested in the Content API key:
 
-![undefined](/content/adding-search-to-ghost/image-2-3.png?width=847&height=359)
+![](/content/adding-search-to-ghost/image-2-3.png)
 
 With the API key in hand I could start to make queries to the Content API using Python. To get the content of posts, I needed to make a query to the `api/v2/content/posts` URL, which would give me back some JSON for a set of posts. This JSON contained all sorts of details that I didn't really need, so I used the `include` parameter to select only the required fields for the database (see the documentation [here](https://ghost.org/docs/api/v3/content/#include)).
 
@@ -339,11 +339,11 @@ I also added some CSS to the `assets/css/screen.css` file that would apply some 
 
 With that in place I needed to create the search page. Now Ghost already provides a simple way of doing this, so I went into the **Pages** section of the administration interface and added a new page called **Search Results**. I changed the page URL in the settings to be `search`, which should correspond to the location to which the search results are posted:
 
-![undefined](/content/adding-search-to-ghost/image-3-1.png?width=308&height=294)
+![](/content/adding-search-to-ghost/image-3-1.png)
 
 With this page added I then tested the form, and it happily navigated me to the new search page and the form contents were in the URL. To create the contents of the search page I added them directly into the page editor in Ghost by selecting `HTML` when I added a new card in the editor:
 
-![undefined](/content/adding-search-to-ghost/Peek-2019-11-01-16-35.gif?width=859&height=279)
+![](/content/adding-search-to-ghost/Peek-2019-11-01-16-35.gif)
 
 With that open I could add the HTML for the larger search box and the JavaScript that makes the call to the API. The JavaScript to make the API call was fairly simple. The Ghost theme includes jQuery already, so I could make use of that rather than use `XMLHttpRequest` directly. First I needed to extract the search term from the URL. The form submits the search as URL encoded parameters, so I can extract the `search_term` using regular expressions and then massage the string somewhat to decode it:
 

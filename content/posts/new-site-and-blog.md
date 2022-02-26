@@ -91,13 +91,13 @@ After setting up the RDS instance, I followed the [instructions](https://ghost.o
 
 Finally I could make sure that the site was running using `ghost ls`, which gave some rather nice output:
 
-![](/content/new-site-and-blog/image-17.png?full=&width=841&height=102&caption=)
+![](/content/new-site-and-blog/image-17.png)
 
 ### Customizing Ghost
 
 Once I had an installation that was working I wanted to be able to customize it. The first thing I wanted to do was to make sure that the site was not generally available. Conveniently Ghost includes a simple way of doing this by switching the site to private, disabling access, SEO and social features. This option can be found in the **General** settings of the administration portal:
 
-![undefined](/content/new-site-and-blog/image-1-1.png?width=770&height=271)
+![](/content/new-site-and-blog/image-1-1.png)
 
 Once the site was private I felt more confident playing around with the Ghost settings, testing the publishing options and the site structure, without fear of exposing my utter incompetence. There are several options relating to site metadata and social stuff which I don't understand. You can apparently link it to you Facebook Page, however as I'm not a boomer I don't have a Facebook Page. You can link it to Twitter as well it seems, but I don't use Twitter either.
 

@@ -54,7 +54,7 @@ We understand that a process operates on virtual memory, and that memory is arra
 
 An answer to this lies in the process page map. The page map is a table that provides a correspondence between a virtual page number and the physical address of that page, along with some flags that tell us information about the page's residency. Each entry in the table is a 64-bit value, with bits 63 down through 55 providing the various flags, and bits 54 to 0 giving the page frame number (assuming the page is in RAM).
 
-![Layout of an entry in the page map](/content/allocating-memory-for-dma-in-linux/image-2-1.png?width=723&height=238&caption=Layout+of+an+entry+in+the+page+map)
+![Layout of an entry in the page map](/content/allocating-memory-for-dma-in-linux/image-2-1.png)
 
 Note that bits 54 through 0 are only the physical page frame number if the page is currently in memory. Under other circumstances it can indicate such things as the swap type and offset. We can ascertain whether the page is actually in RAM by checking if bit 63 is set. If bit 63 is set then the bits 54 through 0 are the page frame number.
 
