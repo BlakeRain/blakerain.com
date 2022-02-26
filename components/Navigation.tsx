@@ -1,10 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { SiteNavigation } from "../lib/utils";
 import { SearchContainer } from "./search/SearchContainer";
 import { SearchChildProps, SearchProvider } from "./search/SearchProvider";
 import styles from "./Navigation.module.scss";
 import { useRouter } from "next/router";
+
+import logoTextImage from "../public/media/logo-text.png";
 
 const trimTrailingSlash = (str: string): string => {
   return str.length > 0 && str.endsWith("/")
@@ -33,7 +36,7 @@ const SiteNav: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
     <React.Fragment>
       <Link href="/">
         <a className={styles.logo}>
-          <img src="/media/logo-text.png" alt="Blake Rain"></img>
+          <Image src={logoTextImage} width={154} height={28} alt="Blake Rain" />
         </a>
       </Link>
       <SiteNavLinks navigation={navigation} />

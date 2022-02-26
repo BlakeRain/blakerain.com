@@ -1,5 +1,6 @@
 import { FC } from "react";
 import cn from "classnames";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Tag, Tags } from "../lib/tags";
@@ -17,11 +18,18 @@ export const PostCard: FC<{
   return (
     <article className={cn(styles.postCard, { [styles.postCardLarge]: large })}>
       {post.coverImage ? (
-        <Link href={"/blog/" + post.slug}>
-          <a>
-            <img src={post.coverImage} alt={post.title} />
-          </a>
-        </Link>
+        <div className={styles.postCardCoverImage}>
+          <Link href={"/blog/" + post.slug}>
+            <a>
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                layout="fill"
+                objectFit="cover"
+              />
+            </a>
+          </Link>
+        </div>
       ) : null}
       <div className={styles.postCardInner}>
         <Link href={"/blog/" + post.slug}>
