@@ -12,6 +12,10 @@
   position: relative;
   width: 100%;
   height: 200px;
+
+  img {
+    border-radius: 8px;
+  }
 }
 
 .postCardInner {
