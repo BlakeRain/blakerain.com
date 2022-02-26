@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { SiteNavigation } from "../lib/utils";
 import { SearchContainer } from "./search/SearchContainer";
@@ -7,11 +6,9 @@ import { SearchChildProps, SearchProvider } from "./search/SearchProvider";
 import styles from "./Navigation.module.scss";
 import { useRouter } from "next/router";
 
-import logoTextImage from "../public/media/logo-text.png";
-
 const trimTrailingSlash = (str: string): string => {
   return str.length > 0 && str.endsWith("/")
-    ? str.substr(0, str.length - 1)
+    ? str.substring(0, str.length - 1)
     : str;
 };
 
@@ -36,7 +33,12 @@ const SiteNav: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
     <React.Fragment>
       <Link href="/">
         <a className={styles.logo}>
-          <Image src={logoTextImage} width={154} height={28} alt="Blake Rain" />
+          <img
+            src="/media/logo-text.png"
+            width={154}
+            height={28}
+            alt="Blake Rain"
+          />
         </a>
       </Link>
       <SiteNavLinks navigation={navigation} />
@@ -142,21 +144,19 @@ const SearchNavigation: FC<{ terms?: string }> = ({ terms }) => {
     }
   }, [router.asPath, terms]);
 
-  const gotoNext: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const gotoNext: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (current < marks.length - 1) {
       focusMark(current + 1);
     }
   };
 
-  const gotoPrev: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const gotoPrev: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (current > 0) {
       focusMark(current - 1);
     }
   };
 
-  const clearHighlight: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
+  const clearHighlight: React.MouseEventHandler<HTMLButtonElement> = () => {
     router.replace(location.pathname);
   };
 

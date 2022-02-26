@@ -6,10 +6,9 @@ import React, {
 } from "react";
 import cn from "classnames";
 
-import Image from "next/image";
-
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import Image from "./Image";
 import styles from "./Document.module.scss";
 
 import bash from "react-syntax-highlighter/dist/cjs/languages/hljs/bash";
@@ -215,8 +214,16 @@ const RenderImage: (
       <div className={styles.imageCardImage}>
         <Image
           src={props.src || ""}
-          width={props.width}
-          height={props.height}
+          width={
+            typeof props.width === "string"
+              ? parseInt(props.width)
+              : props.width
+          }
+          height={
+            typeof props.height === "string"
+              ? parseInt(props.height)
+              : props.height
+          }
           alt={props.alt}
         />
       </div>

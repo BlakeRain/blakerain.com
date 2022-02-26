@@ -1,12 +1,12 @@
 import { FC } from "react";
 import cn from "classnames";
-import Image from "next/image";
 import Link from "next/link";
 
 import { Tag, Tags } from "../lib/tags";
 import { PostInfo } from "../lib/content";
 import { PostDetails } from "./PostDetails";
 import { TagList } from "./TagList";
+import Image from "./Image";
 
 import styles from "./PostCard.module.scss";
 
