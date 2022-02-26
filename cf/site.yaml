@@ -69,8 +69,13 @@ Resources:
             Action:
               - s3:PutObject
               - s3:DeleteObject
-              - s3:ListBucket
             Resource: !Sub arn:aws:s3:::${BlakeRainBucket}/*
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:user/${BlakeRainGitHubDeployerUser}
+            Action:
+              - s3:ListBucket
+            Resource: !Sub arn:aws:s3:::${BlakeRainBucket}
 
   BlakeRainDistribution:
     Type: AWS::CloudFront::Distribution
