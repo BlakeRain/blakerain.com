@@ -25,6 +25,7 @@ export const PostCard: FC<{
               alt={post.title}
               layout="fill"
               objectFit="cover"
+              priority={true}
             />
           </a>
         </Link>
