@@ -119,8 +119,7 @@ async function main() {
     // Store the hash of the image
     image_hashes[image.relative] = image_hash;
 
-    for (let width_idx = 0; width_idx < widths.length; ++width_idx) {
-      const width = widths[width_idx];
+    for (let width of widths) {
       const out_path = imageOutputPath(image, width);
       const transformer = sharp(image_buf);
       await transformer.rotate();
