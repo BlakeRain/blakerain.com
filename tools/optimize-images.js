@@ -59,6 +59,15 @@ async function scanDirectory(dir, info) {
   }
 }
 
+function imageOutputPath(image, width) {
+  return path.join(
+    outDir,
+    image.directory,
+    "optimized",
+    `${image.basename}-opt-${width}.webp`
+  );
+}
+
 async function main() {
   console.log("Image optimization process");
 
@@ -90,8 +99,20 @@ async function main() {
     const expected_hash = image_hashes[image.relative];
     if (expected_hash) {
       if (image_hash === expected_hash) {
-        ++skipped;
-        continue;
+        // The hash matches, so ensure that the expected images exist
+        let missing = 0;
+        for (let width of widths) {
+          try {
+            await fs.access(imageOutputPath(image, width), fs.R_OK);
+          } catch {
+            ++missing;
+          }
+        }
+
+        if (missing === 0) {
+          ++skipped;
+          continue;
+        }
       }
     }
 
