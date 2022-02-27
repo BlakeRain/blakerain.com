@@ -11,7 +11,11 @@ export const PostDetails: FC<{ doc: DocInfo & { readingTime?: number } }> = ({
   return (
     <div className={styles.postDetails}>
       <div>
-        <img className={styles.authorImage} src="/media/profile.png" />
+        <img
+          className={styles.authorImage}
+          src="/media/profile.png"
+          alt="Blake Rain profile picture"
+        />
       </div>
       <div className={styles.postDetailsInner}>
         <ul>
