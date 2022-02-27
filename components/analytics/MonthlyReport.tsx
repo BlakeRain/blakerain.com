@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
-import { format } from "date-fns";
 
 import LineChart, { ChartPoint } from "./LineChart";
-
 import { BrowserReport } from "./BrowserReport";
 
 import {
@@ -59,7 +57,8 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
     <div className={styles.reportContents}>
       <div className={styles.reportControls}>
         <span>
-          <b>Date:</b> {format(new Date(year, month), "MM/yyyy")}
+          <b>Date:</b> {(1 + month).toString().padStart(2, "0")}/
+          {year.toString().padStart(4, "0")}
         </span>
         <div className="buttonGroup">
           <button type="button" onClick={handlePrevClick}>
@@ -79,7 +78,11 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
         )}
         {highlight ? (
           <span>
-            <b>{format(new Date(year, month, highlight.x), "dd/MM/yyyy")}:</b>{" "}
+            <b>
+              {highlight.x.toString().padStart(2, "0")}/
+              {month.toString().padStart(2, "0")}/
+              {year.toString().padStart(4, "0")}:
+            </b>{" "}
             {highlight.y ? highlight.y.toString() : "no"} visitors
           </span>
         ) : null}

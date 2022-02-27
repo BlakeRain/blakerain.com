@@ -1,6 +1,5 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { parseISO } from "date-fns";
 import { Node } from "unist";
 import * as hast from "hast";
 import * as mdast from "mdast";
@@ -275,7 +274,7 @@ export async function loadPostInfos(): Promise<PostInfo[]> {
   );
 
   return posts.sort(
-    (a, b) => parseISO(b.published).getTime() - parseISO(a.published).getTime()
+    (a, b) => new Date(b.published).getTime() - new Date(a.published).getTime()
   );
 }
 

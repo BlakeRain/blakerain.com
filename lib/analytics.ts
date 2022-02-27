@@ -6,7 +6,12 @@
 // This module contains the functionality that interfaces with the website analytics.
 //
 
-import { getDaysInMonth } from "date-fns";
+function getDaysInMonth(year: number, month: number): number {
+  const last = new Date(0);
+  last.setFullYear(year, 1 + month, 0);
+  last.setHours(0, 0, 0, 0);
+  return last.getDate();
+}
 
 export function getAnalyticsURL(path: string): string {
   const host = process.env.ANALYTICS_HOSTNAME || "https://pv.blakerain.com";
@@ -126,7 +131,7 @@ export const getMonthViews = async (
     }),
   });
 
-  const days = getDaysInMonth(new Date(year, month));
+  const days = getDaysInMonth(year, month);
   var months: MonthView[] = await res.json();
 
   for (let day = 1; day <= days; ++day) {

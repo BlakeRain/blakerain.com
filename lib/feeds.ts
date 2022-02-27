@@ -1,7 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { Feed, Item } from "feed";
-import { parseISO } from "date-fns";
 
 import { loadPostInfos } from "../lib/content";
 
@@ -38,7 +37,7 @@ export async function generateFeeds() {
       title: post.title,
       id: post_url,
       link: post_url,
-      date: parseISO(post.published),
+      date: new Date(post.published),
       author: [
         {
           name: "Blake Rain",

@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react";
-import { getISOWeek } from "date-fns";
 
 import LineChart, { ChartPoint } from "./LineChart";
 
@@ -15,6 +14,15 @@ import styles from "./Report.module.scss";
 
 const now = new Date();
 const WEEK_LABELS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+function getISOWeek(date: Date): number {
+  var d = new Date(date);
+  var dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  var diff = d.getTime() - yearStart.getTime();
+  return Math.ceil((diff / 86400000 + 1) / 7);
+}
 
 const WeeklyReport: FC<{ token: string }> = ({ token }) => {
   const [year, setYear] = useState(now.getFullYear());
