@@ -245,7 +245,13 @@ const Bookmark: (props: BookmarkProps) => JSX.Element = ({
             <div className={styles.bookmarkDescription}>{description}</div>
           )}
           <div className={styles.bookmarkMetadata}>
-            {icon && <img className={styles.bookmarkIcon} src={icon} />}
+            {icon && (
+              <img
+                className={styles.bookmarkIcon}
+                alt={publisher || undefined}
+                src={icon}
+              />
+            )}
             {publisher && (
               <span className={styles.bookmarkPublisher}>{publisher}</span>
             )}
