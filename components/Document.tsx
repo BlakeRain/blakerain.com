@@ -3,29 +3,14 @@ import React, {
   FC,
   HTMLAttributes,
   useContext,
+  useEffect,
+  useState,
 } from "react";
 import cn from "classnames";
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import Image from "./Image";
 import styles from "./Document.module.scss";
-
-import bash from "react-syntax-highlighter/dist/cjs/languages/hljs/bash";
-import cpp from "react-syntax-highlighter/dist/cjs/languages/hljs/cpp";
-import css from "react-syntax-highlighter/dist/cjs/languages/hljs/css";
-import js from "react-syntax-highlighter/dist/cjs/languages/hljs/javascript";
-import nginx from "react-syntax-highlighter/dist/cjs/languages/hljs/nginx";
-import rust from "react-syntax-highlighter/dist/cjs/languages/hljs/rust";
-import python from "react-syntax-highlighter/dist/cjs/languages/hljs/python";
-
-SyntaxHighlighter.registerLanguage("bash", bash);
-SyntaxHighlighter.registerLanguage("cpp", cpp);
-SyntaxHighlighter.registerLanguage("css", css);
-SyntaxHighlighter.registerLanguage("javascript", js);
-SyntaxHighlighter.registerLanguage("nginx", nginx);
-SyntaxHighlighter.registerLanguage("rust", rust);
-SyntaxHighlighter.registerLanguage("python", python);
 
 const HighlightContext = React.createContext<RegExp | null>(null);
 
@@ -340,12 +325,48 @@ const RenderCode: (
     lineNumberStart?: number;
   }
 ) => JSX.Element = (props) => {
-  const highlight = useContext(HighlightContext);
-  const caption = props.caption;
-  const syntax =
+  const language =
     typeof props.className === "string" &&
-    props.className !== "language-box-drawing";
-  const content = props.children as string;
+    props.className !== "language-box-drawing"
+      ? props.className.replace("language-", "")
+      : undefined;
+  const caption = props.caption;
+  const highlight = useContext(HighlightContext);
+  const [highlighter, setHighlighter] = useState<any>(null);
+
+  useEffect(() => {
+    if (language) {
+      import("./SyntaxHighlight").then((module) => {
+        setHighlighter(module);
+      });
+    }
+  }, []);
+
+  var code_block = null;
+  if (highlighter && language) {
+    const SyntaxHighlighter = highlighter.SyntaxHighlighter;
+    const content = props.children as string;
+
+    code_block = (
+      <SyntaxHighlighter
+        useInlineStyles={false}
+        showLineNumbers={props.lineNumbers}
+        startingLineNumber={props.lineNumberStart}
+        language={language}
+        renderer={getCodeRenderer(highlight)}
+      >
+        {content.endsWith("\n")
+          ? content.substring(0, content.length - 1)
+          : content}
+      </SyntaxHighlighter>
+    );
+  } else {
+    code_block = (
+      <pre>
+        <code>{props.children}</code>
+      </pre>
+    );
+  }
 
   return (
     <figure
@@ -353,23 +374,7 @@ const RenderCode: (
         [styles.codeCardWithCaption]: Boolean(caption),
       })}
     >
-      {syntax ? (
-        <SyntaxHighlighter
-          useInlineStyles={false}
-          showLineNumbers={props.lineNumbers}
-          startingLineNumber={props.lineNumberStart}
-          language={props?.className?.replace("language-", "") || undefined}
-          renderer={getCodeRenderer(highlight)}
-        >
-          {content.endsWith("\n")
-            ? content.substring(0, content.length - 1)
-            : content}
-        </SyntaxHighlighter>
-      ) : (
-        <pre>
-          <code>{props.children}</code>
-        </pre>
-      )}
+      {code_block}
       {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
     </figure>
   );
