@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { SiteNavigation } from "../lib/utils";
 import { SearchContainer } from "./search/SearchContainer";
@@ -121,36 +121,61 @@ const RssLink: FC = () => {
   );
 };
 
+export interface HighlightRefresh {
+  counter: number;
+  increment: () => void;
+}
+
 const SearchNavigation: FC<{ terms?: string }> = ({ terms }) => {
   const router = useRouter();
   const [marks, setMarks] = useState<HTMLElement[]>([]);
-  const [current, setCurrent] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(-1);
+
+  const highlightMark = (element: HTMLElement) => {
+    element.className = "active";
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   const focusMark = (index: number) => {
-    marks[current].className = "";
-    marks[index].className = "active";
-    marks[index].scrollIntoView({ behavior: "smooth", block: "center" });
+    if (current >= 0) {
+      marks[current].className = "";
+    }
+
+    highlightMark(marks[index]);
     setCurrent(index);
   };
 
-  useEffect(() => {
+  const findMarks = (firstTime: boolean) => {
     const found = Array.prototype.slice.call(document.querySelectorAll("mark"));
 
     setMarks(found);
-    setCurrent(0);
-    if (found.length > 0) {
-      found[0].className = "active";
-      found[0].scrollIntoView({ behavior: "smooth", block: "center" });
+    if (firstTime && found.length > 0) {
+      highlightMark(found[0]);
+      setCurrent(0);
+    } else {
+      if (current >= found.length) {
+        setCurrent(found.length > 0 ? marks.length - 1 : -1);
+      }
     }
+  };
+
+  useEffect(() => {
+    window.setTimeout(() => {
+      findMarks(true);
+    }, 150);
   }, [router.asPath, terms]);
 
   const gotoNext: React.MouseEventHandler<HTMLButtonElement> = () => {
+    findMarks(false);
+
     if (current < marks.length - 1) {
       focusMark(current + 1);
     }
   };
 
   const gotoPrev: React.MouseEventHandler<HTMLButtonElement> = () => {
+    findMarks(false);
+
     if (current > 0) {
       focusMark(current - 1);
     }
