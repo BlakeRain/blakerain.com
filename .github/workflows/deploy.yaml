@@ -16,7 +16,10 @@ jobs:
           node-version: 16
       - uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/node_modules
+          path: |
+            ${{ github.workspace }}/node_modules
+            ${{ github.workspace }}/public/content/**/optimized
+            ${{ github.workspace }}/public/content/images.sha256.json
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
       - run: yarn install
       - run: yarn build
