@@ -135,9 +135,9 @@ const RenderLink: (
     React.AnchorHTMLAttributes<HTMLAnchorElement>,
     HTMLAnchorElement
   >
-) => JSX.Element = ({ href, children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
-    <a href={href}>
+    <a {...props}>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
     </a>
   );
