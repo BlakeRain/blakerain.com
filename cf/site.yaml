@@ -86,7 +86,7 @@ Resources:
         Comment: Handle origin requests to add extensions
         Runtime: cloudfront-js-1.0
       FunctionCode: |
-        var hasExtension = /(.+)\.[a-zA-Z0-9]{2,5}$/;
+        var hasExtension = /(.+)\.[a-zA-Z0-9]{2,12}$/;
         function handler(event) {
           var request = event.request;
 
