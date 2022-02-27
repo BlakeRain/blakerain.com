@@ -46,10 +46,6 @@ export const Layout: FC<LayoutProps> = ({ navigation, children, wrap }) => {
         children
       )}
       <Footer />
-      <script
-        async
-        src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"
-      ></script>
     </React.Fragment>
   );
 };
