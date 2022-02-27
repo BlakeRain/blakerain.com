@@ -1,10 +1,19 @@
 {
-  "name": "",
-  "short_name": "",
+  "start": "https://www.blakerain.com/",
+  "name": "BlakeRain",
+  "description": "Personal site of Blake Rain",
+  "short_name": "BlakeRain",
+  "lang": "en-GB",
+  "orientation": "any",
   "icons": [
     {
       "src": "/android-chrome-72x72.png",
       "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-144x144.png",
+      "sizes": "144x144",
       "type": "image/png"
     }
   ],
