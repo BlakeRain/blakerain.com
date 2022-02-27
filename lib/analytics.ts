@@ -268,7 +268,7 @@ export const getBrowsersMonth = async (
     }
   });
 
-  const days = getDaysInMonth(new Date(year, month));
+  const days = getDaysInMonth(year, month);
   for (let day = 1; day <= days; ++day) {
     Object.keys(data.browsers).forEach((browser) => {
       const found = data.browsers[browser].find((item) => item.day === day);
