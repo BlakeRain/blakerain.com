@@ -36,14 +36,17 @@ export const Layout: FC<LayoutProps> = ({ navigation, children, wrap }) => {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#12304c" />
         <meta name="msapplication-TileColor" content="#12304e" />
         <meta name="theme-color" content="#12304e" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "Blake Rain",
-            url: "https://blakerain.com",
-          })}
-        </script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Blake Rain",
+              url: "https://blakerain.com",
+            }),
+          }}
+        />
       </Head>
       <Navigation navigation={navigation} />
       {wrap ? (

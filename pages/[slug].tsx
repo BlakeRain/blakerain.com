@@ -57,18 +57,21 @@ const PageView: NextPage<PageProps> = ({ navigation, page }) => {
       <Head>
         <title>{page.title}</title>
         {(typeof seo_index === "boolean" ? seo_index : true) && (
-          <script type="application/ld+json">
-            {JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebPage",
-              name: page.title,
-              description: page.excerpt || undefined,
-              publisher: {
-                "@type": "ProfilePage",
-                name: "BlakeRain's Website",
-              },
-            })}
-          </script>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                name: page.title,
+                description: page.excerpt || undefined,
+                publisher: {
+                  "@type": "ProfilePage",
+                  name: "BlakeRain's Website",
+                },
+              }),
+            }}
+          />
         )}
       </Head>
       <NextSeo

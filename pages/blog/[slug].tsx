@@ -89,67 +89,73 @@ const BlogPost: NextPage<BlogPostProps> = ({
     <Layout navigation={navigation}>
       <Head>
         <title>{post.title}</title>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            image: post.coverImage || undefined,
-            url: `https://blakerain.com/blog/${post.slug}`,
-            headline: post.title,
-            alternativeHeadline: post.excerpt || undefined,
-            dateCreated: post.published,
-            datePublished: post.published,
-            dateModified: post.published,
-            inLanguage: "en-GB",
-            isFamilyFriendly: "true",
-            accountablePerson: {
-              "@type": "Person",
-              name: "Blake Rain",
-              url: "https://blakerain.com",
-            },
-            author: {
-              "@type": "Person",
-              name: "Blake Rain",
-              url: "https://blakerain.com",
-            },
-            creator: {
-              "@type": "Person",
-              name: "Blake Rain",
-              url: "https://blakerain.com",
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "Blake Rain",
-              url: "https://blakerain.com",
-              logo: {
-                "@type": "ImageObject",
-                url: "https://blakerain.com/media/logo-text.png",
-                width: "308",
-                height: "56",
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              image: post.coverImage || undefined,
+              url: `https://blakerain.com/blog/${post.slug}`,
+              headline: post.title,
+              alternativeHeadline: post.excerpt || undefined,
+              dateCreated: post.published,
+              datePublished: post.published,
+              dateModified: post.published,
+              inLanguage: "en-GB",
+              isFamilyFriendly: "true",
+              accountablePerson: {
+                "@type": "Person",
+                name: "Blake Rain",
+                url: "https://blakerain.com",
               },
-            },
-            keywords: tags.map((tag) => tag.name),
-          })}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Blog",
-                item: "https://blakerain.com/blog",
+              author: {
+                "@type": "Person",
+                name: "Blake Rain",
+                url: "https://blakerain.com",
               },
-              {
-                "@type": "ListItem",
-                position: 2,
-                name: post.title,
+              creator: {
+                "@type": "Person",
+                name: "Blake Rain",
+                url: "https://blakerain.com",
               },
-            ],
-          })}
-        </script>
+              publisher: {
+                "@type": "Organization",
+                name: "Blake Rain",
+                url: "https://blakerain.com",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://blakerain.com/media/logo-text.png",
+                  width: "308",
+                  height: "56",
+                },
+              },
+              keywords: tags.map((tag) => tag.name),
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Blog",
+                  item: "https://blakerain.com/blog",
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: post.title,
+                },
+              ],
+            }),
+          }}
+        />
       </Head>
       <NextSeo
         title={post.title}
