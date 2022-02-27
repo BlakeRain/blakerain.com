@@ -90,7 +90,7 @@ Resources:
         function handler(event) {
           var request = event.request;
 
-          if (request.uri && request.url !== "/" && !request.uri.match(hasExtension)) {
+          if (request.uri && request.uri !== "/" && !request.uri.match(hasExtension)) {
             request.uri = request.uri + ".html";
           }
 
