@@ -121,13 +121,7 @@ async function main() {
 
     for (let width_idx = 0; width_idx < widths.length; ++width_idx) {
       const width = widths[width_idx];
-      const out_path = path.join(
-        outDir,
-        image.directory,
-        "optimized",
-        `${image.basename}-opt-${width}.webp`
-      );
-
+      const out_path = imageOutputPath(image, width);
       const transformer = sharp(image_buf);
       await transformer.rotate();
       const { width: metaWidth } = await transformer.metadata();
