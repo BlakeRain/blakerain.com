@@ -56,6 +56,20 @@ const PageView: NextPage<PageProps> = ({ navigation, page }) => {
     <Layout navigation={navigation} wrap>
       <Head>
         <title>{page.title}</title>
+        {(typeof seo_index === "boolean" ? seo_index : true) && (
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "http://schema.org",
+              "@type": "WebPage",
+              name: page.title,
+              description: page.excerpt || undefined,
+              publisher: {
+                "@type": "ProfilePage",
+                name: "BlakeRain's Website",
+              },
+            })}
+          </script>
+        )}
       </Head>
       <NextSeo
         noindex={typeof seo_index === "boolean" ? !seo_index : false}

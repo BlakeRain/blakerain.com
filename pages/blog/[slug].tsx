@@ -6,7 +6,7 @@ import {
   NextPage,
 } from "next";
 import Head from "next/head";
-import { NextSeo, ArticleJsonLd } from "next-seo";
+import { NextSeo } from "next-seo";
 import { SiteNavigation, loadNavigation } from "../../lib/utils";
 import { Post, loadPostSlugs, loadPostWithSlug } from "../../lib/content";
 import { Tag, loadTags } from "../../lib/tags";
@@ -89,6 +89,67 @@ const BlogPost: NextPage<BlogPostProps> = ({
     <Layout navigation={navigation}>
       <Head>
         <title>{post.title}</title>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "http://schema.org",
+            "@type": "BlogPosting",
+            image: post.coverImage || undefined,
+            url: `https://blakerain.com/blog/${post.slug}`,
+            headling: post.title,
+            alternativeHeadline: post.excerpt || undefined,
+            dateCreated: post.published,
+            datePublished: post.published,
+            dateModified: post.published,
+            inLanguage: "en-GB",
+            isFamilyFriendly: "true",
+            accountablePerson: {
+              "@type": "Person",
+              name: "Blake Rain",
+              url: "https://blakerain.com",
+            },
+            author: {
+              "@type": "Person",
+              name: "Blake Rain",
+              url: "https://blakerain.com",
+            },
+            creator: {
+              "@type": "Person",
+              name: "Blake Rain",
+              url: "https://blakerain.com",
+            },
+            publisher: {
+              "@type": "Organisation",
+              name: "Blake Rain",
+              url: "https://blakerain.com",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://blakerain.com/media/logo-text.png",
+                width: "308",
+                height: "56",
+              },
+            },
+            keywords: tags.map((tag) => tag.name),
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Blog",
+                item: "https://blakerain.com/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: post.title,
+              },
+            ],
+          })}
+        </script>
       </Head>
       <NextSeo
         title={post.title}
@@ -113,17 +174,6 @@ const BlogPost: NextPage<BlogPostProps> = ({
             tags: tags.map((tag) => tag.name),
           },
         }}
-      />
-      <ArticleJsonLd
-        type="Blog"
-        title={post.title}
-        description={post.excerpt || ""}
-        url={`https://www.blakerain.com/blog/${post.slug}`}
-        images={post.coverImage ? [post.coverImage] : []}
-        datePublished={post.published}
-        authorName={"Blake Rain"}
-        publisherName="blakerain.com"
-        publisherLogo="https://www.blakerain.com/media/logo-text.png"
       />
       <Content
         tags={tags}
