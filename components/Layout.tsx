@@ -38,7 +38,7 @@ export const Layout: FC<LayoutProps> = ({ navigation, children, wrap }) => {
         <meta name="theme-color" content="#12304e" />
         <script type="application/ld+json">
           {JSON.stringify({
-            "@context": "http://schema.org",
+            "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Blake Rain",
             url: "https://blakerain.com",

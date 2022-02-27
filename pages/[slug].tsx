@@ -59,7 +59,7 @@ const PageView: NextPage<PageProps> = ({ navigation, page }) => {
         {(typeof seo_index === "boolean" ? seo_index : true) && (
           <script type="application/ld+json">
             {JSON.stringify({
-              "@context": "http://schema.org",
+              "@context": "https://schema.org",
               "@type": "WebPage",
               name: page.title,
               description: page.excerpt || undefined,

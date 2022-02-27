@@ -91,11 +91,11 @@ const BlogPost: NextPage<BlogPostProps> = ({
         <title>{post.title}</title>
         <script type="application/ld+json">
           {JSON.stringify({
-            "@context": "http://schema.org",
+            "@context": "https://schema.org",
             "@type": "BlogPosting",
             image: post.coverImage || undefined,
             url: `https://blakerain.com/blog/${post.slug}`,
-            headling: post.title,
+            headline: post.title,
             alternativeHeadline: post.excerpt || undefined,
             dateCreated: post.published,
             datePublished: post.published,
@@ -118,7 +118,7 @@ const BlogPost: NextPage<BlogPostProps> = ({
               url: "https://blakerain.com",
             },
             publisher: {
-              "@type": "Organisation",
+              "@type": "Organization",
               name: "Blake Rain",
               url: "https://blakerain.com",
               logo: {
