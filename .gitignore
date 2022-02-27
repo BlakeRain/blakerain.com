@@ -42,3 +42,4 @@ yarn-error.log*
 
 # Optimized images
 /public/content/**/optimized
+/public/content/images.sha256.json
