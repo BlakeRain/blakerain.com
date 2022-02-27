@@ -19,7 +19,7 @@ async function scanDirectory(dir, info) {
     const image_path = path.join(baseDir, dir, image_filename);
     const image_stat = await fs.stat(image_path);
 
-    if (image_stat.isDirectory()) {
+    if (image_stat.isDirectory() && image_filename !== "optimized") {
       await scanDirectory(path.join(dir, image_filename), info);
     } else if (image_stat.isFile()) {
       const image_ext = path.extname(image_filename);
