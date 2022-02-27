@@ -3,7 +3,7 @@ const sharp = require("sharp");
 const path = require("path");
 
 const baseDir = path.join(process.cwd(), "public", "content");
-const outDir = path.join(process.cwd(), "out", "content");
+const outDir = path.join(process.cwd(), "public", "content");
 
 const IMAGE_SIZES = [16, 32, 48, 64, 96, 128, 256, 384];
 const DEVICE_SIZES = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
