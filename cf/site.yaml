@@ -110,6 +110,8 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${BlakeRainAccessIdentity}
         Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
         DefaultRootObject: index.html
         DefaultCacheBehavior:
           Compress: true
@@ -135,6 +137,7 @@ Resources:
         ViewerCertificate:
           AcmCertificateArn: !Ref CertificateArn
           SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
 
   BlakeRainHostedZoneRecordSetGroup:
     Type: AWS::Route53::RecordSetGroup
