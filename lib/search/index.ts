@@ -2,7 +2,6 @@ import { Decoder, Encoder } from "./store";
 import { IndexTerm } from "./term";
 import { Trie, TrieNode, TrieNodeVisitor } from "./trie";
 import { stemmer, STEM_WORDS } from "./stem";
-import { MarkdownExtractor } from "./markdown";
 
 const MAGIC = 0x53524348;
 const WORD_RE = /[\w_][\w_-]{2,}/g;
@@ -85,19 +84,20 @@ export class IndexBuilder {
     }
   }
 
-  public addDocument(
+  public async addDocument(
     page: boolean,
     slug: string,
     title: string,
     excerpt: string,
     content: string
-  ): IndexDocument {
+  ): Promise<IndexDocument> {
     const id = this.documents.size;
     const doc = new IndexDocument(page, id, slug, title, excerpt);
 
     this.documents.set(id, doc);
     this.addTermsFrom(doc.excerpt, id);
 
+    const { MarkdownExtractor } = await import("./markdown");
     for (let block of MarkdownExtractor.extract(content)) {
       this.addTermsFrom(block, id);
     }

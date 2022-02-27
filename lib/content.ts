@@ -296,7 +296,7 @@ export async function buildSearchIndex(): Promise<PreparedIndex> {
     );
 
     const { slug, title, excerpt } = extractDocInfo(filename, preamble);
-    index.addDocument(true, slug, title, excerpt || "", source);
+    await index.addDocument(true, slug, title, excerpt || "", source);
   }
 
   const postsDir = path.join(process.cwd(), "content", "posts");
@@ -306,7 +306,7 @@ export async function buildSearchIndex(): Promise<PreparedIndex> {
     );
 
     const { slug, title, excerpt } = extractDocInfo(filename, preamble);
-    index.addDocument(false, slug, title, excerpt || "", source);
+    await index.addDocument(false, slug, title, excerpt || "", source);
   }
 
   return index.prepare();
