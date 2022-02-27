@@ -260,7 +260,7 @@ const Bookmark: (props: BookmarkProps) => JSX.Element = ({
         </div>
         {thumbnail && (
           <div className={styles.bookmarkThumbnail}>
-            <img src={thumbnail} alt={title} />
+            <img src={thumbnail} alt={title} loading="lazy" decoding="async" />
           </div>
         )}
       </a>
