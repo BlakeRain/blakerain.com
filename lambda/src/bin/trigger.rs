@@ -1,5 +1,5 @@
 use aws_sdk_dynamodb::model::AttributeValue;
-use blakerain_analytics_lambdas::Env;
+use blakerain_analytics_lambdas::env::Env;
 use lambda_runtime::{handler_fn, Context, Error};
 use serde_json::Value;
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
@@ -154,7 +154,6 @@ async fn update_user_agent(env: &Env, time: &OffsetDateTime, ua: &str) -> Result
 }
 
 async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
-    println!("Event: {}", event);
     if let Some(records) = event.get("Records").and_then(|v| v.as_array()) {
         for record in records {
             match record.get("eventName").and_then(|v| v.as_str()) {

@@ -17,6 +17,7 @@ fernet = "0.1.4"
 http = "0.2"
 lambda_http = "0.4.1"
 lambda_runtime = "0.4.1"
+thiserror = "1.0"
 time = { version = "0.3.7", features = ["formatting"] }
 tokio = { version = "1", features = ["full"] }
 pbkdf2 = "0.10"
