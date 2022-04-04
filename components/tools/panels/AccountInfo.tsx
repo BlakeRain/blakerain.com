@@ -26,6 +26,10 @@ export const AccountInfoPanel: FC = () => {
     dispatch({ action: "setPositionRisk", risk: risk / 100 });
   };
 
+  const onPlacesChange = (places: number) => {
+    dispatch({ action: "setPlaces", places });
+  };
+
   return (
     <Card title="Account Information">
       <Grid rowGap={2}>
@@ -39,7 +43,7 @@ export const AccountInfoPanel: FC = () => {
           <NumberInput
             value={account.amount}
             prefix={CURRENCY_SYMBOLS.get(account.currency)}
-            places={2}
+            places={account.places}
             onChange={onAmountChange}
           />
         </FloatingLabel>
@@ -61,6 +65,14 @@ export const AccountInfoPanel: FC = () => {
             />
           </FloatingLabel>
         </Grid>
+        <FloatingLabel title="Decimal Places">
+          <NumberInput
+            value={account.places}
+            places={0}
+            suffix=" digits"
+            onChange={onPlacesChange}
+          />
+        </FloatingLabel>
       </Grid>
     </Card>
   );

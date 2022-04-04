@@ -107,7 +107,7 @@ export const PositionInfoPanel: FC = () => {
         (
         {formatNumber(
           account.exchangeRates.rates.get(position.currency) || 0,
-          4,
+          account.places,
           positionSymbol
         )}
         )
@@ -143,7 +143,7 @@ export const PositionInfoPanel: FC = () => {
           <FloatingLabel title="Open Price">
             <NumberInput
               value={position.openPrice}
-              places={4}
+              places={account.places}
               prefix={positionSymbol}
               onChange={onOpenPriceChange}
             />
@@ -159,7 +159,7 @@ export const PositionInfoPanel: FC = () => {
             <FloatingLabel title="Take Profit">
               <NumberInput
                 value={position.takeProfit || 0}
-                places={4}
+                places={account.places}
                 prefix={positionSymbol}
                 onChange={onTakeProfitChange}
                 disabled={typeof position.takeProfit !== "number"}
@@ -168,7 +168,7 @@ export const PositionInfoPanel: FC = () => {
             <FloatingLabel title="Take Profit Distance">
               <NumberInput
                 value={takeProfitDistance}
-                places={4}
+                places={account.places}
                 prefix={positionSymbol}
                 onChange={onTakeProfitDistanceChange}
                 disabled={typeof position.takeProfit !== "number"}
@@ -186,7 +186,7 @@ export const PositionInfoPanel: FC = () => {
             <FloatingLabel title="Stop Loss">
               <NumberInput
                 value={position.stopLoss || 0}
-                places={4}
+                places={account.places}
                 prefix={positionSymbol}
                 onChange={onStopLossChange}
                 disabled={typeof position.stopLoss !== "number"}
@@ -195,7 +195,7 @@ export const PositionInfoPanel: FC = () => {
             <FloatingLabel title="Stop Loss Distance">
               <NumberInput
                 value={stopLossDistance}
-                places={4}
+                places={account.places}
                 prefix={positionSymbol}
                 onChange={onStopLossDistanceChange}
                 disabled={typeof position.stopLoss !== "number"}

@@ -27,7 +27,7 @@ const SimplePositionSize: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 available,
-                2,
+                account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
             </td>
@@ -35,14 +35,18 @@ const SimplePositionSize: FC = () => {
           <tr>
             <th rowSpan={2}>Available Margin</th>
             <td className={styles.numberCell}>
-              {formatNumber(margin, 2, CURRENCY_SYMBOLS.get(account.currency))}
+              {formatNumber(
+                margin,
+                account.places,
+                CURRENCY_SYMBOLS.get(account.currency)
+              )}
             </td>
           </tr>
           <tr>
             <td className={styles.numberCell}>
               {formatNumber(
                 marginPos,
-                2,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -51,7 +55,9 @@ const SimplePositionSize: FC = () => {
             <th>Affordable Quantity</th>
             <td className={styles.numberCell}>
               {position.openPrice !== 0 ? (
-                <b>{formatNumber(amount, 2, undefined, " units")}</b>
+                <b>
+                  {formatNumber(amount, account.places, undefined, " units")}
+                </b>
               ) : (
                 "-"
               )}
@@ -90,7 +96,7 @@ const StopLossPosition: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 available,
-                2,
+                account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
             </td>
@@ -99,7 +105,7 @@ const StopLossPosition: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 availablePos,
-                4,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -109,7 +115,7 @@ const StopLossPosition: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 distance,
-                4,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -120,7 +126,7 @@ const StopLossPosition: FC = () => {
               <b>
                 {formatNumber(
                   position.openPrice - distance,
-                  4,
+                  account.places,
                   CURRENCY_SYMBOLS.get(position.currency)
                 )}
               </b>
@@ -169,7 +175,7 @@ const PlannedStopLossQuantity: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 available,
-                2,
+                account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
             </td>
@@ -178,7 +184,7 @@ const PlannedStopLossQuantity: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 availablePos,
-                4,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -188,7 +194,7 @@ const PlannedStopLossQuantity: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 position.stopLoss || 0,
-                4,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -198,7 +204,7 @@ const PlannedStopLossQuantity: FC = () => {
             <td className={styles.numberCell}>
               {formatNumber(
                 stopLossDistance,
-                4,
+                account.places,
                 CURRENCY_SYMBOLS.get(position.currency)
               )}
             </td>
@@ -206,7 +212,11 @@ const PlannedStopLossQuantity: FC = () => {
           <tr>
             <th>Available Quantity</th>
             <td className={styles.numberCell}>
-              {stopLossDistance !== 0 ? <b>{formatNumber(amount, 2)}</b> : "-"}
+              {stopLossDistance !== 0 ? (
+                <b>{formatNumber(amount, account.places)}</b>
+              ) : (
+                "-"
+              )}
             </td>
           </tr>
           {typeof position.takeProfit === "number" && (
@@ -215,7 +225,7 @@ const PlannedStopLossQuantity: FC = () => {
               <td className={styles.numberCell}>
                 {formatNumber(
                   (takeProfitDistance * amount) / rate,
-                  2,
+                  account.places,
                   CURRENCY_SYMBOLS.get(account.currency)
                 )}
               </td>

@@ -1,11 +1,17 @@
 import { Currency, ExchangeRates } from "./forex";
 
 export interface AccountInfo {
+  places: number;
   currency: Currency;
   exchangeRates: ExchangeRates;
   amount: number;
   marginRisk: number;
   positionRisk: number;
+}
+
+export interface SetPlacesAccountAction {
+  action: "setPlaces";
+  places: number;
 }
 
 export interface SetCurrencyAccountAction {
@@ -34,6 +40,7 @@ export interface SetPositionRiskAction {
 }
 
 export type AccountAction =
+  | SetPlacesAccountAction
   | SetCurrencyAccountAction
   | SetExchangeRatesAccountAction
   | SetAmountAccountAction
@@ -45,6 +52,8 @@ export function accountReducer(
   action: AccountAction
 ): AccountInfo {
   switch (action.action) {
+    case "setPlaces":
+      return { ...state, places: action.places };
     case "setCurrency":
       return { ...state, currency: action.currency };
     case "setExchangeRates":

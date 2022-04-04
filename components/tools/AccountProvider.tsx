@@ -17,6 +17,7 @@ export const AccountContext = React.createContext<
 
 export const AccountProvider: FC = ({ children }) => {
   const [account, dispatch] = React.useReducer(accountReducer, {
+    places: 4,
     currency: "GBP",
     exchangeRates: {
       base: "GBP",
