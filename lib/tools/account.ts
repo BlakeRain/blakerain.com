@@ -1,5 +1,7 @@
 import { Currency, ExchangeRates } from "./forex";
 
+const ACCOUNT_VERSION: number = 1;
+
 export interface AccountInfo {
   places: number;
   currency: Currency;
@@ -51,21 +53,92 @@ export function accountReducer(
   state: AccountInfo,
   action: AccountAction
 ): AccountInfo {
+  let new_value = null;
   switch (action.action) {
     case "setPlaces":
-      return { ...state, places: action.places };
+      new_value = { ...state, places: action.places };
+      break;
     case "setCurrency":
-      return { ...state, currency: action.currency };
+      new_value = { ...state, currency: action.currency };
+      break;
     case "setExchangeRates":
-      return { ...state, exchangeRates: action.exchangeRates };
+      new_value = { ...state, exchangeRates: action.exchangeRates };
+      break;
     case "setAmount":
-      return { ...state, amount: action.amount };
+      new_value = { ...state, amount: action.amount };
+      break;
     case "setMarginRisk":
-      return { ...state, marginRisk: action.risk };
+      new_value = { ...state, marginRisk: action.risk };
+      break;
     case "setPositionRisk":
-      return { ...state, positionRisk: action.risk };
+      new_value = { ...state, positionRisk: action.risk };
+      break;
     default:
       console.error("Unrecognized account action", action);
       return state;
   }
+
+  storeAccount(new_value);
+  return new_value;
+}
+
+export function storeAccount(account: AccountInfo) {
+  window.localStorage.setItem(
+    "blakerain.tools.accountinfo",
+    JSON.stringify({
+      ...account,
+      exchangeRates: {
+        base: account.currency,
+        rates: Array.from(account.exchangeRates.rates).reduce(
+          (obj, [key, value]) => {
+            obj[key] = value;
+            return obj;
+          },
+          {} as { [currency: string]: number }
+        ),
+      },
+      __version: ACCOUNT_VERSION,
+    })
+  );
+}
+
+export function deleteStoredAccount() {
+  window.localStorage.removeItem("blakerain.tools.accountinfo");
+}
+
+export function loadAccount(): AccountInfo | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const value = window.localStorage.getItem("blakerain.tools.accountinfo");
+  if (typeof value === "string") {
+    const account = JSON.parse(value) as AccountInfo & {
+      exchangeRates: { rates: { [name: string]: number } };
+      __version: number;
+    };
+
+    if (
+      typeof account.__version !== "number" ||
+      account.__version !== ACCOUNT_VERSION
+    ) {
+      deleteStoredAccount();
+      return null;
+    }
+
+    const rates = new Map<Currency, number>();
+    for (let symbol of Object.keys(account.exchangeRates.rates)) {
+      rates.set(symbol as Currency, account.exchangeRates.rates[symbol]);
+    }
+
+    return {
+      ...account,
+      exchangeRates: {
+        base: account.currency,
+        rates,
+      },
+    };
+  }
+
+  return null;
 }
