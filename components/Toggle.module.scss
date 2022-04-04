@@ -1,0 +1,62 @@
+@import "../styles/colors.scss";
+
+.toggle {
+  display: block;
+  position: relative;
+
+  cursor: pointer;
+
+  width: 6rem;
+  height: 3rem;
+
+  &.toggleActive {
+    .toggleBackground {
+      background-color: lighten($primary-background, 20%);
+    }
+
+    .toggleInner {
+      right: 0rem;
+    }
+  }
+}
+
+.toggleBackground {
+  position: absolute;
+
+  width: 6rem;
+  height: 1.5rem;
+
+  top: 0.75rem;
+
+  border-radius: 1.5rem;
+
+  background-color: $color-light-grey;
+}
+
+.toggleInner {
+  position: absolute;
+
+  width: 3rem;
+  height: 3rem;
+
+  top: 0;
+  right: 3rem;
+
+  border-radius: 1.5rem;
+
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+  transition: right 0.125s ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  .toggleBackground {
+    background-color: $color-mid-grey;
+  }
+
+  .toggleInner {
+    background-color: lighten($primary-background, 10%);
+  }
+}

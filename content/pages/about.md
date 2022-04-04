@@ -4,12 +4,12 @@ published: 2018-10-22T07:21:38.000Z
 excerpt: Some information about me, what I do and have done.
 ---
 
-I like to believe I'm a software engineer. The languages that I use in my everyday work are primarily C++ and
+I like to believe I'm a software engineer. The languages that I use in my everyday work are primarily Rust, C++, and
 [Haskell](https://www.haskell.org/), although I also end up writing a lot of Python and JavaScript. My current editor of
 choice is [neovim](https://neovim.io), although I sometimes use [vscode](https://code.visualstudio.com/) and
 the venerable [emacs](https://www.gnu.org/software/emacs/) for those [irreplaceable](https://orgmode.org/) modes.
 [Linux](https://www.linux.org/) has almost always been my main operating system both personally and professionally, with
-some Unix thrown in for variety. Recently I've moved to the M1 for my daily driver.
+some Unix thrown in for variety. Recently I've moved to the Apple M1 for my daily driver.
 
 I currently work at [Neo Technologies](https://neotechnologiesltd.com/) as the Technical Director.
 

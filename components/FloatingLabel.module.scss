@@ -1,0 +1,13 @@
+.floatingLabel {
+  display: flex;
+  flex-direction: column;
+
+  h4 {
+    margin: 0;
+    font-weight: normal;
+
+    small {
+      display: inline;
+    }
+  }
+}

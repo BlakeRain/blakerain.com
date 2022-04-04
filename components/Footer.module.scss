@@ -63,8 +63,74 @@
           display: none;
         }
       }
+
+      svg {
+        position: relative;
+        top: 2px;
+        height: 0.9em;
+      }
     }
   }
+}
+
+.popup {
+  position: relative;
+}
+
+.popupMenu {
+  position: absolute;
+
+  bottom: 3rem;
+  right: -1em;
+  width: 20rem;
+
+  display: none;
+
+  padding: 1rem;
+
+  background-color: lighten($primary-background, 10%);
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+
+    right: 1rem;
+    bottom: -1rem;
+
+    width: 0;
+    height: 0;
+
+    border-left: 1rem solid transparent;
+    border-right: 1rem solid transparent;
+    border-top: 1rem solid lighten($primary-background, 10%);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    li {
+      margin: 0;
+      padding: 0;
+
+      display: block;
+
+      a {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.popupOpen {
+  display: block;
 }
 
 @media (max-width: 650px) {
