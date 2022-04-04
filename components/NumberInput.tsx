@@ -67,6 +67,21 @@ const NumberInput: FC<NumberInputProps> = ({
     setEditValue(event.target.value);
   };
 
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (event.key === "Enter") {
+      try {
+        var valueNum = parseFloat(editValue);
+        if (onChange) {
+          onChange(valueNum);
+
+          if (inputEl.current) {
+            inputEl.current.select();
+          }
+        }
+      } catch {}
+    }
+  };
+
   return (
     <input
       ref={inputEl}
@@ -78,6 +93,7 @@ const NumberInput: FC<NumberInputProps> = ({
       onFocus={onFocus}
       onBlur={onBlur}
       onChange={onInputChange}
+      onKeyDown={onKeyDown}
     />
   );
 };
