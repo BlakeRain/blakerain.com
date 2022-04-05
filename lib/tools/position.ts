@@ -6,6 +6,7 @@ export type Direction = "buy" | "sell";
 export interface PositionInfo {
   currency: Currency;
   openPrice: number;
+  quantity: number | null;
   direction: Direction;
   margin: number;
   takeProfit: number | null;
@@ -20,6 +21,11 @@ export interface SetCurrencyPositionAction {
 export interface SetOpenPricePositionAction {
   action: "setOpenPrice";
   openPrice: number;
+}
+
+export interface SetQuantityPositionAction {
+  action: "setQuantity";
+  quantity: number | null;
 }
 
 export interface SetDirectionPositionAction {
@@ -45,6 +51,7 @@ export interface SetStopLossPositionAction {
 export type PositionAction =
   | SetCurrencyPositionAction
   | SetOpenPricePositionAction
+  | SetQuantityPositionAction
   | SetDirectionPositionAction
   | SetMarginPositionAction
   | SetTakeProfitPositionAction
@@ -59,6 +66,8 @@ export function positionReducer(
       return { ...state, currency: action.currency };
     case "setOpenPrice":
       return { ...state, openPrice: action.openPrice };
+    case "setQuantity":
+      return { ...state, quantity: action.quantity };
     case "setDirection": {
       let takeProfit = state.takeProfit;
       let stopLoss = state.stopLoss;
@@ -111,7 +120,16 @@ interface PositionSize {
   /// Margin available (in position currency)
   marginPos: number;
   /// Quantity affordable at position price (as units)
-  amount: number;
+  quantity: number;
+  /// Optional actual position size margin risk
+  actual: null | {
+    /// The actual position cost (in position currency)
+    costPos: number;
+    /// The actual position cost (in account currency)
+    cost: number;
+    /// The account margin required (as a %)
+    margin: number;
+  };
 }
 
 export function computePositionSize(
@@ -123,31 +141,75 @@ export function computePositionSize(
   const availablePos = available * rate;
   const margin = available / (position.margin || 1);
   const marginPos = margin * rate;
-  const amount = marginPos / position.openPrice;
+  const quantity = marginPos / position.openPrice;
 
-  return { available, availablePos, margin, marginPos, amount };
+  const computeActual = (actualQuantity: number) => {
+    const costPos = actualQuantity * position.openPrice * position.margin;
+    const cost = costPos / rate;
+    const margin = cost / account.amount;
+
+    return { costPos, cost, margin };
+  };
+
+  const actual =
+    typeof position.quantity === "number"
+      ? computeActual(position.quantity)
+      : null;
+
+  return { available, availablePos, margin, marginPos, quantity, actual };
 }
 
 interface StopLoss {
-  /// Computed or specified position size
-  size: number;
+  /// Funds available under position risk (in account currency)
+  available: number;
+  /// Funds available under position risk (in position currency)
+  availablePos: number;
+  /// Specified position size
+  quantity: number;
   /// Required stop-loss distance
   distance: number;
+  /// Optional actual stop-loss assessment
+  actual: null | {
+    /// The actual stop-loss distance (in position currency)
+    distance: number;
+    /// The possible loss
+    loss: number;
+    /// The actual position risk (as a %)
+    risk: number;
+  };
 }
 
 export function computeStopLoss(
   account: AccountInfo,
   position: PositionInfo,
-  size?: number
+  quantity: number
 ): StopLoss {
-  const position_size = computePositionSize(account, position);
+  const rate = account.exchangeRates.rates.get(position.currency) || 1;
+  const available = account.amount * account.positionRisk;
+  const availablePos = available * rate;
+  const distance = quantity === 0 ? 0 : availablePos / quantity;
 
-  if (typeof size !== "number") {
-    size = position_size.amount;
-  }
+  const computeActual = (stopLoss: number) => {
+    const actualDistance =
+      position.direction === "buy"
+        ? position.openPrice - stopLoss
+        : stopLoss - position.openPrice;
+    const loss = (actualDistance * quantity) / rate;
+    const risk = loss / account.amount;
 
-  const distance = position_size.availablePos / size;
-  return { size, distance };
+    return {
+      distance: actualDistance,
+      loss,
+      risk,
+    };
+  };
+
+  const actual =
+    typeof position.stopLoss === "number"
+      ? computeActual(position.stopLoss)
+      : null;
+
+  return { available, availablePos, quantity, distance, actual };
 }
 
 interface StopLossQuantity {
@@ -158,7 +220,7 @@ interface StopLossQuantity {
   /// Computed stop loss distance (in position currency)
   stopLossDistance: number;
   /// Amount that can be bought at the given stop loss (as units)
-  amount: number;
+  quantity: number;
   /// Required margin for that amount (in account currency)
   margin: number;
 }
@@ -177,8 +239,8 @@ export function computedStopLossQuantity(
   const rate = account.exchangeRates.rates.get(position.currency) || 1;
   const available = account.amount * account.positionRisk;
   const availablePos = available * rate;
-  const amount = availablePos / stopLossDistance;
-  const margin = (amount * position.openPrice * position.margin) / rate;
+  const quantity = availablePos / stopLossDistance;
+  const margin = (quantity * position.openPrice * position.margin) / rate;
 
-  return { available, availablePos, stopLossDistance, amount, margin };
+  return { available, availablePos, stopLossDistance, quantity, margin };
 }

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Currency, CURRENCY_SYMBOLS } from "../../../lib/tools/forex";
-import { Direction } from "../../../lib/tools/position";
+import { computePositionSize, Direction } from "../../../lib/tools/position";
 import { formatNumber } from "../../../lib/tools/utils";
 import Card from "../../Card";
 import CurrencySelect from "../../CurrencySelect";
@@ -44,6 +44,23 @@ export const PositionInfoPanel: FC = () => {
 
   const onOpenPriceChange = (openPrice: number) => {
     dispatch({ action: "setOpenPrice", openPrice });
+  };
+
+  const onQuantityToggleChange = (enabled: boolean) => {
+    if (enabled) {
+      dispatch({ action: "setQuantity", quantity: 0 });
+    } else {
+      dispatch({ action: "setQuantity", quantity: null });
+    }
+  };
+
+  const onQuantityChange = (quantity: number) => {
+    dispatch({ action: "setQuantity", quantity });
+  };
+
+  const onUseAffordableClick = () => {
+    const { quantity } = computePositionSize(account, position);
+    dispatch({ action: "setQuantity", quantity });
   };
 
   const onDirectionChange: React.ChangeEventHandler<HTMLSelectElement> = (
@@ -148,6 +165,33 @@ export const PositionInfoPanel: FC = () => {
               onChange={onOpenPriceChange}
             />
           </FloatingLabel>
+        </Grid>
+        <Grid columns={["6rem", "1fr"]} columnGap={2}>
+          <Toggle
+            value={typeof position.quantity === "number"}
+            onChange={onQuantityToggleChange}
+            style={{ marginTop: "3rem" }}
+          />
+          <Grid columns={2} columnGap={2}>
+            <FloatingLabel title="Quantity">
+              <NumberInput
+                value={position.quantity || 0}
+                places={2}
+                suffix=" units"
+                onChange={onQuantityChange}
+                disabled={typeof position.quantity !== "number"}
+              />
+            </FloatingLabel>
+            <FloatingLabel title="&nbsp;">
+              <button
+                type="button"
+                onClick={onUseAffordableClick}
+                disabled={typeof position.quantity !== "number"}
+              >
+                Use Affordable
+              </button>
+            </FloatingLabel>
+          </Grid>
         </Grid>
         <Grid columns={["6rem", "1fr"]} columnGap={2}>
           <Toggle

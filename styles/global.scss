@@ -56,6 +56,10 @@ h6 {
   }
 }
 
+.text-danger {
+  color: $color-red;
+}
+
 button {
   background-color: $button-background;
 
@@ -65,8 +69,8 @@ button {
 
   padding: 1rem 2rem;
 
-  border: none;
-  border-radius: 5px;
+  border: 1px solid $color-light-grey;
+  border-radius: 0.25rem;
 
   transition: all 0.25s ease;
 
@@ -75,8 +79,10 @@ button {
   }
 
   &:disabled {
-    background-color: lighten($primary-background, 15%);
-    color: rgba(255, 255, 255, 0.4);
+    border-color: transparent;
+    background-color: $color-light-grey;
+    cursor: inherit;
+    color: $color-mid-grey;
   }
 }
 
@@ -150,6 +156,14 @@ select {
     }
   }
 
+  button {
+    border-color: $color-mid-grey;
+
+    &:disabled {
+      background-color: $color-dark-grey;
+    }
+  }
+
   select,
   input {
     color: rgba(255, 255, 255, 0.75);
@@ -162,6 +176,7 @@ select {
     }
 
     &:disabled {
+      border-color: transparent;
       background-color: $color-dark-grey;
     }
   }
