@@ -137,7 +137,11 @@ const SimplePositionSize: FC = () => {
               </tr>
               {Math.round(100 * actual.margin) > 100 * account.marginRisk && (
                 <tr>
-                  <td colSpan={2} className="text-danger">
+                  <td
+                    colSpan={2}
+                    className="text-danger"
+                    style={{ paddingTop: "2rem" }}
+                  >
                     Actual quantity of {formatNumber(position.quantity || 0, 2)}{" "}
                     units exceeds account margin risk of{" "}
                     {formatNumber(account.marginRisk * 100, 0, undefined, "%")}{" "}
@@ -256,10 +260,46 @@ const StopLossPosition: FC = () => {
               </tr>
               <tr>
                 <th>Actual Risk</th>
-                <td className={styles.numberCell}>
+                <td
+                  className={cn(styles.numberCell, {
+                    "text-danger":
+                      Math.round(100 * actual.risk) >
+                      100 * account.positionRisk,
+                  })}
+                >
                   {formatNumber(actual.risk * 100, 2, undefined, "%")}
                 </td>
               </tr>
+              {Math.round(100 * actual.risk) > 100 * account.positionRisk && (
+                <tr>
+                  <td
+                    colSpan={2}
+                    className="text-danger"
+                    style={{ paddingTop: "2rem" }}
+                  >
+                    Actual stop loss of{" "}
+                    {formatNumber(
+                      actual.loss,
+                      2,
+                      CURRENCY_SYMBOLS.get(account.currency)
+                    )}{" "}
+                    exceeds account position risk of{" "}
+                    {formatNumber(
+                      account.positionRisk * 100,
+                      0,
+                      undefined,
+                      "%"
+                    )}{" "}
+                    by{" "}
+                    {formatNumber(
+                      actual.loss - available,
+                      2,
+                      CURRENCY_SYMBOLS.get(account.currency)
+                    )}
+                    .
+                  </td>
+                </tr>
+              )}
             </>
           )}
         </tbody>
