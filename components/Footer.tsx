@@ -39,10 +39,6 @@ export const Footer: FC = () => {
             </Link>
             <Dismissable onDismiss={() => setShowTools(false)}>
               <div className={styles.popup}>
-                <a href="#" onClick={onToolsClick}>
-                  Tools
-                  <Caret direction={showTools ? "down" : "up"} />
-                </a>
                 <div
                   className={cn(styles.popupMenu, {
                     [styles.popupOpen]: showTools,
@@ -56,6 +52,10 @@ export const Footer: FC = () => {
                     </li>
                   </ul>
                 </div>
+                <a href="#" onClick={onToolsClick}>
+                  Tools
+                  <Caret direction="up" filled={showTools} />
+                </a>
               </div>
             </Dismissable>
             <a href="https://twitter.com/HalfWayMan">Twitter</a>

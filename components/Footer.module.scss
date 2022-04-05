@@ -44,8 +44,16 @@
     a {
       color: rgba(255, 255, 255, 0.7);
       position: relative;
-      margin-left: 20px;
 
+      svg {
+        position: relative;
+        top: 2px;
+        height: 0.9em;
+      }
+    }
+
+    > a,
+    .popup {
       &:before {
         content: "";
         position: absolute;
@@ -54,20 +62,18 @@
         left: -11px;
         width: 2px;
         height: 2px;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.75);
         border-radius: 100%;
       }
+    }
+
+    > a {
+      margin-left: 20px;
 
       &:first-of-type {
         &:before {
           display: none;
         }
-      }
-
-      svg {
-        position: relative;
-        top: 2px;
-        height: 0.9em;
       }
     }
   }
@@ -75,6 +81,7 @@
 
 .popup {
   position: relative;
+  margin-left: 20px;
 }
 
 .popupMenu {
@@ -139,15 +146,45 @@
     align-items: flex-start;
   }
 
-  .navigation {
-    align-items: flex-start;
+  .copyright {
+    margin-bottom: 1rem;
+  }
 
+  .navigation {
     nav {
+      flex-direction: column;
+
       a {
         &:first-child {
           margin-left: 0;
         }
       }
+
+      > a,
+      .popup {
+        margin-left: 0;
+        margin-bottom: 1rem;
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .popupMenu {
+    position: relative;
+
+    bottom: auto;
+    right: auto;
+
+    height: auto;
+
+    margin-bottom: 1rem;
+
+    &::after {
+      right: auto;
+      left: 1rem;
     }
   }
 }
