@@ -140,7 +140,8 @@ const SimplePositionSize: FC = () => {
                   <td colSpan={2} className="text-danger">
                     Actual quantity of {formatNumber(position.quantity || 0, 2)}{" "}
                     units exceeds account margin risk of{" "}
-                    {formatNumber(account.marginRisk, 0, undefined, "%")} by{" "}
+                    {formatNumber(account.marginRisk * 100, 0, undefined, "%")}{" "}
+                    by{" "}
                     {formatNumber(
                       actual.costPos - available,
                       2,
