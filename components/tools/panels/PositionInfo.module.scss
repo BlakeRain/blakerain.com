@@ -1,0 +1,17 @@
+.positionGrid,
+.quantityGrid,
+.takeStopGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 800px) {
+  .positionGrid,
+  .quantityGrid,
+  .takeStopGrid {
+    grid-template-columns: 1fr;
+  }
+  .positionGrid,
+  .takeStopGrid {
+    row-gap: 2rem;
+  }
+}

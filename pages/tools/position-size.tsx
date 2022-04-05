@@ -10,6 +10,7 @@ import AccountInfoPanel from "../../components/tools/panels/AccountInfo";
 import { PositionProvider } from "../../components/tools/PositionProvider";
 import { PositionInfoPanel } from "../../components/tools/panels/PositionInfo";
 import PositionSizePanel from "../../components/tools/panels/PositionSizePanel";
+import styles from "./position-size.module.scss";
 
 export const getStaticProps: GetStaticProps = async () => {
   const navigation = await loadNavigation();
@@ -32,7 +33,7 @@ const PositionSize: NextPage<{ navigation: SiteNavigation[] }> = ({
       <Analytics />
       <AccountProvider>
         <PositionProvider>
-          <Grid columns={2} columnGap={2} mt={2} mb={2}>
+          <Grid className={styles.grid} columnGap={2} mt={2} mb={2}>
             <AccountInfoPanel />
             <PositionInfoPanel />
           </Grid>

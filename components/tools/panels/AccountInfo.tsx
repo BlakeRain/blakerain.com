@@ -6,6 +6,7 @@ import FloatingLabel from "../../FloatingLabel";
 import Grid from "../../Grid";
 import NumberInput from "../../NumberInput";
 import { useAccount } from "../AccountProvider";
+import styles from "./AccountInfo.module.scss";
 
 export const AccountInfoPanel: FC = () => {
   const { account, dispatch } = useAccount();
@@ -47,7 +48,7 @@ export const AccountInfoPanel: FC = () => {
             onChange={onAmountChange}
           />
         </FloatingLabel>
-        <Grid columns={2} columnGap={2}>
+        <Grid className={styles.riskGrid} columnGap={2}>
           <FloatingLabel title="Margin Risk">
             <NumberInput
               value={account.marginRisk * 100}

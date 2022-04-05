@@ -11,6 +11,7 @@ export interface GridProps {
   mr?: number;
   mb?: number;
   ml?: number;
+  className?: string;
   style?: React.CSSProperties;
 }
 
@@ -24,6 +25,7 @@ export const Grid: FC<GridProps> = ({
   mb,
   ml,
   style,
+  className,
   children,
 }) => {
   const computedStyle: React.CSSProperties = { ...style };
@@ -65,7 +67,7 @@ export const Grid: FC<GridProps> = ({
   }
 
   return (
-    <div className={styles.grid} style={computedStyle}>
+    <div className={cn(styles.grid, className)} style={computedStyle}>
       {children}
     </div>
   );

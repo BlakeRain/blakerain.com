@@ -10,6 +10,7 @@ import NumberInput from "../../NumberInput";
 import Toggle from "../../Toggle";
 import { useAccount } from "../AccountProvider";
 import { usePosition } from "../PositionProvider";
+import styles from "./PositionInfo.module.scss";
 
 export const PositionInfoPanel: FC = () => {
   const { account } = useAccount();
@@ -134,7 +135,7 @@ export const PositionInfoPanel: FC = () => {
   return (
     <Card title="Position Information">
       <Grid rowGap={2}>
-        <Grid columns={2} columnGap={2}>
+        <Grid className={styles.positionGrid} columnGap={2}>
           <FloatingLabel title={<span>Position Currency {exchange}</span>}>
             <CurrencySelect
               value={position.currency}
@@ -150,7 +151,7 @@ export const PositionInfoPanel: FC = () => {
             />
           </FloatingLabel>
         </Grid>
-        <Grid columns={2} columnGap={2}>
+        <Grid className={styles.positionGrid} columnGap={2}>
           <FloatingLabel title="Position Direction">
             <select value={position.direction} onChange={onDirectionChange}>
               <option value="buy">Buy</option>
@@ -172,7 +173,7 @@ export const PositionInfoPanel: FC = () => {
             onChange={onQuantityToggleChange}
             style={{ marginTop: "3rem" }}
           />
-          <Grid columns={2} columnGap={2}>
+          <Grid className={styles.quantityGrid} columnGap={2}>
             <FloatingLabel title="Quantity">
               <NumberInput
                 value={position.quantity || 0}
@@ -200,7 +201,7 @@ export const PositionInfoPanel: FC = () => {
             onChange={onTakeProfitToggleChange}
             style={{ marginTop: "3rem" }}
             />
-          <Grid columns={2} columnGap={2}>
+          <Grid className={styles.takeStopGrid} columnGap={2}>
             <FloatingLabel title="Take Profit">
               <NumberInput
                 value={position.takeProfit || 0}
@@ -228,7 +229,7 @@ export const PositionInfoPanel: FC = () => {
             onChange={onStopLossToggleChange}
             style={{ marginTop: "3rem" }}
           />
-          <Grid columns={2} columnGap={2}>
+          <Grid className={styles.takeStopGrid} columnGap={2}>
             <FloatingLabel title="Stop Loss">
               <NumberInput
                 value={position.stopLoss || 0}

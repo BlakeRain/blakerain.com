@@ -390,7 +390,11 @@ export const PositionSizePanel: FC = () => {
 
   return (
     <Grid
-      columns={typeof position.stopLoss === "number" ? 3 : 2}
+      className={
+        typeof position.stopLoss === "number"
+          ? styles.gridWithLoss
+          : styles.gridNoLoss
+      }
       columnGap={2}
       mb={2}
     >
