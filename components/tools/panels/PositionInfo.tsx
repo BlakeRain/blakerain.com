@@ -20,12 +20,12 @@ export const PositionInfoPanel: FC = () => {
       <small>{`(${Math.round(1 / position.margin)}x leverage)`}</small>
     ) : null;
 
-  const takeProfitDistance =
-    typeof position.takeProfit === "number"
-      ? position.direction === "buy"
-        ? position.takeProfit - position.openPrice
-        : position.openPrice - position.takeProfit
-      : 0;
+  // const takeProfitDistance =
+  //   typeof position.takeProfit === "number"
+  //     ? position.direction === "buy"
+  //       ? position.takeProfit - position.openPrice
+  //       : position.openPrice - position.takeProfit
+  //     : 0;
 
   const stopLossDistance =
     typeof position.stopLoss === "number"
@@ -72,27 +72,27 @@ export const PositionInfoPanel: FC = () => {
     });
   };
 
-  const onTakeProfitToggleChange = (enabled: boolean) => {
-    if (enabled) {
-      dispatch({ action: "setTakeProfit", takeProfit: position.openPrice });
-    } else {
-      dispatch({ action: "setTakeProfit", takeProfit: null });
-    }
-  };
-
-  const onTakeProfitChange = (takeProfit: number) => {
-    dispatch({ action: "setTakeProfit", takeProfit });
-  };
-
-  const onTakeProfitDistanceChange = (takeProfitDistance: number) => {
-    dispatch({
-      action: "setTakeProfit",
-      takeProfit:
-        position.direction === "buy"
-          ? position.openPrice + takeProfitDistance
-          : position.openPrice - takeProfitDistance,
-    });
-  };
+  // const onTakeProfitToggleChange = (enabled: boolean) => {
+  //   if (enabled) {
+  //     dispatch({ action: "setTakeProfit", takeProfit: position.openPrice });
+  //   } else {
+  //     dispatch({ action: "setTakeProfit", takeProfit: null });
+  //   }
+  // };
+  //
+  // const onTakeProfitChange = (takeProfit: number) => {
+  //   dispatch({ action: "setTakeProfit", takeProfit });
+  // };
+  //
+  // const onTakeProfitDistanceChange = (takeProfitDistance: number) => {
+  //   dispatch({
+  //     action: "setTakeProfit",
+  //     takeProfit:
+  //       position.direction === "buy"
+  //         ? position.openPrice + takeProfitDistance
+  //         : position.openPrice - takeProfitDistance,
+  //   });
+  // };
 
   const onStopLossToggleChange = (enabled: boolean) => {
     if (enabled) {
@@ -193,12 +193,13 @@ export const PositionInfoPanel: FC = () => {
             </FloatingLabel>
           </Grid>
         </Grid>
+        {/*
         <Grid columns={["6rem", "1fr"]} columnGap={2}>
           <Toggle
             value={typeof position.takeProfit === "number"}
             onChange={onTakeProfitToggleChange}
             style={{ marginTop: "3rem" }}
-          />
+            />
           <Grid columns={2} columnGap={2}>
             <FloatingLabel title="Take Profit">
               <NumberInput
@@ -207,7 +208,7 @@ export const PositionInfoPanel: FC = () => {
                 prefix={positionSymbol}
                 onChange={onTakeProfitChange}
                 disabled={typeof position.takeProfit !== "number"}
-              />
+                />
             </FloatingLabel>
             <FloatingLabel title="Take Profit Distance">
               <NumberInput
@@ -216,10 +217,11 @@ export const PositionInfoPanel: FC = () => {
                 prefix={positionSymbol}
                 onChange={onTakeProfitDistanceChange}
                 disabled={typeof position.takeProfit !== "number"}
-              />
+                />
             </FloatingLabel>
           </Grid>
         </Grid>
+        */}
         <Grid columns={["6rem", "1fr"]} columnGap={2}>
           <Toggle
             value={typeof position.stopLoss === "number"}
