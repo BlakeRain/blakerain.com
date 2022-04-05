@@ -1,3 +1,4 @@
+import { AccountInfo } from "./account";
 import { Currency } from "./forex";
 
 export type Direction = "buy" | "sell";
@@ -98,4 +99,86 @@ export function positionReducer(
       console.error("Unrecognized position action", action);
       return state;
   }
+}
+
+interface PositionSize {
+  /// Funds available under margin risk (in account currency)
+  available: number;
+  /// Funds available under margin risk (in position currency)
+  availablePos: number;
+  /// Margin available under margin risk (in account currency)
+  margin: number;
+  /// Margin available (in position currency)
+  marginPos: number;
+  /// Quantity affordable at position price (as units)
+  amount: number;
+}
+
+export function computePositionSize(
+  account: AccountInfo,
+  position: PositionInfo
+): PositionSize {
+  const rate = account.exchangeRates.rates.get(position.currency) || 1;
+  const available = account.amount * account.marginRisk;
+  const availablePos = available * rate;
+  const margin = available / (position.margin || 1);
+  const marginPos = margin * rate;
+  const amount = marginPos / position.openPrice;
+
+  return { available, availablePos, margin, marginPos, amount };
+}
+
+interface StopLoss {
+  /// Computed or specified position size
+  size: number;
+  /// Required stop-loss distance
+  distance: number;
+}
+
+export function computeStopLoss(
+  account: AccountInfo,
+  position: PositionInfo,
+  size?: number
+): StopLoss {
+  const position_size = computePositionSize(account, position);
+
+  if (typeof size !== "number") {
+    size = position_size.amount;
+  }
+
+  const distance = position_size.availablePos / size;
+  return { size, distance };
+}
+
+interface StopLossQuantity {
+  /// Funds available under position risk (in account currency)
+  available: number;
+  /// Funds available under position risk (in position currency)
+  availablePos: number;
+  /// Computed stop loss distance (in position currency)
+  stopLossDistance: number;
+  /// Amount that can be bought at the given stop loss (as units)
+  amount: number;
+  /// Required margin for that amount (in account currency)
+  margin: number;
+}
+
+export function computedStopLossQuantity(
+  account: AccountInfo,
+  position: PositionInfo
+): StopLossQuantity {
+  const stopLossDistance =
+    typeof position.stopLoss === "number"
+      ? position.direction === "buy"
+        ? position.openPrice - position.stopLoss
+        : position.stopLoss - position.openPrice
+      : 0;
+
+  const rate = account.exchangeRates.rates.get(position.currency) || 1;
+  const available = account.amount * account.positionRisk;
+  const availablePos = available * rate;
+  const amount = availablePos / stopLossDistance;
+  const margin = (amount * position.openPrice * position.margin) / rate;
+
+  return { available, availablePos, stopLossDistance, amount, margin };
 }
