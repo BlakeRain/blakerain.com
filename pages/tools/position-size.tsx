@@ -11,6 +11,7 @@ import { PositionProvider } from "../../components/tools/PositionProvider";
 import { PositionInfoPanel } from "../../components/tools/panels/PositionInfo";
 import PositionSizePanel from "../../components/tools/panels/PositionSizePanel";
 import styles from "./position-size.module.scss";
+import { NextSeo } from "next-seo";
 
 export const getStaticProps: GetStaticProps = async () => {
   const navigation = await loadNavigation();
@@ -30,6 +31,7 @@ const PositionSize: NextPage<{ navigation: SiteNavigation[] }> = ({
       <Head>
         <title>Position Size Calculator</title>
       </Head>
+      <NextSeo noindex nofollow />
       <Analytics />
       <AccountProvider>
         <PositionProvider>

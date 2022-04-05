@@ -187,7 +187,10 @@ export const PositionInfoPanel: FC = () => {
               <button
                 type="button"
                 onClick={onUseAffordableClick}
-                disabled={typeof position.quantity !== "number"}
+                disabled={
+                  typeof position.quantity !== "number" ||
+                  position.openPrice === 0
+                }
               >
                 Use Affordable
               </button>
