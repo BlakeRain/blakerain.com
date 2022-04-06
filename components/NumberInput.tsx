@@ -86,6 +86,7 @@ const NumberInput: FC<NumberInputProps> = ({
     <input
       ref={inputEl}
       type="text"
+      inputMode="decimal"
       className={cn(styles.numberInput, className)}
       id={id}
       disabled={disabled}
