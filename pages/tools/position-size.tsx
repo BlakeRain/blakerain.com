@@ -35,7 +35,7 @@ const PositionSize: NextPage<{ navigation: SiteNavigation[] }> = ({
       <Analytics />
       <AccountProvider>
         <PositionProvider>
-          <Grid className={styles.grid} columnGap={2} mt={2} mb={2}>
+          <Grid className={styles.grid} columnGap={2} mb={2}>
             <AccountInfoPanel />
             <PositionInfoPanel />
           </Grid>
