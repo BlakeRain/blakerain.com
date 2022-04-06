@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  color: darken($color-mid-grey, 30%);
+  color: $color-body-text;
 
   font-family: $body-font-family;
   font-size: 1.6rem;
@@ -27,7 +27,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   body {
-    color: rgba(255, 255, 255, 0.75);
+    color: $dark-mode-body-text;
     background: $dark-mode-background;
   }
 }

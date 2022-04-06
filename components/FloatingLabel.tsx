@@ -5,17 +5,25 @@ import styles from "./FloatingLabel.module.scss";
 export interface FloatingLabelProps {
   title: React.ReactNode;
   className?: string;
+  row?: boolean;
 }
 
 export const FloatingLabel: FC<FloatingLabelProps> = ({
   title,
   className,
+  row = false,
   children,
 }) => {
   return (
-    <div className={cn(styles.floatingLabel, className)}>
+    <div
+      className={cn(
+        styles.floatingLabel,
+        { [styles.floatingLabelRow]: row },
+        className
+      )}
+    >
       <h4>{title}</h4>
-      {children}
+      <div className={styles.floatingLabelBody}>{children}</div>
     </div>
   );
 };

@@ -1,9 +1,14 @@
 import React, { FC } from "react";
 import { Currency, CURRENCY_SYMBOLS } from "../../../lib/tools/forex";
-import { computePositionSize, Direction } from "../../../lib/tools/position";
+import {
+  computedStopLossQuantity,
+  computePositionSize,
+  Direction,
+} from "../../../lib/tools/position";
 import { formatNumber } from "../../../lib/tools/utils";
 import Card from "../../Card";
 import CurrencySelect from "../../CurrencySelect";
+import DropdownButton from "../../DropdownButton";
 import FloatingLabel from "../../FloatingLabel";
 import Grid from "../../Grid";
 import NumberInput from "../../NumberInput";
@@ -60,7 +65,13 @@ export const PositionInfoPanel: FC = () => {
   };
 
   const onUseAffordableClick = () => {
+    console.log("useAffordableClick");
     const { quantity } = computePositionSize(account, position);
+    dispatch({ action: "setQuantity", quantity });
+  };
+
+  const onUseAvailableClick = () => {
+    const { quantity } = computedStopLossQuantity(account, position);
     dispatch({ action: "setQuantity", quantity });
   };
 
@@ -183,17 +194,29 @@ export const PositionInfoPanel: FC = () => {
                 disabled={typeof position.quantity !== "number"}
               />
             </FloatingLabel>
-            <FloatingLabel title="&nbsp;">
-              <button
-                type="button"
+            <FloatingLabel title="Use Calculated Value">
+              <DropdownButton
+                title="Affordable"
                 onClick={onUseAffordableClick}
                 disabled={
                   typeof position.quantity !== "number" ||
                   position.openPrice === 0
                 }
               >
-                Use Affordable
-              </button>
+                <button type="button" onClick={onUseAffordableClick}>
+                  Affordable Quantity
+                </button>
+                <button
+                  type="button"
+                  onClick={onUseAvailableClick}
+                  disabled={
+                    typeof position.stopLoss !== "number" ||
+                    stopLossDistance === 0
+                  }
+                >
+                  Stop Loss Quantity
+                </button>
+              </DropdownButton>
             </FloatingLabel>
           </Grid>
         </Grid>

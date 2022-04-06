@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef } from "react";
 
 export const Dismissable: FC<{
-  onDismiss: () => void;
+  onDismiss: (event: MouseEvent) => void;
 }> = ({ onDismiss, children }) => {
   const outerDiv = useRef<HTMLDivElement>(null);
 
@@ -12,7 +12,7 @@ export const Dismissable: FC<{
         outerDiv.current &&
         !outerDiv.current.contains(event.target as Node)
       ) {
-        onDismiss();
+        onDismiss(event);
       }
     };
 

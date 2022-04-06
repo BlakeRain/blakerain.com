@@ -18,7 +18,7 @@ export const PositionProvider: FC = ({ children }) => {
   const [position, dispatch] = React.useReducer(positionReducer, {
     currency: "GBP",
     openPrice: 0,
-    quantity: 0,
+    quantity: null,
     direction: "buy",
     margin: 0.05,
     takeProfit: null,

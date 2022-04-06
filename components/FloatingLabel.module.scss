@@ -10,4 +10,15 @@
       display: inline;
     }
   }
+
+  .floatingLabelBody {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.floatingLabelRow {
+  .floatingLabelBody {
+    flex-direction: row;
+  }
 }
