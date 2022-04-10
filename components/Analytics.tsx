@@ -3,13 +3,18 @@ import React, { useEffect, useState } from "react";
 const uuidv4 = (): string => {
   return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => {
     const n = parseInt(c, 10);
-    return (n ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))).toString(16);
+    return (
+      n ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))
+    ).toString(16);
   });
 };
 
-const ensureStartSlash = (path: string): string => (path.startsWith("/") ? path : "/" + path);
+const ensureStartSlash = (path: string): string =>
+  path.startsWith("/") ? path : "/" + path;
 
-const isIPAddressLike = (host: string): boolean => /[0-9]+$/.test(host.replace(/\./g, ""));
+const isIPAddressLike = (host: string): boolean =>
+  /[0-9]+$/.test(host.replace(/\./g, ""));
 
 const cleanReferrer = (url: string): string =>
   url
@@ -53,7 +58,9 @@ interface AnalyticsParams {
   scroll?: number;
 }
 
-const encodeParamValue = (value: string | number | undefined): string | undefined => {
+const encodeParamValue = (
+  value: string | number | undefined
+): string | undefined => {
   if (typeof value === "string") {
     return encodeURIComponent(value);
   } else if (typeof value === "number") {
@@ -113,14 +120,23 @@ const ANALYTICS_URL = "https://pv.blakerain.com/pv.gif";
 const AnalyticsImage = ({ data }: { data: AnalyticsData }) => {
   return (
     <img
-      style={{ visibility: "hidden", width: 0, height: 0 }}
+      style={{
+        visibility: "hidden",
+        width: 0,
+        height: 0,
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+      }}
       src={`${ANALYTICS_URL}?${data.toParams()}`}
     />
   );
 };
 
 const Analytics = () => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
