@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
+import { getExchangeRates } from "../../lib/tools/forex";
 import {
   PositionAction,
   PositionInfo,
@@ -16,7 +17,9 @@ export const PositionContext = React.createContext<
 
 export const PositionProvider: FC = ({ children }) => {
   const [position, dispatch] = React.useReducer(positionReducer, {
-    currency: "GBP",
+    posCurrency: "GBP",
+    quoteCurrency: "GBP",
+    conversion: 1,
     openPrice: 0,
     quantity: null,
     direction: "buy",
@@ -24,6 +27,17 @@ export const PositionProvider: FC = ({ children }) => {
     takeProfit: null,
     stopLoss: null,
   });
+
+  useEffect(() => {
+    getExchangeRates(position.posCurrency, position.quoteCurrency).then(
+      (exchangeRates) => {
+        dispatch({
+          action: "setConversion",
+          conversion: exchangeRates.rates.get(position.quoteCurrency) || 1,
+        });
+      }
+    );
+  }, [position.posCurrency, position.quoteCurrency]);
 
   return (
     <PositionContext.Provider value={{ position, dispatch }}>

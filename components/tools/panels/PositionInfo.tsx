@@ -40,8 +40,12 @@ export const PositionInfoPanel: FC = () => {
         : position.stopLoss - position.openPrice
       : 0;
 
-  const onCurrencyChange = (currency: Currency) => {
-    dispatch({ action: "setCurrency", currency });
+  const onPosCurrencyChange = (currency: Currency) => {
+    dispatch({ action: "setPosCurrency", currency });
+  };
+
+  const onQuoteCurrencyChange = (currency: Currency) => {
+    dispatch({ action: "setQuoteCurrency", currency });
   };
 
   const onMarginChange = (margin: number) => {
@@ -128,31 +132,64 @@ export const PositionInfoPanel: FC = () => {
     });
   };
 
-  const positionSymbol = CURRENCY_SYMBOLS.get(position.currency);
+  const positionSymbol = CURRENCY_SYMBOLS.get(position.posCurrency);
+  const quoteSymbol = CURRENCY_SYMBOLS.get(position.quoteCurrency);
 
-  const exchange =
-    account.currency !== position.currency ? (
-      <small>
-        (
+  const posExchange =
+    account.currency !== position.posCurrency ? (
+      <>
+        ({account.currency}&rarr;{position.posCurrency}{" "}
         {formatNumber(
-          account.exchangeRates.rates.get(position.currency) || 0,
+          account.exchangeRates.rates.get(position.posCurrency) || 0,
           account.places,
           positionSymbol
         )}
         )
-      </small>
-    ) : null;
+      </>
+    ) : (
+      <>&nbsp;</>
+    );
+
+  const quoteExchange =
+    position.quoteCurrency !== position.posCurrency ? (
+      <>
+        ({position.posCurrency}&rarr;{position.quoteCurrency}{" "}
+        {formatNumber(position.conversion, account.places, quoteSymbol)})
+      </>
+    ) : (
+      <>&nbsp;</>
+    );
 
   return (
     <Card title="Position Information">
       <Grid rowGap={2}>
         <Grid className={styles.positionGrid} columnGap={2}>
-          <FloatingLabel title={<span>Position Currency {exchange}</span>}>
+          <FloatingLabel
+            title={
+              <span>
+                Position <small>{posExchange}</small>
+              </span>
+            }
+          >
             <CurrencySelect
-              value={position.currency}
-              onChange={onCurrencyChange}
+              value={position.posCurrency}
+              onChange={onPosCurrencyChange}
             />
           </FloatingLabel>
+          <FloatingLabel
+            title={
+              <span>
+                Quote <small>{quoteExchange}</small>
+              </span>
+            }
+          >
+            <CurrencySelect
+              value={position.quoteCurrency}
+              onChange={onQuoteCurrencyChange}
+            />
+          </FloatingLabel>
+        </Grid>
+        <Grid className={styles.positionGrid} columnGap={2}>
           <FloatingLabel title={<span>Position Margin {leverage}</span>}>
             <NumberInput
               value={position.margin * 100}
@@ -161,19 +198,19 @@ export const PositionInfoPanel: FC = () => {
               onChange={onMarginChange}
             />
           </FloatingLabel>
-        </Grid>
-        <Grid className={styles.positionGrid} columnGap={2}>
           <FloatingLabel title="Position Direction">
             <select value={position.direction} onChange={onDirectionChange}>
               <option value="buy">Buy</option>
               <option value="sell">Sell</option>
             </select>
           </FloatingLabel>
+        </Grid>
+        <Grid className={styles.priceGrid}>
           <FloatingLabel title="Open Price">
             <NumberInput
               value={position.openPrice}
               places={account.places}
-              prefix={positionSymbol}
+              prefix={quoteSymbol}
               onChange={onOpenPriceChange}
             />
           </FloatingLabel>
@@ -260,7 +297,7 @@ export const PositionInfoPanel: FC = () => {
               <NumberInput
                 value={position.stopLoss || 0}
                 places={account.places}
-                prefix={positionSymbol}
+                prefix={quoteSymbol}
                 onChange={onStopLossChange}
                 disabled={typeof position.stopLoss !== "number"}
               />
@@ -269,7 +306,7 @@ export const PositionInfoPanel: FC = () => {
               <NumberInput
                 value={stopLossDistance}
                 places={account.places}
-                prefix={positionSymbol}
+                prefix={quoteSymbol}
                 onChange={onStopLossDistanceChange}
                 disabled={typeof position.stopLoss !== "number"}
               />
