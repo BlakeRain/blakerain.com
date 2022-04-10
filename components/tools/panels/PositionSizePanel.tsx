@@ -12,6 +12,7 @@ import Grid from "../../Grid";
 import { useAccount } from "../AccountProvider";
 import { usePosition } from "../PositionProvider";
 import styles from "./PositionSizePanel.module.scss";
+import Tooltip from "../../Tooltip";
 
 const SimplePositionSize: FC = () => {
   const { account } = useAccount();
@@ -47,6 +48,9 @@ const SimplePositionSize: FC = () => {
                 account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
+              <Tooltip position="left">
+                Amount of account available under margin risk
+              </Tooltip>
             </td>
           </tr>
           {account.currency !== position.posCurrency && (
@@ -57,6 +61,9 @@ const SimplePositionSize: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.posCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under margin risk in the position currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -68,6 +75,9 @@ const SimplePositionSize: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.quoteCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under margin risk in the quote currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -87,6 +97,11 @@ const SimplePositionSize: FC = () => {
                 account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
+              <Tooltip position="left">
+                Available amount with a{" "}
+                {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                position margin
+              </Tooltip>
             </td>
           </tr>
           {account.currency !== position.posCurrency && (
@@ -97,6 +112,11 @@ const SimplePositionSize: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.posCurrency)
                 )}
+                <Tooltip position="left">
+                  Available amount with a{" "}
+                  {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                  position margin converted to position currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -108,6 +128,11 @@ const SimplePositionSize: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.quoteCurrency)
                 )}
+                <Tooltip position="left">
+                  Available amount with a{" "}
+                  {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                  position margin converted to quote currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -119,6 +144,20 @@ const SimplePositionSize: FC = () => {
               ) : (
                 "-"
               )}
+              <Tooltip position="left">
+                Position size that can be taken at an open price of{" "}
+                {formatNumber(
+                  position.openPrice,
+                  account.places,
+                  CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                )}{" "}
+                with available margin of{" "}
+                {formatNumber(
+                  marginQuote,
+                  account.places,
+                  CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                )}
+              </Tooltip>
             </td>
           </tr>
           {actual && (position.quantity || 0) > 0 && (
@@ -131,6 +170,9 @@ const SimplePositionSize: FC = () => {
                 <th>Actual Quantity</th>
                 <td className={styles.numberCell}>
                   {formatNumber(position.quantity || 0, 2, undefined, " units")}
+                  <Tooltip position="left">
+                    Quantity entered into position form
+                  </Tooltip>
                 </td>
               </tr>
               <tr>
@@ -139,8 +181,17 @@ const SimplePositionSize: FC = () => {
                   {formatNumber(
                     (position.quantity || 0) * position.openPrice,
                     account.places,
-                    CURRENCY_SYMBOLS.get(position.posCurrency)
+                    CURRENCY_SYMBOLS.get(position.quoteCurrency)
                   )}
+                  <Tooltip position="left">
+                    Cost of opening the position of{" "}
+                    {formatNumber(position.quantity || 0, 2)} units at{" "}
+                    {formatNumber(
+                      position.openPrice,
+                      account.places,
+                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                    )}
+                  </Tooltip>
                 </td>
               </tr>
               <tr>
@@ -157,8 +208,20 @@ const SimplePositionSize: FC = () => {
                   {formatNumber(
                     actual.costQuote,
                     account.places,
-                    CURRENCY_SYMBOLS.get(position.posCurrency)
+                    CURRENCY_SYMBOLS.get(position.quoteCurrency)
                   )}
+                  <Tooltip position="left">
+                    Amount required at{" "}
+                    {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                    position margin (
+                    {formatNumber(
+                      1.0 / (position.margin || 1),
+                      0,
+                      undefined,
+                      "x"
+                    )}{" "}
+                    leverage)
+                  </Tooltip>
                 </td>
               </tr>
               {position.quoteCurrency !== position.posCurrency && (
@@ -167,8 +230,13 @@ const SimplePositionSize: FC = () => {
                     {formatNumber(
                       actual.costPos,
                       account.places,
-                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                      CURRENCY_SYMBOLS.get(position.posCurrency)
                     )}
+                    <Tooltip position="left">
+                      Amount required at{" "}
+                      {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                      margin, converted into the position currency.
+                    </Tooltip>
                   </td>
                 </tr>
               )}
@@ -180,6 +248,11 @@ const SimplePositionSize: FC = () => {
                       account.places,
                       CURRENCY_SYMBOLS.get(account.currency)
                     )}
+                    <Tooltip position="left">
+                      Amount required at{" "}
+                      {formatNumber(position.margin * 100, 2, undefined, "%")}{" "}
+                      margin, converted into the account currency.
+                    </Tooltip>
                   </td>
                 </tr>
               )}
@@ -192,6 +265,10 @@ const SimplePositionSize: FC = () => {
                   })}
                 >
                   {formatNumber(actual.margin * 100, 2, undefined, "%")}
+                  <Tooltip position="left">
+                    The percentage of the account that will be committed as
+                    margin to open the position
+                  </Tooltip>
                 </td>
               </tr>
               {Math.round(100 * actual.margin) > 100 * account.marginRisk && (
@@ -257,6 +334,10 @@ const StopLossPosition: FC = () => {
                 account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
+              <Tooltip position="left">
+                Amount of account available under position risk of{" "}
+                {formatNumber(account.positionRisk * 100, 2, undefined, "%")}
+              </Tooltip>
             </td>
           </tr>
           {account.currency !== position.posCurrency && (
@@ -267,6 +348,11 @@ const StopLossPosition: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.posCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under position risk of{" "}
+                  {formatNumber(account.positionRisk * 100, 2, undefined, "%")}{" "}
+                  in the position currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -278,6 +364,11 @@ const StopLossPosition: FC = () => {
                   account.places,
                   CURRENCY_SYMBOLS.get(position.quoteCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under position risk of{" "}
+                  {formatNumber(account.positionRisk * 100, 2, undefined, "%")}{" "}
+                  in the quote currency
+                </Tooltip>
               </td>
             </tr>
           )}
@@ -287,8 +378,20 @@ const StopLossPosition: FC = () => {
               {formatNumber(
                 distance,
                 account.places,
-                CURRENCY_SYMBOLS.get(position.posCurrency)
+                CURRENCY_SYMBOLS.get(position.quoteCurrency)
               )}
+              <Tooltip position="left">
+                The maximum stop loss distance for a position of{" "}
+                {formatNumber(quantity, 2, undefined, " units")} at{" "}
+                {formatNumber(
+                  position.openPrice,
+                  account.places,
+                  CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                )}{" "}
+                to remain within the position risk of{" "}
+                {formatNumber(account.positionRisk * 100, 2, undefined, "%")} of
+                the account
+              </Tooltip>
             </td>
           </tr>
           <tr>
@@ -300,8 +403,20 @@ const StopLossPosition: FC = () => {
                     ? position.openPrice - distance
                     : position.openPrice + distance,
                   account.places,
-                  CURRENCY_SYMBOLS.get(position.posCurrency)
+                  CURRENCY_SYMBOLS.get(position.quoteCurrency)
                 )}
+                <Tooltip position="left">
+                  The maximum stop loss for a position of{" "}
+                  {formatNumber(quantity, 2, undefined, " units")} at{" "}
+                  {formatNumber(
+                    position.openPrice,
+                    account.places,
+                    CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                  )}{" "}
+                  to remain within the position risk of{" "}
+                  {formatNumber(account.positionRisk * 100, 2, undefined, "%")}{" "}
+                  of the account
+                </Tooltip>
               </b>
             </td>
           </tr>
@@ -319,6 +434,9 @@ const StopLossPosition: FC = () => {
                     account.places,
                     CURRENCY_SYMBOLS.get(position.posCurrency)
                   )}
+                  <Tooltip position="left">
+                    The distance provided in the position form
+                  </Tooltip>
                 </td>
               </tr>
               <tr>
@@ -329,6 +447,15 @@ const StopLossPosition: FC = () => {
                     account.places,
                     CURRENCY_SYMBOLS.get(account.currency)
                   )}
+                  <Tooltip position="left">
+                    The actual account loss that will be incurred should the
+                    position close at the provided stop loss position of{" "}
+                    {formatNumber(
+                      position.stopLoss || 0,
+                      account.places,
+                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                    )}
+                  </Tooltip>
                 </td>
               </tr>
               <tr>
@@ -341,6 +468,15 @@ const StopLossPosition: FC = () => {
                   })}
                 >
                   {formatNumber(actual.risk * 100, 2, undefined, "%")}
+                  <Tooltip position="left">
+                    Percentage of account at risk for the provided stop loss
+                    position of{" "}
+                    {formatNumber(
+                      position.stopLoss || 0,
+                      account.places,
+                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                    )}
+                  </Tooltip>
                 </td>
               </tr>
               {Math.round(100 * actual.risk) > 100 * account.positionRisk && (
@@ -413,104 +549,144 @@ const PlannedStopLossQuantity: FC = () => {
             >
               Available Account
             </th>
-            <td
-              className={styles.numberCell}
-              title="Funds available under position risk"
-            >
+            <td className={styles.numberCell}>
               {formatNumber(
                 available,
                 account.places,
                 CURRENCY_SYMBOLS.get(account.currency)
               )}
+              <Tooltip position="left">
+                Amount of account available under position risk of{" "}
+                {formatNumber(account.positionRisk * 100, 2, undefined, "%")}
+              </Tooltip>
             </td>
           </tr>
           {account.currency !== position.posCurrency && (
             <tr>
-              <td
-                className={styles.numberCell}
-                title="Funds available under position risk in position currency"
-              >
+              <td className={styles.numberCell}>
                 {formatNumber(
                   availablePos,
                   account.places,
                   CURRENCY_SYMBOLS.get(position.posCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under position risk of{" "}
+                  {formatNumber(account.positionRisk * 100, 2, undefined, "%")}{" "}
+                  in the position currency
+                </Tooltip>
               </td>
             </tr>
           )}
           {position.quoteCurrency !== position.posCurrency && (
             <tr>
-              <td
-                className={styles.numberCell}
-                title="Funds available under position risk in quote currency"
-              >
+              <td className={styles.numberCell}>
                 {formatNumber(
                   availableQuote,
                   account.places,
                   CURRENCY_SYMBOLS.get(position.quoteCurrency)
                 )}
+                <Tooltip position="left">
+                  Available account under position risk of{" "}
+                  {formatNumber(account.positionRisk * 100, 2, undefined, "%")}{" "}
+                  in the quote currency
+                </Tooltip>
               </td>
             </tr>
           )}
           <tr>
             <th>Stop Loss</th>
-            <td className={styles.numberCell} title="Specified stop loss">
+            <td className={styles.numberCell}>
               {formatNumber(
                 position.stopLoss || 0,
                 account.places,
-                CURRENCY_SYMBOLS.get(position.posCurrency)
+                CURRENCY_SYMBOLS.get(position.quoteCurrency)
               )}
+              <Tooltip position="left">
+                Stop loss entered in position form.
+              </Tooltip>
             </td>
           </tr>
           <tr>
             <th>Stop Distance</th>
-            <td className={styles.numberCell} title="Stop loss distance">
+            <td className={styles.numberCell}>
               {formatNumber(
                 stopLossDistance,
                 account.places,
-                CURRENCY_SYMBOLS.get(position.posCurrency)
+                CURRENCY_SYMBOLS.get(position.quoteCurrency)
               )}
+              <Tooltip position="left">
+                Stop loss distance entered into position form.
+              </Tooltip>
             </td>
           </tr>
           <tr>
             <th>Available Quantity</th>
-            <td
-              className={styles.numberCell}
-              title="Position size under given stop loss and position risk"
-            >
+            <td className={styles.numberCell}>
               {stopLossDistance !== 0 ? (
                 <b>{formatNumber(quantity, 2)}</b>
               ) : (
                 "0"
               )}
+              <Tooltip position="left">
+                The position size that can be taken at an open price of{" "}
+                {formatNumber(
+                  position.openPrice,
+                  account.places,
+                  CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                )}
+                , given an account position risk of{" "}
+                {formatNumber(account.positionRisk * 100, 2, undefined, "%")}
+              </Tooltip>
             </td>
           </tr>
           {stopLossDistance !== 0 && (
             <>
               <tr>
                 <th rowSpan={2}>Required Margin</th>
-                <td
-                  className={styles.numberCell}
-                  title="Margin requirement for maximum position size"
-                >
+                <td className={styles.numberCell}>
                   {formatNumber(
                     margin,
                     account.places,
                     CURRENCY_SYMBOLS.get(account.currency)
                   )}
+                  <Tooltip position="left">
+                    The amount of account margin that will be committed to
+                    opening a position of{" "}
+                    {formatNumber(quantity, 2, undefined, " units")} at{" "}
+                    {formatNumber(
+                      position.openPrice,
+                      account.places,
+                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                    )}{" "}
+                    with a position margin of{" "}
+                    {formatNumber(position.margin * 100, 2, undefined, "%")} (
+                    {formatNumber(1 / position.margin, 0, undefined, "x")}{" "}
+                    leverage)
+                  </Tooltip>
                 </td>
               </tr>
               <tr>
-                <td
-                  className={styles.numberCell}
-                  title="Margin requirement as a percentage of account value"
-                >
+                <td className={styles.numberCell}>
                   {formatNumber(
                     (margin / account.amount) * 100,
                     2,
                     undefined,
                     "%"
                   )}
+                  <Tooltip position="left">
+                    The amount of account margin, as a percentage of the account
+                    value, that will be committed to opening a position of{" "}
+                    {formatNumber(quantity, 2, undefined, " units")} at{" "}
+                    {formatNumber(
+                      position.openPrice,
+                      account.places,
+                      CURRENCY_SYMBOLS.get(position.quoteCurrency)
+                    )}{" "}
+                    with a position margin of{" "}
+                    {formatNumber(position.margin * 100, 2, undefined, "%")} (
+                    {formatNumber(1 / position.margin, 0, undefined, "x")}{" "}
+                    leverage)
+                  </Tooltip>
                 </td>
               </tr>
             </>
