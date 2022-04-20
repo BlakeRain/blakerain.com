@@ -7,7 +7,13 @@ use lambda_runtime::Error;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-use crate::{env::Env, model::dynamodb::{item::FromItemError, attribute::{get_attr, Attribute}}};
+use crate::{
+    env::Env,
+    model::dynamodb::{
+        attribute::{get_attr, Attribute, AttributeError},
+        item::FromItemError,
+    },
+};
 
 use super::utils::{add_standard_headers, build_json, from_request};
 
@@ -104,7 +110,14 @@ impl ViewQuery for WeekViewReq {
         Ok(WeekViewRes {
             year: self.year,
             week: self.week,
-            day: get_attr(&mut item, "ViewDay")?,
+            day: get_attr::<String>(&mut item, "ViewDay")?
+                .parse()
+                .map_err(|err| {
+                    FromItemError::AttributeError(
+                        "ViewDay".to_string(),
+                        AttributeError::ParseError(format!("{:?}", err)),
+                    )
+                })?,
             count: get_attr(&mut item, "ViewCount")?,
         })
     }
@@ -132,7 +145,14 @@ impl ViewQuery for MonthViewReq {
         Ok(MonthViewRes {
             year: self.year,
             month: self.month,
-            day: get_attr(&mut item, "ViewDay")?,
+            day: get_attr::<String>(&mut item, "ViewDay")?
+                .parse()
+                .map_err(|err| {
+                    FromItemError::AttributeError(
+                        "ViewDay".to_string(),
+                        AttributeError::ParseError(format!("{:?}", err)),
+                    )
+                })?,
             count: get_attr(&mut item, "ViewCount")?,
         })
     }
@@ -150,7 +170,7 @@ impl ViewQuery for WeekBrowserReq {
     }
 
     fn projection(&self) -> Option<String> {
-        Some("Section, ViewDay, ViewCount".to_string())
+        Some("#S, ViewDay, ViewCount".to_string())
     }
 
     fn from(
@@ -164,7 +184,14 @@ impl ViewQuery for WeekBrowserReq {
             year: self.year,
             week: self.week,
             browser: browser.to_string(),
-            day: get_attr(&mut item, "ViewDay")?,
+            day: get_attr::<String>(&mut item, "ViewDay")?
+                .parse()
+                .map_err(|err| {
+                    FromItemError::AttributeError(
+                        "ViewDay".to_string(),
+                        AttributeError::ParseError(format!("{:?}", err)),
+                    )
+                })?,
             count: get_attr(&mut item, "ViewCount")?,
         })
     }
@@ -182,7 +209,7 @@ impl ViewQuery for MonthBrowserReq {
     }
 
     fn projection(&self) -> Option<String> {
-        Some("Section, ViewDay, ViewCount".to_string())
+        Some("#S, ViewDay, ViewCount".to_string())
     }
 
     fn from(
@@ -196,7 +223,14 @@ impl ViewQuery for MonthBrowserReq {
             year: self.year,
             month: self.month,
             browser: browser.to_string(),
-            day: get_attr(&mut item, "ViewDay")?,
+            day: get_attr::<String>(&mut item, "ViewDay")?
+                .parse()
+                .map_err(|err| {
+                    FromItemError::AttributeError(
+                        "ViewDay".to_string(),
+                        AttributeError::ParseError(format!("{:?}", err)),
+                    )
+                })?,
             count: get_attr(&mut item, "ViewCount")?,
         })
     }

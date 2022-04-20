@@ -1,8 +1,8 @@
 use blakerain_analytics_lambdas::{
     api::{
         auth::handle_auth_signin,
-        utils::build_json,
         page_view::handle_page_view,
+        utils::build_json,
         view_query::{
             handle_browsers_month, handle_browsers_week, handle_views_month, handle_views_week,
         },

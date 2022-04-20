@@ -2,7 +2,10 @@ use http::Response;
 use lambda_http::{Body, Request, RequestExt};
 use lambda_runtime::Error;
 
-use crate::{env::Env, model::{page_view::PageView, dynamodb::item::ToItem}};
+use crate::{
+    env::Env,
+    model::{dynamodb::item::ToItem, page_view::PageView},
+};
 
 use super::utils::add_standard_headers;
 
