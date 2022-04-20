@@ -225,6 +225,9 @@ async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
                         println!("INSERT event is missing 'dynamodb' section");
                     }
                 }
+                Some(_) => {
+                    // Ignoring this event
+                }
                 _ => {
                     println!("No 'eventName' in event");
                 }
