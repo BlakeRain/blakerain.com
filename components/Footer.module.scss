@@ -94,7 +94,7 @@
 
   display: none;
 
-  padding: 1rem;
+  padding: 1rem 0;
 
   background-color: lighten($primary-background, 10%);
   border-radius: 5px;
@@ -131,7 +131,14 @@
       display: block;
 
       a {
+        display: block;
         margin: 0;
+
+        padding: 0.5rem 1rem;
+
+        &:hover {
+          background-color: lighten($primary-background, 20%);
+        }
       }
     }
   }
