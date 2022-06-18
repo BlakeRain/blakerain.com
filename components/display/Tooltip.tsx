@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import cn from "classnames";
 import styles from "./Tooltip.module.scss";
-import QuestionCircle from "./icons/QuestionCircle";
+import QuestionCircle from "../icons/QuestionCircle";
 
 export interface TooltipProps {
   position?: "top" | "left" | "bottom" | "right";

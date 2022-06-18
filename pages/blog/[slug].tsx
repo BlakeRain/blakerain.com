@@ -11,7 +11,7 @@ import { SiteNavigation, loadNavigation } from "../../lib/utils";
 import { Post, loadPostSlugs, loadPostWithSlug } from "../../lib/content";
 import { Tag, loadTags } from "../../lib/tags";
 import { Layout } from "../../components/Layout";
-import { Content } from "../../components/Content";
+import { Content } from "../../components/article/Content";
 import { useEffect, useRef } from "react";
 import Analytics from "../../components/Analytics";
 

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Tag, Tags } from "../lib/tags";
 import { PostInfo } from "../lib/content";
 import { PostDetails } from "./PostDetails";
-import { TagList } from "./TagList";
-import Image from "./Image";
+import { TagList } from "./display/TagList";
+import Image from "./display/Image";
 
 import styles from "./PostCard.module.scss";
 

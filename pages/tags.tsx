@@ -2,7 +2,7 @@ import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FC } from "react";
-import { DateSpan } from "../components/DateSpan";
+import { DateSpan } from "../components/display/DateSpan";
 import { Layout } from "../components/Layout";
 import { SiteNavigation, loadNavigation } from "../lib/utils";
 import { PostInfo, loadPostInfos } from "../lib/content";

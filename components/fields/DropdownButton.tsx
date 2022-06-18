@@ -1,8 +1,8 @@
 import React, { FC, useRef, useState } from "react";
 import cn from "classnames";
 import styles from "./DropdownButton.module.scss";
-import Caret from "./icons/Caret";
-import Dismissable from "./Dismissable";
+import Caret from "../icons/Caret";
+import Dismissable from "../Dismissable";
 
 export interface DropdownButtonProps {
   title: string;

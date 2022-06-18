@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { DocInfo } from "../lib/content";
-import { DateSpan } from "./DateSpan";
+import { DateSpan } from "./display/DateSpan";
 
 import styles from "./PostDetails.module.scss";
 

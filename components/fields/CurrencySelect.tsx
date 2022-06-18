@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Currency, CURRENCY_SYMBOLS, CURRENCIES } from "../lib/tools/forex";
+import { Currency, CURRENCY_SYMBOLS, CURRENCIES } from "../../lib/tools/forex";
 
 export interface CurrencySelectProps {
   value: Currency;

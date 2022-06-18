@@ -7,12 +7,12 @@ import {
   computeStopLoss,
 } from "../../../lib/tools/position";
 import { formatNumber } from "../../../lib/tools/utils";
-import Card from "../../Card";
-import Grid from "../../Grid";
+import Card from "../../display/Card";
+import Grid from "../../display/Grid";
 import { useAccount } from "../AccountProvider";
 import { usePosition } from "../PositionProvider";
 import styles from "./PositionSizePanel.module.scss";
-import Tooltip from "../../Tooltip";
+import Tooltip from "../../display/Tooltip";
 
 const SimplePositionSize: FC = () => {
   const { account } = useAccount();

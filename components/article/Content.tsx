@@ -4,13 +4,13 @@ import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 
-import { DocInfo } from "../lib/content";
-import { Tag } from "../lib/tags";
+import { DocInfo } from "../../lib/content";
+import { Tag } from "../../lib/tags";
 
-import { ScrollToTopButton } from "./ScrollToTop";
-import { PostDetails } from "./PostDetails";
-import { TagList } from "./TagList";
-import { Render } from "./Document";
+import { ScrollToTopButton } from "../fields/ScrollToTop";
+import { PostDetails } from "../PostDetails";
+import { TagList } from "../display/TagList";
+import { Render } from "./Render";
 
 import styles from "./Content.module.scss";
 

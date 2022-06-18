@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { Currency, CURRENCY_SYMBOLS } from "../../../lib/tools/forex";
-import Card from "../../Card";
-import CurrencySelect from "../../CurrencySelect";
-import FloatingLabel from "../../FloatingLabel";
-import Grid from "../../Grid";
-import NumberInput from "../../NumberInput";
+import Card from "../../display/Card";
+import CurrencySelect from "../../fields/CurrencySelect";
+import FloatingLabel from "../../display/FloatingLabel";
+import Grid from "../../display/Grid";
+import NumberInput from "../../fields/NumberInput";
 import { useAccount } from "../AccountProvider";
 import styles from "./AccountInfo.module.scss";
 

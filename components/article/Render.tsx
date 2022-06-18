@@ -9,8 +9,8 @@ import React, {
 import cn from "classnames";
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import Image from "./Image";
-import styles from "./Document.module.scss";
+import Image from "../display/Image";
+import styles from "./Render.module.scss";
 
 const HighlightContext = React.createContext<RegExp | null>(null);
 

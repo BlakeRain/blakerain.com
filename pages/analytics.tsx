@@ -4,7 +4,7 @@ import Head from "next/head";
 import { NextSeo } from "next-seo";
 import cn from "classnames";
 
-import ClientOnly from "../components/ClientOnly";
+import ClientOnly from "../components/display/ClientOnly";
 import { Layout } from "../components/Layout";
 import { loadNavigation, SiteNavigation } from "../lib/utils";
 import { getSessionToken, setSessionToken } from "../lib/analytics";

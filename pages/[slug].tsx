@@ -10,7 +10,7 @@ import { NextSeo } from "next-seo";
 import { SiteNavigation, loadNavigation } from "../lib/utils";
 import { Page, loadPageSlugs, loadPageWithSlug } from "../lib/content";
 import { Layout } from "../components/Layout";
-import { Content } from "../components/Content";
+import { Content } from "../components/article/Content";
 import Analytics from "../components/Analytics";
 
 export const getStaticPaths: GetStaticPaths = async () => {

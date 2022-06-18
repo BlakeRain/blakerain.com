@@ -1,6 +1,6 @@
 import React, { FC, useRef, useState } from "react";
 import cn from "classnames";
-import { formatNumber } from "../lib/tools/utils";
+import { formatNumber } from "../../lib/tools/utils";
 import styles from "./NumberInput.module.scss";
 
 export interface NumberInputProps {
