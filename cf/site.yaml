@@ -32,6 +32,14 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       UserName: BlakeRainGitHubDeployerUser
+      Policies:
+        - PolicyName: BlakeRainGitHubDeployerCloudFrontPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: cloudfront:CreateInvalidation
+                Resource: "*"
 
   BlakeRainGitHubDeployerAccessKey:
     Type: AWS::IAM::AccessKey
