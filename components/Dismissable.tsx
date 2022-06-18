@@ -2,7 +2,8 @@ import React, { FC, useEffect, useRef } from "react";
 
 export const Dismissable: FC<{
   onDismiss: (event: MouseEvent) => void;
-}> = ({ onDismiss, children }) => {
+  className?: string;
+}> = ({ onDismiss, className, children }) => {
   const outerDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,7 +23,11 @@ export const Dismissable: FC<{
     };
   }, [onDismiss]);
 
-  return <div ref={outerDiv}>{children}</div>;
+  return (
+    <div ref={outerDiv} className={className}>
+      {children}
+    </div>
+  );
 };
 
 export default Dismissable;

@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 import cn from "classnames";
 import Link from "next/link";
 import styles from "./Footer.module.scss";
-import Caret from "./icons/Caret";
 import Dismissable from "./Dismissable";
 
 export const Footer: FC = () => {
@@ -37,28 +36,24 @@ export const Footer: FC = () => {
             <Link href="/analytics">
               <a>Analytics</a>
             </Link>
-            <Dismissable onDismiss={() => setShowTools(false)}>
-              <div className={styles.popup}>
-                <div
-                  className={cn(styles.popupMenu, {
-                    [styles.popupOpen]: showTools,
-                  })}
-                >
-                  <ul>
-                    <li>
-                      <Link href="/tools/position-size">
-                        <a>Position Size Calculator</a>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <a href="#" onClick={onToolsClick}>
-                  Tools
-                  <Caret direction="up" filled={showTools} />
-                </a>
-              </div>
-            </Dismissable>
             <a href="https://twitter.com/HalfWayMan">Twitter</a>
+            <Dismissable
+              onDismiss={() => setShowTools(false)}
+              className={cn(styles.popup, { [styles.popupOpen]: showTools })}
+            >
+              <div className={cn(styles.popupMenu)}>
+                <ul>
+                  <li>
+                    <Link href="/tools/position-size">
+                      <a>Position Size Calculator</a>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <a href="#" onClick={onToolsClick}>
+                Tools
+              </a>
+            </Dismissable>
           </nav>
         </section>
       </div>
