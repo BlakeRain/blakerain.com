@@ -60,12 +60,12 @@ export const Footer: FC = () => {
           <Link href="/disclaimer">
             <a>Disclaimer</a>
           </Link>
-          <Link href="/analytics">
-            <a>Analytics</a>
-          </Link>
           <a href="https://twitter.com/HalfWayMan">Twitter</a>
           <FooterDropdown title="Tools">
             <li>
+              <Link href="/analytics">
+                <a>Analytics Dashboard</a>
+              </Link>
               <Link href="/tools/position-size">
                 <a>Position Size Calculator</a>
               </Link>
