@@ -11,6 +11,7 @@ import cn from "classnames";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
+import { AnalyticsInformation } from "../Analytics";
 
 const HighlightContext = React.createContext<RegExp | null>(null);
 
@@ -448,6 +449,7 @@ export const Render: FC<{
           h6: createHeading(6),
 
           Bookmark: Bookmark,
+          AnalyticsInformation: AnalyticsInformation,
         }}
       />
     </HighlightContext.Provider>
