@@ -427,31 +427,30 @@ export const Render: FC<{
       ? new RegExp(highlight.join("|"), "mig")
       : null;
 
+  const components: any = {
+    pre: SelectPre,
+    img: RenderImage,
+    p: RenderParagraph,
+    blockquote: RenderBlockQuote,
+    em: RenderEmphasis,
+    strong: RenderStrong,
+    li: RenderListItem,
+    a: RenderLink,
+    h1: createHeading(1),
+    h2: createHeading(2),
+    h3: createHeading(3),
+    h4: createHeading(4),
+    h5: createHeading(5),
+    h6: createHeading(6),
+
+    Bookmark: Bookmark,
+    AnalyticsInformation: AnalyticsInformation,
+  };
+
   return (
     <HighlightContext.Provider value={highlight_regex}>
       {" "}
-      <MDXRemote
-        {...content}
-        components={{
-          pre: SelectPre,
-          img: RenderImage,
-          p: RenderParagraph,
-          blockquote: RenderBlockQuote,
-          em: RenderEmphasis,
-          strong: RenderStrong,
-          li: RenderListItem,
-          a: RenderLink,
-          h1: createHeading(1),
-          h2: createHeading(2),
-          h3: createHeading(3),
-          h4: createHeading(4),
-          h5: createHeading(5),
-          h6: createHeading(6),
-
-          Bookmark: Bookmark,
-          AnalyticsInformation: AnalyticsInformation,
-        }}
-      />
+      <MDXRemote {...content} components={components} />
     </HighlightContext.Provider>
   );
 };
