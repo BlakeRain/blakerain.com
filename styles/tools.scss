@@ -1,3 +1,5 @@
+@import "./const.scss";
+
 .outer {
   display: flex;
   justify-content: center;
@@ -6,5 +8,5 @@
 
 .inner {
   width: 100%;
-  max-width: 1040px;
+  max-width: $content-width;
 }
