@@ -30,31 +30,43 @@ interface CombinedData extends NamedData {
 }
 
 const BrowserTooltip = ({
+  year,
+  param,
+  formatDay,
   active,
   payload,
 }: {
+  year: number;
+  param: number;
+  formatDay: (year: number, param: number, category: string) => string;
   active?: boolean;
   payload?: any;
 }) => {
   if (active && payload && payload.length > 0) {
     const data = payload[0].payload as CombinedData;
+    const names = Object.keys(data)
+      .filter((name) => name !== "label")
+      .filter((name) => data[name] > 0)
+      .sort((a, b) => data[b] - data[a]);
 
     return (
       <div className={reportStyles.tooltip}>
-        <p className={reportStyles.title}>{data.label}</p>
+        <p className={reportStyles.title}>
+          {formatDay(year, param, data.label)}
+        </p>
         <table>
           <tbody>
-            {Object.keys(data)
-              .filter((name) => name !== "label")
-              .filter((name) => data[name] > 0)
-              .map((name, index) => (
-                <tr key={index.toString()}>
-                  <th>{name.replace("-", " ")}</th>
-                  <td>{formatNumber(data[name], 0)}</td>
-                </tr>
-              ))}
+            {names.map((name, index) => (
+              <tr key={index.toString()}>
+                <th>{name.replace("-", " ")}</th>
+                <td>{formatNumber(data[name], 0)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
+        {names.length === 0 && (
+          <div className={reportStyles.notice}>No Data</div>
+        )}
       </div>
     );
   } else {
@@ -63,10 +75,13 @@ const BrowserTooltip = ({
 };
 
 export const BrowserReport: FC<{
+  year: number;
+  param: number;
+  formatDay: (year: number, param: number, category: string) => string;
   browserData: BrowserData;
   startOffset: number;
   labelMapper: (day: number) => string;
-}> = ({ browserData, startOffset, labelMapper }) => {
+}> = ({ year, param, formatDay, browserData, startOffset, labelMapper }) => {
   const [browsers, names] = useMemo(() => {
     let combined: CombinedData[] = [];
     let names: string[] = Object.keys(browserData);
@@ -104,7 +119,11 @@ export const BrowserReport: FC<{
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
         <XAxis dataKey="label" />
         <YAxis />
-        <Tooltip content={<BrowserTooltip />} />
+        <Tooltip
+          content={
+            <BrowserTooltip year={year} param={param} formatDay={formatDay} />
+          }
+        />
       </LineChart>
     </>
   );
