@@ -1,15 +1,82 @@
 import React, { FC, useEffect, useState } from "react";
-
-import LineChart, { ChartPoint } from "./LineChart";
 import { BrowserReport } from "./BrowserReport";
 
 import {
   getMonthViews,
   getBrowsersMonth,
   BrowserData,
+  MonthView,
 } from "../../lib/analytics";
 
 import styles from "./Report.module.scss";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { formatNumber, zeroPad } from "../../lib/tools/utils";
+
+const MonthViewTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: any;
+}) => {
+  if (active && payload && payload.length > 0) {
+    const view = payload[0].payload as MonthView;
+
+    return (
+      <div className={styles.tooltip}>
+        <p className={styles.title}>
+          {view.year}-{zeroPad(view.month, 2)}-{zeroPad(view.day, 2)}
+        </p>
+        <table>
+          <tbody>
+            <tr>
+              <th>View Count</th>
+              <td>{formatNumber(view.count || 0, 0)}</td>
+            </tr>
+            <tr>
+              <th>Avg. Scroll</th>
+              <td>
+                {typeof view.scroll === "number" &&
+                typeof view.count === "number" &&
+                view.count > 0
+                  ? formatNumber(view.scroll / view.count, 2, undefined, "%")
+                  : "-"}
+              </td>
+            </tr>
+            <tr>
+              <th>Avg. Duration</th>
+              <td>
+                {typeof view.duration === "number" &&
+                typeof view.count === "number" &&
+                view.count > 0
+                  ? formatNumber(
+                      view.duration / view.count,
+                      2,
+                      undefined,
+                      " secs"
+                    )
+                  : "-"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.tooltip}>
+        <i>No Content</i>
+      </div>
+    );
+  }
+};
 
 const MonthlyReport: FC<{ token: string }> = ({ token }) => {
   const now = new Date();
@@ -18,9 +85,8 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
   const [views, setViews] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [scroll, setScroll] = useState<number>(0);
-  const [data, setData] = useState<ChartPoint[] | null>(null);
+  const [data, setData] = useState<MonthView[] | null>(null);
   const [browsers, setBrowsers] = useState<BrowserData | null>(null);
-  const [highlight, setHighlight] = useState<ChartPoint | null>(null);
 
   useEffect(() => {
     getMonthViews(token, year, month).then((result) => {
@@ -44,17 +110,16 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
         total_views += item.count || 0;
       });
 
-      setData(
-        result.map((item) => ({
-          label: item.day.toString(),
-          x: item.day,
-          y: item.count,
-        }))
-      );
-
+      setData(result);
       setViews(total_views);
-      setScroll(total_scroll / counted_views);
-      setDuration(total_duration / counted_views);
+
+      if (counted_views > 0) {
+        setScroll(total_scroll / counted_views);
+        setDuration(total_duration / counted_views);
+      } else {
+        setScroll(0);
+        setDuration(0);
+      }
     });
 
     getBrowsersMonth(token, year, month).then((result) => {
@@ -100,56 +165,42 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
             <span>
               <b>Total:</b> {views}
             </span>
-            <span>
-              <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
-            </span>
-            <span>
-              <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
-            </span>
+            {scroll > 0 && (
+              <span>
+                <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
+              </span>
+            )}
+            {duration > 0 && (
+              <span>
+                <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
+              </span>
+            )}
           </>
         )}
-        {highlight ? (
-          <span>
-            <b>
-              {highlight.x.toString().padStart(2, "0")}/
-              {month.toString().padStart(2, "0")}/
-              {year.toString().padStart(4, "0")}:
-            </b>{" "}
-            {highlight.y ? highlight.y.toString() : "no"} visitors
-          </span>
-        ) : null}
       </div>
-      {data ? (
-        <div>
-          <LineChart
-            data={[{ color: "#0074d9", points: data }]}
-            width={400}
-            height={200}
-            gridY={5}
-            gridX={15}
-            onMouseOver={(_event, _data, point) => setHighlight(point)}
-            onMouseOut={() => setHighlight(null)}
+      <div className={styles.reportCharts}>
+        {data && (
+          <LineChart width={1000} height={400} data={data}>
+            <Line
+              type="monotone"
+              dataKey="count"
+              stroke="#0074d9"
+              strokeWidth={2}
+            />
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="day" />
+            <YAxis />
+            <Tooltip content={<MonthViewTooltip />} />
+          </LineChart>
+        )}
+        {browsers && (
+          <BrowserReport
+            startOffset={1}
+            browserData={browsers}
+            labelMapper={(day) => day.toString()}
           />
-        </div>
-      ) : (
-        <svg viewBox="0 0 300 200">
-          <rect
-            x={0}
-            y={0}
-            width="100%"
-            height="100%"
-            stroke="none"
-            fill="#303030"
-          />
-        </svg>
-      )}
-
-      {browsers && (
-        <BrowserReport
-          browserData={browsers}
-          labelMapper={(day) => day.toString()}
-        />
-      )}
+        )}
+      </div>
     </div>
   );
 };

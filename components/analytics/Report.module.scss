@@ -37,12 +37,13 @@
 
 .reportTabButton {
   display: inline-block;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border: none;
 }
 
 .activeTabButton {
   background-color: $button-active-background;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .reportContents {
@@ -55,12 +56,6 @@
 
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-
-  div {
-    svg {
-      margin: 0 1rem;
-    }
-  }
 }
 
 .reportControls {
@@ -90,8 +85,59 @@
   }
 }
 
+.reportCharts {
+  padding: 2rem 0;
+
+  > div + div {
+    margin-top: 2rem;
+  }
+}
+
+.tooltip {
+  font-size: 80%;
+  width: 20rem;
+  background-color: $color-white-grey;
+
+  .title {
+    margin: 0;
+    font-weight: bold;
+    text-align: center;
+    background-color: $color-light-grey;
+  }
+
+  table {
+    border: none;
+    width: 100%;
+
+    tbody tr {
+      th,
+      td {
+        padding: 0.25rem 1rem;
+      }
+
+      th {
+        text-align: left;
+        background-color: $color-light-grey;
+      }
+
+      td {
+        text-align: right;
+      }
+    }
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .reportControls {
     background-color: $color-mid-grey;
+  }
+
+  .tooltip {
+    background-color: $color-dark-grey;
+
+    .title,
+    table tbody tr th {
+      background-color: $color-mid-grey;
+    }
   }
 }

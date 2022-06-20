@@ -149,7 +149,7 @@ export const getMonthViews = async (
     }
 
     if (!found) {
-      months.push({ year, month, day });
+      months.push({ year, month, day, count: 0, scroll: 0, duration: 0 });
     }
   }
 

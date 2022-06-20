@@ -1,15 +1,18 @@
-import React, { FC, useMemo, useState } from "react";
-
-import LineChart, { ChartData, ChartPoint } from "./LineChart";
-import PieChart, { PieChartPoint } from "./PieChart";
-
-import BrowserIcon from "./BrowserIcon";
+import React, { FC, useMemo } from "react";
 
 import { BrowserData } from "../../lib/analytics";
+import reportStyles from "./Report.module.scss";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { formatNumber } from "../../lib/tools/utils";
 
-import styles from "./BrowserChart.module.scss";
-
-const TOP_BROWSERS = 8;
+// const TOP_BROWSERS = 8;
 const BROWSER_COLORS = [
   "#0584A5",
   "#F6C75E",
@@ -20,131 +23,89 @@ const BROWSER_COLORS = [
   "#8DDDD0",
 ];
 
-export interface BrowserChartData extends ChartData {
-  name: string;
-  total: number;
+type NamedData = { [name: string]: any };
+
+interface CombinedData extends NamedData {
+  label: string;
 }
+
+const BrowserTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: any;
+}) => {
+  if (active && payload && payload.length > 0) {
+    const data = payload[0].payload as CombinedData;
+
+    return (
+      <div className={reportStyles.tooltip}>
+        <p className={reportStyles.title}>{data.label}</p>
+        <table>
+          <tbody>
+            {Object.keys(data)
+              .filter((name) => name !== "label")
+              .filter((name) => data[name] > 0)
+              .map((name, index) => (
+                <tr key={index.toString()}>
+                  <th>{name.replace("-", " ")}</th>
+                  <td>{formatNumber(data[name], 0)}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return <div className={reportStyles.tooltip}></div>;
+  }
+};
 
 export const BrowserReport: FC<{
   browserData: BrowserData;
+  startOffset: number;
   labelMapper: (day: number) => string;
-}> = ({ browserData, labelMapper }) => {
-  const [highlight, setHighlight] = useState<{
-    browser: BrowserChartData;
-    point?: ChartPoint;
-  } | null>(null);
+}> = ({ browserData, startOffset, labelMapper }) => {
+  const [browsers, names] = useMemo(() => {
+    let combined: CombinedData[] = [];
+    let names: string[] = Object.keys(browserData);
 
-  const [browsers, topN, others] = useMemo(() => {
-    const browsers: BrowserChartData[] = Object.keys(browserData)
-      .map((browser) => ({
-        name: browser.replaceAll("-", " "),
-        total: browserData[browser].reduce(
-          (total, item) => total + (item.count || 0),
-          0
-        ),
-        color: "",
-        points: browserData[browser].map((item) => ({
-          label: labelMapper(item.day),
-          x: item.day,
-          y: item.count,
-        })),
-      }))
-      .sort((a, b) => b.total - a.total)
-      .map((obj, index) => {
-        obj.color = BROWSER_COLORS[index % BROWSER_COLORS.length];
-        return obj;
-      });
+    Object.keys(browserData).forEach((name) => {
+      let data = browserData[name];
 
-    const topN: PieChartPoint[] = [];
-    const others: string[] = [];
-    var total = 0;
+      for (let item of data) {
+        let index = item.day - startOffset;
+        while (index >= combined.length) {
+          combined.push({
+            label: labelMapper(startOffset + combined.length),
+          });
+        }
 
-    for (let i = 0; i < browsers.length; ++i) {
-      total += browsers[i].total;
-      if (i < TOP_BROWSERS - 1) {
-        topN.push({
-          label: browsers[i].name,
-          color: browsers[i].color,
-          ratio: browsers[i].total,
-        });
-      } else if (i === TOP_BROWSERS - 1) {
-        others.push(browsers[i].name);
-        topN.push({ label: "Others", color: "#444", ratio: browsers[i].total });
-      } else {
-        others.push(browsers[i].name);
-        topN[topN.length - 1].ratio += browsers[i].total;
+        combined[index][name] = item.count || 0;
       }
-    }
+    });
 
-    topN.forEach((item) => (item.ratio = item.ratio / total));
-
-    return [browsers, topN, others];
+    return [combined, names];
   }, [browserData]);
 
-  if (browsers.length === 0) {
-    return null;
-  }
-
-  const pie_highlight = highlight
-    ? others.indexOf(highlight.browser.name) !== -1
-      ? "Others"
-      : highlight.browser.name
-    : undefined;
-
   return (
-    <React.Fragment>
-      <div>
-        <LineChart
-          data={browsers}
-          width={400}
-          height={200}
-          gridX={6}
-          gridY={5}
-          highlight={
-            highlight
-              ? browsers.findIndex((b) => b.name === highlight.browser.name)
-              : undefined
-          }
-          onMouseOver={(_event, data, point) => {
-            setHighlight({ browser: data as BrowserChartData, point: point });
-          }}
-          onMouseOut={() => setHighlight(null)}
-        />
-      </div>
-      <div className={styles.browserInfo}>
-        <div>
-          <PieChart data={topN} highlight={pie_highlight} />
-        </div>
-        <div className={styles.browserPalette}>
-          {browsers.map((browser, index) => (
-            <div
-              className={
-                styles.browserButton +
-                " " +
-                (highlight === null || highlight.browser.name === browser.name
-                  ? ""
-                  : styles.inactive)
-              }
-              key={index.toString()}
-              style={{ backgroundColor: browser.color }}
-              onMouseOver={() => setHighlight({ browser })}
-              onMouseOut={() => setHighlight(null)}
-            >
-              <div>
-                <BrowserIcon name={browser.name} />
-                {browser.name}
-              </div>
-              <b>
-                {highlight &&
-                highlight.point &&
-                highlight.browser.name === browser.name
-                  ? highlight.point.y
-                  : browser.total}
-              </b>
-            </div>
-          ))}
-        </div>
-      </div>
-    </React.Fragment>
+    <>
+      <LineChart width={1000} height={400} data={browsers}>
+        {names.map((name, index) => (
+          <Line
+            key={index.toString()}
+            type="monotone"
+            dataKey={name}
+            stroke={BROWSER_COLORS[index % BROWSER_COLORS.length]}
+            strokeWidth={2}
+          />
+        ))}
+        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+        <XAxis dataKey="label" />
+        <YAxis />
+        <Tooltip content={<BrowserTooltip />} />
+      </LineChart>
+    </>
   );
 };
