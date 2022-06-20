@@ -240,7 +240,7 @@ const Analytics = () => {
       // Do not record analytics for localhost or an IP address
       if (hostname === "localhost" || isIPAddressLike(hostname)) {
         console.warn(`Ignoring analytics for hostname: ${hostname}`);
-        // return;
+        return;
       }
 
       const analytics = new AnalyticsData();
