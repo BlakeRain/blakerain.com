@@ -35,6 +35,24 @@ const cleanReferrer = (url: string): string =>
     .replace(/^https?:\/\/((m|l|w{2,3})([0-9]+)?\.)?([^?#]+)(.*)$/, "$4")
     .replace(/^([^/]+)$/, "$1");
 
+// Get the distance scrolled through the document
+const getPosition = (): number => {
+  try {
+    const doc = window.document.documentElement;
+    const body = window.document.body;
+
+    return Math.min(
+      100,
+      5 *
+        Math.round(
+          (100 * (doc.scrollTop + doc.clientHeight)) / body.scrollHeight / 5
+        )
+    );
+  } catch {
+    return 0;
+  }
+};
+
 // The dimensions of the viewport and screen
 interface Dimensions {
   viewportWidth: number;
@@ -97,8 +115,11 @@ class AnalyticsData {
   public referrer: string;
   public dimensions: Dimensions;
   public timezone: string | undefined;
-  public duration: number | undefined;
-  public scroll: number | undefined;
+  public duration: number = 0;
+  public scroll: number = 0;
+  private start: number;
+  private hideStart: number = 0;
+  private totalHidden: number = 0;
 
   constructor() {
     this.uuid = uuidv4();
@@ -107,8 +128,7 @@ class AnalyticsData {
     this.referrer = cleanReferrer(document.referrer || "");
     this.dimensions = getDimensions();
     this.timezone = getTimeZone();
-    this.duration = undefined;
-    this.scroll = undefined;
+    this.start = Date.now();
   }
 
   // Collect up the `AnalyticsParams` and render them into a querystring
@@ -122,6 +142,8 @@ class AnalyticsData {
       screen_width: this.dimensions.screenWidth,
       screen_height: this.dimensions.screenHeight,
       referrer: this.referrer,
+      duration: this.duration,
+      scroll: this.scroll,
     };
 
     if (this.timezone) {
@@ -135,6 +157,42 @@ class AnalyticsData {
       })
       .filter((param) => typeof param === "string")
       .join("&");
+  }
+
+  toBeaconJson(): string {
+    return JSON.stringify({
+      uuid: this.uuid,
+      path: this.pathname,
+      duration: this.duration,
+      scroll: this.scroll,
+    });
+  }
+
+  onScroll() {
+    const position = getPosition();
+    if (this.scroll < position) {
+      this.scroll = position;
+    }
+  }
+
+  onVisibilityChange() {
+    if (window.document.hidden) {
+      if (!("onpagehide" in window)) {
+        this.sendBeacon();
+      }
+
+      this.hideStart = Date.now();
+    } else {
+      this.totalHidden += Date.now() - this.hideStart;
+    }
+  }
+
+  sendBeacon() {
+    this.duration = Math.round(
+      (Date.now() - this.start - this.totalHidden) / 1000.0
+    );
+    this.scroll = Math.max(0, this.scroll, getPosition());
+    navigator.sendBeacon(`${ANALYTICS_URL}/append`, this.toBeaconJson());
   }
 }
 
@@ -179,9 +237,33 @@ const Analytics = () => {
       // Do not record analytics for localhost or an IP address
       if (hostname === "localhost" || isIPAddressLike(hostname)) {
         console.warn(`Ignoring analytics for hostname: ${hostname}`);
-      } else {
-        setAnalyticsData(new AnalyticsData());
+        // return;
       }
+
+      const analytics = new AnalyticsData();
+      setAnalyticsData(analytics);
+
+      const onScrollEvent = () => {
+        analytics.onScroll();
+      };
+
+      const onVisibilityChange = () => {
+        analytics.onVisibilityChange();
+      };
+
+      const onPageHide = () => {
+        analytics.sendBeacon();
+      };
+
+      window.addEventListener("scroll", onScrollEvent);
+      window.addEventListener("visibilitychange", onVisibilityChange);
+      window.addEventListener("pagehide", onPageHide);
+      return () => {
+        window.removeEventListener("scroll", onScrollEvent);
+        window.removeEventListener("visibilitychange", onVisibilityChange);
+        window.removeEventListener("pagehide", onPageHide);
+        analytics.sendBeacon();
+      };
     }
   }, []);
 

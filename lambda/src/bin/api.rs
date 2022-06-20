@@ -1,7 +1,7 @@
 use blakerain_analytics_lambdas::{
     api::{
         auth::handle_auth_signin,
-        page_view::handle_page_view,
+        page_view::{handle_page_view, handle_page_view_append},
         utils::build_json,
         view_query::{
             handle_browsers_month, handle_browsers_week, handle_views_month, handle_views_week,
@@ -31,6 +31,7 @@ async fn api_handler(env: &Env, request: Request) -> Result<Response<Body>, Erro
         },
 
         Method::POST => match request.uri().path() {
+            "/append" => handle_page_view_append(env, &request).await,
             "/api/auth/signin" => handle_auth_signin(env, &request).await,
             "/api/views/week" => handle_views_week(env, &request).await,
             "/api/views/month" => handle_views_month(env, &request).await,

@@ -55,6 +55,8 @@ analytics on this site is detailed below.
 1. The dimensions of the screen of the device and the viewport in which the site is rendered.
 1. The referrer information, which allows the site owner to ascertain how visitors were directed to this site.
 1. The time zone of the browser. This information is used to ascertain which countries visitors are from.
+1. The amount of time spent on the page.
+1. How far down the page you have scrolled.
 
 The above can be verified via inspection of the [source
 code](https://github.com/BlakeRain/blakerain.com/blob/main/components/Analytics.tsx). The data that will have been
