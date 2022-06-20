@@ -54,15 +54,13 @@ pub async fn handle_page_view_append(
         .ddb
         .update_item()
         .table_name(env.table_name.to_string())
-        .key("#P", append.path.into_attr())
-        .key("#S", format!("view-{}", append.uuid).into_attr())
+        .key("Path", append.path.into_attr())
+        .key("Section", format!("view-{}", append.uuid).into_attr())
         .update_expression("SET #DU = :d, #SC = :s")
-        .expression_attribute_names("#P", "Path")
-        .expression_attribute_names("#S", "Section")
         .expression_attribute_names("#DU", "Duration")
         .expression_attribute_names("#SC", "Scroll")
-        .expression_attribute_values("d", append.duration.into_attr())
-        .expression_attribute_values("s", append.scroll.into_attr())
+        .expression_attribute_values(":d", append.duration.into_attr())
+        .expression_attribute_values(":s", append.scroll.into_attr())
         .send()
         .await
     {
