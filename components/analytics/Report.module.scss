@@ -130,6 +130,10 @@
       }
     }
   }
+
+  &.large {
+    width: 30rem;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,27 +1,33 @@
 import React, { FC, useMemo } from "react";
-
+import cn from "classnames";
 import { BrowserData } from "../../lib/analytics";
 import reportStyles from "./Report.module.scss";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
-  Line,
-  LineChart,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { formatNumber } from "../../lib/tools/utils";
 
-// const TOP_BROWSERS = 8;
-const BROWSER_COLORS = [
-  "#0584A5",
-  "#F6C75E",
-  "#6D4E7C",
-  "#9CD866",
-  "#C9472F",
-  "#FFA055",
-  "#8DDDD0",
-];
+const OTHER_COLORS = ["#6588b7", "#88a2bc", "#f0dbb0", "#efb680", "#d99477"];
+
+const BROWSER_COLORS: { [key: string]: string } = {
+  Safari: "#4594b5",
+  Chrome: "#FFA055",
+  Firefox: "#C9472F",
+};
+
+function browserColor(name: string, index: number): string {
+  const color = BROWSER_COLORS[name];
+  if (color) {
+    return color;
+  }
+
+  return OTHER_COLORS[index % OTHER_COLORS.length];
+}
 
 type NamedData = { [name: string]: any };
 
@@ -32,37 +38,51 @@ interface CombinedData extends NamedData {
 const BrowserTooltip = ({
   year,
   param,
+  names,
   formatDay,
   active,
   payload,
 }: {
   year: number;
   param: number;
+  names: string[];
   formatDay: (year: number, param: number, category: string) => string;
   active?: boolean;
   payload?: any;
 }) => {
   if (active && payload && payload.length > 0) {
     const data = payload[0].payload as CombinedData;
-    const names = Object.keys(data)
-      .filter((name) => name !== "label")
-      .filter((name) => data[name] > 0)
-      .sort((a, b) => data[b] - data[a]);
+    const total = names.reduce((total, name) => total + data[name], 0);
+
+    const rows: any[] = [];
+    names.forEach((name, index) => {
+      if (data[name] > 0) {
+        rows.unshift(
+          <tr key={index.toString()}>
+            <th
+              style={{
+                color: "#000000",
+                backgroundColor: browserColor(name, index),
+              }}
+            >
+              {name.replace("-", " ")}
+            </th>
+            <td>{formatNumber(data[name], 0)}</td>
+            <td>
+              {formatNumber((100 * data[name]) / total, 0, undefined, "%")}
+            </td>
+          </tr>
+        );
+      }
+    });
 
     return (
-      <div className={reportStyles.tooltip}>
+      <div className={cn(reportStyles.tooltip, reportStyles.large)}>
         <p className={reportStyles.title}>
-          {formatDay(year, param, data.label)}
+          {formatDay(year, param, data.label)} - {formatNumber(total, 0)} views
         </p>
         <table>
-          <tbody>
-            {names.map((name, index) => (
-              <tr key={index.toString()}>
-                <th>{name.replace("-", " ")}</th>
-                <td>{formatNumber(data[name], 0)}</td>
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{rows}</tbody>
         </table>
         {names.length === 0 && (
           <div className={reportStyles.notice}>No Data</div>
@@ -85,9 +105,11 @@ export const BrowserReport: FC<{
   const [browsers, names] = useMemo(() => {
     let combined: CombinedData[] = [];
     let names: string[] = Object.keys(browserData);
+    let totals: { [key: string]: number } = {};
 
     Object.keys(browserData).forEach((name) => {
       let data = browserData[name];
+      let total = 0;
 
       for (let item of data) {
         let index = item.day - startOffset;
@@ -98,21 +120,28 @@ export const BrowserReport: FC<{
         }
 
         combined[index][name] = item.count || 0;
+        total += item.count || 0;
       }
+
+      totals[name] = total;
     });
+
+    names.sort((a, b) => totals[a] - totals[b]);
 
     return [combined, names];
   }, [browserData]);
 
   return (
     <>
-      <LineChart width={1000} height={400} data={browsers}>
+      <AreaChart width={1000} height={400} data={browsers}>
         {names.map((name, index) => (
-          <Line
+          <Area
             key={index.toString()}
             type="monotone"
             dataKey={name}
-            stroke={BROWSER_COLORS[index % BROWSER_COLORS.length]}
+            stackId="1"
+            stroke={browserColor(name, index)}
+            fill={browserColor(name, index)}
             strokeWidth={2}
           />
         ))}
@@ -121,10 +150,15 @@ export const BrowserReport: FC<{
         <YAxis />
         <Tooltip
           content={
-            <BrowserTooltip year={year} param={param} formatDay={formatDay} />
+            <BrowserTooltip
+              year={year}
+              param={param}
+              names={names}
+              formatDay={formatDay}
+            />
           }
         />
-      </LineChart>
+      </AreaChart>
     </>
   );
 };
