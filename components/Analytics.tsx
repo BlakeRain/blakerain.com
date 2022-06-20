@@ -192,12 +192,15 @@ class AnalyticsData {
       (Date.now() - this.start - this.totalHidden) / 1000.0
     );
     this.scroll = Math.max(0, this.scroll, getPosition());
-    navigator.sendBeacon(`${ANALYTICS_URL}/append`, this.toBeaconJson());
+    navigator.sendBeacon(ANALYTICS_APPEND_URL, this.toBeaconJson());
   }
 }
 
 // This is the path to our analytics image. We append the query string from the `AnalyticsData` to this URL.
 const ANALYTICS_URL = "https://pv.blakerain.com/pv.gif";
+
+// This is the path to our analytics append function.
+const ANALYTICS_APPEND_URL = "https://pv.blakerain.com/append";
 
 // Renders an image using our analytics image.
 //
