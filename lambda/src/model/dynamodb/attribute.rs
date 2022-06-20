@@ -108,3 +108,16 @@ pub fn get_attr_opt<T: Attribute>(
         }
     }
 }
+
+pub fn get_attr_or<T: Attribute>(
+    item: &mut HashMap<String, AttributeValue>,
+    name: &str,
+    fallback: T,
+) -> Result<T, FromItemError> {
+    match item.remove(name) {
+        None => Ok(fallback),
+        Some(attr) => {
+            T::from_attr(attr).map_err(|err| FromItemError::AttributeError(name.to_string(), err))
+        }
+    }
+}

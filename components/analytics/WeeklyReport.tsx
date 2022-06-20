@@ -27,12 +27,33 @@ function getISOWeek(date: Date): number {
 const WeeklyReport: FC<{ token: string }> = ({ token }) => {
   const [year, setYear] = useState(now.getFullYear());
   const [week, setWeek] = useState(getISOWeek(now));
+  const [views, setViews] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [scroll, setScroll] = useState<number>(0);
   const [data, setData] = useState<ChartPoint[] | null>(null);
   const [browsers, setBrowsers] = useState<BrowserData | null>(null);
   const [highlight, setHighlight] = useState<ChartPoint | null>(null);
 
   useEffect(() => {
     getWeekViews(token, year, week).then((result) => {
+      let total_views = 0;
+      let counted_views = 0;
+      let total_scroll = 0;
+      let total_duration = 0;
+
+      result.forEach((item) => {
+        if (
+          typeof item.scroll === "number" &&
+          typeof item.duration === "number"
+        ) {
+          total_scroll += item.scroll;
+          total_duration += item.duration;
+          counted_views += item.count || 0;
+        }
+
+        total_views += item.count || 0;
+      });
+
       setData(
         result.map((item) => ({
           label: WEEK_LABELS[item.day],
@@ -40,6 +61,10 @@ const WeeklyReport: FC<{ token: string }> = ({ token }) => {
           y: item.count,
         }))
       );
+
+      setViews(total_views);
+      setScroll(total_scroll / counted_views);
+      setDuration(total_duration / counted_views);
     });
 
     getBrowsersWeek(token, year, week).then((result) => {
@@ -80,12 +105,17 @@ const WeeklyReport: FC<{ token: string }> = ({ token }) => {
           </button>
         </div>
         {data && (
-          <span>
-            <b>Total:</b>{" "}
-            {data
-              .reduce((total, datum) => total + (datum.y || 0), 0)
-              .toString()}
-          </span>
+          <>
+            <span>
+              <b>Total:</b> {views}
+            </span>
+            <span>
+              <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
+            </span>
+            <span>
+              <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
+            </span>
+          </>
         )}
         {highlight ? (
           <span>
