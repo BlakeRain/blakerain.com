@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import cn from "classnames";
 import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
 import { DocInfo } from "../../lib/content";
 import { Tag } from "../../lib/tags";
