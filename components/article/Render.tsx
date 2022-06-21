@@ -115,9 +115,9 @@ const RenderStrong: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => JSX.Element = ({ children }) => {
   return (
-    <em>
+    <strong>
       <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
-    </em>
+    </strong>
   );
 };
 
