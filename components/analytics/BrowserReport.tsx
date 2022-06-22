@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { formatNumber } from "../../lib/tools/utils";
+import { formatNumber } from "../../lib/utils";
 
 const OTHER_COLORS = ["#6588b7", "#88a2bc", "#f0dbb0", "#efb680", "#d99477"];
 
@@ -129,7 +129,7 @@ export const BrowserReport: FC<{
     names.sort((a, b) => totals[a] - totals[b]);
 
     return [combined, names];
-  }, [browserData]);
+  }, [browserData, labelMapper, startOffset]);
 
   return (
     <>

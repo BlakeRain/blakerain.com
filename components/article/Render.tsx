@@ -347,7 +347,7 @@ const RenderCode: (
         setHighlighter(module);
       });
     }
-  }, []);
+  }, [language]);
 
   var code_block = null;
   if (highlighter && language) {

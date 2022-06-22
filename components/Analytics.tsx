@@ -208,6 +208,7 @@ const ANALYTICS_APPEND_URL = "https://pv.blakerain.com/append";
 const AnalyticsImage = ({ data }: { data: AnalyticsData }) => {
   return (
     <img
+      alt=""
       style={{
         visibility: "hidden",
         width: 0,

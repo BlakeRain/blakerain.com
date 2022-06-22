@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { BrowserData } from "../../lib/analytics";
 import { BrowserReport } from "./BrowserReport";
-import { formatNumber } from "../../lib/tools/utils";
+import { formatNumber } from "../../lib/utils";
 
 export interface ReportView {
   category: string;
@@ -137,7 +137,7 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
         setDuration(0);
       }
     });
-  }, [year, param]);
+  }, [getData, year, param]);
 
   const handlePrevClick = () => {
     if (param === paramInfo.min) {

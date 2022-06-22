@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
-import { SiteNavigation } from "../lib/utils";
+import { SiteNavigation } from "../lib/navigation";
 import { SearchContainer } from "./search/SearchContainer";
 import { SearchChildProps, SearchProvider } from "./search/SearchProvider";
 import styles from "./Navigation.module.scss";

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { getWeekViews, getBrowsersWeek } from "../../lib/analytics";
-import { getISOWeek } from "../../lib/tools/utils";
+import { getISOWeek } from "../../lib/utils";
 import { Report } from "./Report";
 
 const WEEK_LABELS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];

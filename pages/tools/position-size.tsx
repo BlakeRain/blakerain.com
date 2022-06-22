@@ -3,7 +3,7 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Analytics from "../../components/Analytics";
 import { Layout } from "../../components/Layout";
-import { loadNavigation, SiteNavigation } from "../../lib/utils";
+import { loadNavigation, SiteNavigation } from "../../lib/navigation";
 import Grid from "../../components/display/Grid";
 import { AccountProvider } from "../../components/tools/AccountProvider";
 import AccountInfoPanel from "../../components/tools/panels/AccountInfo";

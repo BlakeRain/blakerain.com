@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { FC } from "react";
 import { DateSpan } from "../components/display/DateSpan";
 import { Layout } from "../components/Layout";
-import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import { PostInfo, loadPostInfos } from "../lib/content";
 import { Tag, loadTags } from "../lib/tags";
 import styles from "./tags.module.scss";

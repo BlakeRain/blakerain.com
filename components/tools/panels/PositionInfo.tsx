@@ -5,7 +5,7 @@ import {
   computePositionSize,
   Direction,
 } from "../../../lib/tools/position";
-import { formatNumber } from "../../../lib/tools/utils";
+import { formatNumber } from "../../../lib/utils";
 import Card from "../../display/Card";
 import CurrencySelect from "../../fields/CurrencySelect";
 import DropdownButton from "../../fields/DropdownButton";

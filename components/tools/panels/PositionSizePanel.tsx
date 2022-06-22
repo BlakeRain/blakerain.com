@@ -6,7 +6,7 @@ import {
   computePositionSize,
   computeStopLoss,
 } from "../../../lib/tools/position";
-import { formatNumber } from "../../../lib/tools/utils";
+import { formatNumber } from "../../../lib/utils";
 import Card from "../../display/Card";
 import Grid from "../../display/Grid";
 import { useAccount } from "../AccountProvider";
