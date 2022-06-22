@@ -44,8 +44,8 @@ pub async fn handle_page_view(env: &Env, request: &Request) -> Result<Response<B
 struct PageViewAppend {
     uuid: String,
     path: String,
-    duration: i32,
-    scroll: i32,
+    duration: u64,
+    scroll: u64,
 }
 
 fn map_weekday(time: &OffsetDateTime) -> u8 {

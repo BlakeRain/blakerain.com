@@ -51,8 +51,8 @@ struct WeekViewRes {
     week: i32,
     day: i32,
     count: i32,
-    scroll: i32,
-    duration: i32,
+    scroll: u64,
+    duration: u64,
 }
 
 #[derive(Serialize)]
@@ -61,8 +61,8 @@ struct MonthViewRes {
     month: i32,
     day: i32,
     count: i32,
-    scroll: i32,
-    duration: i32,
+    scroll: u64,
+    duration: u64,
 }
 
 #[derive(Serialize)]

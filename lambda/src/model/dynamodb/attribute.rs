@@ -51,6 +51,25 @@ impl Attribute for i32 {
     }
 }
 
+impl Attribute for u64 {
+    fn into_attr(self) -> AttributeValue {
+        AttributeValue::N(self.to_string())
+    }
+
+    fn from_attr(value: AttributeValue) -> Result<Self, AttributeError> {
+        match value {
+            AttributeValue::N(value) => {
+                value
+                    .parse()
+                    .map_err(|err: <u64 as std::str::FromStr>::Err| {
+                        AttributeError::ParseError(err.to_string())
+                    })
+            }
+            _ => Err(AttributeError::IncorrectType),
+        }
+    }
+}
+
 impl Attribute for OffsetDateTime {
     fn into_attr(self) -> AttributeValue {
         AttributeValue::S(self.format(&Rfc3339).unwrap())
