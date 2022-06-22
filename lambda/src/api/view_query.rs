@@ -10,7 +10,7 @@ use serde_json::json;
 use crate::{
     env::Env,
     model::dynamodb::{
-        attribute::{get_attr, Attribute, AttributeError},
+        attribute::{get_attr, Attribute, AttributeError, get_attr_or},
         item::FromItemError,
     },
 };
@@ -51,6 +51,8 @@ struct WeekViewRes {
     week: i32,
     day: i32,
     count: i32,
+    scroll: i32,
+    duration: i32,
 }
 
 #[derive(Serialize)]
@@ -59,6 +61,8 @@ struct MonthViewRes {
     month: i32,
     day: i32,
     count: i32,
+    scroll: i32,
+    duration: i32,
 }
 
 #[derive(Serialize)]
@@ -100,7 +104,7 @@ impl ViewQuery for WeekViewReq {
     }
 
     fn projection(&self) -> Option<String> {
-        Some("ViewDay, ViewCount".to_string())
+        Some("ViewDay, ViewCount, TotalScroll, TotalDuration".to_string())
     }
 
     fn from(
@@ -118,7 +122,9 @@ impl ViewQuery for WeekViewReq {
                         AttributeError::ParseError(format!("{:?}", err)),
                     )
                 })?,
-            count: get_attr(&mut item, "ViewCount")?,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
+            scroll: get_attr_or(&mut item, "TotalScroll", 0)?,
+            duration: get_attr_or(&mut item, "TotalDuration", 0)?,
         })
     }
 }
@@ -135,7 +141,7 @@ impl ViewQuery for MonthViewReq {
     }
 
     fn projection(&self) -> Option<String> {
-        Some("ViewDay, ViewCount".to_string())
+        Some("ViewDay, ViewCount, TotalScroll, TotalDuration".to_string())
     }
 
     fn from(
@@ -153,7 +159,9 @@ impl ViewQuery for MonthViewReq {
                         AttributeError::ParseError(format!("{:?}", err)),
                     )
                 })?,
-            count: get_attr(&mut item, "ViewCount")?,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
+            scroll: get_attr_or(&mut item, "TotalScroll", 0)?,
+            duration: get_attr_or(&mut item, "TotalDuration", 0)?,
         })
     }
 }
@@ -192,7 +200,7 @@ impl ViewQuery for WeekBrowserReq {
                         AttributeError::ParseError(format!("{:?}", err)),
                     )
                 })?,
-            count: get_attr(&mut item, "ViewCount")?,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
         })
     }
 }
@@ -231,7 +239,7 @@ impl ViewQuery for MonthBrowserReq {
                         AttributeError::ParseError(format!("{:?}", err)),
                     )
                 })?,
-            count: get_attr(&mut item, "ViewCount")?,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
         })
     }
 }

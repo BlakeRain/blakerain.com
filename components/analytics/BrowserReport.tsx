@@ -1,150 +1,164 @@
-import React, { FC, useMemo, useState } from "react";
-
-import LineChart, { ChartData, ChartPoint } from "./LineChart";
-import PieChart, { PieChartPoint } from "./PieChart";
-
-import BrowserIcon from "./BrowserIcon";
-
+import React, { FC, useMemo } from "react";
+import cn from "classnames";
 import { BrowserData } from "../../lib/analytics";
+import reportStyles from "./Report.module.scss";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { formatNumber } from "../../lib/tools/utils";
 
-import styles from "./BrowserChart.module.scss";
+const OTHER_COLORS = ["#6588b7", "#88a2bc", "#f0dbb0", "#efb680", "#d99477"];
 
-const TOP_BROWSERS = 8;
-const BROWSER_COLORS = [
-  "#0584A5",
-  "#F6C75E",
-  "#6D4E7C",
-  "#9CD866",
-  "#C9472F",
-  "#FFA055",
-  "#8DDDD0",
-];
+const BROWSER_COLORS: { [key: string]: string } = {
+  Safari: "#4594b5",
+  Chrome: "#FFA055",
+  Firefox: "#C9472F",
+};
 
-export interface BrowserChartData extends ChartData {
-  name: string;
-  total: number;
-}
-
-export const BrowserReport: FC<{
-  browserData: BrowserData;
-  labelMapper: (day: number) => string;
-}> = ({ browserData, labelMapper }) => {
-  const [highlight, setHighlight] = useState<{
-    browser: BrowserChartData;
-    point?: ChartPoint;
-  } | null>(null);
-
-  const [browsers, topN, others] = useMemo(() => {
-    const browsers: BrowserChartData[] = Object.keys(browserData)
-      .map((browser) => ({
-        name: browser.replaceAll("-", " "),
-        total: browserData[browser].reduce(
-          (total, item) => total + (item.count || 0),
-          0
-        ),
-        color: "",
-        points: browserData[browser].map((item) => ({
-          label: labelMapper(item.day),
-          x: item.day,
-          y: item.count,
-        })),
-      }))
-      .sort((a, b) => b.total - a.total)
-      .map((obj, index) => {
-        obj.color = BROWSER_COLORS[index % BROWSER_COLORS.length];
-        return obj;
-      });
-
-    const topN: PieChartPoint[] = [];
-    const others: string[] = [];
-    var total = 0;
-
-    for (let i = 0; i < browsers.length; ++i) {
-      total += browsers[i].total;
-      if (i < TOP_BROWSERS - 1) {
-        topN.push({
-          label: browsers[i].name,
-          color: browsers[i].color,
-          ratio: browsers[i].total,
-        });
-      } else if (i === TOP_BROWSERS - 1) {
-        others.push(browsers[i].name);
-        topN.push({ label: "Others", color: "#444", ratio: browsers[i].total });
-      } else {
-        others.push(browsers[i].name);
-        topN[topN.length - 1].ratio += browsers[i].total;
-      }
-    }
-
-    topN.forEach((item) => (item.ratio = item.ratio / total));
-
-    return [browsers, topN, others];
-  }, [browserData]);
-
-  if (browsers.length === 0) {
-    return null;
+function browserColor(name: string, index: number): string {
+  const color = BROWSER_COLORS[name];
+  if (color) {
+    return color;
   }
 
-  const pie_highlight = highlight
-    ? others.indexOf(highlight.browser.name) !== -1
-      ? "Others"
-      : highlight.browser.name
-    : undefined;
+  return OTHER_COLORS[index % OTHER_COLORS.length];
+}
+
+type NamedData = { [name: string]: any };
+
+interface CombinedData extends NamedData {
+  label: string;
+}
+
+const BrowserTooltip = ({
+  year,
+  param,
+  names,
+  formatDay,
+  active,
+  payload,
+}: {
+  year: number;
+  param: number;
+  names: string[];
+  formatDay: (year: number, param: number, category: string) => string;
+  active?: boolean;
+  payload?: any;
+}) => {
+  if (active && payload && payload.length > 0) {
+    const data = payload[0].payload as CombinedData;
+    const total = names.reduce((total, name) => total + data[name], 0);
+
+    const rows: any[] = [];
+    names.forEach((name, index) => {
+      if (data[name] > 0) {
+        rows.unshift(
+          <tr key={index.toString()}>
+            <th
+              style={{
+                color: "#000000",
+                backgroundColor: browserColor(name, index),
+              }}
+            >
+              {name.replace("-", " ")}
+            </th>
+            <td>{formatNumber(data[name], 0)}</td>
+            <td>
+              {formatNumber((100 * data[name]) / total, 0, undefined, "%")}
+            </td>
+          </tr>
+        );
+      }
+    });
+
+    return (
+      <div className={cn(reportStyles.tooltip, reportStyles.large)}>
+        <p className={reportStyles.title}>
+          {formatDay(year, param, data.label)} - {formatNumber(total, 0)} views
+        </p>
+        <table>
+          <tbody>{rows}</tbody>
+        </table>
+        {names.length === 0 && (
+          <div className={reportStyles.notice}>No Data</div>
+        )}
+      </div>
+    );
+  } else {
+    return <div className={reportStyles.tooltip}></div>;
+  }
+};
+
+export const BrowserReport: FC<{
+  year: number;
+  param: number;
+  formatDay: (year: number, param: number, category: string) => string;
+  browserData: BrowserData;
+  startOffset: number;
+  labelMapper: (day: number) => string;
+}> = ({ year, param, formatDay, browserData, startOffset, labelMapper }) => {
+  const [browsers, names] = useMemo(() => {
+    let combined: CombinedData[] = [];
+    let names: string[] = Object.keys(browserData);
+    let totals: { [key: string]: number } = {};
+
+    Object.keys(browserData).forEach((name) => {
+      let data = browserData[name];
+      let total = 0;
+
+      for (let item of data) {
+        let index = item.day - startOffset;
+        while (index >= combined.length) {
+          combined.push({
+            label: labelMapper(startOffset + combined.length),
+          });
+        }
+
+        combined[index][name] = item.count || 0;
+        total += item.count || 0;
+      }
+
+      totals[name] = total;
+    });
+
+    names.sort((a, b) => totals[a] - totals[b]);
+
+    return [combined, names];
+  }, [browserData]);
 
   return (
-    <React.Fragment>
-      <div>
-        <LineChart
-          data={browsers}
-          width={400}
-          height={200}
-          gridX={6}
-          gridY={5}
-          highlight={
-            highlight
-              ? browsers.findIndex((b) => b.name === highlight.browser.name)
-              : undefined
+    <>
+      <AreaChart width={1000} height={400} data={browsers}>
+        {names.map((name, index) => (
+          <Area
+            key={index.toString()}
+            type="monotone"
+            dataKey={name}
+            stackId="1"
+            stroke={browserColor(name, index)}
+            fill={browserColor(name, index)}
+            strokeWidth={2}
+          />
+        ))}
+        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+        <XAxis dataKey="label" />
+        <YAxis />
+        <Tooltip
+          content={
+            <BrowserTooltip
+              year={year}
+              param={param}
+              names={names}
+              formatDay={formatDay}
+            />
           }
-          onMouseOver={(_event, data, point) => {
-            setHighlight({ browser: data as BrowserChartData, point: point });
-          }}
-          onMouseOut={() => setHighlight(null)}
         />
-      </div>
-      <div className={styles.browserInfo}>
-        <div>
-          <PieChart data={topN} highlight={pie_highlight} />
-        </div>
-        <div className={styles.browserPalette}>
-          {browsers.map((browser, index) => (
-            <div
-              className={
-                styles.browserButton +
-                " " +
-                (highlight === null || highlight.browser.name === browser.name
-                  ? ""
-                  : styles.inactive)
-              }
-              key={index.toString()}
-              style={{ backgroundColor: browser.color }}
-              onMouseOver={() => setHighlight({ browser })}
-              onMouseOut={() => setHighlight(null)}
-            >
-              <div>
-                <BrowserIcon name={browser.name} />
-                {browser.name}
-              </div>
-              <b>
-                {highlight &&
-                highlight.point &&
-                highlight.browser.name === browser.name
-                  ? highlight.point.y
-                  : browser.total}
-              </b>
-            </div>
-          ))}
-        </div>
-      </div>
-    </React.Fragment>
+      </AreaChart>
+    </>
   );
 };

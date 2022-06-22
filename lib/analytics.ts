@@ -61,6 +61,8 @@ export interface WeekView {
   week: number;
   day: number;
   count?: number;
+  scroll?: number;
+  duration?: number;
 }
 
 const DAYS_REMAP = [6, 0, 1, 2, 3, 4, 5];
@@ -112,6 +114,8 @@ export interface MonthView {
   month: number;
   day: number;
   count?: number;
+  scroll?: number;
+  duration?: number;
 }
 
 export const getMonthViews = async (
@@ -145,7 +149,7 @@ export const getMonthViews = async (
     }
 
     if (!found) {
-      months.push({ year, month, day });
+      months.push({ year, month, day, count: 0, scroll: 0, duration: 0 });
     }
   }
 

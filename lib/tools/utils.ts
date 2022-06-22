@@ -1,3 +1,12 @@
+export function zeroPad(n: number, count: number = 2): string {
+  const s = n.toString();
+  if (s.length < count) {
+    return new Array(count - s.length).fill("0") + s;
+  } else {
+    return s;
+  }
+}
+
 export function formatNumber(
   value: number,
   places: number,
@@ -9,4 +18,13 @@ export function formatNumber(
   var parts = aval.toFixed(places).split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return (neg ? "-" : "") + (prefix || "") + parts.join(".") + (suffix || "");
+}
+
+export function getISOWeek(date: Date): number {
+  var d = new Date(date);
+  var dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  var diff = d.getTime() - yearStart.getTime();
+  return Math.ceil((diff / 86400000 + 1) / 7);
 }

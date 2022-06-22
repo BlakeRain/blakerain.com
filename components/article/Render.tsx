@@ -11,6 +11,7 @@ import cn from "classnames";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
+import { AnalyticsInformation } from "../Analytics";
 
 const HighlightContext = React.createContext<RegExp | null>(null);
 
@@ -426,30 +427,30 @@ export const Render: FC<{
       ? new RegExp(highlight.join("|"), "mig")
       : null;
 
+  const components: any = {
+    pre: SelectPre,
+    img: RenderImage,
+    p: RenderParagraph,
+    blockquote: RenderBlockQuote,
+    em: RenderEmphasis,
+    strong: RenderStrong,
+    li: RenderListItem,
+    a: RenderLink,
+    h1: createHeading(1),
+    h2: createHeading(2),
+    h3: createHeading(3),
+    h4: createHeading(4),
+    h5: createHeading(5),
+    h6: createHeading(6),
+
+    Bookmark: Bookmark,
+    AnalyticsInformation: AnalyticsInformation,
+  };
+
   return (
     <HighlightContext.Provider value={highlight_regex}>
       {" "}
-      <MDXRemote
-        {...content}
-        components={{
-          pre: SelectPre,
-          img: RenderImage,
-          p: RenderParagraph,
-          blockquote: RenderBlockQuote,
-          em: RenderEmphasis,
-          strong: RenderStrong,
-          li: RenderListItem,
-          a: RenderLink,
-          h1: createHeading(1),
-          h2: createHeading(2),
-          h3: createHeading(3),
-          h4: createHeading(4),
-          h5: createHeading(5),
-          h6: createHeading(6),
-
-          Bookmark: Bookmark,
-        }}
-      />
+      <MDXRemote {...content} components={components} />
     </HighlightContext.Provider>
   );
 };

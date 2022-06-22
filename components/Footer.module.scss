@@ -1,104 +1,100 @@
 @import "../styles/colors.scss";
+@import "../styles/tools.scss";
 
+$color-footer-link: rgba(255, 255, 255, 0.7);
+$color-footer-link-hover: rgba(255, 255, 255, 1);
+$color-footer-link-separator: rgba(255, 255, 255, 0.75);
+$color-footer-popup-background: lighten($primary-background, 10%);
+$color-footer-popup-link: rgba(255, 255, 255, 1);
+$color-footer-popup-link-hover-background: lighten($primary-background, 20%);
+
+// The outer footer component, which provides the full-width primary background and some padding
 .footer {
   background-color: $primary-background;
-  padding: 20px 5vw;
-  display: flex;
-  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-.inner {
-  max-width: 1040px;
-  width: 100%;
-
+// THe inner component of the footer, which consumes all available space up to a maximum width, corresponding to the
+// main body size. This arranges for it's children to be spaced either side of the footer, which we override on smaller
+// displays to arrange children vertically.
+.footerInner {
+  // Use a slightly smaller font for the footer
   font-size: 1.3rem;
 
+  // Arrange our children horizontally (a row) and space them equally.
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
 
+  // Any link found in the footer should be white, and become a tad brighter when we hover.
   a {
-    color: rgba(255, 255, 255, 0.7);
+    color: $color-footer-link;
 
     &:hover {
-      color: rgba(255, 255, 255, 1);
+      color: $color-footer-link-hover;
       text-decoration: none;
     }
   }
 }
 
+// The copyright notice matches the color of our links
 .copyright {
-  color: rgba(255, 255, 255, 0.7);
+  color: $color-footer-link;
 }
 
+// A navigation in the footer. This contains a series of links that are arranged horizontally, or vertically on mobile.
 .navigation {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  margin-bottom: 1rem;
 
-  nav {
-    display: flex;
-    margin-bottom: 1rem;
+  // Ensure that links in the navigation have a dot between them. We do this by using a ':before' pseudo class that
+  // lets us add a small dot to the left of the link. Note that we don't apply this to the first child.
+  > a,
+  .popup {
+    position: relative;
+    margin-left: 20px;
 
-    // Links should be translucent white
-    a {
-      color: rgba(255, 255, 255, 0.7);
-      position: relative;
-    }
-
-    // Ensure that links in the menu have a dot between them
-    > a,
-    .popup {
-      &:before {
-        content: "";
-        position: absolute;
-        display: block;
-        top: 12px;
-        left: -11px;
-        width: 2px;
-        height: 2px;
-        background-color: rgba(255, 255, 255, 0.75);
-        border-radius: 100%;
-      }
-    }
-
-    > a {
-      margin-left: 20px;
-
-      &:first-of-type {
-        &:before {
-          display: none;
-        }
-      }
+    &:not(:first-child):before {
+      content: "";
+      position: absolute;
+      display: block;
+      top: 12px;
+      left: -11px;
+      width: 2px;
+      height: 2px;
+      background-color: $color-footer-link-separator;
+      border-radius: 100%;
     }
   }
 }
 
+// Add a small triangle at the end of the link that points up. We override this on mobile devices to point in different
+// directions, corresponding with the UI arrangement.
 .popup {
-  position: relative;
-  margin-left: 20px;
-
   > a:after {
     content: "";
     position: relative;
     display: inline-block;
     width: 0px;
     height: 0px;
-    top: -1px;
+    top: -3px;
     left: 4px;
     border-left: 0.5rem solid transparent;
     border-right: 0.5rem solid transparent;
-    border-bottom: 0.5rem solid rgba(255, 255, 255, 0.7);
-  }
-
-  &.popupOpen {
-    .popupMenu {
-      display: block;
-    }
+    border-bottom: 0.5rem solid $color-footer-link;
   }
 }
 
+// When the popup is open, set the menu display to block (previous was 'none')
+.popup.popupOpen {
+  .popupMenu {
+    display: block;
+  }
+}
+
+// Arrange the popup menu to be an absolute positioned element aligned to the right of it's container.
 .popupMenu {
   position: absolute;
 
@@ -111,7 +107,7 @@
 
   padding: 1rem 0;
 
-  background-color: lighten($primary-background, 10%);
+  background-color: $color-footer-popup-background;
   border-radius: 5px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 
@@ -132,12 +128,12 @@
       a {
         display: block;
         margin: 0;
-        color: rgb(255, 255, 255);
+        color: $color-footer-popup-link;
 
         padding: 0.5rem 1rem;
 
         &:hover {
-          background-color: lighten($primary-background, 20%);
+          background-color: $color-footer-popup-link-hover-background;
         }
       }
     }
@@ -145,6 +141,8 @@
 }
 
 @media (min-width: 700px) {
+  // On larger displays, add a small arrow to the bottom-right of the popup menu that should line up with the arrow on
+  // the right of the popup link.
   .popupMenu {
     &:after {
       content: "";
@@ -159,7 +157,7 @@
 
       border-left: 1rem solid transparent;
       border-right: 1rem solid transparent;
-      border-top: 1rem solid lighten($primary-background, 10%);
+      border-top: 1rem solid $color-footer-popup-background;
     }
   }
 }
@@ -172,63 +170,82 @@
 
   .copyright {
     margin-bottom: 1rem;
+    color: darken($color-footer-link, 20%);
+
+    > a {
+      color: darken($color-footer-link, 20%);
+    }
   }
 
   .navigation {
+    flex-direction: column;
     align-items: stretch;
+    margin-bottom: 0;
 
-    nav {
+    > a,
+    .popup {
+      margin-left: 0;
+      padding: 1rem 0;
+
+      &:not(:first-child):before {
+        display: none;
+      }
+    }
+
+    > .popup {
+      // The pop-up should arrange it's children in a column
+      display: flex;
       flex-direction: column;
+      align-items: stretch;
 
-      a {
-        &:first-child {
-          margin-left: 0;
-        }
+      // Adjust a pop-up menu so that it's full width (overlapping the container padding)
+      padding: 1rem 2rem;
+      margin-left: -2rem;
+      margin-right: -2rem;
+
+      // When the popup is open on smaller displays, we hide the padding at the bottom and match the background of the
+      // popup menu.
+      &.popupOpen {
+        padding-bottom: 0;
+        background-color: $color-footer-popup-background;
       }
 
-      > a,
-      .popup {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+      // We re-arrange the flex order of the children so the menu opens _below_ the link, rather than above it.
+      > div {
+        order: 1;
+      }
 
-        margin-left: 0;
-        margin-bottom: 1rem;
-
-        &:before {
-          display: none;
-        }
+      > a {
+        order: 0;
       }
     }
   }
 
+  // Change the arrows in the popup menu link to a different orientation for smaller devices
   .popup {
-    > div {
-      order: 1;
-    }
-
     > a {
-      order: 0;
-
       // Make the arrow after the link of a footer popup menu point to the right on smaller devices
       &:after {
+        top: 0px;
         left: 6px;
         border-top: 0.5rem solid transparent;
         border-bottom: 0.5rem solid transparent;
-        border-left: 0.5rem solid rgba(255, 255, 255, 0.7);
+        border-left: 0.5rem solid $color-footer-link;
       }
     }
 
     &.popupOpen {
+      // Make the arrow after the link of a footer popup menu point down on smaller devices
       > a:after {
         top: 4px;
         border-left: 0.5rem solid transparent;
         border-right: 0.5rem solid transparent;
-        border-top: 0.5rem solid rgba(255, 255, 255, 0.7);
+        border-top: 0.5rem solid $color-footer-link;
       }
     }
   }
 
+  // Show the pop-up menu as a normal flex child rather than a floating element.
   .popupMenu {
     position: relative;
 
@@ -236,14 +253,14 @@
     right: initial;
     width: auto;
 
-    margin: 1rem -2rem;
-
+    // Don't have any shadow, background or border radius
     box-shadow: none;
     border-radius: 0;
+    background: none;
 
+    // Make sure that the links in the popup menu have an increased gap for mobile
     ul > li > a {
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding: 1rem 0;
     }
   }
 }

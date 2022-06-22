@@ -144,6 +144,19 @@ select {
   background-size: 16px 12px;
 }
 
+// An override for tables that are column oriented
+table.columnOriented {
+  tbody {
+    tr {
+      th {
+        text-align: left;
+        background-color: $primary-background;
+        color: white;
+      }
+    }
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   h1,
   h2,
