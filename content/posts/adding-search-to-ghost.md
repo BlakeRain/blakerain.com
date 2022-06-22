@@ -12,7 +12,7 @@ cover: /content/photo-1546277838-f1e7a049a490.jpg
 
 **tl;dr** I added search with a couple of Python scripts ([here](https://github.com/HalfWayMan/blakerain.com/blob/master/populate-db.py) and [here](https://github.com/HalfWayMan/blakerain.com/blob/master/simple-search.py)).
 
-> **Update (2020-11-27): **I've moved to a [different search](http://localhost:2368/blog/updated-site-search/) implementation, and the search mechanism described in this post has been deprecated.
+> **Update (2020-11-27):** I've moved to a [different search](http://localhost:2368/blog/updated-site-search/) implementation, and the search mechanism described in this post has been deprecated.
 
 One feature that is oddly missing from Ghost is a search feature. I thought this rather strange, so I looked around on the Ghost [forums](https://forum.ghost.org/t/search-for-ghost/832) to see if there were any known good solutions. I found a few, such as:
 
