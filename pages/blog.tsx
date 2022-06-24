@@ -5,7 +5,7 @@ import Analytics from "../components/Analytics";
 import { Layout } from "../components/Layout";
 import { PostCards } from "../components/PostCard";
 
-import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import { Tag, loadTags } from "../lib/tags";
 import { PostInfo, loadPostInfos } from "../lib/content";
 

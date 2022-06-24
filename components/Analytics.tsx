@@ -188,13 +188,20 @@ class AnalyticsData {
   }
 
   sendBeacon() {
-    this.duration = Math.round(
-      (Date.now() - this.start - this.totalHidden) / 1000.0
+    this.duration = Math.max(
+      0,
+      Math.min(
+        MAX_DURATION,
+        Math.round((Date.now() - this.start - this.totalHidden) / 1000.0)
+      )
     );
     this.scroll = Math.max(0, this.scroll, getPosition());
     navigator.sendBeacon(ANALYTICS_APPEND_URL, this.toBeaconJson());
   }
 }
+
+// The maximum duration (2 hours)
+const MAX_DURATION = 2 * 60 * 60;
 
 // This is the path to our analytics image. We append the query string from the `AnalyticsData` to this URL.
 const ANALYTICS_URL = "https://pv.blakerain.com/pv.gif";
@@ -208,6 +215,7 @@ const ANALYTICS_APPEND_URL = "https://pv.blakerain.com/append";
 const AnalyticsImage = ({ data }: { data: AnalyticsData }) => {
   return (
     <img
+      alt=""
       style={{
         visibility: "hidden",
         width: 0,

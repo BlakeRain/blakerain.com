@@ -7,7 +7,7 @@ import {
 } from "next";
 import Head from "next/head";
 import { NextSeo } from "next-seo";
-import { SiteNavigation, loadNavigation } from "../lib/utils";
+import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import { Page, loadPageSlugs, loadPageWithSlug } from "../lib/content";
 import { Layout } from "../components/Layout";
 import { Content } from "../components/article/Content";
