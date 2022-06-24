@@ -100,7 +100,7 @@
 
 .tooltip {
   font-size: 80%;
-  width: 20rem;
+  width: 22rem;
   background-color: $color-white-grey;
 
   .title {
@@ -122,6 +122,7 @@
     tbody tr {
       th,
       td {
+        width: 50%;
         padding: 0.25rem 1rem;
       }
 

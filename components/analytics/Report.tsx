@@ -70,7 +70,7 @@ const ReportTooltip = ({
               <th>Avg. Scroll</th>
               <td>
                 {view.views > 0
-                  ? formatNumber(view.scroll / view.views, 2, undefined, "%")
+                  ? formatNumber(view.scroll / view.views, 0, undefined, "%")
                   : "-"}
               </td>
             </tr>
@@ -80,7 +80,7 @@ const ReportTooltip = ({
                 {view.views > 0
                   ? formatNumber(
                       view.duration / view.views,
-                      2,
+                      0,
                       undefined,
                       " secs"
                     )
