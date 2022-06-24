@@ -140,11 +140,7 @@ export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
         setDuration(0);
       }
     });
-<<<<<<< HEAD
-  }, [path, year, param]);
-=======
-  }, [getData, year, param]);
->>>>>>> d5a3fef62d561be2ddfba2c854c76ac44494e6a2
+  }, [getData, path, year, param]);
 
   const handlePrevClick = () => {
     if (param === paramInfo.min) {
