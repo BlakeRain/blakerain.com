@@ -4,7 +4,8 @@ use blakerain_analytics_lambdas::{
         page_view::{handle_page_view, handle_page_view_append},
         utils::build_json,
         view_query::{
-            handle_browsers_month, handle_browsers_week, handle_views_month, handle_views_week,
+            handle_browsers_month, handle_browsers_week, handle_pages_month, handle_pages_week,
+            handle_views_month, handle_views_week,
         },
     },
     env::Env,
@@ -37,6 +38,8 @@ async fn api_handler(env: &Env, request: Request) -> Result<Response<Body>, Erro
             "/api/views/month" => handle_views_month(env, &request).await,
             "/api/browsers/week" => handle_browsers_week(env, &request).await,
             "/api/browsers/month" => handle_browsers_month(env, &request).await,
+            "/api/pages/week" => handle_pages_week(env, &request).await,
+            "/api/pages/month" => handle_pages_month(env, &request).await,
             _ => Ok(build_json(
                 404,
                 json!({

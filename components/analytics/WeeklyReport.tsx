@@ -1,5 +1,9 @@
 import React, { FC } from "react";
-import { getWeekViews, getBrowsersWeek } from "../../lib/analytics";
+import {
+  getWeekViews,
+  getBrowsersWeek,
+  getWeekPageCount,
+} from "../../lib/analytics";
 import { getISOWeek } from "../../lib/utils";
 import { Report } from "./Report";
 
@@ -32,7 +36,8 @@ const WeeklyReport: FC<{ paths: string[]; token: string }> = ({
           })
         );
         const browsers = (await getBrowsersWeek(token, year, week)).browsers;
-        return { data, browsers };
+        const pages = await getWeekPageCount(token, year, week);
+        return { data, browsers, pages };
       }}
     />
   );

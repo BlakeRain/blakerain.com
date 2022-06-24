@@ -1,5 +1,9 @@
 import React, { FC } from "react";
-import { getMonthViews, getBrowsersMonth } from "../../lib/analytics";
+import {
+  getMonthViews,
+  getBrowsersMonth,
+  getMonthPageCount,
+} from "../../lib/analytics";
 import { Report } from "./Report";
 
 const MonthlyReport: FC<{ paths: string[]; token: string }> = ({
@@ -34,7 +38,8 @@ const MonthlyReport: FC<{ paths: string[]; token: string }> = ({
           })
         );
         const browsers = (await getBrowsersMonth(token, year, month)).browsers;
-        return { data, browsers };
+        const pages = await getMonthPageCount(token, year, month);
+        return { data, browsers, pages };
       }}
     />
   );

@@ -2,15 +2,29 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./Report.module.scss";
 import {
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
+  Pie,
+  PieChart,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { BrowserData } from "../../lib/analytics";
+import { BrowserData, PageCount } from "../../lib/analytics";
 import { BrowserReport } from "./BrowserReport";
 import { formatNumber } from "../../lib/utils";
+
+const PIE_COLORS = [
+  "#003f5c",
+  "#2f4b7c",
+  "#665191",
+  "#a05195",
+  "#d45087",
+  "#f95d6a",
+  "#ff7c43",
+  "#ffa600",
+];
 
 export interface ReportView {
   category: string;
@@ -36,7 +50,11 @@ export interface ReportProps {
     path: string,
     year: number,
     param: number
-  ) => Promise<{ data: ReportView[]; browsers: BrowserData }>;
+  ) => Promise<{
+    data: ReportView[];
+    browsers: BrowserData;
+    pages: PageCount[];
+  }>;
 }
 
 const ReportTooltip = ({
@@ -100,6 +118,38 @@ const ReportTooltip = ({
   }
 };
 
+const ReportPageTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: any;
+}) => {
+  if (active && payload && payload.length > 0) {
+    const page = payload[0].payload as PageCount;
+
+    return (
+      <div className={styles.tooltip}>
+        <p className={styles.title}>{page.page}</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>View Count</th>
+              <td>{formatNumber(page.count, 0)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.tooltip}>
+        <div className={styles.notice}>No Data</div>
+      </div>
+    );
+  }
+};
+
 export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
   const now = new Date();
   const [path, setPath] = useState("site");
@@ -110,9 +160,10 @@ export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
   const [scroll, setScroll] = useState(0);
   const [data, setData] = useState<ReportView[]>([]);
   const [browsers, setBrowsers] = useState<BrowserData>({});
+  const [pages, setPages] = useState<PageCount[]>([]);
 
   useEffect(() => {
-    getData(path, year, param).then(({ data, browsers }) => {
+    getData(path, year, param).then(({ data, browsers, pages }) => {
       let total_views = 0;
       let counted_views = 0;
       let total_scroll = 0;
@@ -131,6 +182,9 @@ export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
       setBrowsers(browsers);
       setData(data);
       setViews(total_views);
+
+      pages.sort((a, b) => b.count - a.count);
+      setPages(pages);
 
       if (counted_views > 0) {
         setScroll(total_scroll / counted_views);
@@ -240,6 +294,37 @@ export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
             labelMapper={paramInfo.labelMapper}
           />
         )}
+        <div className={styles.reportChartsRow}>
+          <PieChart width={500} height={400}>
+            <Pie data={pages} dataKey="count" fill="#0074d9">
+              {pages.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={PIE_COLORS[index % PIE_COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<ReportPageTooltip />} />
+          </PieChart>
+          <table>
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th style={{ textAlign: "right" }}>Views</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pages.map((page, index) => (
+                <tr key={index.toString()}>
+                  <td>{page.page}</td>
+                  <td style={{ textAlign: "right" }}>
+                    {formatNumber(page.count, 0)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -96,6 +96,50 @@
   > div + div {
     margin-top: 2rem;
   }
+
+  .reportChartsRow {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  table {
+    border-collapse: collapse;
+
+    min-width: 50%;
+    max-width: 100%;
+
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+
+    th,
+    td {
+      padding: 0.25rem 1rem;
+    }
+
+    thead {
+      tr {
+        background-color: $primary-background;
+        color: white;
+        text-align: left;
+      }
+    }
+
+    tbody {
+      tr {
+        &:not(:last-child) {
+          border-bottom: 1px solid $color-light-grey;
+        }
+
+        &:nth-of-type(even) {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        &:last-child {
+          border-bottom-color: $color-mid-grey;
+        }
+      }
+    }
+  }
 }
 
 .tooltip {
@@ -153,6 +197,26 @@
     .title,
     table tbody tr th {
       background-color: $color-mid-grey;
+    }
+  }
+
+  .reportCharts {
+    table {
+      tbody {
+        tr {
+          &:not(:last-child) {
+            border-bottom: 1px solid $color-mid-grey;
+          }
+
+          &:nth-of-type(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+          }
+
+          &:last-child {
+            border-bottom-color: $color-dark-grey;
+          }
+        }
+      }
     }
   }
 }

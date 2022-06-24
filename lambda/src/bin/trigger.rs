@@ -1,11 +1,63 @@
 use aws_sdk_dynamodb::model::AttributeValue;
-use blakerain_analytics_lambdas::env::Env;
+use blakerain_analytics_lambdas::{env::Env, model::dynamodb::attribute::Attribute};
 use lambda_runtime::{handler_fn, Context, Error};
 use serde_json::Value;
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
 fn map_weekday(time: &OffsetDateTime) -> u8 {
     time.weekday().number_days_from_sunday()
+}
+
+async fn update_page_count(env: &Env, path: &str, time: &OffsetDateTime) -> Result<(), Error> {
+    // Store the total views for this path on this day
+    env.ddb
+        .update_item()
+        .table_name(env.table_name.to_string())
+        .key(
+            "Path",
+            format!(
+                "page-view-day-{}-{:02}-{:02}",
+                time.year(),
+                time.month() as u8,
+                time.day()
+            )
+            .into_attr(),
+        )
+        .key("Section", path.to_string().into_attr())
+        .update_expression("ADD ViewCount :n")
+        .expression_attribute_values(":n", AttributeValue::N("1".to_string()))
+        .send()
+        .await?;
+
+    // Store the total views for this path in this week
+    env.ddb
+        .update_item()
+        .table_name(env.table_name.to_string())
+        .key(
+            "Path",
+            format!("page-view-week-{}-{:02}", time.year(), time.iso_week()).into_attr(),
+        )
+        .key("Section", path.to_string().into_attr())
+        .update_expression("ADD ViewCount :n")
+        .expression_attribute_values(":n", AttributeValue::N("1".to_string()))
+        .send()
+        .await?;
+
+    // Store the total views for this path in this month
+    env.ddb
+        .update_item()
+        .table_name(env.table_name.to_string())
+        .key(
+            "Path",
+            format!("page-view-month-{}-{:02}", time.year(), time.month() as u8).into_attr(),
+        )
+        .key("Section", path.to_string().into_attr())
+        .update_expression("ADD ViewCount :n")
+        .expression_attribute_values(":n", AttributeValue::N("1".to_string()))
+        .send()
+        .await?;
+
+    Ok(())
 }
 
 async fn update_path(env: &Env, path: &str, time: &OffsetDateTime) -> Result<(), Error> {
@@ -198,6 +250,7 @@ async fn trigger_handler(env: &Env, event: Value) -> Result<(), Error> {
                                             &Rfc3339,
                                         )?;
 
+                                        update_page_count(env, &path, &time).await?;
                                         update_path(env, &path, &time).await?;
                                         update_path(env, "site", &time).await?;
 
