@@ -13,8 +13,9 @@ import styles from "../components/analytics/Report.module.scss";
 import WeeklyReport from "../components/analytics/WeeklyReport";
 import MonthlyReport from "../components/analytics/MonthlyReport";
 import SignIn from "../components/analytics/SignIn";
+import { loadPageSlugs, loadPostSlugs } from "../lib/content";
 
-const Report: FC<{ token: string }> = ({ token }) => {
+const Report: FC<{ paths: string[]; token: string }> = ({ paths, token }) => {
   const [mode, setMode] = useState<"month" | "week">("month");
 
   return (
@@ -42,9 +43,9 @@ const Report: FC<{ token: string }> = ({ token }) => {
         </div>
       </div>
       {mode === "week" ? (
-        <WeeklyReport token={token} />
+        <WeeklyReport paths={paths} token={token} />
       ) : (
-        <MonthlyReport token={token} />
+        <MonthlyReport paths={paths} token={token} />
       )}
     </div>
   );
@@ -52,15 +53,31 @@ const Report: FC<{ token: string }> = ({ token }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const navigation = await loadNavigation();
+  const page_slugs = await loadPageSlugs();
+  const post_slugs = await loadPostSlugs();
+
+  const paths = ["site", "/", "/blog", "/tags"];
+
+  for (let slug of page_slugs) {
+    paths.push(`/${slug}`);
+  }
+
+  for (let slug of post_slugs) {
+    paths.push(`/blog/${slug}`);
+  }
 
   return {
     props: {
+      paths,
       navigation,
     },
   };
 };
 
-const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
+const Analytics: FC<{ navigation: SiteNavigation[]; paths: string[] }> = ({
+  navigation,
+  paths,
+}) => {
   const [token, setToken] = useState<string | null>(getSessionToken());
 
   return (
@@ -71,7 +88,9 @@ const Analytics: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
       <NextSeo noindex nofollow />
       <ClientOnly>
         {token ? (
-          <Report token={token}>Okay</Report>
+          <Report paths={paths} token={token}>
+            Okay
+          </Report>
         ) : (
           <SignIn
             setToken={(token) => {

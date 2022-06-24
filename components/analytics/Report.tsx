@@ -30,8 +30,10 @@ export interface ParamInfo {
 }
 
 export interface ReportProps {
+  paths: string[];
   paramInfo: ParamInfo;
   getData: (
+    path: string,
     year: number,
     param: number
   ) => Promise<{ data: ReportView[]; browsers: BrowserData }>;
@@ -98,8 +100,9 @@ const ReportTooltip = ({
   }
 };
 
-export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
+export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
   const now = new Date();
+  const [path, setPath] = useState("site");
   const [year, setYear] = useState(now.getFullYear());
   const [param, setParam] = useState(paramInfo.fromDate(now));
   const [views, setViews] = useState(0);
@@ -109,7 +112,7 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
   const [browsers, setBrowsers] = useState<BrowserData>({});
 
   useEffect(() => {
-    getData(year, param).then(({ data, browsers }) => {
+    getData(path, year, param).then(({ data, browsers }) => {
       let total_views = 0;
       let counted_views = 0;
       let total_scroll = 0;
@@ -137,7 +140,7 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
         setDuration(0);
       }
     });
-  }, [year, param]);
+  }, [path, year, param]);
 
   const handlePrevClick = () => {
     if (param === paramInfo.min) {
@@ -157,6 +160,12 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
     }
   };
 
+  const handlePathChange: React.ChangeEventHandler<HTMLSelectElement> = (
+    event
+  ) => {
+    setPath(event.target.value);
+  };
+
   return (
     <div className={styles.reportContents}>
       <div className={styles.reportControls}>
@@ -171,24 +180,33 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
             &rarr;
           </button>
         </div>
-        {data.length > 0 && (
-          <>
-            <span>
-              <b>Total:</b> {views}
-            </span>
-            {scroll > 0 && (
-              <span>
-                <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
-              </span>
-            )}
-            {duration > 0 && (
-              <span>
-                <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
-              </span>
-            )}
-          </>
-        )}
+        <div>
+          <select value={path} onChange={handlePathChange}>
+            {paths.map((path, index) => (
+              <option key={index.toString()} value={path}>
+                {path}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+      {data.length > 0 && (
+        <div className={styles.reportControls}>
+          <span>
+            <b>Total:</b> {views}
+          </span>
+          {scroll > 0 && (
+            <span>
+              <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
+            </span>
+          )}
+          {duration > 0 && (
+            <span>
+              <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
+            </span>
+          )}
+        </div>
+      )}
       <div className={styles.reportCharts}>
         {data.length > 0 && (
           <LineChart width={1000} height={400} data={data}>

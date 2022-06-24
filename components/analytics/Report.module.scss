@@ -80,8 +80,13 @@
 
   span + div,
   div + span,
+  div + div,
   span + span {
     margin-left: 1rem;
+  }
+
+  select {
+    max-width: 30rem;
   }
 }
 

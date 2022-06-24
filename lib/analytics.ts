@@ -69,6 +69,7 @@ const DAYS_REMAP = [6, 0, 1, 2, 3, 4, 5];
 
 export const getWeekViews = async (
   token: string,
+  path: string,
   year: number,
   week: number
 ): Promise<WeekView[]> => {
@@ -79,6 +80,7 @@ export const getWeekViews = async (
     },
     body: JSON.stringify({
       token,
+      path,
       year: year,
       week: week,
     }),
@@ -120,6 +122,7 @@ export interface MonthView {
 
 export const getMonthViews = async (
   token: string,
+  path: string,
   year: number,
   month: number
 ): Promise<MonthView[]> => {
@@ -130,6 +133,7 @@ export const getMonthViews = async (
     },
     body: JSON.stringify({
       token,
+      path,
       year: year,
       month: 1 + month,
     }),

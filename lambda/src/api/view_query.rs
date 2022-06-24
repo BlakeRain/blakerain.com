@@ -10,7 +10,7 @@ use serde_json::json;
 use crate::{
     env::Env,
     model::dynamodb::{
-        attribute::{get_attr, Attribute, AttributeError, get_attr_or},
+        attribute::{get_attr, get_attr_or, Attribute, AttributeError},
         item::FromItemError,
     },
 };
@@ -20,6 +20,7 @@ use super::utils::{add_standard_headers, build_json, from_request};
 #[derive(Deserialize)]
 struct WeekViewReq {
     token: String,
+    path: String,
     year: i32,
     week: i32,
 }
@@ -27,6 +28,7 @@ struct WeekViewReq {
 #[derive(Deserialize)]
 struct MonthViewReq {
     token: String,
+    path: String,
     year: i32,
     month: i32,
 }
@@ -87,6 +89,7 @@ trait ViewQuery {
     type Response: Sized;
 
     fn token(&self) -> &str;
+    fn path(&self) -> &str;
     fn section(&self) -> String;
     fn projection(&self) -> Option<String>;
     fn from(&self, item: HashMap<String, AttributeValue>) -> Result<Self::Response, FromItemError>;
@@ -97,6 +100,10 @@ impl ViewQuery for WeekViewReq {
 
     fn token(&self) -> &str {
         &self.token
+    }
+
+    fn path(&self) -> &str {
+        &self.path
     }
 
     fn section(&self) -> String {
@@ -136,6 +143,10 @@ impl ViewQuery for MonthViewReq {
         &self.token
     }
 
+    fn path(&self) -> &str {
+        &self.path
+    }
+
     fn section(&self) -> String {
         format!("Month-{}-{:02}", self.year, self.month)
     }
@@ -171,6 +182,10 @@ impl ViewQuery for WeekBrowserReq {
 
     fn token(&self) -> &str {
         &self.token
+    }
+
+    fn path(&self) -> &str {
+        "site"
     }
 
     fn section(&self) -> String {
@@ -210,6 +225,10 @@ impl ViewQuery for MonthBrowserReq {
 
     fn token(&self) -> &str {
         &self.token
+    }
+
+    fn path(&self) -> &str {
+        "site"
     }
 
     fn section(&self) -> String {
@@ -280,7 +299,7 @@ fn map_items<T: ViewQuery>(
 async fn handle_query_views<'a, T: ViewQuery + Deserialize<'a>>(
     env: &Env,
     request: &'a Request,
-    path: &str,
+    path_override: Option<&str>,
 ) -> Result<Response<Body>, Error>
 where
     <T as ViewQuery>::Response: Serialize,
@@ -296,7 +315,13 @@ where
         ));
     }
 
-    let items = query_views(env, path, &body.section(), body.projection()).await?;
+    let items = query_views(
+        env,
+        path_override.unwrap_or(body.path()),
+        &body.section(),
+        body.projection(),
+    )
+    .await?;
     let result = map_items(body, items)?;
 
     Ok(
@@ -311,17 +336,17 @@ where
 }
 
 pub async fn handle_views_week(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<WeekViewReq>(env, request, "site").await
+    handle_query_views::<WeekViewReq>(env, request, None).await
 }
 
 pub async fn handle_views_month(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<MonthViewReq>(env, request, "site").await
+    handle_query_views::<MonthViewReq>(env, request, None).await
 }
 
 pub async fn handle_browsers_week(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<WeekBrowserReq>(env, request, "browser").await
+    handle_query_views::<WeekBrowserReq>(env, request, Some("browser")).await
 }
 
 pub async fn handle_browsers_month(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<MonthBrowserReq>(env, request, "browser").await
+    handle_query_views::<MonthBrowserReq>(env, request, Some("browser")).await
 }

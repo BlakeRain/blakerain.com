@@ -2,9 +2,13 @@ import React, { FC } from "react";
 import { getMonthViews, getBrowsersMonth } from "../../lib/analytics";
 import { Report } from "./Report";
 
-const MonthlyReport: FC<{ token: string }> = ({ token }) => {
+const MonthlyReport: FC<{ paths: string[]; token: string }> = ({
+  paths,
+  token,
+}) => {
   return (
     <Report
+      paths={paths}
       paramInfo={{
         min: 0,
         max: 52,
@@ -20,13 +24,15 @@ const MonthlyReport: FC<{ token: string }> = ({ token }) => {
             .toString()
             .padStart(2, "0")}/${year.toString().padStart(4, "0")}`,
       }}
-      getData={async (year, month) => {
-        const data = (await getMonthViews(token, year, month)).map((item) => ({
-          category: item.day.toString(),
-          views: item.count || 0,
-          scroll: item.scroll || 0,
-          duration: item.duration || 0,
-        }));
+      getData={async (path, year, month) => {
+        const data = (await getMonthViews(token, path, year, month)).map(
+          (item) => ({
+            category: item.day.toString(),
+            views: item.count || 0,
+            scroll: item.scroll || 0,
+            duration: item.duration || 0,
+          })
+        );
         const browsers = (await getBrowsersMonth(token, year, month)).browsers;
         return { data, browsers };
       }}

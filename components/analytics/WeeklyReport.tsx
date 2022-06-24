@@ -5,9 +5,13 @@ import { Report } from "./Report";
 
 const WEEK_LABELS: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const WeeklyReport: FC<{ token: string }> = ({ token }) => {
+const WeeklyReport: FC<{ paths: string[]; token: string }> = ({
+  paths,
+  token,
+}) => {
   return (
     <Report
+      paths={paths}
       paramInfo={{
         min: 1,
         max: 52,
@@ -18,13 +22,15 @@ const WeeklyReport: FC<{ token: string }> = ({ token }) => {
         formatDay: (year, week, category) =>
           `${year.toString()} W${week.toString()} ${category}`,
       }}
-      getData={async (year, week) => {
-        const data = (await getWeekViews(token, year, week)).map((item) => ({
-          category: WEEK_LABELS[item.day],
-          views: item.count || 0,
-          scroll: item.scroll || 0,
-          duration: item.duration || 0,
-        }));
+      getData={async (path, year, week) => {
+        const data = (await getWeekViews(token, path, year, week)).map(
+          (item) => ({
+            category: WEEK_LABELS[item.day],
+            views: item.count || 0,
+            scroll: item.scroll || 0,
+            duration: item.duration || 0,
+          })
+        );
         const browsers = (await getBrowsersWeek(token, year, week)).browsers;
         return { data, browsers };
       }}
