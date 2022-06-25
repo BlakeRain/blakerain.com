@@ -368,7 +368,9 @@
 
     tbody {
       tr {
-        border-bottom: 1px solid $color-light-grey;
+        &:not(:last-child) {
+          border-bottom: 1px solid $color-light-grey;
+        }
 
         &:nth-of-type(even) {
           background-color: rgba(0, 0, 0, 0.1);
@@ -448,7 +450,9 @@
     table {
       tbody {
         tr {
-          border-bottom: 1px solid $color-mid-grey;
+          &:not(:last-child) {
+            border-bottom: 1px solid $color-mid-grey;
+          }
 
           &:nth-of-type(even) {
             background-color: rgba(255, 255, 255, 0.05);

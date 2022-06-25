@@ -2,15 +2,29 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./Report.module.scss";
 import {
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
+  Pie,
+  PieChart,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { BrowserData } from "../../lib/analytics";
+import { BrowserData, PageCount } from "../../lib/analytics";
 import { BrowserReport } from "./BrowserReport";
 import { formatNumber } from "../../lib/utils";
+
+const PIE_COLORS = [
+  "#003f5c",
+  "#2f4b7c",
+  "#665191",
+  "#a05195",
+  "#d45087",
+  "#f95d6a",
+  "#ff7c43",
+  "#ffa600",
+];
 
 export interface ReportView {
   category: string;
@@ -30,11 +44,17 @@ export interface ParamInfo {
 }
 
 export interface ReportProps {
+  paths: string[];
   paramInfo: ParamInfo;
   getData: (
+    path: string,
     year: number,
     param: number
-  ) => Promise<{ data: ReportView[]; browsers: BrowserData }>;
+  ) => Promise<{
+    data: ReportView[];
+    browsers: BrowserData;
+    pages: PageCount[];
+  }>;
 }
 
 const ReportTooltip = ({
@@ -68,7 +88,7 @@ const ReportTooltip = ({
               <th>Avg. Scroll</th>
               <td>
                 {view.views > 0
-                  ? formatNumber(view.scroll / view.views, 2, undefined, "%")
+                  ? formatNumber(view.scroll / view.views, 0, undefined, "%")
                   : "-"}
               </td>
             </tr>
@@ -78,7 +98,7 @@ const ReportTooltip = ({
                 {view.views > 0
                   ? formatNumber(
                       view.duration / view.views,
-                      2,
+                      0,
                       undefined,
                       " secs"
                     )
@@ -98,8 +118,41 @@ const ReportTooltip = ({
   }
 };
 
-export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
+const ReportPageTooltip = ({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: any;
+}) => {
+  if (active && payload && payload.length > 0) {
+    const page = payload[0].payload as PageCount;
+
+    return (
+      <div className={styles.tooltip}>
+        <p className={styles.title}>{page.page}</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>View Count</th>
+              <td>{formatNumber(page.count, 0)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  } else {
+    return (
+      <div className={styles.tooltip}>
+        <div className={styles.notice}>No Data</div>
+      </div>
+    );
+  }
+};
+
+export const Report: FC<ReportProps> = ({ paths, paramInfo, getData }) => {
   const now = new Date();
+  const [path, setPath] = useState("site");
   const [year, setYear] = useState(now.getFullYear());
   const [param, setParam] = useState(paramInfo.fromDate(now));
   const [views, setViews] = useState(0);
@@ -107,9 +160,10 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
   const [scroll, setScroll] = useState(0);
   const [data, setData] = useState<ReportView[]>([]);
   const [browsers, setBrowsers] = useState<BrowserData>({});
+  const [pages, setPages] = useState<PageCount[]>([]);
 
   useEffect(() => {
-    getData(year, param).then(({ data, browsers }) => {
+    getData(path, year, param).then(({ data, browsers, pages }) => {
       let total_views = 0;
       let counted_views = 0;
       let total_scroll = 0;
@@ -129,6 +183,9 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
       setData(data);
       setViews(total_views);
 
+      pages.sort((a, b) => b.count - a.count);
+      setPages(pages);
+
       if (counted_views > 0) {
         setScroll(total_scroll / counted_views);
         setDuration(total_duration / counted_views);
@@ -137,7 +194,7 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
         setDuration(0);
       }
     });
-  }, [getData, year, param]);
+  }, [getData, path, year, param]);
 
   const handlePrevClick = () => {
     if (param === paramInfo.min) {
@@ -157,6 +214,12 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
     }
   };
 
+  const handlePathChange: React.ChangeEventHandler<HTMLSelectElement> = (
+    event
+  ) => {
+    setPath(event.target.value);
+  };
+
   return (
     <div className={styles.reportContents}>
       <div className={styles.reportControls}>
@@ -171,24 +234,33 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
             &rarr;
           </button>
         </div>
-        {data.length > 0 && (
-          <>
-            <span>
-              <b>Total:</b> {views}
-            </span>
-            {scroll > 0 && (
-              <span>
-                <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
-              </span>
-            )}
-            {duration > 0 && (
-              <span>
-                <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
-              </span>
-            )}
-          </>
-        )}
+        <div>
+          <select value={path} onChange={handlePathChange}>
+            {paths.map((path, index) => (
+              <option key={index.toString()} value={path}>
+                {path}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+      {data.length > 0 && (
+        <div className={styles.reportControls}>
+          <span>
+            <b>Total:</b> {views}
+          </span>
+          {scroll > 0 && (
+            <span>
+              <b>Avg. Scroll:</b> {scroll.toFixed(2)}%
+            </span>
+          )}
+          {duration > 0 && (
+            <span>
+              <b>Avg. Duration:</b> {duration.toFixed(2)} seconds
+            </span>
+          )}
+        </div>
+      )}
       <div className={styles.reportCharts}>
         {data.length > 0 && (
           <LineChart width={1000} height={400} data={data}>
@@ -222,6 +294,37 @@ export const Report: FC<ReportProps> = ({ paramInfo, getData }) => {
             labelMapper={paramInfo.labelMapper}
           />
         )}
+        <div className={styles.reportChartsRow}>
+          <PieChart width={500} height={400}>
+            <Pie data={pages} dataKey="count" fill="#0074d9">
+              {pages.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={PIE_COLORS[index % PIE_COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<ReportPageTooltip />} />
+          </PieChart>
+          <table>
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th style={{ textAlign: "right" }}>Views</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pages.map((page, index) => (
+                <tr key={index.toString()}>
+                  <td>{page.page}</td>
+                  <td style={{ textAlign: "right" }}>
+                    {formatNumber(page.count, 0)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

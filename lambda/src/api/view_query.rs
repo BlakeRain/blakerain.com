@@ -10,7 +10,7 @@ use serde_json::json;
 use crate::{
     env::Env,
     model::dynamodb::{
-        attribute::{get_attr, Attribute, AttributeError, get_attr_or},
+        attribute::{get_attr, get_attr_or, Attribute, AttributeError},
         item::FromItemError,
     },
 };
@@ -20,6 +20,7 @@ use super::utils::{add_standard_headers, build_json, from_request};
 #[derive(Deserialize)]
 struct WeekViewReq {
     token: String,
+    path: String,
     year: i32,
     week: i32,
 }
@@ -27,6 +28,7 @@ struct WeekViewReq {
 #[derive(Deserialize)]
 struct MonthViewReq {
     token: String,
+    path: String,
     year: i32,
     month: i32,
 }
@@ -40,6 +42,20 @@ struct WeekBrowserReq {
 
 #[derive(Deserialize)]
 struct MonthBrowserReq {
+    token: String,
+    year: i32,
+    month: i32,
+}
+
+#[derive(Deserialize)]
+struct WeekPagesReq {
+    token: String,
+    year: i32,
+    week: i32,
+}
+
+#[derive(Deserialize)]
+struct MonthPagesReq {
     token: String,
     year: i32,
     month: i32,
@@ -83,11 +99,18 @@ struct MonthBrowserRes {
     count: i32,
 }
 
+#[derive(Serialize)]
+struct PagesRes {
+    page: String,
+    count: i32,
+}
+
 trait ViewQuery {
     type Response: Sized;
 
     fn token(&self) -> &str;
-    fn section(&self) -> String;
+    fn path(&self) -> String;
+    fn section(&self) -> Option<String>;
     fn projection(&self) -> Option<String>;
     fn from(&self, item: HashMap<String, AttributeValue>) -> Result<Self::Response, FromItemError>;
 }
@@ -99,8 +122,12 @@ impl ViewQuery for WeekViewReq {
         &self.token
     }
 
-    fn section(&self) -> String {
-        format!("Week-{}-{:02}", self.year, self.week)
+    fn path(&self) -> String {
+        self.path.clone()
+    }
+
+    fn section(&self) -> Option<String> {
+        Some(format!("Week-{}-{:02}", self.year, self.week))
     }
 
     fn projection(&self) -> Option<String> {
@@ -136,8 +163,12 @@ impl ViewQuery for MonthViewReq {
         &self.token
     }
 
-    fn section(&self) -> String {
-        format!("Month-{}-{:02}", self.year, self.month)
+    fn path(&self) -> String {
+        self.path.to_string()
+    }
+
+    fn section(&self) -> Option<String> {
+        Some(format!("Month-{}-{:02}", self.year, self.month))
     }
 
     fn projection(&self) -> Option<String> {
@@ -173,8 +204,12 @@ impl ViewQuery for WeekBrowserReq {
         &self.token
     }
 
-    fn section(&self) -> String {
-        format!("Week-{}-{:02}", self.year, self.week)
+    fn path(&self) -> String {
+        "site".to_string()
+    }
+
+    fn section(&self) -> Option<String> {
+        Some(format!("Week-{}-{:02}", self.year, self.week))
     }
 
     fn projection(&self) -> Option<String> {
@@ -212,8 +247,12 @@ impl ViewQuery for MonthBrowserReq {
         &self.token
     }
 
-    fn section(&self) -> String {
-        format!("Month-{}-{:02}", self.year, self.month)
+    fn path(&self) -> String {
+        "site".to_string()
+    }
+
+    fn section(&self) -> Option<String> {
+        Some(format!("Month-{}-{:02}", self.year, self.month))
     }
 
     fn projection(&self) -> Option<String> {
@@ -244,24 +283,89 @@ impl ViewQuery for MonthBrowserReq {
     }
 }
 
+impl ViewQuery for WeekPagesReq {
+    type Response = PagesRes;
+
+    fn token(&self) -> &str {
+        &self.token
+    }
+
+    fn path(&self) -> String {
+        format!("page-view-week-{:04}-{:02}", self.year, self.week)
+    }
+
+    fn section(&self) -> Option<String> {
+        None
+    }
+
+    fn projection(&self) -> Option<String> {
+        Some("#S, ViewCount".to_string())
+    }
+
+    fn from(&self, mut item: HashMap<String, AttributeValue>) -> Result<PagesRes, FromItemError> {
+        let section = get_attr::<String>(&mut item, "Section")?;
+
+        Ok(PagesRes {
+            page: section,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
+        })
+    }
+}
+
+impl ViewQuery for MonthPagesReq {
+    type Response = PagesRes;
+
+    fn token(&self) -> &str {
+        &self.token
+    }
+
+    fn path(&self) -> String {
+        format!("page-view-month-{:04}-{:02}", self.year, self.month)
+    }
+
+    fn section(&self) -> Option<String> {
+        None
+    }
+
+    fn projection(&self) -> Option<String> {
+        Some("#S, ViewCount".to_string())
+    }
+
+    fn from(&self, mut item: HashMap<String, AttributeValue>) -> Result<PagesRes, FromItemError> {
+        let section = get_attr::<String>(&mut item, "Section")?;
+
+        Ok(PagesRes {
+            page: section,
+            count: get_attr_or(&mut item, "ViewCount", 0)?,
+        })
+    }
+}
 async fn query_views(
     env: &Env,
     path: &str,
-    section: &str,
+    section: Option<String>,
     projection: Option<String>,
 ) -> Result<Vec<HashMap<String, AttributeValue>>, Error> {
-    let res = env
+    let mut query = env
         .ddb
         .query()
         .table_name(env.table_name.to_owned())
-        .key_condition_expression("#P = :v1 AND begins_with(#S, :v2)")
         .expression_attribute_names("#P", "Path")
         .expression_attribute_names("#S", "Section")
-        .expression_attribute_values(":v1", path.to_string().into_attr())
-        .expression_attribute_values(":v2", section.to_string().into_attr())
-        .set_projection_expression(projection)
-        .send()
-        .await?;
+        .set_projection_expression(projection);
+
+    if let Some(section) = section {
+        query = query
+            .key_condition_expression("#P = :p AND begins_with(#S, :s)")
+            .expression_attribute_values(":p", path.to_string().into_attr())
+            .expression_attribute_values(":s", section.to_string().into_attr());
+    } else {
+        query = query
+            .key_condition_expression("#P = :p")
+            .expression_attribute_values(":p", path.to_string().into_attr());
+    }
+
+    let res = query.send().await?;
 
     Ok(res.items().unwrap_or(&[]).into())
 }
@@ -280,7 +384,7 @@ fn map_items<T: ViewQuery>(
 async fn handle_query_views<'a, T: ViewQuery + Deserialize<'a>>(
     env: &Env,
     request: &'a Request,
-    path: &str,
+    path_override: Option<&str>,
 ) -> Result<Response<Body>, Error>
 where
     <T as ViewQuery>::Response: Serialize,
@@ -296,7 +400,13 @@ where
         ));
     }
 
-    let items = query_views(env, path, &body.section(), body.projection()).await?;
+    let items = query_views(
+        env,
+        path_override.unwrap_or(&body.path()),
+        body.section(),
+        body.projection(),
+    )
+    .await?;
     let result = map_items(body, items)?;
 
     Ok(
@@ -311,17 +421,25 @@ where
 }
 
 pub async fn handle_views_week(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<WeekViewReq>(env, request, "site").await
+    handle_query_views::<WeekViewReq>(env, request, None).await
 }
 
 pub async fn handle_views_month(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<MonthViewReq>(env, request, "site").await
+    handle_query_views::<MonthViewReq>(env, request, None).await
 }
 
 pub async fn handle_browsers_week(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<WeekBrowserReq>(env, request, "browser").await
+    handle_query_views::<WeekBrowserReq>(env, request, Some("browser")).await
 }
 
 pub async fn handle_browsers_month(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
-    handle_query_views::<MonthBrowserReq>(env, request, "browser").await
+    handle_query_views::<MonthBrowserReq>(env, request, Some("browser")).await
+}
+
+pub async fn handle_pages_week(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
+    handle_query_views::<WeekPagesReq>(env, request, None).await
+}
+
+pub async fn handle_pages_month(env: &Env, request: &Request) -> Result<Response<Body>, Error> {
+    handle_query_views::<MonthPagesReq>(env, request, None).await
 }

@@ -69,6 +69,7 @@ const DAYS_REMAP = [6, 0, 1, 2, 3, 4, 5];
 
 export const getWeekViews = async (
   token: string,
+  path: string,
   year: number,
   week: number
 ): Promise<WeekView[]> => {
@@ -79,6 +80,7 @@ export const getWeekViews = async (
     },
     body: JSON.stringify({
       token,
+      path,
       year: year,
       week: week,
     }),
@@ -120,6 +122,7 @@ export interface MonthView {
 
 export const getMonthViews = async (
   token: string,
+  path: string,
   year: number,
   month: number
 ): Promise<MonthView[]> => {
@@ -130,6 +133,7 @@ export const getMonthViews = async (
     },
     body: JSON.stringify({
       token,
+      path,
       year: year,
       month: 1 + month,
     }),
@@ -154,6 +158,51 @@ export const getMonthViews = async (
   }
 
   return months.sort((a, b) => a.day - b.day);
+};
+
+export interface PageCount {
+  page: string;
+  count: number;
+}
+
+export const getWeekPageCount = async (
+  token: string,
+  year: number,
+  week: number
+): Promise<PageCount[]> => {
+  const res = await fetch(getAnalyticsURL("api/pages/week"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token,
+      year,
+      week,
+    }),
+  });
+
+  return await res.json();
+};
+
+export const getMonthPageCount = async (
+  token: string,
+  year: number,
+  month: number
+): Promise<PageCount[]> => {
+  const res = await fetch(getAnalyticsURL("api/pages/month"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token,
+      year,
+      month: month + 1,
+    }),
+  });
+
+  return await res.json();
 };
 
 export interface BrowserDataItem {
