@@ -19,23 +19,24 @@
     padding: 0;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 
     li {
       position: relative;
       display: block;
 
-      margin-left: 10px;
+      margin-right: 10px;
 
       font-weight: 600;
       font-size: 1.3rem;
 
-      &:before {
+      &:after {
         content: "";
         display: block;
         position: absolute;
 
         top: 7px;
-        left: -6px;
+        right: -6px;
         width: 2px;
         height: 2px;
 
@@ -43,12 +44,16 @@
         border-radius: 100%;
       }
 
-      &:first-of-type {
+      &:last-of-type {
         margin-left: 0;
 
-        &:before {
+        &:after {
           display: none;
         }
+      }
+
+      a {
+        margin-bottom: 0;
       }
     }
   }

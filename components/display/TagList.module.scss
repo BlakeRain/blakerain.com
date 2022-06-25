@@ -15,16 +15,16 @@
     position: relative;
     display: block;
 
-    margin-left: 10px;
+    margin-right: 10px;
     font-weight: 600;
 
-    &:before {
+    &:after {
       content: "";
       display: block;
       position: absolute;
 
       top: 7px;
-      left: -6px;
+      right: -6px;
       width: 2px;
       height: 2px;
 
@@ -32,10 +32,10 @@
       border-radius: 100%;
     }
 
-    &:first-of-type {
-      margin-left: 0;
+    &:last-of-type {
+      margin-right: 0;
 
-      &:before {
+      &:after {
         display: none;
       }
     }
@@ -48,11 +48,11 @@
   font-weight: 600;
 
   li {
-    margin-left: 20px;
+    margin-right: 20px;
 
-    &:before {
+    &:after {
       top: 8px;
-      left: -12px;
+      right: -12px;
       width: 4px;
       height: 4px;
     }
