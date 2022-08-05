@@ -244,7 +244,7 @@
     color: #383a42;
     background-color: rgb(255, 247, 236);
 
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     line-height: 1.5em;
 
     &::selection {
@@ -315,7 +315,6 @@
     line-height: 1em;
     font-weight: 400 !important;
     background-color: lighten($color-light-grey, 15%);
-    border-radius: 3px;
   }
 
   hr {

@@ -37,6 +37,11 @@ body {
   background: lighten($color-blue, 30%);
 }
 
+pre,
+code {
+  font-family: $code-font-family;
+}
+
 a {
   color: darken($color-blue, 25%);
   text-decoration: none;
