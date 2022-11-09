@@ -7,7 +7,10 @@ export interface TooltipProps {
   position?: "top" | "left" | "bottom" | "right";
 }
 
-export const Tooltip: FC<TooltipProps> = ({ position = "top", children }) => {
+export const Tooltip: FC<React.PropsWithChildren<TooltipProps>> = ({
+  position = "top",
+  children,
+}) => {
   const [open, setOpen] = useState(false);
 
   const onMouseOver: React.MouseEventHandler<HTMLDivElement> = () => {

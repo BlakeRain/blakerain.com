@@ -23,9 +23,7 @@ const SiteNavLinks: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
       {navigation.map((item, index) => {
         return (
           <li key={index.toString()}>
-            <Link href={trimTrailingSlash(item.url)}>
-              <a>{item.label}</a>
-            </Link>
+            <Link href={trimTrailingSlash(item.url)}>{item.label}</Link>
           </li>
         );
       })}
@@ -36,15 +34,13 @@ const SiteNavLinks: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
 const SiteNav: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
   return (
     <React.Fragment>
-      <Link href="/">
-        <a className={styles.logo}>
-          <img
-            src="/media/logo-text.png"
-            width={154}
-            height={28}
-            alt="Blake Rain"
-          />
-        </a>
+      <Link href="/" className={styles.logo}>
+        <img
+          src="/media/logo-text.png"
+          width={154}
+          height={28}
+          alt="Blake Rain"
+        />
       </Link>
       <SiteNavLinks navigation={navigation} />
     </React.Fragment>

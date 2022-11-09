@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import cn from "classnames";
 import Link from "next/link";
 import styles from "./Footer.module.scss";
@@ -9,7 +9,10 @@ import Dismissable from "./Dismissable";
  *
  * This component encapsulates the drop-down footer menus
  */
-const FooterDropdown: FC<{ title: string }> = ({ title, children }) => {
+const FooterDropdown: FC<React.PropsWithChildren<{ title: string }>> = ({
+  title,
+  children,
+}) => {
   const [visible, setVisible] = useState(false);
 
   const onLinkClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
@@ -45,30 +48,18 @@ export const Footer: FC = () => {
     <footer className={cn(styles.footer, styles.outer)}>
       <div className={cn(styles.footerInner, styles.inner)}>
         <section className={styles.copyright}>
-          <Link href="/">
-            <a>Blake Rain</a>
-          </Link>{" "}
-          &copy; {date.getFullYear().toString()}
+          <Link href="/">Blake Rain</Link> &copy;{" "}
+          {date.getFullYear().toString()}
         </section>
         <nav className={styles.navigation}>
-          <Link href="/blog">
-            <a>Latest Posts</a>
-          </Link>
-          <Link href="/tags">
-            <a>Tags</a>
-          </Link>
-          <Link href="/disclaimer">
-            <a>Disclaimer</a>
-          </Link>
+          <Link href="/blog">Latest Posts</Link>
+          <Link href="/tags">Tags</Link>
+          <Link href="/disclaimer">Disclaimer</Link>
           <a href="https://twitter.com/HalfWayMan">Twitter</a>
           <FooterDropdown title="Tools">
             <li>
-              <Link href="/analytics">
-                <a>Analytics Dashboard</a>
-              </Link>
-              <Link href="/tools/position-size">
-                <a>Position Size Calculator</a>
-              </Link>
+              <Link href="/analytics">Analytics Dashboard</Link>
+              <Link href="/tools/position-size">Position Size Calculator</Link>
             </li>
           </FooterDropdown>
         </nav>

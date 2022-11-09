@@ -1,13 +1,12 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { DocInfo } from "../lib/content";
 import { DateSpan } from "./display/DateSpan";
 
 import styles from "./PostDetails.module.scss";
 
-export const PostDetails: FC<{ doc: DocInfo & { readingTime?: number } }> = ({
-  doc,
-  children,
-}) => {
+export const PostDetails: FC<
+  React.PropsWithChildren<{ doc: DocInfo & { readingTime?: number } }>
+> = ({ doc, children }) => {
   return (
     <div className={styles.postDetails}>
       <div>

@@ -5,7 +5,10 @@ export interface CardProps {
   title?: string;
 }
 
-export const Card: FC<CardProps> = ({ title, children }) => {
+export const Card: FC<React.PropsWithChildren<CardProps>> = ({
+  title,
+  children,
+}) => {
   return (
     <div className={styles.card}>
       {title && (

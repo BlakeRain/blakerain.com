@@ -5,10 +5,12 @@ import React, { FC, useEffect, useRef } from "react";
  *
  * When a mouse click event is received outside of this component, the `onDismiss` property is called.
  */
-export const Dismissable: FC<{
-  onDismiss: (event: MouseEvent) => void;
-  className?: string;
-}> = ({ onDismiss, className, children }) => {
+export const Dismissable: FC<
+  React.PropsWithChildren<{
+    onDismiss: (event: MouseEvent) => void;
+    className?: string;
+  }>
+> = ({ onDismiss, className, children }) => {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

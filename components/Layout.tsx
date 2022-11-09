@@ -10,7 +10,11 @@ export interface LayoutProps {
   wrap?: boolean;
 }
 
-export const Layout: FC<LayoutProps> = ({ navigation, children, wrap }) => {
+export const Layout: FC<React.PropsWithChildren<LayoutProps>> = ({
+  navigation,
+  children,
+  wrap,
+}) => {
   return (
     <React.Fragment>
       <Head>

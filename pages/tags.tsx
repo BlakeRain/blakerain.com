@@ -12,9 +12,7 @@ import styles from "./tags.module.scss";
 const TagPost: FC<{ post: PostInfo }> = ({ post }) => {
   return (
     <li>
-      <Link href={"/blog/" + post.slug}>
-        <a>{post.title}</a>
-      </Link>
+      <Link href={"/blog/" + post.slug}>{post.title}</Link>
       <div className={styles.postDateAndTime}>
         <DateSpan date={post.published || "1970-01-01T00:00:00.000Z"} />
         <span className={styles.readingTime}>{post.readingTime} min read</span>

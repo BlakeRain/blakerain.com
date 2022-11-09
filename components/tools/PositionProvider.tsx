@@ -15,7 +15,7 @@ export const PositionContext = React.createContext<
   PositionContextProps | undefined
 >(undefined);
 
-export const PositionProvider: FC = ({ children }) => {
+export const PositionProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [position, dispatch] = React.useReducer(positionReducer, {
     posCurrency: "GBP",
     quoteCurrency: "GBP",

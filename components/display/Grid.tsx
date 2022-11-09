@@ -15,7 +15,7 @@ export interface GridProps {
   style?: React.CSSProperties;
 }
 
-export const Grid: FC<GridProps> = ({
+export const Grid: FC<React.PropsWithChildren<GridProps>> = ({
   rows,
   columns,
   rowGap,

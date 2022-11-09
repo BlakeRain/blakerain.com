@@ -119,20 +119,19 @@ export const SearchDialog: FC<SearchChildProps> = (props) => {
       index: number;
     }> = ({ post, index }) => {
       return (
-        <Link href={post.url + query}>
-          <a
-            className={cn(styles.row, styles.searchResult, {
-              [styles.active]: index === active,
-            })}
-            onClick={() => {
-              props.setSearchVisible(false);
-            }}
-          >
-            <div className={styles.column}>
-              <div className={styles.postTitle}>{post.title}</div>
-              <div className={styles.postExcerpt}>{post.excerpt}</div>
-            </div>
-          </a>
+        <Link
+          href={post.url + query}
+          className={cn(styles.row, styles.searchResult, {
+            [styles.active]: index === active,
+          })}
+          onClick={() => {
+            props.setSearchVisible(false);
+          }}
+        >
+          <div className={styles.column}>
+            <div className={styles.postTitle}>{post.title}</div>
+            <div className={styles.postExcerpt}>{post.excerpt}</div>
+          </div>
         </Link>
       );
     };

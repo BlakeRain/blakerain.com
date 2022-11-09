@@ -10,12 +10,9 @@ export interface DropdownButtonProps {
   disabled?: boolean;
 }
 
-export const DropdownButton: FC<DropdownButtonProps> = ({
-  title,
-  onClick,
-  disabled,
-  children,
-}) => {
+export const DropdownButton: FC<
+  React.PropsWithChildren<DropdownButtonProps>
+> = ({ title, onClick, disabled, children }) => {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -24,11 +21,6 @@ export const DropdownButton: FC<DropdownButtonProps> = ({
   };
 
   const onDismiss = (event?: MouseEvent) => {
-    // console.log(
-    //   event.target,
-    //   toggleRef.current && toggleRef.current.contains(event.target as Node)
-    // );
-    //
     if (
       event &&
       toggleRef.current &&

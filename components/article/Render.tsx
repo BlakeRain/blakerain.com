@@ -60,7 +60,7 @@ function renderHighlight(terms: RegExp, text: string): React.ReactElement {
   }
 }
 
-const RenderPhrasingChildren: FC = ({ children }) => {
+const RenderPhrasingChildren: FC<React.PropsWithChildren> = ({ children }) => {
   const highlight = useContext(HighlightContext);
   if (highlight) {
     if (typeof children === "undefined") {
@@ -210,7 +210,7 @@ const RenderImage: (
               ? parseInt(props.height)
               : props.height
           }
-          alt={props.alt}
+          alt={props.alt || ""}
         />
       </div>
       {caption && <figcaption>{caption}</figcaption>}

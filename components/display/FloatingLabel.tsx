@@ -8,7 +8,7 @@ export interface FloatingLabelProps {
   row?: boolean;
 }
 
-export const FloatingLabel: FC<FloatingLabelProps> = ({
+export const FloatingLabel: FC<React.PropsWithChildren<FloatingLabelProps>> = ({
   title,
   className,
   row = false,

@@ -35,7 +35,7 @@ function load(): AccountInfo {
   return res;
 }
 
-export const AccountProvider: FC = ({ children }) => {
+export const AccountProvider: FC<React.PropsWithChildren> = ({ children }) => {
   const [account, dispatch] = React.useReducer(accountReducer, load());
 
   useEffect(() => {

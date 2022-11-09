@@ -15,7 +15,9 @@ import MonthlyReport from "../components/analytics/MonthlyReport";
 import SignIn from "../components/analytics/SignIn";
 import { loadPageSlugs, loadPostSlugs } from "../lib/content";
 
-const Report: FC<{ paths: string[]; token: string }> = ({ paths, token }) => {
+const Report: FC<
+  React.PropsWithChildren<{ paths: string[]; token: string }>
+> = ({ paths, token }) => {
   const [mode, setMode] = useState<"month" | "week">("month");
 
   return (

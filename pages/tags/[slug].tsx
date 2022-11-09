@@ -68,10 +68,7 @@ const TagPosts: NextPage<TagProps> = ({ tag, posts, tags, navigation }) => {
         <title>{tag.name} Tag</title>
       </Head>
       <h1>
-        <Link href={"/tags"}>
-          <a>Tags</a>
-        </Link>{" "}
-        / {tag.name}
+        <Link href={"/tags"}>Tags</Link> / {tag.name}
         <small>
           There are {posts.length} post{posts.length === 1 ? "" : "s"} with this
           tag

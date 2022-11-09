@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import path from "path";
-
-import { ImageProps } from "next/dist/client/image";
-const NextImage = dynamic(() => import("next/image"), { ssr: false });
+import NextImage, { ImageProps } from "next/image";
 
 interface SplitFilePath {
   dir: string;

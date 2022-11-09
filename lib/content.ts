@@ -6,7 +6,7 @@ import * as mdast from "mdast";
 import { TagId } from "./tags";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
-import { remarkMdxCodeMeta } from "remark-mdx-code-meta";
+import remarkMdxCodeMeta from "remark-mdx-code-meta";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";

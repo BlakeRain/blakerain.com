@@ -18,24 +18,14 @@ export const PostCard: FC<{
   return (
     <article className={cn(styles.postCard, { [styles.postCardLarge]: large })}>
       {post.coverImage ? (
-        <Link href={"/blog/" + post.slug}>
-          <a className={styles.postCardCoverImage}>
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              layout="fill"
-              objectFit="cover"
-              priority={true}
-            />
-          </a>
+        <Link href={"/blog/" + post.slug} className={styles.postCardCoverImage}>
+          <Image src={post.coverImage} alt={post.title} fill priority={true} />
         </Link>
       ) : null}
       <div className={styles.postCardInner}>
         <Link href={"/blog/" + post.slug}>
-          <a>
-            <header>{post.title}</header>
-            {post.excerpt ? <section>{post.excerpt}</section> : null}
-          </a>
+          <header>{post.title}</header>
+          {post.excerpt ? <section>{post.excerpt}</section> : null}
         </Link>
         <PostDetails doc={post}>
           <TagList tags={tags} />

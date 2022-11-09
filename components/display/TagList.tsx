@@ -19,8 +19,8 @@ export const TagList: FC<{
         .filter((tag) => tag.visibility === "public")
         .map((tag, index) => (
           <li key={index.toString()}>
-            <Link href={"/tags/" + tag.slug}>
-              <a title={tag.description || ""}>{tag.name}</a>
+            <Link href={"/tags/" + tag.slug} title={tag.description || ""}>
+              {tag.name}
             </Link>
           </li>
         ))}
