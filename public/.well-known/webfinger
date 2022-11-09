@@ -1,0 +1,21 @@
+{
+  "subject": "acct:blake.rain@blakerain.com",
+  "links": [
+    {
+      "rel": "http://webfinger.net/rel/avatar",
+      "href": "https://blakerain.com/media/profile.png"
+    },
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "href": "https://blakerain.com/"
+    },
+    {
+      "rel": "me",
+      "href": "https://blakerain.com/"
+    }
+  ],
+  "aliases": [
+    "https://mastodonapp.uk/@BlakeRain",
+    "https://mastodonapp.uk/users/BlakeRain"
+  ],
+}
