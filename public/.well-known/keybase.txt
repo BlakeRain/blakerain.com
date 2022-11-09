@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/blakerain
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://blakerain.com
+  * I am blakerain (https://keybase.io/blakerain) on keybase.
+  * I have a public key ASBTVudJS_NvkszikV0oNDllEy1IS0OhpP9gjT50fDVFRwo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01205356e7494bf36f92cce2915d28343965132d484b43a1a4ff608d3e747c3545470a",
+      "host": "keybase.io",
+      "kid": "01205356e7494bf36f92cce2915d28343965132d484b43a1a4ff608d3e747c3545470a",
+      "uid": "cfd0dc9d52d149b17b59dbff43e44419",
+      "username": "blakerain"
+    },
+    "merkle_root": {
+      "ctime": 1667986619,
+      "hash": "1f23cbd45b09e93b26b1ae824ac62a40739c9760b3015f10231445bfb1848480cbc2cd3342f84d8b527629d3d39903b8e9afe56938841468b55d68bf3a6a67ee",
+      "hash_meta": "4fba5c710d71ebce85077dac2eac22b6b596e72a6b415ed9564692130f2e2488",
+      "seqno": 23518234
+    },
+    "service": {
+      "entropy": "UOo8i1vqh3bD6LiqGH68dIvI",
+      "hostname": "blakerain.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "6.0.1"
+  },
+  "ctime": 1667986638,
+  "expire_in": 504576000,
+  "prev": "5ec7be6fe7a5ab1db7c552ccb41565dd21ea5513ed9ecfc7fd50be259351f766",
+  "seqno": 10,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgU1bnSUvzb5LM4pFdKDQ5ZRMtSEtDoaT/YI0+dHw1RUcKp3BheWxvYWTESpcCCsQgXse+b+elqx23xVLMtBVl3SHqVRPtns/H/VC+JZNR92bEIMaExwlxha4l9yGsWQVALZZSGlQ/KZACwE8JWcZGQtt6AgHCo3NpZ8RAeF3CWZrbiNXmi+BFeITHfO74I1Prb3NNkxaYrUo0k/BVEsQem9k5GgFTZNQKKAix1cGKiROEF0QUZN7TejTaAKhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIPDIbp4g22E2bzg3ijzjVC2BeBuoNOktbQjllUPMVszho3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/blakerain
+
+==================================================================
