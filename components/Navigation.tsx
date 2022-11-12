@@ -84,7 +84,7 @@ const MastodonLink: FC = () => {
       href="https://mastodonapp.uk/@BlakeRain"
       title="@BlakeRain@mastodonapp.uk"
       target="_blank"
-      rel="noreferrer"
+      rel="me noreferrer"
     >
       <Mastodon />
     </a>
