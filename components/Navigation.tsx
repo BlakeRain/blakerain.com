@@ -7,7 +7,6 @@ import styles from "./Navigation.module.scss";
 import { useRouter } from "next/router";
 import Search from "./icons/Search";
 import GitHub from "./icons/GitHub";
-import Twitter from "./icons/Twitter";
 import DevTo from "./icons/DevTo";
 import Rss from "./icons/Rss";
 import Mastodon from "./icons/Mastodon";
