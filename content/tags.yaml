@@ -6,61 +6,73 @@ getting-started:
   slug: getting-started
   name: Getting Started
   visibility: public
+
 haskell:
   slug: haskell
   name: Haskell
   visibility: public
   description: Posts that feature the Haskell programming language.
+
 reviews:
   slug: reviews
   name: Reviews
   visibility: public
   description: Reviews of books or other articles
+
 electronics:
   slug: electronics
   name: Electronics
   visibility: public
   description: Posts that feature electronic circuits.
+
 javascript:
   slug: javascript
   name: JavaScript
   visibility: public
   description: Posts that feature the JavaScript scripting language.
+
 python:
   slug: python
   name: Python
   visibility: public
   description: Posts that feature the Python scripting language
+
 ghost-tag:
   slug: ghost-tag
   name: Ghost
   visibility: public
   description: Posts related to my use of the Ghost CMS
+
 gtk:
   slug: gtk
   name: GTK
   visibility: public
   description: Posts that feature the GTK graphical user interface toolkit.
+
 aws:
   slug: aws
   name: AWS
   visibility: public
   description: Posts that relate to Amazon Web Services
+
 linux:
   slug: linux
   name: Linux
   visibility: public
   description: Posts that feature the Linux operating system.
+
 cairo:
   slug: cairo
   name: Cairo
   visibility: public
   description: Posts that feature the Cairo vector-based graphics library.
+
 cpp:
   slug: cpp
   name: C++
   visibility: public
   description: Posts that feature the C++ programming language.
+
 yesod:
   slug: yesod
   name: Yesod
@@ -68,48 +80,63 @@ yesod:
   description:
     Posts which feature the Yesod web application development framework
     for the Haskell programming language.
+
 ethernet:
   slug: ethernet
   name: Ethernet
   visibility: public
   description: Posts that relate to Ethernet networking
+
 react:
   slug: react
   name: React
   visibility: public
   description: Posts that make use of the React JavaScript library.
+
 gc:
   slug: gc
   name: GC
   visibility: public
   description: Posts that relate to garbage collection and memory management.
+
 sqlite:
   slug: sqlite
   name: SQLite
   visibility: public
   description: Posts that feature the SQLite embedded relational database.
+
 chakracore:
   slug: chakracore
   name: ChakraCore
   visibility: public
   description: Posts that feature the ChakraCore JavaScript engine.
+
 pci:
   slug: pci
   name: PCI
   visibility: public
   description: Articles related to programming PCI express devices.
+
 usb:
   slug: usb
   name: USB
   visibility: public
   description: Posts that relate to working with the Universal Serial Bus
+
 intel-i350:
   slug: intel-i350
   name: Intel i350
   visibility: public
   description: Blog posts about programming the Intel i350 NIC and related models.
+
 rust:
   slug: rust
   name: Rust
   visibility: public
   description: Blog posts related to the Rust programming language
+
+mastodon:
+  slug: mastodon
+  name: Mastodon
+  visibility: public
+  description: Posts that feature the Mastodon social network.
