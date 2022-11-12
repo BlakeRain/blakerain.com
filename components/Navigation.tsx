@@ -10,6 +10,7 @@ import GitHub from "./icons/GitHub";
 import Twitter from "./icons/Twitter";
 import DevTo from "./icons/DevTo";
 import Rss from "./icons/Rss";
+import Mastodon from "./icons/Mastodon";
 
 const trimTrailingSlash = (str: string): string => {
   return str.length > 0 && str.endsWith("/")
@@ -77,15 +78,15 @@ const GitHubLink: FC = () => {
   );
 };
 
-const TwitterLink: FC = () => {
+const MastodonLink: FC = () => {
   return (
     <a
-      href="https://twitter.com/HalfWayMan"
-      title="Twitter"
+      href="https://mastodonapp.uk/@BlakeRain"
+      title="@BlakeRain@mastodonapp.uk"
       target="_blank"
       rel="noreferrer"
     >
-      <Twitter />
+      <Mastodon />
     </a>
   );
 };
@@ -223,7 +224,7 @@ const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
               <GitHubLink />
             </li>
             <li>
-              <TwitterLink />
+              <MastodonLink />
             </li>
             <li>
               <DevLink />
