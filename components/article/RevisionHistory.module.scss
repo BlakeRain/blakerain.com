@@ -1,0 +1,26 @@
+@import "../../styles/colors.scss";
+
+.revisionHistory {
+  width: 100%;
+
+  border-top: 1px solid $primary-background;
+  margin-top: 5rem;
+
+  font-size: 80%;
+
+  h3 {
+    font-size: 120%;
+  }
+
+  ul {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

@@ -13,6 +13,8 @@ import { TagList } from "../display/TagList";
 import { Render } from "./Render";
 
 import styles from "./Content.module.scss";
+import { GitLogEntry } from "../../lib/git";
+import RevisionHistory from "./RevisionHistory";
 
 const ContentHeader: FC<{
   tags?: Tag[];
@@ -53,9 +55,10 @@ function getHighlightTerms(search: ParsedUrlQuery): string[] {
   return [];
 }
 
-const ContentBody: FC<{ content: MDXRemoteSerializeResult }> = ({
-  content,
-}) => {
+const ContentBody: FC<{
+  content: MDXRemoteSerializeResult;
+  history: GitLogEntry[];
+}> = ({ content, history }) => {
   const router = useRouter();
   const highlight = getHighlightTerms(router.query);
 
@@ -64,6 +67,7 @@ const ContentBody: FC<{ content: MDXRemoteSerializeResult }> = ({
       <div className={cn(styles.content, styles.outer)}>
         <div className={cn(styles.contentInner, styles.inner)}>
           <Render content={content} highlight={highlight} />
+          {history.length && <RevisionHistory history={history} />}
         </div>
       </div>
       <ScrollToTopButton />
@@ -76,6 +80,7 @@ export interface ContentProps {
   doc: DocInfo;
   featureImage?: string;
   content: MDXRemoteSerializeResult;
+  history?: GitLogEntry[];
 }
 
 export const Content: FC<ContentProps> = ({
@@ -83,11 +88,12 @@ export const Content: FC<ContentProps> = ({
   doc,
   featureImage,
   content,
+  history = [],
 }) => {
   return (
     <article className="post">
       <ContentHeader tags={tags} doc={doc} featureImage={featureImage} />
-      <ContentBody content={content} />
+      <ContentBody content={content} history={history} />
     </article>
   );
 };
