@@ -2,6 +2,7 @@ import React, {
   DetailedHTMLProps,
   FC,
   HTMLAttributes,
+  PropsWithChildren,
   useContext,
   useEffect,
   useState,
@@ -269,6 +270,34 @@ const Bookmark: (props: BookmarkProps) => JSX.Element = ({
   );
 };
 
+interface QuoteProps {
+  url?: string;
+  author?: string;
+}
+
+const Quote: (props: PropsWithChildren<QuoteProps>) => JSX.Element = ({
+  url,
+  author,
+  children,
+}) => {
+  return (
+    <div className={styles.quote}>
+      {children}
+      {author && (
+        <cite className={styles.quoteAuthor}>
+          {url ? (
+            <a href={url} target="_blank" rel="noreferrer">
+              {author}
+            </a>
+          ) : (
+            author
+          )}
+        </cite>
+      )}
+    </div>
+  );
+};
+
 interface HighlightRow {
   properties: any;
   type: "text" | "element";
@@ -444,6 +473,7 @@ export const Render: FC<{
     h6: createHeading(6),
 
     Bookmark: Bookmark,
+    Quote: Quote,
     AnalyticsInformation: AnalyticsInformation,
   };
 
