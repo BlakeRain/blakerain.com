@@ -116,6 +116,49 @@
   line-height: 1.5em;
 }
 
+.quote {
+  position: relative;
+
+  margin: 0 0 1.5em;
+  padding: 0 1.5em;
+  min-width: 100%;
+
+  font-style: italic;
+  color: $color-mid-grey;
+
+  &:before {
+    position: absolute;
+
+    top: 16px;
+    left: -20px;
+
+    display: block;
+    content: "\201C";
+    font-size: 8rem;
+  }
+
+  p {
+    margin: 0 0 1em 0;
+    color: inherit;
+    font-size: inherit;
+    font-style: italic;
+    line-height: inherit;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  cite {
+    font-family: $body-font-family;
+    font-size: 1.8rem;
+
+    &:before {
+      content: "\2014 \2009";
+    }
+  }
+}
+
 .codeCard {
   width: 100%;
   margin: 0.8em 0 2.3em;
@@ -192,6 +235,10 @@
     color: rgba(255, 255, 255, 0.75);
   }
 
+  .quote {
+    color: lighten($color-mid-grey, 30%);
+  }
+
   .codeCardWithCaption,
   .imageCard {
     figcaption {
@@ -230,6 +277,10 @@
     img {
       border-radius: 3px 3px 0 0;
     }
+  }
+
+  .quote {
+    padding: 0 1.3em;
   }
 }
 
