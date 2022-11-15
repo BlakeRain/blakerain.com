@@ -13,6 +13,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeImageSize from "rehype-img-size";
 import matter from "gray-matter";
 import { IndexBuilder, PreparedIndex } from "./search";
+import { GitLogEntry, loadFileRevisions } from "./git";
 
 export interface DocInfo {
   slug: string;
@@ -33,6 +34,7 @@ export interface PostInfo extends DocInfo, Tagged {
 export interface Post extends PostInfo {
   content: MDXRemoteSerializeResult;
   preamble: PostPreamble;
+  history: GitLogEntry[];
 }
 
 export interface Page extends DocInfo {
@@ -45,6 +47,7 @@ export interface Preamble {
   title?: string;
   published?: string;
   excerpt?: string;
+  history?: boolean;
 }
 
 export interface PostPreamble extends Preamble {
@@ -144,6 +147,7 @@ async function loadDoc<P extends Preamble>(
   source: string;
   wordCount: number;
   content: MDXRemoteSerializeResult;
+  history: GitLogEntry[];
 }> {
   const { preamble, source } = await loadDocSource<P>(filename);
   return {
@@ -162,6 +166,8 @@ async function loadDoc<P extends Preamble>(
         ],
       },
     }),
+    history:
+      preamble.history !== false ? await loadFileRevisions(filename) : [],
   };
 }
 
@@ -241,12 +247,13 @@ export async function loadPageWithSlug(slug: string): Promise<Page> {
 // --------------------------------------------------------------------------------------------------------------------
 
 export async function loadPost(filename: string): Promise<Post> {
-  const { preamble, wordCount, content } = await loadDoc<PostPreamble>(
+  const { preamble, wordCount, content, history } = await loadDoc<PostPreamble>(
     filename
   );
   return {
     ...extractPostInfo(filename, preamble, wordCount),
     preamble: processDates(preamble),
+    history,
     content,
   };
 }

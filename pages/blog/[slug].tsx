@@ -186,6 +186,7 @@ const BlogPost: NextPage<BlogPostProps> = ({
         doc={post}
         content={post.content}
         featureImage={post.coverImage || undefined}
+        history={post.history}
       />
       <Analytics />
       {enableCommento && (
