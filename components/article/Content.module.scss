@@ -195,6 +195,11 @@
       box-shadow: $color-blue 0 -1px 0 inset;
     }
 
+    &[data-footnote-backref="true"] {
+      box-shadow: none;
+      color: $color-light-grey;
+    }
+
     > code {
       text-decoration: underline;
     }
@@ -381,6 +386,10 @@
       }
     }
   }
+
+  section[data-footnotes="true"] {
+    width: 100%;
+  }
 }
 
 .contentInner {
@@ -424,6 +433,10 @@
     a {
       color: white;
       box-shadow: inset 0 -1px 0 white;
+
+      &[data-footnote-backref="true"] {
+        color: $color-mid-grey;
+      }
     }
 
     strong,
