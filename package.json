@@ -29,6 +29,7 @@
     "rehype-autolink-headings": "^6.1.1",
     "rehype-img-size": "^1.0.1",
     "rehype-slug": "^5.0.1",
+    "remark-emoji": "^3.0.2",
     "remark-gfm": "^3.0.1",
     "remark-mdx-code-meta": "^2.0.0",
     "sass": "^1.49.7",
