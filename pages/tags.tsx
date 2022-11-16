@@ -1,4 +1,4 @@
-import { GetStaticProps } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import React, { FC } from "react";
@@ -8,6 +8,47 @@ import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import { PostInfo, loadPostInfos } from "../lib/content";
 import { Tag, loadTags } from "../lib/tags";
 import styles from "./tags.module.scss";
+
+interface PageProps {
+  navigation: SiteNavigation[];
+  tags: { tag: Tag; posts: PostInfo[] }[];
+}
+
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
+  const tags = await loadTags();
+  const posts = await loadPostInfos();
+  const navigation = await loadNavigation();
+
+  let binned_tags: { tag: Tag; posts: PostInfo[] }[] = [];
+  for (const tag of tags.values()) {
+    binned_tags.push({
+      tag,
+      posts: posts.filter((post) => post.tags.includes(tag.slug)),
+    });
+  }
+
+  binned_tags = binned_tags
+    .filter((bin) => bin.posts.length > 0)
+    .sort((a, b) => a.tag.name.localeCompare(b.tag.name));
+
+  console.log(`Tags used: ${binned_tags.length} (of ${tags.size})`);
+  if (binned_tags.length < tags.size) {
+    for (const bin of binned_tags) {
+      tags.delete(bin.tag.slug);
+    }
+
+    console.log(
+      `Remaining tags: ${[...tags.values()].map((tag) => tag.slug).join(", ")}`
+    );
+  }
+
+  return {
+    props: {
+      tags: binned_tags,
+      navigation,
+    },
+  };
+};
 
 const TagPost: FC<{ post: PostInfo }> = ({ post }) => {
   return (
@@ -45,31 +86,15 @@ const TagInfo: FC<{ tag: Tag; posts: PostInfo[] }> = ({ tag, posts }) => {
   );
 };
 
-const TagList: FC<{
-  tags: { [slug: string]: Tag };
-  posts: PostInfo[];
-  navigation: SiteNavigation[];
-}> = ({ tags, posts, navigation }) => {
-  let binned_tags: { tag: Tag; posts: PostInfo[] }[] = [];
-  for (const tag of new Map(Object.entries(tags)).values()) {
-    binned_tags.push({
-      tag,
-      posts: posts.filter((post) => post.tags.includes(tag.slug)),
-    });
-  }
-
-  binned_tags = binned_tags
-    .filter((bin) => bin.posts.length > 0)
-    .sort((a, b) => b.posts.length - a.posts.length);
-
+const TagList: NextPage<PageProps> = ({ tags, navigation }) => {
   return (
     <Layout navigation={navigation} wrap>
       <Head>
         <title>Tags</title>
       </Head>
-      <h1>There are {binned_tags.length} tags on this site</h1>
+      <h1>There are {tags.length} tags on this site</h1>
       <div className={styles.list}>
-        {binned_tags.map((tag, index) => (
+        {tags.map((tag, index) => (
           <TagInfo key={index.toString()} {...tag} />
         ))}
       </div>
@@ -78,17 +103,3 @@ const TagList: FC<{
 };
 
 export default TagList;
-
-export const getStaticProps: GetStaticProps = async () => {
-  const tags = await loadTags();
-  const posts = await loadPostInfos();
-  const navigation = await loadNavigation();
-
-  return {
-    props: {
-      tags: Object.fromEntries(tags),
-      posts,
-      navigation,
-    },
-  };
-};
