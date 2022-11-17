@@ -67,7 +67,7 @@ const ContentBody: FC<{
       <div className={cn(styles.content, styles.outer)}>
         <div className={cn(styles.contentInner, styles.inner)}>
           <Render content={content} highlight={highlight} />
-          {history.length && <RevisionHistory history={history} />}
+          {history.length > 0 && <RevisionHistory history={history} />}
         </div>
       </div>
       <ScrollToTopButton />
