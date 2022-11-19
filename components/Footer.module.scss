@@ -264,3 +264,9 @@ $color-footer-popup-link-hover-background: lighten($primary-background, 20%);
     }
   }
 }
+
+@media print {
+  .footer {
+    display: none;
+  }
+}
