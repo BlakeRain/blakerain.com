@@ -55,7 +55,12 @@ export const Footer: FC = () => {
           <Link href="/blog">Latest Posts</Link>
           <Link href="/tags">Tags</Link>
           <Link href="/disclaimer">Disclaimer</Link>
-          <a href="https://twitter.com/HalfWayMan">Twitter</a>
+          <a rel="noreferrer" href="https://github.com/BlakeRain">
+            GitHub
+          </a>
+          <a rel="noreferrer" href="https://mastodonapp.uk/@BlakeRain">
+            Mastodon
+          </a>
           <FooterDropdown title="Tools">
             <li>
               <Link href="/analytics">Analytics Dashboard</Link>
