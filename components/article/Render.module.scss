@@ -280,7 +280,11 @@
   }
 
   .quote {
-    padding: 0 1.3em;
+    padding: 0;
+
+    &:before {
+      display: none;
+    }
   }
 }
 

@@ -578,8 +578,9 @@
   .headerWithImage {
     .headerInner {
       .details {
-        padding-left: 0;
-        padding-right: 0;
+        box-sizing: border-box;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
       }
     }
   }
@@ -588,8 +589,13 @@
     flex-direction: column;
   }
 
+  .excerpt {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
   .content {
-    padding: 35px 0 0 0;
+    padding: 35px 0.5rem 0 0.5rem;
 
     p,
     ul,
@@ -623,7 +629,9 @@
   }
 
   .content {
-    p {
+    p,
+    li,
+    blockquote {
       font-size: 1.6rem;
       line-height: 1.6em;
     }
@@ -641,6 +649,25 @@
 
     h6 {
       font-size: 2rem;
+    }
+
+    pre {
+      background-color: transparent;
+    }
+
+    a {
+      text-decoration: none;
+      box-shadow: none;
+    }
+
+    code {
+      padding: none;
+      font-size: 1em;
+      background-color: transparent;
+    }
+
+    a > code {
+      text-decoration: none;
     }
   }
 }

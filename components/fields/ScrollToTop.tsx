@@ -58,7 +58,7 @@ export const ScrollToTopButton: FC = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }}
     >
-      &uarr; Goto Top
+      &uarr;<span> Goto Top</span>
     </button>
   );
 };

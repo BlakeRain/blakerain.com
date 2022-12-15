@@ -20,6 +20,14 @@
   }
 }
 
+@media (max-width: 1170px) {
+  .button {
+    > span {
+      display: none;
+    }
+  }
+}
+
 @media (max-width: 800px) {
   .button {
     display: none;

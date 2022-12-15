@@ -24,6 +24,18 @@ $dark-symbol: rgb(112, 161, 236);
 $dark-class: rgb(242, 146, 70);
 $dark-param: rgb(226, 119, 145);
 
+$print-comment: #636363;
+$print-keyword: #080f97;
+$print-name: #b66fd5;
+$print-literal: #532404;
+$print-string: #023e2b;
+$print-literal-var: #004550;
+$print-type: $print-name;
+$print-class: #532404;
+$print-number: $print-literal;
+$print-symbol: #122850;
+$print-param: #511521;
+
 .hljs-comment {
   color: $light-comment;
   font-style: italic;
@@ -317,5 +329,78 @@ $dark-param: rgb(226, 119, 145);
 
   .hljs-strong {
     font-weight: bold;
+  }
+}
+
+@media print {
+  .hljs-comment,
+  .hljs-quote {
+    color: $print-comment;
+    font-style: italic;
+  }
+
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-formula {
+    color: $print-keyword;
+  }
+
+  .hljs-section,
+  .hljs-name,
+  .hljs-selector-tag,
+  .hljs-deletion,
+  .hljs-subst {
+    color: $print-name;
+  }
+
+  .hljs-literal {
+    color: $print-literal;
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-addition,
+  .hljs-attribute,
+  .hljs-meta-string {
+    color: $print-string;
+  }
+
+  .hljs-built_in,
+  .hljs-class.hljs-title,
+  .hljs-class.hljs-params {
+    color: $print-class;
+  }
+
+  .hljs-attr {
+    color: $print-type;
+  }
+
+  .hljs-variable,
+  .hljs-template-variable {
+    color: $print-literal-var;
+  }
+
+  .hljs-type,
+  .hljs-selector-class,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo {
+    color: $print-type;
+  }
+
+  .hljs-number {
+    color: $print-number;
+  }
+
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-meta,
+  .hljs-selector-id,
+  .hljs-title {
+    color: $print-symbol;
+  }
+
+  .hljs-function.hljs-params {
+    color: $print-param;
   }
 }
