@@ -80,3 +80,115 @@ export class MarkdownExtractor {
     return extractor.blocks;
   }
 }
+
+export class PlaintextMarkdownExtractor {
+  private blocks: string[] = [];
+
+  private addBlock(block: string) {
+    if (typeof block !== "string") {
+      throw new Error("Expected markdown block to be a string");
+    }
+
+    if (block.length > 0) {
+      this.blocks.push(block);
+    }
+  }
+
+  private code(token: marked.Tokens.Code) {
+    if (token.lang) {
+      this.addBlock("```" + token.lang);
+    } else {
+      this.addBlock("```");
+    }
+
+    this.addBlock(token.text);
+    this.addBlock("```\n");
+  }
+
+  private heading(token: marked.Tokens.Heading) {
+    const prefix = "#".repeat(token.depth);
+    this.addBlock(`${prefix} ${token.text}\n`);
+  }
+
+  private table(token: marked.Tokens.Table) {
+    this.addBlock(token.raw + "\n");
+  }
+
+  private paragraph(token: marked.Tokens.Paragraph) {
+    const content = this.processSpanTokens(token.tokens);
+    this.addBlock(content + "\n");
+  }
+
+  private list(token: marked.Tokens.List) {
+    const generator = (
+      typeof token.start === "number"
+        ? () => {
+            let index = token.start as number;
+            return () => {
+              const prefix = `${index}.`;
+              index += 1;
+              return prefix;
+            };
+          }
+        : () => {
+            return () => "-";
+          }
+    )();
+
+    for (const item of token.items) {
+      const prefix = generator();
+      const content = this.processSpanTokens(item.tokens);
+      this.addBlock(`${prefix} ${content}\n`);
+    }
+  }
+
+  private processSpanTokens(tokens: marked.Token[]): string {
+    const spans = [];
+
+    for (const token of tokens) {
+      switch (token.type) {
+        case "text":
+          spans.push(token.text);
+          break;
+      }
+    }
+
+    return spans.join("");
+  }
+
+  private processBlockToken(token: marked.Token) {
+    switch (token.type) {
+      case "code":
+        this.code(token);
+        break;
+      case "heading":
+        this.heading(token);
+        break;
+      case "table":
+        this.table(token);
+        break;
+      case "paragraph":
+        this.paragraph(token);
+        break;
+      case "list":
+        this.list(token);
+        break;
+    }
+  }
+
+  private processBlockTokens(tokens: marked.Token[]) {
+    for (let token of tokens) {
+      this.processBlockToken(token);
+    }
+  }
+
+  constructor(content: string) {
+    const tokens = marked.lexer(content);
+    this.processBlockTokens(tokens);
+  }
+
+  public static extract(content: string): string[] {
+    const extractor = new PlaintextMarkdownExtractor(content);
+    return extractor.blocks;
+  }
+}

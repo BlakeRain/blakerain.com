@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { createHash } from "crypto";
 import { Node } from "unist";
 import * as hast from "hast";
 import * as mdast from "mdast";
@@ -13,7 +14,12 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeImageSize from "rehype-img-size";
 import matter from "gray-matter";
-import { IndexBuilder, PreparedIndex } from "./search";
+import {
+  GptIndexBuilder,
+  IndexBuilder,
+  PreparedIndex,
+  StoredIndexedDocuments,
+} from "./search";
 import { GitLogEntry, loadFileRevisions } from "./git";
 
 export interface DocInfo {
@@ -298,7 +304,61 @@ export async function loadPostWithSlug(slug: string): Promise<Post> {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-export async function buildSearchIndex(): Promise<PreparedIndex> {
+export function hashDocument(
+  slug: string,
+  title: string,
+  excerpt: string,
+  content: string
+): string {
+  const hash = createHash("sha256");
+  hash.update(slug);
+  hash.update(title);
+  hash.update(excerpt);
+  hash.update(content);
+  return hash.digest("hex");
+}
+
+async function loadStoredSearchIndex(): Promise<StoredIndexedDocuments> {
+  const storedPath = path.join(process.cwd(), "public", "data", "search.json");
+
+  try {
+    const content = await fs.readFile(storedPath, "utf-8");
+    return JSON.parse(content);
+  } catch {
+    return { pages: [], posts: [] };
+  }
+}
+
+export async function buildGptSearchIndex(): Promise<StoredIndexedDocuments> {
+  const stored = await loadStoredSearchIndex();
+  const index = new GptIndexBuilder(stored);
+
+  const pagesDir = path.join(process.cwd(), "content", "pages");
+  for (let filename of await fs.readdir(pagesDir)) {
+    const { preamble, source } = await loadDocSource(
+      path.join(pagesDir, filename)
+    );
+
+    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
+    const hash = hashDocument(slug, title, excerpt || "", source);
+    await index.addDocument(true, slug, title, excerpt || "", hash, source);
+  }
+
+  const postsDir = path.join(process.cwd(), "content", "posts");
+  for (let filename of await fs.readdir(postsDir)) {
+    const { preamble, source } = await loadDocSource(
+      path.join(postsDir, filename)
+    );
+
+    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
+    const hash = hashDocument(slug, title, excerpt || "", source);
+    await index.addDocument(false, slug, title, excerpt || "", hash, source);
+  }
+
+  return index.finish();
+}
+
+export async function buildSearchIndex_old(): Promise<PreparedIndex> {
   const index = new IndexBuilder();
 
   const pagesDir = path.join(process.cwd(), "content", "pages");

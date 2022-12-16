@@ -2,6 +2,82 @@ import { Decoder, Encoder } from "./store";
 import { IndexTerm } from "./term";
 import { Trie, TrieNode, TrieNodeVisitor } from "./trie";
 import { stemmer, STEM_WORDS } from "./stem";
+import { generateEmbeddings } from "./gpt";
+
+export interface IndexedDocument {
+  slug: string;
+  title: string;
+  excerpt: string;
+  hash: string;
+  embedding: number[];
+}
+
+export interface StoredIndexedDocuments {
+  pages: IndexedDocument[];
+  posts: IndexedDocument[];
+}
+
+export class GptIndexBuilder {
+  public pages: Map<string, IndexedDocument> = new Map();
+  public posts: Map<string, IndexedDocument> = new Map();
+
+  constructor(stored?: StoredIndexedDocuments) {
+    if (stored) {
+      for (const page of stored.pages) {
+        this.pages.set(page.slug, page);
+      }
+
+      for (const post of stored.posts) {
+        this.posts.set(post.slug, post);
+      }
+    }
+  }
+
+  public async addDocument(
+    page: boolean,
+    slug: string,
+    title: string,
+    excerpt: string,
+    hash: string,
+    content: string
+  ) {
+    const index = page ? this.pages : this.posts;
+    if (index.has(slug)) {
+      const doc = index.get(slug)!;
+      if (doc.hash === hash) {
+        return;
+      }
+    }
+
+    const { PlaintextMarkdownExtractor } = await import("./markdown");
+    const plain = PlaintextMarkdownExtractor.extract(content).join("");
+    const embeddings = await generateEmbeddings(plain);
+
+    const doc = {
+      slug,
+      title,
+      excerpt,
+      hash,
+      embedding: embeddings.data[0].embedding,
+    };
+
+    index.set(slug, doc);
+  }
+
+  public finish(): StoredIndexedDocuments {
+    const stored: StoredIndexedDocuments = { pages: [], posts: [] };
+
+    for (const page of this.pages.values()) {
+      stored.pages.push(page);
+    }
+
+    for (const post of this.posts.values()) {
+      stored.posts.push(post);
+    }
+
+    return stored;
+  }
+}
 
 const MAGIC = 0x53524348;
 const WORD_RE = /[\w_][\w_-]{2,}/g;
