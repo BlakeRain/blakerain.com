@@ -158,6 +158,7 @@ async function loadDoc<P extends Preamble>(
     content: await serialize(source, {
       scope: preamble as Record<string, any>,
       mdxOptions: {
+        development: false,
         remarkPlugins: [
           remarkPlugin,
           remarkMdxCodeMeta,
