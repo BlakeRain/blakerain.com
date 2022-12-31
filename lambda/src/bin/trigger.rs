@@ -1,6 +1,6 @@
 use aws_sdk_dynamodb::model::AttributeValue;
 use blakerain_analytics_lambdas::{env::Env, model::dynamodb::attribute::Attribute};
-use lambda_runtime::{handler_fn, Context, Error};
+use lambda_runtime::{service_fn, Error, LambdaEvent};
 use serde_json::Value;
 use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 
@@ -298,9 +298,10 @@ async fn main() -> Result<(), Error> {
     let env = Env::new().await;
 
     let handler_env = &env;
-    let handler =
-        move |event: Value, _: Context| async move { trigger_handler(handler_env, event).await };
+    let handler = move |event: LambdaEvent<Value>| async move {
+        trigger_handler(handler_env, event.payload).await
+    };
 
-    lambda_runtime::run(handler_fn(handler)).await?;
+    lambda_runtime::run(service_fn(handler)).await?;
     Ok(())
 }

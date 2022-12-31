@@ -10,7 +10,7 @@ use blakerain_analytics_lambdas::{
     },
     env::Env,
 };
-use lambda_http::{handler, http::Method, Body, Context, Request, Response};
+use lambda_http::{http::Method, service_fn, Body, Request, Response};
 use lambda_runtime::Error;
 
 use serde_json::json;
@@ -61,7 +61,7 @@ async fn main() -> Result<(), Error> {
     let env = Env::new().await;
 
     let handler_func_env = &env;
-    let handler_func = move |req: Request, _cxt: Context| async move {
+    let handler_func = move |req: Request| async move {
         let response = api_handler(handler_func_env, req).await;
         match response {
             Ok(res) => Ok(res),
@@ -72,6 +72,6 @@ async fn main() -> Result<(), Error> {
         }
     };
 
-    lambda_runtime::run(handler(handler_func)).await?;
+    lambda_http::run(service_fn(handler_func)).await?;
     Ok(())
 }

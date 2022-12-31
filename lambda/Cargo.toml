@@ -10,18 +10,21 @@ repository = "https://github.com/BlakeRain/blakerain.com"
 publish = false
 
 [dependencies]
-aws-config = "0.6.0"
-aws-sdk-dynamodb = "0.6.0"
-base64 = "0.13"
-fernet = "0.1.4"
+aws-config = "0.52"
+aws-sdk-dynamodb = "0.22"
+base64 = "0.20"
+fernet = "0.2"
 http = "0.2"
-lambda_http = "0.4.1"
-lambda_runtime = "0.4.1"
+lambda_http = "0.7"
+lambda_runtime = "0.7"
 thiserror = "1.0"
-time = { version = "0.3.7", features = ["formatting"] }
+time = { version = "0.3", features = ["formatting"] }
 tokio = { version = "1", features = ["full"] }
-pbkdf2 = "0.10"
+pbkdf2 = "0.11"
 rand_core = { version = "0.6", features = ["std"] }
 serde = "1.0"
 serde_json = "1.0"
 woothee = "0.13"
+
+# We have a specific version of 'tracing' here to avoid lack of `String` instance of `Value` trait.
+tracing = "0.1.37"

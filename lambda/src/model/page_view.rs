@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use aws_sdk_dynamodb::model::AttributeValue;
-use lambda_http::StrMap;
+use lambda_http::aws_lambda_events::query_map::QueryMap;
 use time::OffsetDateTime;
 
 use super::dynamodb::{
@@ -25,31 +25,31 @@ pub struct PageView {
 }
 
 impl PageView {
-    pub fn from_querystring(query: StrMap) -> Option<Self> {
-        let uuid = query.get("uuid")?;
-        let path = query.get("path")?;
+    pub fn from_querystring(query: QueryMap) -> Option<Self> {
+        let uuid = query.first("uuid")?;
+        let path = query.first("path")?;
 
         Some(PageView {
             path: path.to_string(),
             section: format!("view-{}", uuid),
             time: OffsetDateTime::now_utc(),
-            user_agent: query.get("ua").map(ToString::to_string),
+            user_agent: query.first("ua").map(ToString::to_string),
             viewport_width: query
-                .get("viewport_width")
+                .first("viewport_width")
                 .and_then(|value| value.parse().ok()),
             viewport_height: query
-                .get("viewport_height")
+                .first("viewport_height")
                 .and_then(|value| value.parse().ok()),
             screen_width: query
-                .get("screen_width")
+                .first("screen_width")
                 .and_then(|value| value.parse().ok()),
             screen_height: query
-                .get("viewport_height")
+                .first("viewport_height")
                 .and_then(|value| value.parse().ok()),
-            timezone: query.get("tz").map(ToString::to_string),
-            referrer: query.get("referrer").map(ToString::to_string),
-            duration: query.get("duration").and_then(|value| value.parse().ok()),
-            scroll: query.get("scroll").and_then(|value| value.parse().ok()),
+            timezone: query.first("tz").map(ToString::to_string),
+            referrer: query.first("referrer").map(ToString::to_string),
+            duration: query.first("duration").and_then(|value| value.parse().ok()),
+            scroll: query.first("scroll").and_then(|value| value.parse().ok()),
         })
     }
 }
