@@ -15,7 +15,7 @@ const MonthlyReport: FC<{ paths: string[]; token: string }> = ({
       paths={paths}
       paramInfo={{
         min: 0,
-        max: 52,
+        max: 11,
         startOffset: 1,
         labelMapper: (day) => day.toString(),
         fromDate: (date) => date.getMonth(),
