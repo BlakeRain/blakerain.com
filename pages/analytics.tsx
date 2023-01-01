@@ -58,7 +58,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const page_slugs = await loadPageSlugs();
   const post_slugs = await loadPostSlugs();
 
-  const paths = ["site", "/", "/blog", "/tags"];
+  const paths = ["site", "/", "/blog", "/tags", "/tools/position-size"];
 
   for (let slug of page_slugs) {
     paths.push(`/${slug}`);
