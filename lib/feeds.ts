@@ -6,6 +6,7 @@ import { loadPostInfos } from "../lib/content";
 
 const BASE_URL = "https://www.blakerain.com";
 
+/// Create the various RSS and Atom feeds for all blog posts in the site.
 export async function generateFeeds() {
   const now = new Date();
   const feed = new Feed({

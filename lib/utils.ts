@@ -1,3 +1,4 @@
+/// Pad a number with zeros to a specific length.
 export function zeroPad(n: number, count: number = 2): string {
   const s = n.toString();
   if (s.length < count) {
@@ -7,6 +8,10 @@ export function zeroPad(n: number, count: number = 2): string {
   }
 }
 
+/// Format a number
+///
+/// This function will format the given number to a certain number of decimal places. It will also comma-separate any
+/// lengthy numbers. Numbers may also have prefixes and suffixes added to them.
 export function formatNumber(
   value: number,
   places: number,
@@ -20,6 +25,7 @@ export function formatNumber(
   return (neg ? "-" : "") + (prefix || "") + parts.join(".") + (suffix || "");
 }
 
+/// Get the ISO week for the given `Date`.
 export function getISOWeek(date: Date): number {
   var d = new Date(date);
   var dayNum = d.getUTCDay() || 7;

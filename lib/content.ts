@@ -1,7 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { Node } from "unist";
-import * as hast from "hast";
 import * as mdast from "mdast";
 import { TagId } from "./tags";
 import { serialize } from "next-mdx-remote/serialize";
@@ -16,53 +15,92 @@ import matter from "gray-matter";
 import { IndexBuilder, PreparedIndex } from "./search";
 import { GitLogEntry, loadFileRevisions } from "./git";
 
+/// Information about a document
 export interface DocInfo {
+  /// The slug used to form the URL for the document.
   slug: string;
+  /// The rendered title for the document.
   title: string;
+  /// Any excerpt given in indices or at the start of a document.
   excerpt: string | null;
+  /// The ISO-8601 date string on which the document was published.
   published: string;
 }
 
+/// Interface for something that has a number of tags.
 export interface Tagged {
+  /// The tags (if any) for this object.
   tags: TagId[];
 }
 
+/// Summary information about a blog post.
+///
+/// This extends both `DocInfo` for summary information about the document and `Tagged` to associate tags with a blog
+/// post.
 export interface PostInfo extends DocInfo, Tagged {
+  /// The amount of time it will roughly take to read the blog post.
   readingTime: number;
+  /// URL for the cover image (if there is one).
   coverImage: string | null;
 }
 
+/// A fully deserialized blog post.
+///
+/// This interface extends `PostInfo` to include the content of the blog post.
 export interface Post extends PostInfo {
+  /// The content of the blog post, as parsed by MDX.
   content: MDXRemoteSerializeResult;
+  /// Any pre-amble data for the blog post.
   preamble: PostPreamble;
+  /// The git history of changes made to this blog post.
   history: GitLogEntry[];
 }
 
+/// A full deserialized page.
+///
+/// This interface extends `DocInfo` to include the contents of the page.
 export interface Page extends DocInfo {
+  /// The content of the page, as parsed by MDX.
   content: MDXRemoteSerializeResult;
+  /// Any pre-amble data for the page.
   preamble: PagePreamble;
 }
 
+/// Represents general document preamble.
+///
+/// Preambles are provided using YAML in the frontispiece of a markdown document. This structure represents the basic
+/// information extracted from the preamble for all documents (posts or pages).
 export interface Preamble {
-  draft?: boolean;
+  /// The title of the document (if any).
   title?: string;
+  /// When the document was published (if any, as an ISO-8601 string).
   published?: string;
+  /// The excerpt for the document (if any).
   excerpt?: string;
+  /// Whether to include the git history of this document.
   history?: boolean;
 }
 
+/// Preamble specific to a blog post.
 export interface PostPreamble extends Preamble {
+  /// The cover image URL.
   cover?: string;
+  /// The IDs (slugs) of the tags for this post.
   tags?: TagId[];
 }
 
+/// Preamble specific to a page.
 export interface PagePreamble extends Preamble {
+  /// SEO settings for the page.
   seo?: {
+    /// Whether to include this page for indexing.
     index?: boolean;
+    /// Whether robots should follow links from this page.
     follow?: boolean;
   };
 }
 
+// A remark plugin that extracts images that live inside paragraphs, to avoid `<p><img .../></p>`.
 function remarkPlugin() {
   function transformChildren(node: mdast.Parent) {
     node.children = node.children.map((child) =>
@@ -96,44 +134,20 @@ function remarkPlugin() {
   };
 }
 
-function rehypePlugin() {
-  function transformChildren(node: hast.Parent) {
-    node.children = node.children.map((child) =>
-      walkNode(child)
-    ) as hast.Content[];
-  }
-
-  function walkNode(node: Node): Node {
-    switch (node.type) {
-      case "root": {
-        transformChildren(node as hast.Root);
-      }
-
-      case "element": {
-        const element = node as hast.Element;
-        switch (element.tagName) {
-        }
-      }
-    }
-
-    return node;
-  }
-
-  return (tree: Node) => {
-    walkNode(tree);
-  };
-}
-
 const WORD_RE = /[a-zA-Z0-9_-]\w+/;
 
-function countWords(source: string) {
+// Roughly count the words in a source string.
+function countWords(source: string): number {
   return source.split(/\s+/).filter((word) => WORD_RE.exec(word)).length;
 }
 
+// Load the document source for a given path.
+//
+// This function will load the source at the given path and split out any front-matter.
 async function loadDocSource<P extends Preamble>(
-  filename: string
+  doc_path: string
 ): Promise<{ preamble: P; source: string }> {
-  const source = await fs.readFile(filename, "utf-8");
+  const source = await fs.readFile(doc_path, "utf-8");
   const { content, data } = matter(source, {});
   return {
     preamble: data as P,
@@ -141,8 +155,16 @@ async function loadDocSource<P extends Preamble>(
   };
 }
 
+// Load a document from the given path.
+//
+// This function will load the document from the given path using `loadDocSource`. It will then parse the contents of
+// the document, returning the components needed to produce the various interfaces such as a `Post` or `Page`.
+//
+// 1. Count the number of words in the document.
+// 2. Use MDX to parse the contents of the document, including our chosen remark and rehype plugins.
+// 3. Load and parse the git history for the file (unless instructed otherwise).
 async function loadDoc<P extends Preamble>(
-  filename: string
+  doc_path: string
 ): Promise<{
   preamble: P;
   source: string;
@@ -150,7 +172,7 @@ async function loadDoc<P extends Preamble>(
   content: MDXRemoteSerializeResult;
   history: GitLogEntry[];
 }> {
-  const { preamble, source } = await loadDocSource<P>(filename);
+  const { preamble, source } = await loadDocSource<P>(doc_path);
   return {
     preamble,
     source,
@@ -166,7 +188,6 @@ async function loadDoc<P extends Preamble>(
           remarkEmoji,
         ],
         rehypePlugins: [
-          rehypePlugin,
           rehypeSlug,
           rehypeAutolinkHeadings,
           [rehypeImageSize as any, { dir: "public" }],
@@ -174,10 +195,14 @@ async function loadDoc<P extends Preamble>(
       },
     }),
     history:
-      preamble.history !== false ? await loadFileRevisions(filename) : [],
+      preamble.history !== false ? await loadFileRevisions(doc_path) : [],
   };
 }
 
+// Parse the date received in some preamble.
+//
+// Dates can be stored either as strings or a `Date` object (due to helpful YAML parsing), or be missing. In all three
+// cases we try to extract an ISO-8601 string that we can serialize to JSON.
 function processDate(date: string | Date | undefined): string {
   if (typeof date === "string") {
     return date;
@@ -188,6 +213,10 @@ function processDate(date: string | Date | undefined): string {
   }
 }
 
+// Parse any date-like objects found in the given object.
+//
+// This goes some way to ensure that the `Record` doesn't contain any `Date` objects, which we cannot serialize to JSON.
+// Instead all dates should be stored as ISO-8601 strings.
 function processDates(obj: Record<string, any>): Record<string, any> {
   Object.keys(obj).forEach((key) => {
     let value = obj[key];
@@ -202,6 +231,14 @@ function processDates(obj: Record<string, any>): Record<string, any> {
   return obj;
 }
 
+// Given a path to a document and some preamble, build the `DocInfo`.
+//
+// This function constructs the `DocInfo` interface using the given data:
+//
+// 1. The `slug` of the document is the document's filename without the '.md' extension.
+// 2. The title is "Untitled" unless a title is provided in the preamble.
+// 3. The excerpt is extracted from the preamble (if there is any).
+// 4. The `published` date string is retrieved from the preamble (if there is any).
 function extractDocInfo(filename: string, preamble: PagePreamble): DocInfo {
   return {
     slug: path.basename(filename).replace(".md", ""),
@@ -211,6 +248,15 @@ function extractDocInfo(filename: string, preamble: PagePreamble): DocInfo {
   };
 }
 
+// Given a path to a document and some preamble, build the `PostInfo`.
+//
+// This function builds the `PostInfo` by first building the `DocInfo` that `PostInfo` extends using the
+// `extractDocInfo` function defined above. This function then extracts the following:
+//
+// 1. The `coverImage` is extracted from the preamble if one is present. A `/` is prepended to the cover image path if
+//    one is not already present.
+// 2. The `readingTime` is "calculated" by dividing the number of words in the document by 200.
+// 3. The `tags` are extracted from the preamble if any are present.
 function extractPostInfo(
   filename: string,
   preamble: PostPreamble,
@@ -228,15 +274,17 @@ function extractPostInfo(
 
 // --------------------------------------------------------------------------------------------------------------------
 
-export async function loadPage(filename: string): Promise<Page> {
-  const { preamble, content } = await loadDoc<PagePreamble>(filename);
+/// Load a `Page` from the given path.
+export async function loadPage(doc_path: string): Promise<Page> {
+  const { preamble, content } = await loadDoc<PagePreamble>(doc_path);
   return {
-    ...extractDocInfo(filename, preamble),
+    ...extractDocInfo(doc_path, preamble),
     preamble: processDates(preamble),
     content,
   };
 }
 
+/// Load the slugs for all pages in the site.
 export async function loadPageSlugs(): Promise<string[]> {
   const pagesDir = path.join(process.cwd(), "content", "pages");
   const filenames = await fs.readdir(pagesDir);
@@ -246,6 +294,7 @@ export async function loadPageSlugs(): Promise<string[]> {
   );
 }
 
+/// Load a `Page` with the given slug.
 export async function loadPageWithSlug(slug: string): Promise<Page> {
   const pagePath = path.join(process.cwd(), "content", "pages", slug + ".md");
   return await loadPage(pagePath);
@@ -253,18 +302,20 @@ export async function loadPageWithSlug(slug: string): Promise<Page> {
 
 // --------------------------------------------------------------------------------------------------------------------
 
-export async function loadPost(filename: string): Promise<Post> {
+/// Load a `Post` from the given path.
+export async function loadPost(doc_path: string): Promise<Post> {
   const { preamble, wordCount, content, history } = await loadDoc<PostPreamble>(
-    filename
+    doc_path
   );
   return {
-    ...extractPostInfo(filename, preamble, wordCount),
+    ...extractPostInfo(doc_path, preamble, wordCount),
     preamble: processDates(preamble),
     history,
     content,
   };
 }
 
+/// Load the slugs for all posts in the site.
 export async function loadPostSlugs(): Promise<string[]> {
   const postsDir = path.join(process.cwd(), "content", "posts");
   const filenames = await fs.readdir(postsDir);
@@ -274,6 +325,10 @@ export async function loadPostSlugs(): Promise<string[]> {
   );
 }
 
+/// Load all `PostInfo` for the posts in the site.
+///
+/// This is used to build the index of blog posts, where only some summary information of a post is required (as encoded
+/// by the `PostInfo` interface). This function will also sort the results by descending published date.
 export async function loadPostInfos(): Promise<PostInfo[]> {
   const postsDir = path.join(process.cwd(), "content", "posts");
   const filenames = await fs.readdir(postsDir);
@@ -292,6 +347,7 @@ export async function loadPostInfos(): Promise<PostInfo[]> {
   );
 }
 
+/// Load a `Post` with the given slug.
 export async function loadPostWithSlug(slug: string): Promise<Post> {
   const postPath = path.join(process.cwd(), "content", "posts", slug + ".md");
   return await loadPost(postPath);
@@ -299,9 +355,13 @@ export async function loadPostWithSlug(slug: string): Promise<Post> {
 
 // --------------------------------------------------------------------------------------------------------------------
 
+/// Build the search index over all pages and blog posts.
+///
+/// This will return the `PreparedIndex` that can be serialized to a binary file.
 export async function buildSearchIndex(): Promise<PreparedIndex> {
   const index = new IndexBuilder();
 
+  // Iterate through all the pages, extract their source, and add it to the `IndexBuilder`.
   const pagesDir = path.join(process.cwd(), "content", "pages");
   for (let filename of await fs.readdir(pagesDir)) {
     const { preamble, source } = await loadDocSource(
@@ -312,6 +372,7 @@ export async function buildSearchIndex(): Promise<PreparedIndex> {
     await index.addDocument(true, slug, title, excerpt || "", source);
   }
 
+  // Iterate through all the blog posts, extract their source, and add it to the `IndexBuilder`.
   const postsDir = path.join(process.cwd(), "content", "posts");
   for (let filename of await fs.readdir(postsDir)) {
     const { preamble, source } = await loadDocSource(
@@ -322,5 +383,6 @@ export async function buildSearchIndex(): Promise<PreparedIndex> {
     await index.addDocument(false, slug, title, excerpt || "", source);
   }
 
+  // Prepare the final index and return it.
   return index.prepare();
 }
