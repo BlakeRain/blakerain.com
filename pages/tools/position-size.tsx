@@ -5,11 +5,11 @@ import Analytics from "../../components/Analytics";
 import { Layout } from "../../components/Layout";
 import { loadNavigation, SiteNavigation } from "../../lib/navigation";
 import Grid from "../../components/display/Grid";
-import { AccountProvider } from "../../components/tools/AccountProvider";
-import AccountInfoPanel from "../../components/tools/panels/AccountInfo";
-import { PositionProvider } from "../../components/tools/PositionProvider";
-import { PositionInfoPanel } from "../../components/tools/panels/PositionInfo";
-import PositionSizePanel from "../../components/tools/panels/PositionSizePanel";
+import { AccountProvider } from "../../components/tools/position-size/AccountProvider";
+import AccountInfoPanel from "../../components/tools/position-size/panels/AccountInfo";
+import { PositionProvider } from "../../components/tools/position-size/PositionProvider";
+import { PositionInfoPanel } from "../../components/tools/position-size/panels/PositionInfo";
+import PositionSizePanel from "../../components/tools/position-size/panels/PositionSizePanel";
 import styles from "./position-size.module.scss";
 import { NextSeo } from "next-seo";
 

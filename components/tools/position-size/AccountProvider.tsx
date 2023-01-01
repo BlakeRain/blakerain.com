@@ -4,8 +4,8 @@ import {
   AccountInfo,
   accountReducer,
   loadAccount,
-} from "../../lib/tools/account";
-import { getExchangeRates } from "../../lib/tools/forex";
+} from "../../../lib/tools/position-size/account";
+import { getExchangeRates } from "../../../lib/tools/position-size/forex";
 
 export interface AccountContextProps {
   account: AccountInfo;

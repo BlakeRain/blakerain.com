@@ -1,18 +1,18 @@
 import React, { FC } from "react";
 import cn from "classnames";
-import { CURRENCY_SYMBOLS } from "../../../lib/tools/forex";
+import { CURRENCY_SYMBOLS } from "../../../../lib/tools/position-size/forex";
 import {
   computedStopLossQuantity,
   computePositionSize,
   computeStopLoss,
-} from "../../../lib/tools/position";
-import { formatNumber } from "../../../lib/utils";
-import Card from "../../display/Card";
-import Grid from "../../display/Grid";
+} from "../../../../lib/tools/position-size/position";
+import { formatNumber } from "../../../../lib/utils";
+import Card from "../../../display/Card";
+import Grid from "../../../display/Grid";
+import Tooltip from "../../../display/Tooltip";
 import { useAccount } from "../AccountProvider";
 import { usePosition } from "../PositionProvider";
 import styles from "./PositionSizePanel.module.scss";
-import Tooltip from "../../display/Tooltip";
 
 const SimplePositionSize: FC = () => {
   const { account } = useAccount();

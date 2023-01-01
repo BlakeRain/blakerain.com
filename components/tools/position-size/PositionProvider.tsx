@@ -1,10 +1,10 @@
 import React, { FC, useEffect } from "react";
-import { getExchangeRates } from "../../lib/tools/forex";
+import { getExchangeRates } from "../../../lib/tools/position-size/forex";
 import {
   PositionAction,
   PositionInfo,
   positionReducer,
-} from "../../lib/tools/position";
+} from "../../../lib/tools/position-size/position";
 
 export interface PositionContextProps {
   position: PositionInfo;

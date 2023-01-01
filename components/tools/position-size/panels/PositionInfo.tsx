@@ -1,18 +1,18 @@
 import React, { FC } from "react";
-import { Currency, CURRENCY_SYMBOLS } from "../../../lib/tools/forex";
+import { Currency, CURRENCY_SYMBOLS } from "../../../../lib/tools/position-size/forex";
 import {
   computedStopLossQuantity,
   computePositionSize,
   Direction,
-} from "../../../lib/tools/position";
-import { formatNumber } from "../../../lib/utils";
-import Card from "../../display/Card";
-import CurrencySelect from "../../fields/CurrencySelect";
-import DropdownButton from "../../fields/DropdownButton";
-import FloatingLabel from "../../display/FloatingLabel";
-import Grid from "../../display/Grid";
-import NumberInput from "../../fields/NumberInput";
-import Toggle from "../../fields/Toggle";
+} from "../../../../lib/tools/position-size/position";
+import { formatNumber } from "../../../../lib/utils";
+import Card from "../../../display/Card";
+import CurrencySelect from "../../../fields/CurrencySelect";
+import DropdownButton from "../../../fields/DropdownButton";
+import FloatingLabel from "../../../display/FloatingLabel";
+import Grid from "../../../display/Grid";
+import NumberInput from "../../../fields/NumberInput";
+import Toggle from "../../../fields/Toggle";
 import { useAccount } from "../AccountProvider";
 import { usePosition } from "../PositionProvider";
 import styles from "./PositionInfo.module.scss";
