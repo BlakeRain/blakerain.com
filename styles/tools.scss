@@ -11,3 +11,13 @@
   width: 100%;
   max-width: $content-width;
 }
+
+@function _buildIcon($icon) {
+  $icon: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24">#{$icon}</svg>';
+  @return $icon;
+}
+
+@function _buildPath($path, $parameters) {
+  $icon: '<path fill="#{map-get($parameters, color)}" stroke="#{map-get($parameters, stroke-color)}" stroke-width="#{map-get($parameters, stroke-width)}" style="#{map-get($parameters, css)}" d="#{$path}" />';
+  @return $icon;
+}

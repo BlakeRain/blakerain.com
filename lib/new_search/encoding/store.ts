@@ -24,7 +24,7 @@ export default class Store {
   public writeUintVlq(value: number) {
     const values: number[] = [];
 
-    while (value > 0x80) {
+    while (value >= 0x80) {
       values.push((value & 0x7f) | 0x80);
       value = value >> 7;
     }

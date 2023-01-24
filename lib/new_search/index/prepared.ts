@@ -46,11 +46,13 @@ export default class PreparedIndex {
       }
     }
 
-    return fromByteArray(new Uint8Array(store.finish()));
+    const buffer = store.finish();
+    return encodeURIComponent(fromByteArray(new Uint8Array(buffer)));
   }
 
   public static decodePositions(encoded: string): SearchPositions[] {
-    const load = new Load(toByteArray(encoded).buffer);
+    const buffer = toByteArray(decodeURIComponent(encoded)).buffer;
+    const load = new Load(buffer);
     const positions: SearchPositions[] = [];
 
     let npositions = load.readUintVlq();

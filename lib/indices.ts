@@ -39,7 +39,7 @@ function createProcessor() {
 }
 
 // Load a search document from a markdown file.
-async function loadSearchDoc<P extends Preamble>(
+async function loadSearchDoc<P extends Preamble & { cover?: string }>(
   id: number,
   page: boolean,
   doc_path: string
@@ -47,6 +47,14 @@ async function loadSearchDoc<P extends Preamble>(
   const slug = path.basename(doc_path).replace(".md", "");
   const { preamble, source } = await loadDocSource<P>(doc_path);
   const doc = new IndexDoc(id, slug, preamble.title || "No Title");
+
+  if (preamble.published) {
+    doc.published = preamble.published;
+  }
+
+  if (preamble.cover) {
+    doc.cover = preamble.cover;
+  }
 
   if (preamble.excerpt) {
     doc.excerpt = preamble.excerpt;
