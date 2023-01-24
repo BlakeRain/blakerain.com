@@ -7,15 +7,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import cn from "classnames";
 
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
 import { AnalyticsInformation } from "../Analytics";
-import PreparedIndex, {
-  SearchPositions,
-} from "../../lib/new_search/index/prepared";
+import PreparedIndex from "../../lib/new_search/index/prepared";
 import { Position } from "../../lib/new_search/tree/node";
 import Load from "../../lib/new_search/encoding/load";
 
@@ -52,6 +49,27 @@ function getSearchPositions(path: number[]): Position[] {
   }
 
   return [];
+}
+
+function splitPositions(positions: Position[], offset: number): Position[] {
+  const result: Position[] = [];
+  for (const position of positions) {
+    if (position.start < offset) {
+      if (position.start + position.length > offset) {
+        result.push({
+          start: position.start,
+          length: offset - position.start,
+        });
+      }
+    } else {
+      result.push({
+        start: position.start - offset,
+        length: position.length,
+      });
+    }
+  }
+
+  return result;
 }
 
 function renderHighlight(
@@ -378,20 +396,24 @@ interface HighlightRow {
 function createCodeElement(
   positions: Position[],
   row: HighlightRow,
-  index: number
-): React.ReactNode {
+  index: number,
+  offset: number
+): { element: React.ReactNode; newOffset: number } {
   let { properties, type, tagName: TagName, value, children } = row;
-  console.log("createCodeElement", row);
+
   if (type === "text") {
     if (positions.length > 0 && value) {
-      return (
-        <React.Fragment key={index.toString()}>
-          {renderHighlight(positions, value)}
-        </React.Fragment>
-      );
+      return {
+        element: (
+          <React.Fragment key={index.toString()}>
+            {renderHighlight(splitPositions(positions, offset), value)}
+          </React.Fragment>
+        ),
+        newOffset: offset + value.length,
+      };
     }
 
-    return value;
+    return { element: value, newOffset: offset + (value || "").length };
   }
 
   if (TagName) {
@@ -401,16 +423,26 @@ function createCodeElement(
       className: properties.className.join(" "),
     };
 
-    return (
-      <TagName {...props}>
-        {(children || []).map((child, index) =>
-          createCodeElement(positions, child, index)
-        )}
-      </TagName>
-    );
+    children = children || [];
+
+    const childElements = children.map((child, index) => {
+      const { element, newOffset } = createCodeElement(
+        positions,
+        child,
+        index,
+        offset
+      );
+      offset = newOffset;
+      return element;
+    });
+
+    return {
+      element: <TagName {...props}>{childElements}</TagName>,
+      newOffset: offset,
+    };
   }
 
-  return null;
+  return { element: null, newOffset: offset };
 }
 
 type CodeRenderer = (input: {
@@ -421,7 +453,17 @@ type CodeRenderer = (input: {
 
 function getCodeRenderer(positions: Position[]): CodeRenderer {
   return ({ rows }): React.ReactNode => {
-    return rows.map((node, index) => createCodeElement(positions, node, index));
+    let offset = 0;
+    return rows.map((node, index) => {
+      const { element, newOffset } = createCodeElement(
+        positions,
+        node,
+        index,
+        offset
+      );
+      offset = newOffset;
+      return element;
+    });
   };
 }
 
@@ -442,10 +484,9 @@ const RenderCodeBlock: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => JSX.Element = (props) => {
   const { path } = expandDataPath(props);
-  const positions = getSearchPositions([...path]);
+  const positions = getSearchPositions([...path, 0]);
   const language = extractLanguage(props.className);
   const [highlighter, setHighlighter] = useState<any>(null);
-  console.log("Language = ", language, path);
 
   useEffect(() => {
     if (language) {
