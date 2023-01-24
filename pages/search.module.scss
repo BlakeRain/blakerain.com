@@ -6,6 +6,7 @@
   flex-direction: column;
 
   padding-bottom: 2rem;
+  min-height: 280px;
 
   .input {
     position: relative;
@@ -95,10 +96,15 @@
     font-weight: 400;
     color: $color-dark-grey;
 
+    span.matches {
+      font-weight: bold;
+      color: darken($color-green, 20%);
+    }
+
     span:not(:first-child):before {
       content: "•";
       margin: 0 10px;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(0, 0, 0, 0.5);
     }
   }
 }
@@ -142,6 +148,10 @@
 
     .resultStats {
       color: $color-light-grey;
+
+      span.matches {
+        color: $color-green;
+      }
     }
   }
 
@@ -150,6 +160,10 @@
 
     span {
       color: $color-mid-grey;
+
+      &:not(:first-child):before {
+        color: rgba(255, 255, 255, 0.5);
+      }
     }
   }
 }

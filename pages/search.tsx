@@ -190,21 +190,19 @@ const SearchResult: FC<{
       </Link>
       <div className={styles.resultDetails}>
         <Link href={url}>
-          <header>
-            {result.doc.title} {encodedPositions.length.toString()}
-          </header>
+          <header>{result.doc.title}</header>
           <section>{result.doc.excerpt}</section>
         </Link>
         <div className={styles.resultStats}>
+          <span className={styles.matches}>
+            Found {result.total.toString()} match
+            {result.total === 1 ? "" : "es"}
+          </span>
           {result.doc.page ? null : (
             <DateSpan
               date={result.doc.published || "1970-01-01T00:00:00.000Z"}
             />
           )}
-          <span>
-            Found {result.total.toString()} match
-            {result.total === 1 ? "" : "es"}
-          </span>
         </div>
       </div>
     </article>
@@ -218,11 +216,7 @@ const SearchResults: FC<{ index: PreparedIndex; term: string }> = ({
   const results = term.length > 2 ? search(index, term) : [];
 
   if (results.length === 0) {
-    return (
-      <div className={styles.results}>
-        <div className={styles.stats}>No results found</div>
-      </div>
-    );
+    return null;
   } else {
     return (
       <div className={styles.results}>
