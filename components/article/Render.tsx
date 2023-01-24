@@ -13,47 +13,80 @@ import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
 import { AnalyticsInformation } from "../Analytics";
+import PreparedIndex, {
+  SearchPositions,
+} from "../../lib/new_search/index/prepared";
+import { Position } from "../../lib/new_search/tree/node";
+import Load from "../../lib/new_search/encoding/load";
 
-const HighlightContext = React.createContext<RegExp | null>(null);
+interface PathProps {
+  path: number[];
+}
 
-function renderHighlight(terms: RegExp, text: string): React.ReactElement {
-  let match;
-  let parts = [];
-  let last = 0;
+interface LoadedSearchPosition {
+  path: number[];
+  positions: Position[];
+}
 
-  while ((match = terms.exec(text)) !== null) {
-    const match_end = match.index + match[0].length;
+const LoadedSearchPositionsContext = React.createContext<
+  LoadedSearchPosition[]
+>([]);
 
-    if (match.index > 0) {
-      // Split off the left-half of the string
+function getSearchPositions(path: number[]): Position[] {
+  const positions = useContext(LoadedSearchPositionsContext);
+
+  for (const position of positions) {
+    if (position.path.length === path.length) {
+      let match = true;
+      for (let i = 0; i < position.path.length; i++) {
+        if (position.path[i] !== path[i]) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) {
+        return position.positions;
+      }
+    }
+  }
+
+  return [];
+}
+
+function renderHighlight(
+  positions: Position[],
+  text: string
+): React.ReactElement {
+  const parts: React.ReactElement[] = [];
+  let start_index = 0;
+
+  for (const position of positions) {
+    const prefix = text.substring(start_index, position.start);
+    if (prefix.length > 0) {
       parts.push(
-        <React.Fragment key={parts.length.toString()}>
-          {text.substring(last, match.index)}
-        </React.Fragment>
+        <React.Fragment key={parts.length.toString()}>{prefix}</React.Fragment>
       );
     }
 
-    // Create the highlighted section
-    parts.push(
-      <mark key={parts.length.toString()}>
-        {text.substring(match.index, match_end)}
-      </mark>
+    const highlighted = text.substring(
+      position.start,
+      position.start + position.length
     );
+    if (highlighted.length > 0) {
+      parts.push(<mark key={parts.length.toString()}>{highlighted}</mark>);
+    }
 
-    // Update our start offset
-    last = match_end;
+    start_index = position.start + position.length;
   }
 
-  // If we have any remainder, then add it
-  if (last < text.length) {
+  const suffix = text.substring(start_index);
+  if (suffix.length > 0) {
     parts.push(
-      <React.Fragment key={parts.length.toString()}>
-        {text.substring(last)}
-      </React.Fragment>
+      <React.Fragment key={parts.length.toString()}>{suffix}</React.Fragment>
     );
   }
 
-  // If we ended up matching something, then we can return the compound; otherwise just return the text
   if (parts.length > 0) {
     return <React.Fragment>{parts}</React.Fragment>;
   } else {
@@ -61,13 +94,32 @@ function renderHighlight(terms: RegExp, text: string): React.ReactElement {
   }
 }
 
-const RenderPhrasingChildren: FC<React.PropsWithChildren> = ({ children }) => {
-  const highlight = useContext(HighlightContext);
+interface PathProps {
+  path: number[];
+}
+
+function expandDataPath(props: object): PathProps {
+  if (typeof props === "object" && "data-path" in props) {
+    return {
+      path: ((props as any)["data-path"] as string)
+        .split(",")
+        .map((n) => parseInt(n, 10)),
+    };
+  }
+
+  return { path: [] };
+}
+
+const RenderPhrasingChildren: FC<React.PropsWithChildren<PathProps>> = ({
+  path,
+  children,
+}) => {
+  const highlight = useContext(LoadedSearchPositionsContext);
   if (highlight) {
     if (typeof children === "undefined") {
       return null;
     } else if (typeof children === "string") {
-      return renderHighlight(highlight, children);
+      return renderHighlight(getSearchPositions([...path, 0]), children);
     } else if (children instanceof Array) {
       return (
         <>
@@ -75,7 +127,7 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren> = ({ children }) => {
             if (typeof child === "string") {
               return (
                 <React.Fragment key={index.toString()}>
-                  {renderHighlight(highlight, child)}
+                  {renderHighlight(getSearchPositions([...path, index]), child)}
                 </React.Fragment>
               );
             } else if (
@@ -85,7 +137,10 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren> = ({ children }) => {
             ) {
               return (
                 <code key={index.toString()}>
-                  {renderHighlight(highlight, child.props.children)}
+                  {renderHighlight(
+                    getSearchPositions([...path, index]),
+                    child.props.children
+                  )}
                 </code>
               );
             } else {
@@ -104,30 +159,36 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren> = ({ children }) => {
 
 const RenderEmphasis: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
-) => JSX.Element = ({ children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
     <em>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </em>
   );
 };
 
 const RenderStrong: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
-) => JSX.Element = ({ children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
     <strong>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </strong>
   );
 };
 
 const RenderListItem: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLLIElement>, HTMLLIElement>
-) => JSX.Element = ({ children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
     <li>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </li>
   );
 };
@@ -140,7 +201,9 @@ const RenderLink: (
 ) => JSX.Element = ({ children, ...props }) => {
   return (
     <a {...props}>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </a>
   );
 };
@@ -150,10 +213,12 @@ const RenderParagraph: (
     HTMLAttributes<HTMLParagraphElement>,
     HTMLParagraphElement
   >
-) => JSX.Element = ({ children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
     <p>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </p>
   );
 };
@@ -163,10 +228,12 @@ const RenderBlockQuote: (
     React.BlockquoteHTMLAttributes<HTMLElement>,
     HTMLElement
   >
-) => JSX.Element = ({ children }) => {
+) => JSX.Element = ({ children, ...props }) => {
   return (
     <blockquote>
-      <RenderPhrasingChildren>{children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {children}
+      </RenderPhrasingChildren>
     </blockquote>
   );
 };
@@ -183,7 +250,9 @@ function createHeading(
     return React.createElement(
       `h${level}`,
       { id: props.id },
-      <RenderPhrasingChildren>{props.children}</RenderPhrasingChildren>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {props.children}
+      </RenderPhrasingChildren>
     );
   };
 }
@@ -307,15 +376,17 @@ interface HighlightRow {
 }
 
 function createCodeElement(
-  highlight: RegExp | null,
-  { properties, type, tagName: TagName, value, children }: HighlightRow,
+  positions: Position[],
+  row: HighlightRow,
   index: number
 ): React.ReactNode {
+  let { properties, type, tagName: TagName, value, children } = row;
+  console.log("createCodeElement", row);
   if (type === "text") {
-    if (highlight && value) {
+    if (positions.length > 0 && value) {
       return (
         <React.Fragment key={index.toString()}>
-          {renderHighlight(highlight, value)}
+          {renderHighlight(positions, value)}
         </React.Fragment>
       );
     }
@@ -333,7 +404,7 @@ function createCodeElement(
     return (
       <TagName {...props}>
         {(children || []).map((child, index) =>
-          createCodeElement(highlight, child, index)
+          createCodeElement(positions, child, index)
         )}
       </TagName>
     );
@@ -348,27 +419,33 @@ type CodeRenderer = (input: {
   useInlineStyles: boolean;
 }) => React.ReactNode;
 
-function getCodeRenderer(search: RegExp | null): CodeRenderer {
+function getCodeRenderer(positions: Position[]): CodeRenderer {
   return ({ rows }): React.ReactNode => {
-    return rows.map((node, index) => createCodeElement(search, node, index));
+    return rows.map((node, index) => createCodeElement(positions, node, index));
   };
 }
 
-const RenderCode: (
-  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
-    caption?: string;
-    lineNumbers?: boolean;
-    lineNumberStart?: number;
+const LANGUAGE_RE = /language-(\w+)/;
+
+function extractLanguage(className?: string): string | undefined {
+  if (typeof className === "string") {
+    const match = className.match(LANGUAGE_RE);
+    if (match && match[1]) {
+      return match[1];
+    }
   }
+
+  return undefined;
+}
+
+const RenderCodeBlock: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => JSX.Element = (props) => {
-  const language =
-    typeof props.className === "string" &&
-    props.className !== "language-box-drawing"
-      ? props.className.replace("language-", "")
-      : undefined;
-  const caption = props.caption;
-  const highlight = useContext(HighlightContext);
+  const { path } = expandDataPath(props);
+  const positions = getSearchPositions([...path]);
+  const language = extractLanguage(props.className);
   const [highlighter, setHighlighter] = useState<any>(null);
+  console.log("Language = ", language, path);
 
   useEffect(() => {
     if (language) {
@@ -378,91 +455,60 @@ const RenderCode: (
     }
   }, [language]);
 
-  var code_block = null;
   if (highlighter && language) {
     const SyntaxHighlighter = highlighter.SyntaxHighlighter;
     const content = props.children as string;
 
-    code_block = (
+    return (
       <SyntaxHighlighter
         useInlineStyles={false}
-        showLineNumbers={props.lineNumbers}
-        startingLineNumber={props.lineNumberStart}
         language={language}
-        renderer={getCodeRenderer(highlight)}
+        renderer={getCodeRenderer(positions)}
+        PreTag={"div"}
       >
         {content.endsWith("\n")
           ? content.substring(0, content.length - 1)
           : content}
       </SyntaxHighlighter>
     );
-  } else {
-    code_block = (
-      <pre>
-        <code>{props.children}</code>
-      </pre>
-    );
   }
 
   return (
-    <figure
-      className={cn(styles.codeCard, {
-        [styles.codeCardWithCaption]: Boolean(caption),
-      })}
-    >
-      {code_block}
-      {caption && <figcaption dangerouslySetInnerHTML={{ __html: caption }} />}
-    </figure>
+    <code>
+      <RenderPhrasingChildren {...expandDataPath(props)}>
+        {props.children}
+      </RenderPhrasingChildren>
+    </code>
   );
 };
 
-const SelectPre: (
-  props: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement>
+const RenderCode: (
+  props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => JSX.Element = (props) => {
-  if (!props.children) {
-    console.warn("SelectPre has no children");
-    return <b>Empty Code</b>;
+  if (props.className && props.className?.indexOf("block") !== -1) {
+    return <RenderCodeBlock {...props} />;
+  } else {
+    return (
+      <code>
+        <RenderPhrasingChildren {...expandDataPath(props)}>
+          {props.children}
+        </RenderPhrasingChildren>
+      </code>
+    );
   }
-
-  if (
-    props.children &&
-    typeof props.children === "object" &&
-    "props" in props.children
-  ) {
-    switch (props.children?.props.className) {
-      case "language-raw_html":
-        return (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: props.children.props.children as string,
-            }}
-          />
-        );
-      default:
-        return <RenderCode {...{ ...props, ...props.children.props }} />;
-    }
-  }
-
-  console.log("Failed to interpret SelectPre");
-  return <b>Empty Code</b>;
 };
 
 export const Render: FC<{
   content: MDXRemoteSerializeResult;
-  highlight?: string[];
+  highlight?: string;
 }> = ({ content, highlight }) => {
-  const highlight_regex =
-    typeof highlight !== "undefined" && highlight.length > 0
-      ? new RegExp(highlight.join("|"), "mig")
-      : null;
-
   const components: any = {
-    pre: SelectPre,
     img: RenderImage,
     p: RenderParagraph,
     blockquote: RenderBlockQuote,
     em: RenderEmphasis,
     strong: RenderStrong,
+    code: RenderCode,
     li: RenderListItem,
     a: RenderLink,
     h1: createHeading(1),
@@ -477,10 +523,58 @@ export const Render: FC<{
     AnalyticsInformation: AnalyticsInformation,
   };
 
+  const decoded_positions =
+    typeof highlight === "string"
+      ? PreparedIndex.decodePositions(highlight)
+      : [];
+  const [loadedSearchPositions, setLoadedSearchPositions] = useState<
+    LoadedSearchPosition[]
+  >([]);
+
+  useEffect(() => {
+    if (decoded_positions.length === 0) {
+      return;
+    }
+
+    const abort = new AbortController();
+    void (async function () {
+      try {
+        const res = await fetch("/data/search.bin", {
+          signal: abort.signal,
+        });
+
+        const index = PreparedIndex.load(new Load(await res.arrayBuffer()));
+        const loaded: LoadedSearchPosition[] = [];
+
+        for (const position of decoded_positions) {
+          const location = index.locations.getLocation(position.location_id);
+          if (location) {
+            loaded.push({
+              path: location.path,
+              positions: position.positions,
+            });
+          }
+        }
+
+        console.log("Loaded search positions", loaded);
+        setLoadedSearchPositions(loaded);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return;
+        }
+
+        console.error(err);
+      }
+    })();
+
+    return () => {
+      abort.abort();
+    };
+  }, [highlight || ""]);
+
   return (
-    <HighlightContext.Provider value={highlight_regex}>
-      {" "}
+    <LoadedSearchPositionsContext.Provider value={loadedSearchPositions}>
       <MDXRemote {...content} components={components} />
-    </HighlightContext.Provider>
+    </LoadedSearchPositionsContext.Provider>
   );
 };

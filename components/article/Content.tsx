@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import cn from "classnames";
-import { ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
@@ -44,23 +43,17 @@ const ContentHeader: FC<{
   );
 };
 
-function getHighlightTerms(search: ParsedUrlQuery): string[] {
-  if ("highlight" in search) {
-    const term = search["highlight"];
-    if (typeof term === "string" && term.length > 0) {
-      return term.split(" ");
-    }
-  }
-
-  return [];
-}
-
 const ContentBody: FC<{
   content: MDXRemoteSerializeResult;
   history: GitLogEntry[];
 }> = ({ content, history }) => {
   const router = useRouter();
-  const highlight = getHighlightTerms(router.query);
+  const highlight =
+    "s" in router.query &&
+    typeof router.query["s"] === "string" &&
+    router.query["s"].length > 0
+      ? router.query["s"]
+      : undefined;
 
   return (
     <React.Fragment>

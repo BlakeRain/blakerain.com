@@ -159,23 +159,6 @@
   }
 }
 
-.codeCard {
-  width: 100%;
-  margin: 0.8em 0 2.3em;
-}
-
-.codeCardWithCaption {
-  figcaption {
-    margin: 1em 0 0;
-
-    color: darken($color-mid-grey, 10%);
-    font-family: $body-font-family;
-    font-size: 75%;
-    line-height: 1.5em;
-    text-align: center;
-  }
-}
-
 .imageCard {
   margin: 0.8em 0 2.3em;
 
@@ -237,13 +220,6 @@
 
   .quote {
     color: lighten($color-mid-grey, 30%);
-  }
-
-  .codeCardWithCaption,
-  .imageCard {
-    figcaption {
-      color: rgba(255, 255, 255, 0.6);
-    }
   }
 }
 

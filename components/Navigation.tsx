@@ -1,10 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 import { SiteNavigation } from "../lib/navigation";
-import { SearchContainer } from "./search/SearchContainer";
-import { SearchChildProps, SearchProvider } from "./search/SearchProvider";
 import styles from "./Navigation.module.scss";
-import { useRouter } from "next/router";
 import Search from "./icons/Search";
 import GitHub from "./icons/GitHub";
 import DevTo from "./icons/DevTo";
@@ -47,20 +44,11 @@ const SiteNav: FC<{ navigation: SiteNavigation[] }> = ({ navigation }) => {
   );
 };
 
-const SearchLink: FC<{ onSearchClick: () => void }> = ({ onSearchClick }) => {
+const SearchLink: FC = () => {
   return (
-    <a
-      href="#"
-      title="Search"
-      onClick={(event) => {
-        event.preventDefault();
-        if (onSearchClick) {
-          onSearchClick();
-        }
-      }}
-    >
+    <Link href="/search">
       <Search />
-    </a>
+    </Link>
   );
 };
 
@@ -111,99 +99,7 @@ const RssLink: FC = () => {
   );
 };
 
-export interface HighlightRefresh {
-  counter: number;
-  increment: () => void;
-}
-
-const SearchNavigation: FC<{ terms?: string }> = ({ terms }) => {
-  const router = useRouter();
-  const [marks, setMarks] = useState<HTMLElement[]>([]);
-  const [current, setCurrent] = useState<number>(-1);
-
-  const highlightMark = (element: HTMLElement) => {
-    element.className = "active";
-    element.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
-  const focusMark = (index: number) => {
-    if (current >= 0) {
-      marks[current].className = "";
-    }
-
-    highlightMark(marks[index]);
-    setCurrent(index);
-  };
-
-  const findMarks = (firstTime: boolean) => {
-    const found = Array.prototype.slice.call(document.querySelectorAll("mark"));
-
-    setMarks(found);
-    if (firstTime && found.length > 0) {
-      highlightMark(found[0]);
-      setCurrent(0);
-    } else {
-      if (current >= found.length) {
-        setCurrent(found.length > 0 ? marks.length - 1 : -1);
-      }
-    }
-  };
-
-  useEffect(() => {
-    window.setTimeout(() => {
-      findMarks(true);
-    }, 150);
-  }, [router.asPath, terms]);
-
-  const gotoNext: React.MouseEventHandler<HTMLButtonElement> = () => {
-    findMarks(false);
-
-    if (current < marks.length - 1) {
-      focusMark(current + 1);
-    }
-  };
-
-  const gotoPrev: React.MouseEventHandler<HTMLButtonElement> = () => {
-    findMarks(false);
-
-    if (current > 0) {
-      focusMark(current - 1);
-    }
-  };
-
-  const clearHighlight: React.MouseEventHandler<HTMLButtonElement> = () => {
-    router.replace(location.pathname);
-  };
-
-  if (marks.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className={styles.highlightControls}>
-      <div>
-        {1 + current} of {marks.length} matching terms
-      </div>
-      <button type="button" disabled={current === 0} onClick={gotoPrev}>
-        &uarr; Previous
-      </button>
-      <button
-        type="button"
-        disabled={current === marks.length - 1}
-        onClick={gotoNext}
-      >
-        &darr; Next
-      </button>
-      <button type="button" onClick={clearHighlight}>
-        Clear
-      </button>
-    </div>
-  );
-};
-
-const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
-  props
-) => {
+const NavigationBar: FC<{ navigation: SiteNavigation[] }> = (props) => {
   return (
     <nav className={styles.navigation}>
       <div className={styles.inner}>
@@ -213,11 +109,7 @@ const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
         <div className={styles.right}>
           <ul>
             <li>
-              <SearchLink
-                onSearchClick={() => {
-                  props.setSearchVisible(!props.searchVisible);
-                }}
-              />
+              <SearchLink />
             </li>
             <li>
               <GitHubLink />
@@ -238,22 +130,10 @@ const NavigationBar: FC<SearchChildProps & { navigation: SiteNavigation[] }> = (
   );
 };
 
-const NavigationInner: FC<
-  SearchChildProps & { navigation: SiteNavigation[] }
-> = (props) => {
-  const router = useRouter();
-  const highlight = router.query["highlight"];
-  const terms = typeof highlight === "string" ? highlight : undefined;
-
+export const Navigation: FC<{ navigation: SiteNavigation[] }> = (props) => {
   return (
     <React.Fragment>
       <NavigationBar {...props} />
-      <SearchNavigation terms={terms} />
-      <SearchContainer {...props} />
     </React.Fragment>
   );
-};
-
-export const Navigation: FC<{ navigation: SiteNavigation[] }> = (props) => {
-  return <SearchProvider child={NavigationInner} childProps={props} />;
 };
