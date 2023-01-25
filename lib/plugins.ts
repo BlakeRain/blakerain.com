@@ -106,7 +106,7 @@ export function rehypeWrapFigures() {
                 ? [
                     {
                       type: "element",
-                      tagName: "ficaption",
+                      tagName: "figcaption",
                       children: [{ type: "text", value: caption }],
                     },
                   ]
