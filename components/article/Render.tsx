@@ -12,9 +12,9 @@ import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
 import { AnalyticsInformation } from "../Analytics";
-import PreparedIndex from "../../lib/new_search/index/prepared";
-import { Position } from "../../lib/new_search/tree/node";
-import Load from "../../lib/new_search/encoding/load";
+import PreparedIndex from "../../lib/search/index/prepared";
+import { Position } from "../../lib/search/tree/node";
+import Load from "../../lib/search/encoding/load";
 
 interface PathProps {
   path: number[];

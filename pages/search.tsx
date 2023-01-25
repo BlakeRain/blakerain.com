@@ -16,13 +16,13 @@ import Image from "../components/display/Image";
 import { DateSpan } from "../components/display/DateSpan";
 
 import { SiteNavigation, loadNavigation } from "../lib/navigation";
-import Load from "../lib/new_search/encoding/load";
+import Load from "../lib/search/encoding/load";
 import PreparedIndex, {
   SearchPositions,
-} from "../lib/new_search/index/prepared";
+} from "../lib/search/index/prepared";
 
 import styles from "./search.module.scss";
-import IndexDoc from "../lib/new_search/document/document";
+import IndexDoc from "../lib/search/document/document";
 
 interface PageProps {
   navigation: SiteNavigation[];

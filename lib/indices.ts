@@ -12,11 +12,11 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeImageSize from "rehype-img-size";
 import { Root } from "hast";
 
-import Store from "./new_search/encoding/store";
-import IndexDoc from "./new_search/document/document";
-import { fromHast } from "./new_search/document/structure";
-import IndexBuilder from "./new_search/index/builder";
-import PreparedIndex from "./new_search/index/prepared";
+import Store from "./search/encoding/store";
+import IndexDoc from "./search/document/document";
+import { fromHast } from "./search/document/structure";
+import IndexBuilder from "./search/index/builder";
+import PreparedIndex from "./search/index/prepared";
 
 import { loadDocSource, Preamble } from "./content";
 import { rehypeWrapFigures, remarkUnwrapImages } from "./plugins";
