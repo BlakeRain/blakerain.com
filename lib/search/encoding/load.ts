@@ -13,6 +13,10 @@ export default class Load {
     return this.buffer.byteLength;
   }
 
+  public get remaining(): number {
+    return this.buffer.byteLength - this.offset;
+  }
+
   public readUint8(): number {
     const value = this.view.getUint8(this.offset);
     this.offset += 1;
