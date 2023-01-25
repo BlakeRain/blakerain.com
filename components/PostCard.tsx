@@ -19,7 +19,13 @@ export const PostCard: FC<{
     <article className={cn(styles.postCard, { [styles.postCardLarge]: large })}>
       {post.coverImage ? (
         <Link href={"/blog/" + post.slug} className={styles.postCardCoverImage}>
-          <Image src={post.coverImage} alt={post.title} fill priority={true} />
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            priority={true}
+            sizes="(max-width: 1200px) 50vw, 33vw"
+          />
         </Link>
       ) : null}
       <div className={styles.postCardInner}>
