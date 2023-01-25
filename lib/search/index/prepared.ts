@@ -14,6 +14,46 @@ export interface SearchPositions {
   positions: Position[];
 }
 
+export function encodePositions(positions: SearchPositions[]): string {
+  const store = new Store();
+
+  store.writeUintVlq(positions.length);
+  for (const position of positions) {
+    store.writeUintVlq(position.location_id);
+    store.writeUintVlq(position.positions.length);
+    for (const pos of position.positions) {
+      store.writeUintVlq(pos.start);
+      store.writeUintVlq(pos.length);
+    }
+  }
+
+  const buffer = store.finish();
+  return encodeURIComponent(fromByteArray(new Uint8Array(buffer)));
+}
+
+export function decodePositions(encoded: string): SearchPositions[] {
+  const buffer = toByteArray(decodeURIComponent(encoded)).buffer;
+  const load = new Load(buffer);
+  const positions: SearchPositions[] = [];
+
+  let npositions = load.readUintVlq();
+  while (npositions-- > 0) {
+    const location_id = load.readUintVlq();
+    const location_positions: Position[] = [];
+
+    let nlocpos = load.readUintVlq();
+    while (nlocpos-- > 0) {
+      const start = load.readUintVlq();
+      const length = load.readUintVlq();
+      location_positions.push({ start, length });
+    }
+
+    positions.push({ location_id, positions: location_positions });
+  }
+
+  return positions;
+}
+
 export default class PreparedIndex {
   public documents: Map<number, IndexDoc> = new Map();
   public locations: IndexDocLocations;
@@ -31,46 +71,6 @@ export default class PreparedIndex {
       this.locations = new IndexDocLocations();
       this.tree = new Tree();
     }
-  }
-
-  public static encodePositions(positions: SearchPositions[]): string {
-    const store = new Store();
-
-    store.writeUintVlq(positions.length);
-    for (const position of positions) {
-      store.writeUintVlq(position.location_id);
-      store.writeUintVlq(position.positions.length);
-      for (const pos of position.positions) {
-        store.writeUintVlq(pos.start);
-        store.writeUintVlq(pos.length);
-      }
-    }
-
-    const buffer = store.finish();
-    return encodeURIComponent(fromByteArray(new Uint8Array(buffer)));
-  }
-
-  public static decodePositions(encoded: string): SearchPositions[] {
-    const buffer = toByteArray(decodeURIComponent(encoded)).buffer;
-    const load = new Load(buffer);
-    const positions: SearchPositions[] = [];
-
-    let npositions = load.readUintVlq();
-    while (npositions-- > 0) {
-      const location_id = load.readUintVlq();
-      const location_positions: Position[] = [];
-
-      let nlocpos = load.readUintVlq();
-      while (nlocpos-- > 0) {
-        const start = load.readUintVlq();
-        const length = load.readUintVlq();
-        location_positions.push({ start, length });
-      }
-
-      positions.push({ location_id, positions: location_positions });
-    }
-
-    return positions;
   }
 
   public search(term: string): Map<number, SearchPositions[]> {

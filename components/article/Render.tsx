@@ -12,7 +12,9 @@ import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 import styles from "./Render.module.scss";
 import { AnalyticsInformation } from "../Analytics";
-import PreparedIndex from "../../lib/search/index/prepared";
+import PreparedIndex, {
+  decodePositions,
+} from "../../lib/search/index/prepared";
 import { Position } from "../../lib/search/tree/node";
 import Load from "../../lib/search/encoding/load";
 
@@ -575,9 +577,7 @@ export const Render: FC<{
   };
 
   const decoded_positions =
-    typeof highlight === "string"
-      ? PreparedIndex.decodePositions(highlight)
-      : [];
+    typeof highlight === "string" ? decodePositions(highlight) : [];
   const [loadedSearchPositions, setLoadedSearchPositions] = useState<
     LoadedSearchPosition[]
   >([]);

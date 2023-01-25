@@ -17,9 +17,7 @@ import { DateSpan } from "../components/display/DateSpan";
 
 import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import Load from "../lib/search/encoding/load";
-import PreparedIndex, {
-  SearchPositions,
-} from "../lib/search/index/prepared";
+import PreparedIndex, { SearchPositions } from "../lib/search/index/prepared";
 
 import styles from "./search.module.scss";
 import IndexDoc from "../lib/search/document/document";
@@ -164,7 +162,7 @@ function search(index: PreparedIndex, term: string): SearchResult[] {
   const results: SearchResult[] = [];
   for (const [doc_id, positions] of index.search(term)) {
     const doc = index.documents.get(doc_id)!;
-    const encoded_positions = PreparedIndex.encodePositions(positions);
+    const encoded_positions = encodePositions(positions);
     const url = `${doc.url}?s=${encoded_positions}`;
 
     results.push({
@@ -302,3 +300,6 @@ const SearchPage: NextPage<PageProps> = ({ navigation }) => {
 };
 
 export default SearchPage;
+function encodePositions(positions: SearchPositions[]) {
+  throw new Error("Function not implemented.");
+}
