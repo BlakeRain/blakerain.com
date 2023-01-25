@@ -29,9 +29,10 @@ const LoadedSearchPositionsContext = React.createContext<
   LoadedSearchPosition[]
 >([]);
 
-function getSearchPositions(path: number[]): Position[] {
-  const positions = useContext(LoadedSearchPositionsContext);
-
+function getSearchPositions(
+  positions: LoadedSearchPosition[],
+  path: number[]
+): Position[] {
   for (const position of positions) {
     if (position.path.length === path.length) {
       let match = true;
@@ -132,12 +133,17 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren<PathProps>> = ({
   path,
   children,
 }) => {
+  const positions = useContext(LoadedSearchPositionsContext);
   const highlight = useContext(LoadedSearchPositionsContext);
+
   if (highlight) {
     if (typeof children === "undefined") {
       return null;
     } else if (typeof children === "string") {
-      return renderHighlight(getSearchPositions([...path, 0]), children);
+      return renderHighlight(
+        getSearchPositions(positions, [...path, 0]),
+        children
+      );
     } else if (children instanceof Array) {
       return (
         <>
@@ -145,7 +151,10 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren<PathProps>> = ({
             if (typeof child === "string") {
               return (
                 <React.Fragment key={index.toString()}>
-                  {renderHighlight(getSearchPositions([...path, index]), child)}
+                  {renderHighlight(
+                    getSearchPositions(positions, [...path, index]),
+                    child
+                  )}
                 </React.Fragment>
               );
             } else if (
@@ -156,7 +165,7 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren<PathProps>> = ({
               return (
                 <code key={index.toString()}>
                   {renderHighlight(
-                    getSearchPositions([...path, index]),
+                    getSearchPositions(positions, [...path, index]),
                     child.props.children
                   )}
                 </code>
@@ -484,7 +493,8 @@ const RenderCodeBlock: (
   props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
 ) => JSX.Element = (props) => {
   const { path } = expandDataPath(props);
-  const positions = getSearchPositions([...path, 0]);
+  const loaded = useContext(LoadedSearchPositionsContext);
+  const positions = getSearchPositions(loaded, [...path, 0]);
   const language = extractLanguage(props.className);
   const [highlighter, setHighlighter] = useState<any>(null);
 
