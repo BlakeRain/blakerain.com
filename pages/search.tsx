@@ -17,7 +17,10 @@ import { DateSpan } from "../components/display/DateSpan";
 
 import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import Load from "../lib/search/encoding/load";
-import PreparedIndex, { SearchPositions } from "../lib/search/index/prepared";
+import PreparedIndex, {
+  encodePositions,
+  SearchPositions,
+} from "../lib/search/index/prepared";
 
 import styles from "./search.module.scss";
 import IndexDoc from "../lib/search/document/document";
@@ -300,6 +303,3 @@ const SearchPage: NextPage<PageProps> = ({ navigation }) => {
 };
 
 export default SearchPage;
-function encodePositions(positions: SearchPositions[]) {
-  throw new Error("Function not implemented.");
-}
