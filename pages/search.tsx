@@ -1,7 +1,14 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import React, { FC, useContext, useEffect, useReducer, useState } from "react";
+import React, {
+  FC,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import Analytics from "../components/Analytics";
 import ClientOnly from "../components/display/ClientOnly";
 import { Layout } from "../components/Layout";
@@ -22,14 +29,15 @@ interface PageProps {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  // Await the import to avoid including the index building in the main site
   const { generateIndices } = await import("../lib/indices");
 
+  // This will generate the search indices over the contents of the site, storing the index in `/data/search.bin`.
   await generateIndices();
-  const navigation = await loadNavigation();
 
   return {
     props: {
-      navigation,
+      navigation: await loadNavigation(),
     },
   };
 };
@@ -147,6 +155,7 @@ const SearchField: FC = () => {
 
 interface SearchResult {
   doc: IndexDoc;
+  url: string;
   positions: SearchPositions[];
   total: number;
 }
@@ -155,9 +164,12 @@ function search(index: PreparedIndex, term: string): SearchResult[] {
   const results: SearchResult[] = [];
   for (const [doc_id, positions] of index.search(term)) {
     const doc = index.documents.get(doc_id)!;
+    const encoded_positions = PreparedIndex.encodePositions(positions);
+    const url = `${doc.url}?s=${encoded_positions}`;
 
     results.push({
       doc,
+      url,
       positions,
       total: positions.reduce((acc, pos) => acc + pos.positions.length, 0),
     });
@@ -166,45 +178,52 @@ function search(index: PreparedIndex, term: string): SearchResult[] {
   return results.sort((a, b) => b.total - a.total);
 }
 
+const SearchResultImage: FC<{ result: SearchResult }> = ({ result }) => {
+  return (
+    <Link className={styles.resultImage} href={result.url}>
+      {result.doc.page || result.doc.cover === null ? (
+        <div className={styles.noImage}>
+          <span>No Image</span>
+        </div>
+      ) : (
+        <Image
+          src={result.doc.cover || ""}
+          alt={result.doc.title}
+          fill
+          priority={true}
+        />
+      )}
+    </Link>
+  );
+};
+
+const SearchResultDetails: FC<{ result: SearchResult }> = ({ result }) => {
+  return (
+    <div className={styles.resultDetails}>
+      <Link href={result.url}>
+        <header>{result.doc.title}</header>
+        <section>{result.doc.excerpt}</section>
+      </Link>
+      <div className={styles.resultStats}>
+        <span className={styles.matches}>
+          Found {result.total.toString()} match
+          {result.total === 1 ? "" : "es"}
+        </span>
+        {result.doc.page || result.doc.published === null ? null : (
+          <DateSpan date={result.doc.published} />
+        )}
+      </div>
+    </div>
+  );
+};
+
 const SearchResult: FC<{
   result: SearchResult;
 }> = ({ result }) => {
-  const encodedPositions = PreparedIndex.encodePositions(result.positions);
-  const url = `${result.doc.url}?s=${encodedPositions}`;
-
   return (
     <article className={styles.result}>
-      <Link className={styles.resultImage} href={url}>
-        {result.doc.page || result.doc.cover === null ? (
-          <div className={styles.noImage}>
-            <span>No Image</span>
-          </div>
-        ) : (
-          <Image
-            src={result.doc.cover || ""}
-            alt={result.doc.title}
-            fill
-            priority={true}
-          />
-        )}
-      </Link>
-      <div className={styles.resultDetails}>
-        <Link href={url}>
-          <header>{result.doc.title}</header>
-          <section>{result.doc.excerpt}</section>
-        </Link>
-        <div className={styles.resultStats}>
-          <span className={styles.matches}>
-            Found {result.total.toString()} match
-            {result.total === 1 ? "" : "es"}
-          </span>
-          {result.doc.page ? null : (
-            <DateSpan
-              date={result.doc.published || "1970-01-01T00:00:00.000Z"}
-            />
-          )}
-        </div>
-      </div>
+      <SearchResultImage result={result} />
+      <SearchResultDetails result={result} />
     </article>
   );
 };
@@ -213,10 +232,13 @@ const SearchResults: FC<{ index: PreparedIndex; term: string }> = ({
   index,
   term,
 }) => {
-  const results = term.length > 2 ? search(index, term) : [];
+  const results = useMemo(
+    () => (term.length > 2 ? search(index, term) : []),
+    [term]
+  );
 
   if (results.length === 0) {
-    return null;
+    return <div className={styles.message}>No Results</div>;
   } else {
     return (
       <div className={styles.results}>
