@@ -191,6 +191,7 @@ const SearchResultImage: FC<{ result: SearchResult }> = ({ result }) => {
           alt={result.doc.title}
           fill
           priority={true}
+          sizes="(max-width: 1200px) 100vw, 33vw"
         />
       )}
     </Link>
@@ -237,11 +238,22 @@ const SearchResults: FC<{ index: PreparedIndex; term: string }> = ({
     [term]
   );
 
+  const [total_pages, total_matches] = results.reduce(
+    ([p, m], result) => [p + 1, m + result.total],
+    [0, 0]
+  );
+
   if (results.length === 0) {
     return <div className={styles.message}>No Results</div>;
   } else {
     return (
       <div className={styles.results}>
+        <div className={styles.stats}>
+          Found {Intl.NumberFormat().format(total_matches)} match
+          {total_matches === 1 ? "" : "es"} over{" "}
+          {Intl.NumberFormat().format(total_pages)} page
+          {total_pages === 1 ? "" : "s"}
+        </div>
         {results.map((result, index) => (
           <SearchResult key={index.toString()} result={result} />
         ))}
