@@ -17,13 +17,19 @@ export interface SearchPositions {
 export function encodePositions(positions: SearchPositions[]): string {
   const store = new Store();
 
-  store.writeUintVlq(positions.length);
   for (const position of positions) {
+    // Don't bother storing positions if there are none
+    if (position.positions.length === 0) {
+      continue;
+    }
+
     store.writeUintVlq(position.location_id);
-    store.writeUintVlq(position.positions.length);
-    for (const pos of position.positions) {
-      store.writeUintVlq(pos.start);
-      store.writeUintVlq(pos.length);
+    for (let i = 0; i < position.positions.length; ++i) {
+      store.writeUintVlq(
+        (position.positions[i].start << 1) |
+          (i < position.positions.length - 1 ? 0x01 : 0x00)
+      );
+      store.writeUintVlq(position.positions[i].length);
     }
   }
 
@@ -36,16 +42,18 @@ export function decodePositions(encoded: string): SearchPositions[] {
   const load = new Load(buffer);
   const positions: SearchPositions[] = [];
 
-  let npositions = load.readUintVlq();
-  while (npositions-- > 0) {
+  while (load.remaining) {
     const location_id = load.readUintVlq();
     const location_positions: Position[] = [];
 
-    let nlocpos = load.readUintVlq();
-    while (nlocpos-- > 0) {
+    for (;;) {
       const start = load.readUintVlq();
       const length = load.readUintVlq();
-      location_positions.push({ start, length });
+
+      location_positions.push({ start: start >> 1, length });
+      if ((start & 0x01) === 0x00) {
+        break;
+      }
     }
 
     positions.push({ location_id, positions: location_positions });
