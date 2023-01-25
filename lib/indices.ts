@@ -43,9 +43,13 @@ async function loadSearchDoc<P extends Preamble & { cover?: string }>(
   id: number,
   page: boolean,
   doc_path: string
-): Promise<IndexDoc> {
+): Promise<IndexDoc | null> {
   const slug = path.basename(doc_path).replace(".md", "");
   const { preamble, source } = await loadDocSource<P>(doc_path);
+  if (typeof preamble.search === "boolean" && !preamble.search) {
+    return null;
+  }
+
   const doc = new IndexDoc(id, slug, preamble.title || "No Title");
 
   if (preamble.published) {
@@ -89,7 +93,9 @@ async function buildSearchIndex(): Promise<PreparedIndex> {
       path.join(pagesDir, filename)
     );
 
-    index.addDocument(doc);
+    if (doc) {
+      index.addDocument(doc);
+    }
   }
 
   // Iterate through all the blog posts, extract their source, and add it to the `IndexBuilder`.
@@ -100,7 +106,10 @@ async function buildSearchIndex(): Promise<PreparedIndex> {
       false,
       path.join(postsDir, filename)
     );
-    index.addDocument(doc);
+
+    if (doc) {
+      index.addDocument(doc);
+    }
   }
 
   console.log(`Added ${doc_index} documents to search index`);

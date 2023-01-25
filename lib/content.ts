@@ -80,6 +80,8 @@ export interface Preamble {
   excerpt?: string;
   /// Whether to include the git history of this document.
   history?: boolean;
+  /// Should we index this post for search (default is 'true').
+  search?: boolean;
 }
 
 /// Preamble specific to a blog post.
