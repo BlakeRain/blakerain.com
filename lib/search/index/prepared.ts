@@ -42,7 +42,7 @@ export function decodePositions(encoded: string): SearchPositions[] {
   const load = new Load(buffer);
   const positions: SearchPositions[] = [];
 
-  while (load.remaining) {
+  while (load.remaining > 0) {
     const location_id = load.readUintVlq();
     const location_positions: Position[] = [];
 
