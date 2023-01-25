@@ -1,9 +1,42 @@
 import Load from "../encoding/load";
 import Store from "../encoding/store";
 
-export interface Position {
+export interface Range {
   start: number;
   length: number;
+}
+
+export function mergeRanges(as: Range[], bs: Range[]) {
+  for (const b of bs) {
+    const b_start = b.start;
+    const b_end = b.start + b.length;
+
+    let inserted = false;
+    for (let i = 0; i < as.length; ++i) {
+      const a_start = as[i].start;
+      const a_end = a_start + as[i].length;
+
+      if (a_end < b_start) {
+        continue;
+      }
+
+      if (a_start > b_end) {
+        inserted = true;
+        as.splice(i, 0, b);
+        break;
+      }
+
+      as[i].start = Math.min(a_start, b_start);
+      const end = Math.max(a_end, b_end);
+      as[i].length = end - as[i].start;
+      inserted = true;
+      break;
+    }
+
+    if (!inserted) {
+      as.push(b);
+    }
+  }
 }
 
 /// A node in the search tree
@@ -12,9 +45,9 @@ export interface Position {
 /// node also contains zero or more records.
 export default class TreeNode {
   public children: Map<number, TreeNode> = new Map();
-  public positions: Map<number, Position[]> = new Map();
+  public positions: Map<number, Range[]> = new Map();
 
-  public addPosition(location_id: number, position: Position) {
+  public addPosition(location_id: number, position: Range) {
     let positions = this.positions.get(location_id);
     if (positions) {
       positions.push(position);
@@ -55,7 +88,7 @@ export default class TreeNode {
       let nlocations = load.readUintVlq();
       while (nlocations-- > 0) {
         const location_id = load.readUintVlq();
-        const positions: Position[] = [];
+        const positions: Range[] = [];
 
         let npositions = load.readUintVlq();
         while (npositions-- > 0) {

@@ -15,7 +15,7 @@ import { AnalyticsInformation } from "../Analytics";
 import PreparedIndex, {
   decodePositions,
 } from "../../lib/search/index/prepared";
-import { Position } from "../../lib/search/tree/node";
+import { Range } from "../../lib/search/tree/node";
 import Load from "../../lib/search/encoding/load";
 
 interface PathProps {
@@ -24,7 +24,7 @@ interface PathProps {
 
 interface LoadedSearchPosition {
   path: number[];
-  positions: Position[];
+  positions: Range[];
 }
 
 const LoadedSearchPositionsContext = React.createContext<
@@ -34,7 +34,7 @@ const LoadedSearchPositionsContext = React.createContext<
 function getSearchPositions(
   positions: LoadedSearchPosition[],
   path: number[]
-): Position[] {
+): Range[] {
   for (const position of positions) {
     if (position.path.length === path.length) {
       let match = true;
@@ -54,8 +54,8 @@ function getSearchPositions(
   return [];
 }
 
-function splitPositions(positions: Position[], offset: number): Position[] {
-  const result: Position[] = [];
+function splitPositions(positions: Range[], offset: number): Range[] {
+  const result: Range[] = [];
   for (const position of positions) {
     if (position.start < offset) {
       if (position.start + position.length > offset) {
@@ -76,7 +76,7 @@ function splitPositions(positions: Position[], offset: number): Position[] {
 }
 
 function renderHighlight(
-  positions: Position[],
+  positions: Range[],
   text: string
 ): React.ReactElement {
   const parts: React.ReactElement[] = [];
@@ -405,7 +405,7 @@ interface HighlightRow {
 }
 
 function createCodeElement(
-  positions: Position[],
+  positions: Range[],
   row: HighlightRow,
   index: number,
   offset: number
@@ -462,7 +462,7 @@ type CodeRenderer = (input: {
   useInlineStyles: boolean;
 }) => React.ReactNode;
 
-function getCodeRenderer(positions: Position[]): CodeRenderer {
+function getCodeRenderer(positions: Range[]): CodeRenderer {
   return ({ rows }): React.ReactNode => {
     let offset = 0;
     return rows.map((node, index) => {

@@ -2,16 +2,42 @@ import IndexDoc from "../document/document";
 import { IndexDocLocations } from "../document/location";
 import Load from "../encoding/load";
 import Store from "../encoding/store";
-import { Position } from "../tree/node";
+import { mergeRanges, Range } from "../tree/node";
 import Tree from "../tree/tree";
 import IndexBuilder from "./builder";
 import { fromByteArray, toByteArray } from "base64-js";
+import { tokenize } from "./tokens";
 
 const MAGIC = 0x53524348;
 
 export interface SearchPositions {
   location_id: number;
-  positions: Position[];
+  positions: Range[];
+}
+
+function mergeSearchPositions(
+  left: SearchPositions[],
+  right: SearchPositions[]
+): SearchPositions[] {
+  const combined: SearchPositions[] = [...left];
+
+  for (const position of right) {
+    let found = false;
+    for (const existing of combined) {
+      if (existing.location_id === position.location_id) {
+        mergeRanges(existing.positions, position.positions);
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      combined.push(position);
+    }
+  }
+
+  // Sort the combined positions by location ID to ensure they are increasing
+  return combined.sort((a, b) => a.location_id - b.location_id);
 }
 
 export function encodePositions(positions: SearchPositions[]): string {
@@ -44,7 +70,7 @@ export function decodePositions(encoded: string): SearchPositions[] {
 
   while (load.remaining > 0) {
     const location_id = load.readUintVlq();
-    const location_positions: Position[] = [];
+    const location_positions: Range[] = [];
 
     for (;;) {
       const start = load.readUintVlq();
@@ -81,7 +107,7 @@ export default class PreparedIndex {
     }
   }
 
-  public search(term: string): Map<number, SearchPositions[]> {
+  public searchTerm(term: string): Map<number, SearchPositions[]> {
     const found_locations = this.tree.search(term);
 
     // Iterate through the set of locations, and build a mapping from an IndexDoc ID to an object containing the
@@ -99,6 +125,56 @@ export default class PreparedIndex {
     }
 
     return results;
+  }
+
+  public search(input: string): Map<number, SearchPositions[]> {
+    const tokens = tokenize(input);
+    if (tokens.length === 0) {
+      return new Map();
+    }
+
+    const matches = tokens.map((token) => this.searchTerm(token.text));
+
+    // Build a set that combines the intersection of all document IDs
+    let combined_ids: Set<number> | null = null;
+    for (const match of matches) {
+      const match_ids = new Set(match.keys());
+      if (combined_ids === null) {
+        combined_ids = match_ids;
+      } else {
+        for (const doc_id of combined_ids) {
+          if (!match_ids.has(doc_id)) {
+            combined_ids.delete(doc_id);
+          }
+        }
+      }
+    }
+
+    // If we didn't find anything, or the intersection of documents was an empty set (no document(s) include all terms),
+    // then the result of the search is empty.
+    if (combined_ids === null || combined_ids.size === 0) {
+      return new Map();
+    }
+
+    // Build the combined map
+    const combined: Map<number, SearchPositions[]> = new Map();
+    for (const match of matches) {
+      for (const [document_id, positions] of match) {
+        // If this document is not in the combined document IDs, then skip it.
+        if (!combined_ids.has(document_id)) {
+          continue;
+        }
+
+        if (!combined.has(document_id)) {
+          combined.set(document_id, positions);
+        } else {
+          let current = combined.get(document_id)!;
+          combined.set(document_id, mergeSearchPositions(current, positions));
+        }
+      }
+    }
+
+    return combined;
   }
 
   public store(store: Store) {

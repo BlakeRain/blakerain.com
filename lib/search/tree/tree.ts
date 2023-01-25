@@ -1,6 +1,6 @@
 import Load from "../encoding/load";
 import Store from "../encoding/store";
-import TreeNode, { Position } from "./node";
+import TreeNode, { Range } from "./node";
 
 export default class Tree {
   public root: TreeNode;
@@ -9,7 +9,7 @@ export default class Tree {
     this.root = root || new TreeNode();
   }
 
-  public insert(text: string, location_id: number, position: Position) {
+  public insert(text: string, location_id: number, position: Range) {
     const term_chars = new TextEncoder().encode(text);
     let node = this.root;
 
@@ -26,7 +26,7 @@ export default class Tree {
     node.addPosition(location_id, position);
   }
 
-  public search(term: string): Map<number, Position[]> {
+  public search(term: string): Map<number, Range[]> {
     let node = this.root;
 
     for (let code of new TextEncoder().encode(term)) {
@@ -43,7 +43,7 @@ export default class Tree {
     }
 
     // The collected results, indexed by the location
-    const found_locations: Map<number, Position[]> = new Map();
+    const found_locations: Map<number, Range[]> = new Map();
 
     function collectRecords(node: TreeNode) {
       if (node.positions.size > 0) {
