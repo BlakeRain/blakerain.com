@@ -24,7 +24,7 @@ export const PostCard: FC<{
             alt={post.title}
             fill
             priority={true}
-            sizes="(max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 1200px) 100vw, 33vw"
           />
         </Link>
       ) : null}
