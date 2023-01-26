@@ -6,7 +6,7 @@ import { mergeRanges, Range } from "../tree/node";
 import Tree from "../tree/tree";
 import IndexBuilder from "./builder";
 import { fromByteArray, toByteArray } from "base64-js";
-import { tokenize } from "./tokens";
+import { tokenizePhrasing } from "./tokens";
 
 const MAGIC = 0x53524348;
 
@@ -128,7 +128,7 @@ export default class PreparedIndex {
   }
 
   public search(input: string): Map<number, SearchPositions[]> {
-    const tokens = tokenize(input);
+    const tokens = tokenizePhrasing(input);
     if (tokens.length === 0) {
       return new Map();
     }

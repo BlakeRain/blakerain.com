@@ -44,8 +44,13 @@ export function mergeRanges(as: Range[], bs: Range[]) {
 /// Each node in the search tree contains a set of zero or more children, where each child is indexed by character. Each
 /// node also contains a mapping from a location ID to an array of one or more ranges.
 export default class TreeNode {
+  public fragment: string;
   public children: Map<number, TreeNode> = new Map();
   public ranges: Map<number, Range[]> = new Map();
+
+  constructor(fragment: string = "") {
+    this.fragment = fragment;
+  }
 
   public addRange(location_id: number, position: Range) {
     let ranges = this.ranges.get(location_id);
@@ -63,6 +68,7 @@ export default class TreeNode {
       (this.children.size > 0 ? 0x01 : 0x00);
 
     store.writeUintVlq(tag);
+    store.writeUtf8(this.fragment);
     if (this.ranges.size > 0) {
       store.writeUintVlq(this.ranges.size);
       for (const [location_id, positions] of this.ranges) {
@@ -82,7 +88,8 @@ export default class TreeNode {
     node: TreeNode;
   } {
     const tag = load.readUintVlq();
-    const node = new TreeNode();
+    const fragment = load.readUtf8();
+    const node = new TreeNode(fragment);
 
     if ((tag & 0x02) === 0x02) {
       let nlocations = load.readUintVlq();

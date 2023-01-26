@@ -3,7 +3,7 @@ import { IndexDocLocations } from "../document/location";
 import { walkStruct } from "../document/structure";
 import Tree from "../tree/tree";
 import PreparedIndex from "./prepared";
-import { tokenize } from "./tokens";
+import { tokenizeCode, tokenizePhrasing } from "./tokens";
 
 export default class IndexBuilder {
   documents: Map<number, IndexDoc> = new Map();
@@ -18,8 +18,9 @@ export default class IndexBuilder {
     }
 
     this.documents.set(doc.id, doc);
-    for (const { path, content } of walkStruct(doc.structure)) {
-      const tokens = tokenize(content);
+    for (const { path, tagName, content } of walkStruct(doc.structure)) {
+      const tokens =
+        tagName === "code" ? tokenizeCode(content) : tokenizePhrasing(content);
       if (tokens.length === 0) {
         continue;
       }

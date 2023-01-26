@@ -1,5 +1,5 @@
 import { Element, Node, Root, Text } from "hast";
-import { tokenize } from "../index/tokens";
+import { tokenizePhrasing } from "../index/tokens";
 
 export interface StructParent {
   children: StructNode[];
@@ -124,7 +124,7 @@ export function printOutline(root: StructNode[]) {
     } else if (node.type === "text") {
       const { selector, index: last } = walkStructToSelector(root, prefix);
       console.log(
-        `${indent}#text(root.querySelector("${selector}").childNodes[${last}]): ${tokenize(
+        `${indent}#text(root.querySelector("${selector}").childNodes[${last}]): ${tokenizePhrasing(
           node.content || ""
         )
           .map((token) => token.text)
@@ -141,6 +141,7 @@ export function printOutline(root: StructNode[]) {
 
 export interface WalkStructItem {
   path: number[];
+  tagName: string;
   content: string;
 }
 
@@ -148,21 +149,23 @@ export function* walkStruct(root: StructNode[]): Generator<WalkStructItem> {
   let path: number[] = [];
   let index: number = 0;
   let nodes: StructNode[] = [...root];
-  let stack: StructNode[][] = [];
+  let tagName: string = "";
+  let stack: { tagName: string; nodes: StructNode[] }[] = [];
 
   for (;;) {
     while (nodes.length > 0) {
       const node = nodes.shift()!;
 
       if (node.type === "text" && typeof node.content === "string") {
-        yield { path: [...path, index], content: node.content };
+        yield { path: [...path, index], tagName, content: node.content };
         index += 1;
       } else if (node.type === "element") {
         path.push(index);
-        stack.push(nodes);
+        stack.push({ tagName, nodes });
 
         nodes = [...node.children];
         index = 0;
+        tagName = node.tagName;
       }
     }
 
@@ -170,7 +173,9 @@ export function* walkStruct(root: StructNode[]): Generator<WalkStructItem> {
       break;
     }
 
-    nodes = stack.pop()!;
+    const top = stack.pop()!;
+    nodes = top.nodes;
+    tagName = top.tagName;
     index = path.pop()! + 1;
   }
 }

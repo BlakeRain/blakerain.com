@@ -2,6 +2,20 @@ import Load from "../encoding/load";
 import Store from "../encoding/store";
 import TreeNode, { Range } from "./node";
 
+function getCommonPrefix(left: string, right: string): string {
+  let prefix = "";
+
+  for (let i = 0; i < Math.min(left.length, right.length); ++i) {
+    if (left[i] === right[i]) {
+      prefix += left[i];
+    } else {
+      break;
+    }
+  }
+
+  return prefix;
+}
+
 export default class Tree {
   public root: TreeNode;
 
@@ -10,42 +24,92 @@ export default class Tree {
   }
 
   public insert(text: string, location_id: number, range: Range) {
-    const term_chars = new TextEncoder().encode(text);
     let node = this.root;
 
-    for (const term_char of term_chars) {
-      let child = node.children.get(term_char);
-      if (!child) {
-        child = new TreeNode();
-        node.children.set(term_char, child);
+    for (let i = 0; i < text.length; ) {
+      const ch = text.charCodeAt(i);
+      let child = node.children.get(ch);
+
+      if (child) {
+        // If the child's fragment and the remainder of 'text' are the same, then this is our node we want to change.
+        if (child.fragment === text.substring(i)) {
+          child.addRange(location_id, range);
+          return;
+        }
+
+        // Get the common prefix of the child's fragment and the remainder of 'text'.
+        const prefix = getCommonPrefix(child.fragment, text.substring(i));
+
+        if (prefix.length < child.fragment.length) {
+          let mid: TreeNode | null = null;
+
+          if (prefix.length === text.substring(i).length) {
+            mid = new TreeNode(text.substring(i));
+            mid.addRange(location_id, range);
+          } else if (prefix.length < text.substring(i).length) {
+            mid = new TreeNode(prefix);
+
+            const tail = new TreeNode(text.substring(i + prefix.length));
+            tail.addRange(location_id, range);
+            mid.children.set(tail.fragment.charCodeAt(0), tail);
+          }
+
+          if (mid !== null) {
+            // Set the 'child' node to be a child of the new 'mid' node
+            mid.children.set(child.fragment.charCodeAt(prefix.length), child);
+
+            // Update the fragment of 'child' to be what's left of the fragment.
+            child.fragment = child.fragment.substring(prefix.length);
+
+            // Replace 'child' with 'mid' in 'node'
+            node.children.set(ch, mid);
+
+            return;
+          }
+        }
+
+        i += child.fragment.length;
+        node = child;
+      } else {
+        child = new TreeNode(text.substring(i));
+        child.addRange(location_id, range);
+        node.children.set(ch, child);
+        return;
       }
-
-      node = child;
     }
-
-    node.addRange(location_id, range);
   }
 
-  public search(term: string): Map<number, Range[]> {
+  public search(prefix: string): Map<number, Range[]> {
     let node = this.root;
+    let word = "";
 
-    for (let code of new TextEncoder().encode(term)) {
-      const child = node.children.get(code);
-      if (!child) {
+    for (let i = 0; i < prefix.length; ) {
+      const ch = prefix.charCodeAt(i);
+      let child = node.children.get(ch);
+
+      if (child) {
+        const common_prefix = getCommonPrefix(
+          child.fragment,
+          prefix.substring(i)
+        );
+        if (
+          common_prefix.length !== child.fragment.length &&
+          common_prefix.length !== prefix.substring(i).length
+        ) {
+          return new Map();
+        }
+
+        word = word.concat(child.fragment);
+        i += child.fragment.length;
+        node = child;
+      } else {
         return new Map();
       }
-
-      node = child;
     }
 
-    if (!node) {
-      return new Map();
-    }
-
-    // The collected results, indexed by the location
     const found_ranges: Map<number, Range[]> = new Map();
 
-    function collectRecords(node: TreeNode) {
+    function collect(node: TreeNode) {
       if (node.ranges.size > 0) {
         for (const [location_id, ranges] of node.ranges) {
           let result_ranges = found_ranges.get(location_id);
@@ -57,14 +121,70 @@ export default class Tree {
       }
 
       for (const child of node.children.values()) {
-        collectRecords(child);
+        collect(child);
       }
     }
 
-    collectRecords(node);
-
+    collect(node);
     return found_ranges;
   }
+
+  // public insert(text: string, location_id: number, range: Range) {
+  //   const term_chars = new TextEncoder().encode(text);
+  //   let node = this.root;
+  //
+  //   for (const term_char of term_chars) {
+  //     let child = node.children.get(term_char);
+  //     if (!child) {
+  //       child = new TreeNode();
+  //       node.children.set(term_char, child);
+  //     }
+  //
+  //     node = child;
+  //   }
+  //
+  //   node.addRange(location_id, range);
+  // }
+
+  // public search(term: string): Map<number, Range[]> {
+  //   let node = this.root;
+  //
+  //   for (let code of new TextEncoder().encode(term)) {
+  //     const child = node.children.get(code);
+  //     if (!child) {
+  //       return new Map();
+  //     }
+  //
+  //     node = child;
+  //   }
+  //
+  //   if (!node) {
+  //     return new Map();
+  //   }
+  //
+  //   // The collected results, indexed by the location
+  //   const found_ranges: Map<number, Range[]> = new Map();
+  //
+  //   function collectRecords(node: TreeNode) {
+  //     if (node.ranges.size > 0) {
+  //       for (const [location_id, ranges] of node.ranges) {
+  //         let result_ranges = found_ranges.get(location_id);
+  //         found_ranges.set(
+  //           location_id,
+  //           result_ranges ? [...result_ranges, ...ranges] : ranges
+  //         );
+  //       }
+  //     }
+  //
+  //     for (const child of node.children.values()) {
+  //       collectRecords(child);
+  //     }
+  //   }
+  //
+  //   collectRecords(node);
+  //
+  //   return found_ranges;
+  // }
 
   public store(store: Store) {
     let nodeCount = 0;

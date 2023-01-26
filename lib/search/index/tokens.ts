@@ -1,7 +1,8 @@
 import stemmer from "./stem";
 import isStopWord from "./stop";
 
-const SEPARATOR_RE = /[\s\-]+/;
+const SEPARATOR_RE = /[\W]+/;
+const IDENTIFIER_RE = /[\w_-]+/g;
 
 export class Token {
   public start: number;
@@ -15,7 +16,7 @@ export class Token {
   }
 }
 
-export function tokenize(input: string): Token[] {
+export function tokenizePhrasing(input: string): Token[] {
   input = input.toLowerCase();
 
   const tokens: Token[] = [];
@@ -38,6 +39,18 @@ export function tokenize(input: string): Token[] {
 
       start = end + 1;
     }
+  }
+
+  return tokens;
+}
+
+export function tokenizeCode(input: string): Token[] {
+  const tokens: Token[] = [];
+
+  input = input.toLowerCase();
+  for (const match of input.matchAll(IDENTIFIER_RE)) {
+    const word = match[0];
+    tokens.push(new Token(match.index || 0, word.length, word));
   }
 
   return tokens;

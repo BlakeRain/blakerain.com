@@ -20,6 +20,7 @@ import PreparedIndex from "./search/index/prepared";
 
 import { loadDocSource, Preamble } from "./content";
 import { rehypeWrapFigures, remarkUnwrapImages } from "./plugins";
+import { writeTreeDigraph } from "./search/tree/dot";
 
 // Create the unified processor that we use to parse markdown into HTML.
 function createProcessor() {
@@ -113,6 +114,7 @@ async function buildSearchIndex(): Promise<PreparedIndex> {
   }
 
   console.log(`Added ${doc_index} documents to search index`);
+  await writeTreeDigraph(path.join(process.cwd(), "tree.dot"), index.tree);
 
   // Prepare the final index and return it.
   return index.prepare();
