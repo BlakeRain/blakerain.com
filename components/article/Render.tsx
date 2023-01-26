@@ -11,9 +11,7 @@ import React, {
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import Image from "../display/Image";
 
-import PreparedIndex, {
-  decodePositions,
-} from "../../lib/search/index/prepared";
+import PreparedIndex from "../../lib/search/index/prepared";
 import { Range } from "../../lib/search/tree/node";
 import Load from "../../lib/search/encoding/load";
 
@@ -42,6 +40,70 @@ interface LoadedSearchPosition {
 const LoadedSearchPositionsContext = React.createContext<
   LoadedSearchPosition[]
 >([]);
+
+function decodeQuery(query?: string): { docId: number; term: string } {
+  if (typeof query === "string") {
+    return JSON.parse(query);
+  }
+
+  return { docId: -1, term: "" };
+}
+
+const SearchPositionsProvider: FC<
+  React.PropsWithChildren<{ query?: string }>
+> = ({ query, children }) => {
+  const { docId, term } = decodeQuery(query);
+  const [index, setIndex] = useState<PreparedIndex | null>(null);
+  const positions = useMemo(() => {
+    if (term.length === 0 || index === null) {
+      return [];
+    }
+
+    const results = index.search(term, docId);
+    const loaded: LoadedSearchPosition[] = [];
+    for (const position of results.get(docId) || []) {
+      const location = index.locations.getLocation(position.location_id);
+      if (location) {
+        loaded.push({ path: location.path, ranges: position.positions });
+      }
+    }
+
+    return loaded;
+  }, [index !== null, query || ""]);
+
+  useEffect(() => {
+    if (typeof query !== "string" || query.length === 0) {
+      return;
+    }
+
+    const abort = new AbortController();
+    void (async function () {
+      try {
+        const res = await fetch("/data/search.bin", { signal: abort.signal });
+
+        const index = PreparedIndex.load(new Load(await res.arrayBuffer()));
+        setIndex(index);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          // Ignore abort errors.
+          return;
+        }
+
+        console.error(err);
+      }
+    })();
+
+    return () => {
+      abort.abort();
+    };
+  }, [query || ""]);
+
+  return (
+    <LoadedSearchPositionsContext.Provider value={positions}>
+      {children}
+    </LoadedSearchPositionsContext.Provider>
+  );
+};
 
 // Given the array of `LoadedSearchPosition` (usually from the `LoadedSearchPositionsContext`) and the path to the
 // current node (usually from `PathProps`), return any highlight ranges in that node.
@@ -528,8 +590,8 @@ const RenderCode: (
 
 export const Render: FC<{
   content: MDXRemoteSerializeResult;
-  highlight?: string;
-}> = ({ content, highlight }) => {
+  query?: string;
+}> = ({ content, query: highlight }) => {
   const components: any = {
     img: RenderImage,
     p: RenderParagraph,
@@ -550,57 +612,9 @@ export const Render: FC<{
     Quote: Quote,
     AnalyticsInformation: AnalyticsInformation,
   };
-
-  const decoded_positions =
-    typeof highlight === "string" ? decodePositions(highlight) : [];
-  const [loadedSearchPositions, setLoadedSearchPositions] = useState<
-    LoadedSearchPosition[]
-  >([]);
-
-  useEffect(() => {
-    if (decoded_positions.length === 0) {
-      return;
-    }
-
-    const abort = new AbortController();
-    void (async function () {
-      try {
-        const res = await fetch("/data/search.bin", {
-          signal: abort.signal,
-        });
-
-        const index = PreparedIndex.load(new Load(await res.arrayBuffer()));
-        const loaded: LoadedSearchPosition[] = [];
-
-        for (const position of decoded_positions) {
-          const location = index.locations.getLocation(position.location_id);
-          if (location) {
-            loaded.push({
-              path: location.path,
-              ranges: position.positions,
-            });
-          }
-        }
-
-        console.log("Loaded search positions", loaded);
-        setLoadedSearchPositions(loaded);
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") {
-          return;
-        }
-
-        console.error(err);
-      }
-    })();
-
-    return () => {
-      abort.abort();
-    };
-  }, [highlight || ""]);
-
   return (
-    <LoadedSearchPositionsContext.Provider value={loadedSearchPositions}>
+    <SearchPositionsProvider query={highlight}>
       <MDXRemote {...content} components={components} />
-    </LoadedSearchPositionsContext.Provider>
+    </SearchPositionsProvider>
   );
 };

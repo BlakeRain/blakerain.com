@@ -17,10 +17,7 @@ import { DateSpan } from "../components/display/DateSpan";
 
 import { SiteNavigation, loadNavigation } from "../lib/navigation";
 import Load from "../lib/search/encoding/load";
-import PreparedIndex, {
-  encodePositions,
-  SearchPositions,
-} from "../lib/search/index/prepared";
+import PreparedIndex, { SearchPositions } from "../lib/search/index/prepared";
 
 import styles from "./search.module.scss";
 import IndexDoc from "../lib/search/document/document";
@@ -163,10 +160,10 @@ interface SearchResult {
 
 function search(index: PreparedIndex, term: string): SearchResult[] {
   const results: SearchResult[] = [];
-  for (const [doc_id, positions] of index.search(term)) {
-    const doc = index.documents.get(doc_id)!;
-    const encoded_positions = encodePositions(positions);
-    const url = `${doc.url}?s=${encoded_positions}`;
+  for (const [docId, positions] of index.search(term)) {
+    const doc = index.documents.get(docId)!;
+    const encoded_search = encodeURIComponent(JSON.stringify({ docId, term }));
+    const url = `${doc.url}?s=${encoded_search}`;
 
     results.push({
       doc,

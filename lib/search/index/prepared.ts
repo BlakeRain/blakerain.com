@@ -5,7 +5,6 @@ import Store from "../encoding/store";
 import { mergeRanges, Range } from "../tree/node";
 import Tree from "../tree/tree";
 import IndexBuilder from "./builder";
-import { fromByteArray, toByteArray } from "base64-js";
 import { tokenizePhrasing } from "./tokens";
 
 const MAGIC = 0x53524348;
@@ -38,54 +37,6 @@ function mergeSearchPositions(
 
   // Sort the combined positions by location ID to ensure they are increasing
   return combined.sort((a, b) => a.location_id - b.location_id);
-}
-
-export function encodePositions(positions: SearchPositions[]): string {
-  const store = new Store();
-
-  for (const position of positions) {
-    // Don't bother storing positions if there are none
-    if (position.positions.length === 0) {
-      continue;
-    }
-
-    store.writeUintVlq(position.location_id);
-    for (let i = 0; i < position.positions.length; ++i) {
-      store.writeUintVlq(
-        (position.positions[i].start << 1) |
-          (i < position.positions.length - 1 ? 0x01 : 0x00)
-      );
-      store.writeUintVlq(position.positions[i].length);
-    }
-  }
-
-  const buffer = store.finish();
-  return encodeURIComponent(fromByteArray(new Uint8Array(buffer)));
-}
-
-export function decodePositions(encoded: string): SearchPositions[] {
-  const buffer = toByteArray(decodeURIComponent(encoded)).buffer;
-  const load = new Load(buffer);
-  const positions: SearchPositions[] = [];
-
-  while (load.remaining > 0) {
-    const location_id = load.readUintVlq();
-    const location_positions: Range[] = [];
-
-    for (;;) {
-      const start = load.readUintVlq();
-      const length = load.readUintVlq();
-
-      location_positions.push({ start: start >> 1, length });
-      if ((start & 0x01) === 0x00) {
-        break;
-      }
-    }
-
-    positions.push({ location_id, positions: location_positions });
-  }
-
-  return positions;
 }
 
 export default class PreparedIndex {
