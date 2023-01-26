@@ -107,7 +107,10 @@ export default class PreparedIndex {
     }
   }
 
-  public searchTerm(term: string): Map<number, SearchPositions[]> {
+  public searchTerm(
+    term: string,
+    docId?: number
+  ): Map<number, SearchPositions[]> {
     const found_locations = this.tree.search(term);
 
     // Iterate through the set of locations, and build a mapping from an IndexDoc ID to an object containing the
@@ -115,8 +118,13 @@ export default class PreparedIndex {
     let results: Map<number, SearchPositions[]> = new Map();
     for (const [location_id, positions] of found_locations) {
       const location = this.locations.getLocation(location_id)!;
-      const result = results.get(location.docId);
 
+      // If we're only looking for a certain document, and this location isn't in that document, skip it.
+      if (typeof docId === "number" && location.docId !== docId) {
+        continue;
+      }
+
+      const result = results.get(location.docId);
       if (result) {
         result.push({ location_id, positions });
       } else {
@@ -127,13 +135,13 @@ export default class PreparedIndex {
     return results;
   }
 
-  public search(input: string): Map<number, SearchPositions[]> {
+  public search(input: string, docId?: number): Map<number, SearchPositions[]> {
     const tokens = tokenizePhrasing(input);
     if (tokens.length === 0) {
       return new Map();
     }
 
-    const matches = tokens.map((token) => this.searchTerm(token.text));
+    const matches = tokens.map((token) => this.searchTerm(token.text, docId));
 
     // Build a set that combines the intersection of all document IDs
     let combined_ids: Set<number> | null = null;
