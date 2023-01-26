@@ -47,10 +47,34 @@ export function tokenizePhrasing(input: string): Token[] {
 export function tokenizeCode(input: string): Token[] {
   const tokens: Token[] = [];
 
-  input = input.toLowerCase();
   for (const match of input.matchAll(IDENTIFIER_RE)) {
-    const word = match[0];
-    tokens.push(new Token(match.index || 0, word.length, word));
+    const identifier = match[0];
+    tokens.push(
+      new Token(match.index || 0, identifier.length, identifier.toLowerCase())
+    );
+
+    const parts = identifier.split(/[_]+/);
+    let offset = 0;
+    for (let i = 0; i < parts.length; ++i) {
+      const part = parts[i];
+      const subparts = part.split(/(?=[A-Z])/);
+      for (let j = 0; j < subparts.length; ++j) {
+        const subpart = subparts[j];
+        if (subpart.length > 2) {
+          tokens.push(
+            new Token(
+              (match.index || 0) + offset,
+              subpart.length,
+              subpart.toLowerCase()
+            )
+          );
+        }
+
+        offset += subpart.length;
+      }
+
+      offset += 1;
+    }
   }
 
   return tokens;
