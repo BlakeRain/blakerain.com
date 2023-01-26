@@ -42,30 +42,30 @@ export function mergeRanges(as: Range[], bs: Range[]) {
 /// A node in the search tree
 ///
 /// Each node in the search tree contains a set of zero or more children, where each child is indexed by character. Each
-/// node also contains zero or more records.
+/// node also contains a mapping from a location ID to an array of one or more ranges.
 export default class TreeNode {
   public children: Map<number, TreeNode> = new Map();
-  public positions: Map<number, Range[]> = new Map();
+  public ranges: Map<number, Range[]> = new Map();
 
-  public addPosition(location_id: number, position: Range) {
-    let positions = this.positions.get(location_id);
-    if (positions) {
-      positions.push(position);
+  public addRange(location_id: number, position: Range) {
+    let ranges = this.ranges.get(location_id);
+    if (ranges) {
+      ranges.push(position);
     } else {
-      this.positions.set(location_id, [position]);
+      this.ranges.set(location_id, [position]);
     }
   }
 
   public store(store: Store, key: number) {
     const tag =
       (key << 2) |
-      (this.positions.size > 0 ? 0x02 : 0x00) |
+      (this.ranges.size > 0 ? 0x02 : 0x00) |
       (this.children.size > 0 ? 0x01 : 0x00);
 
     store.writeUintVlq(tag);
-    if (this.positions.size > 0) {
-      store.writeUintVlq(this.positions.size);
-      for (const [location_id, positions] of this.positions) {
+    if (this.ranges.size > 0) {
+      store.writeUintVlq(this.ranges.size);
+      for (const [location_id, positions] of this.ranges) {
         store.writeUintVlq(location_id);
         store.writeUintVlq(positions.length);
         for (const position of positions) {
@@ -97,7 +97,7 @@ export default class TreeNode {
           positions.push({ start, length });
         }
 
-        node.positions.set(location_id, positions);
+        node.ranges.set(location_id, positions);
       }
     }
 

@@ -9,7 +9,7 @@ export default class Tree {
     this.root = root || new TreeNode();
   }
 
-  public insert(text: string, location_id: number, position: Range) {
+  public insert(text: string, location_id: number, range: Range) {
     const term_chars = new TextEncoder().encode(text);
     let node = this.root;
 
@@ -23,7 +23,7 @@ export default class Tree {
       node = child;
     }
 
-    node.addPosition(location_id, position);
+    node.addRange(location_id, range);
   }
 
   public search(term: string): Map<number, Range[]> {
@@ -43,15 +43,15 @@ export default class Tree {
     }
 
     // The collected results, indexed by the location
-    const found_locations: Map<number, Range[]> = new Map();
+    const found_ranges: Map<number, Range[]> = new Map();
 
     function collectRecords(node: TreeNode) {
-      if (node.positions.size > 0) {
-        for (const [location_id, positions] of node.positions) {
-          let result_positions = found_locations.get(location_id);
-          found_locations.set(
+      if (node.ranges.size > 0) {
+        for (const [location_id, ranges] of node.ranges) {
+          let result_ranges = found_ranges.get(location_id);
+          found_ranges.set(
             location_id,
-            result_positions ? [...result_positions, ...positions] : positions
+            result_ranges ? [...result_ranges, ...ranges] : ranges
           );
         }
       }
@@ -63,7 +63,7 @@ export default class Tree {
 
     collectRecords(node);
 
-    return found_locations;
+    return found_ranges;
   }
 
   public store(store: Store) {
@@ -79,9 +79,20 @@ export default class Tree {
       }
     }
 
+    let nchildren: Map<number, number> = new Map();
+
     function encodeNode(key: number, node: TreeNode) {
       // Retrate our steps back to the parent node
       retrace();
+
+      if (!nchildren.has(node.children.size)) {
+        nchildren.set(node.children.size, 1);
+      } else {
+        nchildren.set(
+          node.children.size,
+          nchildren.get(node.children.size)! + 1
+        );
+      }
 
       // Store the tree node, and if the node has children, recursively store those aswell.
       node.store(store, key);
@@ -100,6 +111,11 @@ export default class Tree {
     console.log(
       `Index tree contained ${nodeCount} nodes, max depth of ${maxDepth}`
     );
+
+    console.log(`Histogram contains ${nchildren.size} size(s):`);
+    for (const [size, count] of nchildren) {
+      console.log(`Nodes with ${size} children: ${count}`);
+    }
   }
 
   public static load(load: Load): Tree {
