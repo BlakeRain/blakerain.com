@@ -170,7 +170,7 @@ function search(index: PreparedIndex, term: string): SearchResult[] {
       doc,
       url,
       positions,
-      total: positions.reduce((acc, pos) => acc + pos.positions.length, 0),
+      total: positions.reduce((acc, pos) => acc + pos.ranges.length, 0),
     });
   }
 

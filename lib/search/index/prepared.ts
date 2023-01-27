@@ -9,7 +9,7 @@ import { tokenizePhrasing } from "./tokens";
 
 export interface SearchPositions {
   location_id: number;
-  positions: Range[];
+  ranges: Range[];
 }
 
 function mergeSearchPositions(
@@ -22,7 +22,7 @@ function mergeSearchPositions(
     let found = false;
     for (const existing of combined) {
       if (existing.location_id === position.location_id) {
-        mergeRanges(existing.positions, position.positions);
+        mergeRanges(existing.ranges, position.ranges);
         found = true;
         break;
       }
@@ -61,9 +61,9 @@ export default class PreparedIndex {
 
       const result = results.get(location.docId);
       if (result) {
-        result.push({ location_id, positions });
+        result.push({ location_id, ranges: positions });
       } else {
-        results.set(location.docId, [{ location_id, positions }]);
+        results.set(location.docId, [{ location_id, ranges: positions }]);
       }
     }
 

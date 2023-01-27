@@ -71,12 +71,12 @@ export default class TreeNode {
     store.writeUtf8(this.fragment);
     if (this.ranges.size > 0) {
       store.writeUintVlq(this.ranges.size);
-      for (const [location_id, positions] of this.ranges) {
+      for (const [location_id, ranges] of this.ranges) {
         store.writeUintVlq(location_id);
-        store.writeUintVlq(positions.length);
-        for (const position of positions) {
-          store.writeUintVlq(position.start);
-          store.writeUintVlq(position.length);
+        store.writeUintVlq(ranges.length);
+        for (const range of ranges) {
+          store.writeUintVlq(range.start);
+          store.writeUintVlq(range.length);
         }
       }
     }

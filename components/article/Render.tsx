@@ -64,7 +64,7 @@ const SearchPositionsProvider: FC<
     for (const position of results.get(docId) || []) {
       const location = index.locations.getLocation(position.location_id);
       if (location) {
-        loaded.push({ path: location.path, ranges: position.positions });
+        loaded.push({ path: location.path, ranges: position.ranges });
       }
     }
 
@@ -157,7 +157,7 @@ function renderHighlight(ranges: Range[], text: string): React.ReactElement {
   const parts: React.ReactElement[] = [];
   let start_index = 0;
 
-  for (const range of ranges) {
+  for (const range of ranges.sort((a, b) => a.start - b.start)) {
     const prefix = text.substring(start_index, range.start);
     if (prefix.length > 0) {
       parts.push(
