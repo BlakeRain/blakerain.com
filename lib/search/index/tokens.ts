@@ -48,18 +48,11 @@ export function tokenizeCode(input: string): Token[] {
   const tokens: Token[] = [];
 
   for (const match of input.matchAll(IDENTIFIER_RE)) {
-    const identifier = match[0];
-    tokens.push(
-      new Token(match.index || 0, identifier.length, identifier.toLowerCase())
-    );
-
-    const parts = identifier.split(/[_]+/);
+    const parts = match[0].split(/[_]+/);
     let offset = 0;
+
     for (let i = 0; i < parts.length; ++i) {
-      const part = parts[i];
-      const subparts = part.split(/(?=[A-Z])/);
-      for (let j = 0; j < subparts.length; ++j) {
-        const subpart = subparts[j];
+      for (const subpart of parts[i].split(/(?=[A-Z])/)) {
         if (subpart.length > 2) {
           tokens.push(
             new Token(
