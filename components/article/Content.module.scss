@@ -297,6 +297,23 @@
     }
   }
 
+  figure {
+    &:global(.code) {
+      width: 100%;
+      margin: 0.8em 0 2.3em;
+
+      figcaption {
+        margin: 1em 0 0;
+
+        color: darken($color-mid-grey, 10%);
+        font-family: $body-font-family;
+        font-size: 75%;
+        line-height: 1.5em;
+        text-align: center;
+      }
+    }
+  }
+
   strong,
   em {
     color: darken($color-dark-grey, 5%);
@@ -457,6 +474,14 @@
     code {
       color: white;
       background: black;
+    }
+
+    figure {
+      &:global(.code) {
+        figcaption {
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
     }
 
     table {

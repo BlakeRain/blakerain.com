@@ -1,19 +1,20 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { Node } from "unist";
-import * as mdast from "mdast";
 import { TagId } from "./tags";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 import remarkEmoji from "remark-emoji";
-import remarkMdxCodeMeta from "remark-mdx-code-meta";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeImageSize from "rehype-img-size";
 import matter from "gray-matter";
-import { IndexBuilder, PreparedIndex } from "./search";
 import { GitLogEntry, loadFileRevisions } from "./git";
+import {
+  rehypeAddPaths,
+  rehypeWrapFigures,
+  remarkUnwrapImages,
+} from "./plugins";
 
 /// Information about a document
 export interface DocInfo {
@@ -79,6 +80,8 @@ export interface Preamble {
   excerpt?: string;
   /// Whether to include the git history of this document.
   history?: boolean;
+  /// Should we index this post for search (default is 'true').
+  search?: boolean;
 }
 
 /// Preamble specific to a blog post.
@@ -100,40 +103,6 @@ export interface PagePreamble extends Preamble {
   };
 }
 
-// A remark plugin that extracts images that live inside paragraphs, to avoid `<p><img .../></p>`.
-function remarkPlugin() {
-  function transformChildren(node: mdast.Parent) {
-    node.children = node.children.map((child) =>
-      walkNode(child)
-    ) as mdast.Content[];
-  }
-
-  function walkNode(node: Node): Node {
-    switch (node.type) {
-      case "root":
-        transformChildren(node as mdast.Root);
-      case "paragraph": {
-        const paragraph = node as mdast.Paragraph;
-        if (
-          paragraph.children.length === 1 &&
-          paragraph.children[0].type === "image"
-        ) {
-          return walkNode(paragraph.children[0]);
-        } else {
-          transformChildren(paragraph);
-        }
-        break;
-      }
-    }
-
-    return node;
-  }
-
-  return (tree: Node) => {
-    return walkNode(tree);
-  };
-}
-
 const WORD_RE = /[a-zA-Z0-9_-]\w+/;
 
 // Roughly count the words in a source string.
@@ -144,7 +113,7 @@ function countWords(source: string): number {
 // Load the document source for a given path.
 //
 // This function will load the source at the given path and split out any front-matter.
-async function loadDocSource<P extends Preamble>(
+export async function loadDocSource<P extends Preamble>(
   doc_path: string
 ): Promise<{ preamble: P; source: string }> {
   const source = await fs.readFile(doc_path, "utf-8");
@@ -181,16 +150,13 @@ async function loadDoc<P extends Preamble>(
       scope: preamble as Record<string, any>,
       mdxOptions: {
         development: false,
-        remarkPlugins: [
-          remarkPlugin,
-          remarkMdxCodeMeta,
-          remarkGfm,
-          remarkEmoji,
-        ],
+        remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkEmoji],
         rehypePlugins: [
           rehypeSlug,
           rehypeAutolinkHeadings,
           [rehypeImageSize as any, { dir: "public" }],
+          rehypeWrapFigures,
+          rehypeAddPaths,
         ],
       },
     }),
@@ -239,7 +205,10 @@ function processDates(obj: Record<string, any>): Record<string, any> {
 // 2. The title is "Untitled" unless a title is provided in the preamble.
 // 3. The excerpt is extracted from the preamble (if there is any).
 // 4. The `published` date string is retrieved from the preamble (if there is any).
-function extractDocInfo(filename: string, preamble: PagePreamble): DocInfo {
+export function extractDocInfo(
+  filename: string,
+  preamble: PagePreamble
+): DocInfo {
   return {
     slug: path.basename(filename).replace(".md", ""),
     title: preamble.title || "Untitled",
@@ -351,38 +320,4 @@ export async function loadPostInfos(): Promise<PostInfo[]> {
 export async function loadPostWithSlug(slug: string): Promise<Post> {
   const postPath = path.join(process.cwd(), "content", "posts", slug + ".md");
   return await loadPost(postPath);
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-
-/// Build the search index over all pages and blog posts.
-///
-/// This will return the `PreparedIndex` that can be serialized to a binary file.
-export async function buildSearchIndex(): Promise<PreparedIndex> {
-  const index = new IndexBuilder();
-
-  // Iterate through all the pages, extract their source, and add it to the `IndexBuilder`.
-  const pagesDir = path.join(process.cwd(), "content", "pages");
-  for (let filename of await fs.readdir(pagesDir)) {
-    const { preamble, source } = await loadDocSource(
-      path.join(pagesDir, filename)
-    );
-
-    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
-    await index.addDocument(true, slug, title, excerpt || "", source);
-  }
-
-  // Iterate through all the blog posts, extract their source, and add it to the `IndexBuilder`.
-  const postsDir = path.join(process.cwd(), "content", "posts");
-  for (let filename of await fs.readdir(postsDir)) {
-    const { preamble, source } = await loadDocSource(
-      path.join(postsDir, filename)
-    );
-
-    const { slug, title, excerpt } = extractDocInfo(filename, preamble);
-    await index.addDocument(false, slug, title, excerpt || "", source);
-  }
-
-  // Prepare the final index and return it.
-  return index.prepare();
 }
