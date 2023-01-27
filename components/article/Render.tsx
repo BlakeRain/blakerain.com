@@ -208,13 +208,13 @@ const RenderPhrasingChildren: FC<React.PropsWithChildren<PathProps>> = ({
   path,
   children,
 }) => {
+  // Get the loaded search highlight positions.
+  const positions = useContext(LoadedSearchPositionsContext);
+
   // If there are no children, then there's nothing to do.
   if (typeof children === "undefined") {
     return null;
   }
-
-  // Get the loaded search highlight positions.
-  const positions = useContext(LoadedSearchPositionsContext);
 
   // If we don't have any positions, just return the children in a fragment.
   if (positions.length === 0) {
