@@ -1,5 +1,3 @@
-import decode from "../encoding/structure/decoder";
-import encode from "../encoding/structure/encoder";
 import Load from "../encoding/load";
 import Store from "../encoding/store";
 import { StructNode } from "./structure";
@@ -51,8 +49,6 @@ export default class IndexDoc {
     if (this.excerpt) {
       store.writeUtf8(this.excerpt);
     }
-
-    encode(store, this.structure);
   }
 
   public static load(load: Load): IndexDoc {
@@ -78,7 +74,6 @@ export default class IndexDoc {
       doc.excerpt = load.readUtf8();
     }
 
-    doc.structure = decode(load);
     return doc;
   }
 }
