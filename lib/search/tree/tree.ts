@@ -28,28 +28,29 @@ export default class Tree {
 
     for (let i = 0; i < text.length; ) {
       const ch = text.charCodeAt(i);
+      const remainder = text.substring(i);
       let child = node.children.get(ch);
 
       if (child) {
         // If the child's fragment and the remainder of 'text' are the same, then this is our node we want to change.
-        if (child.fragment === text.substring(i)) {
+        if (child.fragment === remainder) {
           child.addRange(location_id, range);
           return;
         }
 
         // Get the common prefix of the child's fragment and the remainder of 'text'.
-        const prefix = getCommonPrefix(child.fragment, text.substring(i));
+        const prefix = getCommonPrefix(child.fragment, remainder);
 
         if (prefix.length < child.fragment.length) {
           let mid: TreeNode | null = null;
 
-          if (prefix.length === text.substring(i).length) {
-            mid = new TreeNode(text.substring(i));
+          if (prefix.length === text.length - i) {
+            mid = new TreeNode(remainder);
             mid.addRange(location_id, range);
-          } else if (prefix.length < text.substring(i).length) {
+          } else if (prefix.length < text.length - i) {
             mid = new TreeNode(prefix);
 
-            const tail = new TreeNode(text.substring(i + prefix.length));
+            const tail = new TreeNode(remainder.substring(prefix.length));
             tail.addRange(location_id, range);
             mid.children.set(tail.fragment.charCodeAt(0), tail);
           }
@@ -81,34 +82,38 @@ export default class Tree {
 
   public search(prefix: string): Map<number, Range[]> {
     let node = this.root;
-    let word = "";
 
     for (let i = 0; i < prefix.length; ) {
       const ch = prefix.charCodeAt(i);
       let child = node.children.get(ch);
 
       if (child) {
+        // Get the common prefix between the remainder of the prefix and the child's fragment.
         const common_prefix = getCommonPrefix(
           child.fragment,
           prefix.substring(i)
         );
+
+        // If the common prefix doesn't match the fragment or what's left of the prefix, this prefix cannot be found in
+        // the tree.
         if (
           common_prefix.length !== child.fragment.length &&
-          common_prefix.length !== prefix.substring(i).length
+          common_prefix.length !== prefix.length - i
         ) {
           return new Map();
         }
 
-        word = word.concat(child.fragment);
         i += child.fragment.length;
         node = child;
       } else {
+        // No child exists with this character, so the prefix cannot be found in the tree.
         return new Map();
       }
     }
 
     const found_ranges: Map<number, Range[]> = new Map();
 
+    // Collect up all the ranges of the tree nodes from 'node'.
     function collect(node: TreeNode) {
       if (node.ranges.size > 0) {
         for (const [location_id, ranges] of node.ranges) {
@@ -129,67 +134,13 @@ export default class Tree {
     return found_ranges;
   }
 
-  // public insert(text: string, location_id: number, range: Range) {
-  //   const term_chars = new TextEncoder().encode(text);
-  //   let node = this.root;
-  //
-  //   for (const term_char of term_chars) {
-  //     let child = node.children.get(term_char);
-  //     if (!child) {
-  //       child = new TreeNode();
-  //       node.children.set(term_char, child);
-  //     }
-  //
-  //     node = child;
-  //   }
-  //
-  //   node.addRange(location_id, range);
-  // }
-
-  // public search(term: string): Map<number, Range[]> {
-  //   let node = this.root;
-  //
-  //   for (let code of new TextEncoder().encode(term)) {
-  //     const child = node.children.get(code);
-  //     if (!child) {
-  //       return new Map();
-  //     }
-  //
-  //     node = child;
-  //   }
-  //
-  //   if (!node) {
-  //     return new Map();
-  //   }
-  //
-  //   // The collected results, indexed by the location
-  //   const found_ranges: Map<number, Range[]> = new Map();
-  //
-  //   function collectRecords(node: TreeNode) {
-  //     if (node.ranges.size > 0) {
-  //       for (const [location_id, ranges] of node.ranges) {
-  //         let result_ranges = found_ranges.get(location_id);
-  //         found_ranges.set(
-  //           location_id,
-  //           result_ranges ? [...result_ranges, ...ranges] : ranges
-  //         );
-  //       }
-  //     }
-  //
-  //     for (const child of node.children.values()) {
-  //       collectRecords(child);
-  //     }
-  //   }
-  //
-  //   collectRecords(node);
-  //
-  //   return found_ranges;
-  // }
-
   public store(store: Store) {
     let nodeCount = 0;
     let maxDepth = 0;
 
+    // Prepare a variable to store our stack depth and a function that will write the stack depth to the store. This
+    // instruction is used to tell our decoder how far back we want to pop the construction stack to get back to our
+    // parent.
     let stackDepth = 0;
     function retrace() {
       if (stackDepth > 0) {
@@ -199,20 +150,9 @@ export default class Tree {
       }
     }
 
-    let nchildren: Map<number, number> = new Map();
-
     function encodeNode(key: number, node: TreeNode) {
       // Retrate our steps back to the parent node
       retrace();
-
-      if (!nchildren.has(node.children.size)) {
-        nchildren.set(node.children.size, 1);
-      } else {
-        nchildren.set(
-          node.children.size,
-          nchildren.get(node.children.size)! + 1
-        );
-      }
 
       // Store the tree node, and if the node has children, recursively store those aswell.
       node.store(store, key);
@@ -220,7 +160,7 @@ export default class Tree {
         encodeNode(child_key, child);
       }
 
-      // We have finished this node, so increment our stack depth.
+      // We have finished this node, so increment our stack depth and node count.
       stackDepth++;
       nodeCount++;
     }
@@ -231,11 +171,6 @@ export default class Tree {
     console.log(
       `Index tree contained ${nodeCount} nodes, max depth of ${maxDepth}`
     );
-
-    console.log(`Histogram contains ${nchildren.size} size(s):`);
-    for (const [size, count] of nchildren) {
-      console.log(`Nodes with ${size} children: ${count}`);
-    }
   }
 
   public static load(load: Load): Tree {
@@ -245,18 +180,24 @@ export default class Tree {
     let total = 0;
 
     for (;;) {
+      // Decode the tree node from the buffer.
       const { key, hasChildren, node } = TreeNode.load(load);
       ++total;
 
+      // If there is a node on the top of the stack, then add this node as a child.
       if (stack.length > 0) {
         stack[stack.length - 1].children.set(key, node);
       }
 
+      // Push this node onto the stack, and if there's no root node yet, then this is the root node.
       stack.push(node);
       if (!root) {
         root = node;
       }
 
+      // If we don't have any children, then read the number of stack elements to pop to get back to the correct parent
+      // node. This value was previously written by 'retrace'. If we end up with an empty stack then we've reached the
+      // end of the tree.
       if (!hasChildren) {
         let depth = load.readUintVlq();
         while (depth-- > 0) {
