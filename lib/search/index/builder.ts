@@ -1,6 +1,6 @@
 import IndexDoc from "../document/document";
 import { IndexDocLocations } from "../document/location";
-import { walkStruct } from "../document/structure";
+import { StructNode, walkStruct } from "../document/structure";
 import Store from "../encoding/store";
 import Tree from "../tree/tree";
 import { BuilderSizes } from "./stats";
@@ -16,7 +16,7 @@ export default class IndexBuilder {
 
   constructor() {}
 
-  public addDocument(doc: IndexDoc) {
+  public addDocument(doc: IndexDoc, structure: StructNode[]) {
     if (this.documents.has(doc.id)) {
       throw new Error(`Duplicate index document ID ${doc.id}`);
     }
@@ -24,7 +24,7 @@ export default class IndexBuilder {
     this.documents.set(doc.id, doc);
     this.sizes.documents += 1;
 
-    for (const { path, tagName, content } of walkStruct(doc.structure)) {
+    for (const { path, tagName, content } of walkStruct(structure)) {
       const tokens =
         tagName === "code" ? tokenizeCode(content) : tokenizePhrasing(content);
       if (tokens.length === 0) {

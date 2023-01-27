@@ -1,6 +1,5 @@
 import Load from "../encoding/load";
 import Store from "../encoding/store";
-import { StructNode } from "./structure";
 
 export default class IndexDoc {
   public id: number;
@@ -10,7 +9,6 @@ export default class IndexDoc {
   public published: string | null;
   public cover: string | null;
   public excerpt: string | null;
-  public structure: StructNode[];
 
   constructor(id: number, slug: string, title: string) {
     this.id = id;
@@ -20,7 +18,6 @@ export default class IndexDoc {
     this.published = null;
     this.cover = null;
     this.excerpt = null;
-    this.structure = [];
   }
 
   public get url(): string {
