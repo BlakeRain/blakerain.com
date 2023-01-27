@@ -71,46 +71,7 @@ export function fromHast(root: Root): StructNode[] {
   return fromHastNodes(root.children);
 }
 
-export interface StructSelector {
-  selector: string;
-  index: number;
-}
-
-export function walkStructToSelector(
-  root: StructNode[],
-  path: number[]
-): StructSelector {
-  let children = [...root];
-  let selector = [];
-
-  for (const index of path) {
-    if (index < children.length) {
-      const child = children[index];
-      if (child.type === "element") {
-        let nth_of_type = 1;
-        for (let i = 0; i < index; ++i) {
-          const previous = children[i];
-          if (
-            previous.type === "element" &&
-            previous.tagName === child.tagName
-          ) {
-            ++nth_of_type;
-          }
-        }
-
-        selector.push(`${child.tagName}:nth-of-type(${nth_of_type})`);
-        children = [...child.children];
-      } else {
-        break;
-      }
-    }
-  }
-
-  return { selector: selector.join(" > "), index: path[path.length - 1] || 0 };
-}
-
 export function printOutline(root: StructNode[]) {
-  console.log("=".repeat(80));
   function printNode(node: StructNode, depth: number, prefix: number[]) {
     const indent = " ".repeat(depth * 2);
 
@@ -122,11 +83,8 @@ export function printOutline(root: StructNode[]) {
       }
       console.log(`${indent}</${node.tagName}>`);
     } else if (node.type === "text") {
-      const { selector, index: last } = walkStructToSelector(root, prefix);
       console.log(
-        `${indent}#text(root.querySelector("${selector}").childNodes[${last}]): ${tokenizePhrasing(
-          node.content || ""
-        )
+        `${indent}#text: ${tokenizePhrasing(node.content || "")
           .map((token) => token.text)
           .join(" ")}`
       );
