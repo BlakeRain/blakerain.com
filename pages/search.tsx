@@ -140,6 +140,7 @@ const SearchField: FC = () => {
   return (
     <div className={styles.input}>
       <input
+        autoFocus
         type="text"
         placeholder="Search website"
         value={state.term}
