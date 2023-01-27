@@ -1,5 +1,6 @@
 import Load from "../encoding/load";
 import Store from "../encoding/store";
+import { BuilderSizes, DecoderStats } from "../index/stats";
 import TreeNode, { Range } from "./node";
 
 function getCommonPrefix(left: string, right: string): string {
@@ -134,10 +135,7 @@ export default class Tree {
     return found_ranges;
   }
 
-  public store(store: Store) {
-    let nodeCount = 0;
-    let maxDepth = 0;
-
+  public store(store: Store, sizes: BuilderSizes) {
     // Prepare a variable to store our stack depth and a function that will write the stack depth to the store. This
     // instruction is used to tell our decoder how far back we want to pop the construction stack to get back to our
     // parent.
@@ -145,7 +143,7 @@ export default class Tree {
     function retrace() {
       if (stackDepth > 0) {
         store.writeUintVlq(stackDepth);
-        maxDepth = Math.max(maxDepth, stackDepth);
+        sizes.maxDepth = Math.max(sizes.maxDepth, stackDepth);
         stackDepth = 0;
       }
     }
@@ -162,27 +160,22 @@ export default class Tree {
 
       // We have finished this node, so increment our stack depth and node count.
       stackDepth++;
-      nodeCount++;
+      sizes.nodes++;
     }
 
     encodeNode(0, this.root);
     retrace();
-
-    console.log(
-      `Index tree contained ${nodeCount} nodes, max depth of ${maxDepth}`
-    );
   }
 
-  public static load(load: Load): Tree {
+  public static load(load: Load, stats: DecoderStats): Tree {
     let start = performance.now();
     let stack: TreeNode[] = [];
     let root: TreeNode | null = null;
-    let total = 0;
 
     for (;;) {
       // Decode the tree node from the buffer.
       const { key, hasChildren, node } = TreeNode.load(load);
-      ++total;
+      stats.sizes.nodes++;
 
       // If there is a node on the top of the stack, then add this node as a child.
       if (stack.length > 0) {
@@ -210,12 +203,7 @@ export default class Tree {
       }
     }
 
-    console.log(
-      `Loaded ${Intl.NumberFormat().format(total)} tree node(s) in ${(
-        performance.now() - start
-      ).toFixed(2)} ms`
-    );
-
+    stats.timings.tree = performance.now() - start;
     return new Tree(root);
   }
 }

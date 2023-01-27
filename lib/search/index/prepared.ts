@@ -1,13 +1,11 @@
 import IndexDoc from "../document/document";
 import { IndexDocLocations } from "../document/location";
 import Load from "../encoding/load";
-import Store from "../encoding/store";
 import { mergeRanges, Range } from "../tree/node";
 import Tree from "../tree/tree";
-import IndexBuilder from "./builder";
+import { MAGIC } from "./builder";
+import { DecoderStats } from "./stats";
 import { tokenizePhrasing } from "./tokens";
-
-const MAGIC = 0x53524348;
 
 export interface SearchPositions {
   location_id: number;
@@ -41,22 +39,8 @@ function mergeSearchPositions(
 
 export default class PreparedIndex {
   public documents: Map<number, IndexDoc> = new Map();
-  public locations: IndexDocLocations;
-  public tree: Tree;
-
-  constructor(index?: IndexBuilder) {
-    if (index) {
-      for (const [id, doc] of index.documents) {
-        this.documents.set(id, doc);
-      }
-
-      this.locations = index.locations;
-      this.tree = index.tree;
-    } else {
-      this.locations = new IndexDocLocations();
-      this.tree = new Tree();
-    }
-  }
+  public locations: IndexDocLocations = new IndexDocLocations();
+  public tree: Tree = new Tree();
 
   public searchTerm(
     term: string,
@@ -136,26 +120,9 @@ export default class PreparedIndex {
     return combined;
   }
 
-  public store(store: Store) {
-    store.writeUint32(MAGIC);
-
-    // Store the document information
-    store.writeUintVlq(this.documents.size);
-    for (const doc of this.documents.values()) {
-      doc.store(store);
-    }
-
-    this.locations.store(store);
-    this.tree.store(store);
-  }
-
   public static load(load: Load): PreparedIndex {
-    console.log(
-      `Loading prepared index from blob of ${(load.length / 1024.0).toFixed(
-        2
-      )} Kib`
-    );
-
+    const start = performance.now();
+    const stats = new DecoderStats(load.length);
     const magic = load.readUint32();
     if (magic !== MAGIC) {
       console.error(
@@ -168,21 +135,17 @@ export default class PreparedIndex {
 
     const index = new PreparedIndex();
 
-    const doc_start = performance.now();
     let doc_count = load.readUintVlq();
     while (doc_count-- > 0) {
       const doc = IndexDoc.load(load);
       index.documents.set(doc.id, doc);
+      stats.sizes.documents++;
     }
 
-    console.log(
-      `Loaded ${index.documents.size} documents in ${(
-        performance.now() - doc_start
-      ).toFixed(2)} ms`
-    );
-
-    index.locations = IndexDocLocations.load(load);
-    index.tree = Tree.load(load);
+    index.locations = IndexDocLocations.load(load, stats);
+    index.tree = Tree.load(load, stats);
+    stats.timings.load = performance.now() - start;
+    stats.log();
 
     return index;
   }

@@ -1,11 +1,15 @@
 import IndexDoc from "../document/document";
 import { IndexDocLocations } from "../document/location";
 import { walkStruct } from "../document/structure";
+import Store from "../encoding/store";
 import Tree from "../tree/tree";
-import PreparedIndex from "./prepared";
+import { BuilderSizes } from "./stats";
 import { tokenizeCode, tokenizePhrasing } from "./tokens";
 
+export const MAGIC = 0x53524348;
+
 export default class IndexBuilder {
+  sizes: BuilderSizes = new BuilderSizes();
   documents: Map<number, IndexDoc> = new Map();
   locations: IndexDocLocations = new IndexDocLocations();
   tree: Tree = new Tree();
@@ -18,12 +22,17 @@ export default class IndexBuilder {
     }
 
     this.documents.set(doc.id, doc);
+    this.sizes.documents += 1;
+
     for (const { path, tagName, content } of walkStruct(doc.structure)) {
       const tokens =
         tagName === "code" ? tokenizeCode(content) : tokenizePhrasing(content);
       if (tokens.length === 0) {
         continue;
       }
+
+      this.sizes.tokens += tokens.length;
+      this.sizes.locations += 1;
 
       const location_id = this.locations.addLocation(doc.id, path);
       for (const token of tokens) {
@@ -35,7 +44,17 @@ export default class IndexBuilder {
     }
   }
 
-  public prepare(): PreparedIndex {
-    return new PreparedIndex(this);
+  public store(store: Store) {
+    store.writeUint32(MAGIC);
+
+    // Store the document information
+    store.writeUintVlq(this.documents.size);
+    for (const doc of this.documents.values()) {
+      doc.store(store);
+    }
+
+    this.locations.store(store);
+    this.tree.store(store, this.sizes);
+    this.sizes.size = store.length;
   }
 }

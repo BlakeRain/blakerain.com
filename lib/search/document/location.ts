@@ -1,5 +1,6 @@
 import Load from "../encoding/load";
 import Store from "../encoding/store";
+import { DecoderStats } from "../index/stats";
 
 export class IndexDocLocation {
   /// The ID of the document in which this location is to be found.
@@ -36,9 +37,8 @@ export class IndexDocLocations {
     }
   }
 
-  public static load(load: Load): IndexDocLocations {
+  public static load(load: Load, stats: DecoderStats): IndexDocLocations {
     const locations = new IndexDocLocations();
-    const locations_start = performance.now();
 
     let nlocations = load.readUintVlq();
     while (nlocations-- > 0) {
@@ -49,12 +49,7 @@ export class IndexDocLocations {
       locations.locations.set(id, new IndexDocLocation(doc_id, path));
     }
 
-    console.log(
-      `Loaded ${Intl.NumberFormat().format(
-        locations.locations.size
-      )} location(s) in ${(performance.now() - locations_start).toFixed(2)} ms`
-    );
-
+    stats.sizes.locations += locations.locations.size;
     return locations;
   }
 }

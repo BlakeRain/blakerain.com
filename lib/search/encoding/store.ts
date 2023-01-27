@@ -3,6 +3,10 @@ export default class Store {
 
   constructor() {}
 
+  public get length(): number {
+    return this.parts.reduce((acc, part) => acc + part.length, 0);
+  }
+
   public writeUint8(value: number) {
     const arr = new ArrayBuffer(1);
     new DataView(arr).setUint8(0, value);
