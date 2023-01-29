@@ -1,5 +1,3 @@
-const STAT_LOG_WIDTH = 8;
-
 export class BuilderSizes {
   documents: number = 0;
   locations: number = 0;
@@ -11,25 +9,15 @@ export class BuilderSizes {
   public log() {
     const nf = Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
     console.log(
-      `Documents : ${nf.format(this.documents).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Locations : ${nf.format(this.locations).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Tokens    : ${nf.format(this.tokens).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Nodes     : ${nf.format(this.nodes).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Max. Depth: ${nf.format(this.maxDepth).padStart(STAT_LOG_WIDTH)}`
-    );
-
-    console.log(
-      `Index Size: ${nf
-        .format(this.size / 1024.0)
-        .padStart(STAT_LOG_WIDTH)} Kib`
+      `Index of ${nf.format(this.size / 1024.0)} Kib covering ${nf.format(
+        this.documents
+      )} document(s) containing ${nf.format(
+        this.tokens
+      )} token(s) over ${nf.format(
+        this.locations
+      )} location(s) formed a tree of ${nf.format(
+        this.nodes
+      )} node(s) (max. depth ${nf.format(this.maxDepth)})`
     );
   }
 }
@@ -55,24 +43,15 @@ export class DecoderStats {
 
   public log() {
     const nf = Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
-
+    const { documents, locations, nodes, size } = this.sizes;
     console.log(
-      `Index Size : ${nf
-        .format(this.sizes.size / 1024.0)
-        .padStart(STAT_LOG_WIDTH)} Kib`
-    );
-
-    console.log(
-      `Documents  : ${nf.format(this.sizes.documents).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Locations  : ${nf.format(this.sizes.locations).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Nodes      : ${nf.format(this.sizes.nodes).padStart(STAT_LOG_WIDTH)}`
-    );
-    console.log(
-      `Decode Time: ${nf.format(this.timings.load).padStart(STAT_LOG_WIDTH)} ms`
+      `Index of ${nf.format(size / 1024.0)} Kib covering ${nf.format(
+        documents
+      )} document(s) containing ${nf.format(
+        locations
+      )} location(s) and a tree of ${nf.format(
+        nodes
+      )} node(s) loaded in ${nf.format(this.timings.load)} ms`
     );
   }
 }
