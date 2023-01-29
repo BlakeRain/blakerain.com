@@ -14,7 +14,6 @@ import { Root } from "hast";
 
 import Store from "./search/encoding/store";
 import IndexDoc from "./search/document/document";
-import { fromHast, StructNode } from "./search/document/structure";
 import IndexBuilder from "./search/index/builder";
 
 import { loadDocSource, Preamble } from "./content";
@@ -42,7 +41,7 @@ async function loadSearchDoc<P extends Preamble & { cover?: string }>(
   id: number,
   page: boolean,
   doc_path: string
-): Promise<{ doc: IndexDoc; structure: StructNode[] } | null> {
+): Promise<{ doc: IndexDoc; structure: Root } | null> {
   const slug = path.basename(doc_path).replace(".md", "");
   const { preamble, source } = await loadDocSource<P>(doc_path);
   if (typeof preamble.search === "boolean" && !preamble.search) {
@@ -70,7 +69,7 @@ async function loadSearchDoc<P extends Preamble & { cover?: string }>(
   const root = processor.parse(source);
   const hast = processor.runSync(root);
 
-  return { doc, structure: fromHast(hast as Root) };
+  return { doc, structure: hast as Root };
 }
 
 /// Build the search index over all pages and blog posts.

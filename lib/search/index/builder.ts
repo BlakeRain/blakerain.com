@@ -1,12 +1,58 @@
+import { Element, Node, Root, Text } from "hast";
 import IndexDoc from "../document/document";
 import { IndexDocLocations } from "../document/location";
-import { StructNode, walkStruct } from "../document/structure";
 import Store from "../encoding/store";
 import Tree from "../tree/tree";
 import { BuilderSizes } from "./stats";
 import { tokenizeCode, tokenizePhrasing } from "./tokens";
 
 export const MAGIC = 0x53524348;
+
+interface WalkStructItem {
+  path: number[];
+  tagName: string;
+  content: string;
+}
+
+function* walkStruct(root: Root): Generator<WalkStructItem> {
+  let path: number[] = [];
+  let index: number = 0;
+  let nodes: Node[] = [...root.children];
+  let tagName: string = "";
+  let stack: { tagName: string; nodes: Node[] }[] = [];
+
+  for (;;) {
+    while (nodes.length > 0) {
+      const node = nodes.shift()!;
+
+      if (node.type === "text" && (node as Text).value.length > 0) {
+        yield {
+          path: [...path, index],
+          tagName,
+          content: (node as Text).value,
+        };
+        index += 1;
+      } else if (node.type === "element") {
+        path.push(index);
+        stack.push({ tagName, nodes });
+
+        const element = node as Element;
+        nodes = [...element.children];
+        index = 0;
+        tagName = element.tagName;
+      }
+    }
+
+    if (stack.length === 0) {
+      break;
+    }
+
+    const top = stack.pop()!;
+    nodes = top.nodes;
+    tagName = top.tagName;
+    index = path.pop()! + 1;
+  }
+}
 
 export default class IndexBuilder {
   sizes: BuilderSizes = new BuilderSizes();
@@ -16,7 +62,7 @@ export default class IndexBuilder {
 
   constructor() {}
 
-  public addDocument(doc: IndexDoc, structure: StructNode[]) {
+  public addDocument(doc: IndexDoc, structure: Root) {
     if (this.documents.has(doc.id)) {
       throw new Error(`Duplicate index document ID ${doc.id}`);
     }
