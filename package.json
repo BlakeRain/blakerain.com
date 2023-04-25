@@ -34,7 +34,7 @@
     "remark-mdx-code-meta": "^2.0.0",
     "sass": "^1.57.1",
     "sharp": "^0.31.3",
-    "yaml": "^2.2.1"
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
