@@ -149,7 +149,7 @@ async function loadDoc<P extends Preamble>(
     content: await serialize(source, {
       scope: preamble as Record<string, any>,
       mdxOptions: {
-        development: false,
+        development: process.env.NODE_ENV === "development",
         remarkPlugins: [remarkUnwrapImages, remarkGfm, remarkEmoji],
         rehypePlugins: [
           rehypeSlug,
