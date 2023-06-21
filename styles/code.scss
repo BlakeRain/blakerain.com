@@ -175,6 +175,10 @@ $print-param: #511521;
   color: $light-param;
 }
 
+.hljs-function.hljs-params.hljs-keyword {
+  color: $light-keyword;
+}
+
 .hljs-emphasis {
   font-style: italic;
 }
@@ -321,6 +325,10 @@ $print-param: #511521;
 
   .hljs-function.hljs-params {
     color: $dark-param;
+  }
+
+  .hljs-function.hljs-params.hljs-keyword {
+    color: $dark-keyword;
   }
 
   .hljs-emphasis {
