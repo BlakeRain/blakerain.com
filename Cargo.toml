@@ -1,0 +1,48 @@
+[package]
+name = "site"
+version = "2.0.0"
+edition = "2021"
+publish = false
+
+[features]
+ssr = ["yew/ssr"]
+hydration = ["yew/hydration"]
+
+[[bin]]
+name = "site-hydrate"
+required-features = [
+  "hydrate"
+]
+
+[[bin]]
+name = "site-build"
+required-features = [
+  "ssr"
+]
+
+[dependencies]
+yew = { version = "0.20" }
+yew-router = { version = "0.17" }
+log = { version = "0.4" }
+futures = { version = "0.3", features = ["std"], default-features = false }
+
+[dependencies.yew_icons]
+version = "0.7"
+features = [
+  "LucideRss"
+]
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = { version = "0.4" }
+wasm-logger = { version = "0.2" }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1.32", features = ["full"] }
+axum = { version = "0.6" }
+tower = { version = "0.4", features = ["make"] }
+tower-http = { version = "0.4", features = ["fs"] }
+env_logger = { version = "0.10" }
+clap = { version = "4.3", features = ["derive"] }
+hyper = { version = "0.14", features = ["server", "http1"] }
+jemallocator = { version = "0.5" }
+
