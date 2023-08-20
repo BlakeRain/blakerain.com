@@ -5,20 +5,22 @@ edition = "2021"
 publish = false
 
 [features]
-ssr = ["yew/ssr"]
-hydration = ["yew/hydration"]
+hydration = [
+  "yew/hydration"
+]
 
-[[bin]]
-name = "site-hydrate"
-required-features = [
-  "hydrate"
+static = [
+  "yew/ssr"
 ]
 
 [[bin]]
 name = "site-build"
 required-features = [
-  "ssr"
+  "static",
 ]
+
+[[bin]]
+name = "site"
 
 [dependencies]
 yew = { version = "0.20" }
@@ -38,11 +40,5 @@ wasm-logger = { version = "0.2" }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tokio = { version = "1.32", features = ["full"] }
-axum = { version = "0.6" }
-tower = { version = "0.4", features = ["make"] }
-tower-http = { version = "0.4", features = ["fs"] }
 env_logger = { version = "0.10" }
-clap = { version = "4.3", features = ["derive"] }
-hyper = { version = "0.14", features = ["server", "http1"] }
-jemallocator = { version = "0.5" }
 

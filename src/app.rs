@@ -1,8 +1,51 @@
-use yew::{function_component, html, Html};
+use yew::{function_component, html, Html, Properties};
+use yew_router::Switch;
+
+#[cfg(feature = "static")]
+use yew_router::{
+    history::{AnyHistory, History, MemoryHistory},
+    Router,
+};
+
+#[cfg(not(feature = "static"))]
+use yew_router::BrowserRouter;
+
+use crate::pages::Route;
+
+#[function_component(AppContent)]
+fn app_content() -> Html {
+    html! {
+        <main>
+            <Switch<Route> render={Route::switch} />
+        </main>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+#[cfg_attr(not(feature = "static"), derive(Default))]
+pub struct AppProps {
+    #[cfg(feature = "static")]
+    pub url: String,
+}
 
 #[function_component(App)]
-pub fn app() -> Html {
+#[allow(unused_variables)]
+pub fn app(props: &AppProps) -> Html {
+    #[cfg(feature = "static")]
+    {
+        let history = AnyHistory::from(MemoryHistory::default());
+        history.push(&props.url);
+        html! {
+            <Router history={history}>
+                <AppContent />
+            </Router>
+        }
+    }
+
+    #[cfg(not(feature = "static"))]
     html! {
-        <h1>{"Hello, World!"}</h1>
+        <BrowserRouter>
+            <AppContent />
+        </BrowserRouter>
     }
 }
