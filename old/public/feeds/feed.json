@@ -1,0 +1,122 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "Blake Rain",
+    "home_page_url": "https://www.blakerain.com/",
+    "feed_url": "https://www.blakerain.com/feeds/feed.json",
+    "description": "Feed of blog posts on the website of Blake Rain",
+    "icon": "https://www.blakerain.com/media/logo-text.png",
+    "author": {
+        "name": "Blake Rain",
+        "url": "https://www.blakerain.com/about"
+    },
+    "items": [
+        {
+            "id": "https://www.blakerain.com/blog/moving-to-mastodon",
+            "url": "https://www.blakerain.com/blog/moving-to-mastodon",
+            "title": "Moving to Mastodon",
+            "summary": "Much like a great number of other people, I have followed the trend towards Mastodon, and have found it to be quite a\nwonderful experience.\n",
+            "image": "https://www.blakerain.com/content/moving-to-mastodon/cover.jpg",
+            "date_modified": "2022-11-13T15:38:33.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/moving-lambdas-to-rust",
+            "url": "https://www.blakerain.com/blog/moving-lambdas-to-rust",
+            "title": "Moving my Lambda Functions to Rust",
+            "summary": "My experience changing the AWS Lambda functions for this website from Python to Rust.\n",
+            "image": "https://www.blakerain.com/content/moving-lambdas-to-rust/jay-heike-Fc-0gi4YylM-unsplash.jpg",
+            "date_modified": "2022-02-07T20:04:44.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/moving-towards-jamstack-with-netlify",
+            "url": "https://www.blakerain.com/blog/moving-towards-jamstack-with-netlify",
+            "title": "Moving Towards JamStack with Netlify",
+            "summary": "In this post I outline the steps that I took to make this blog a static site, whilst still maintaining some of the advantages of the Ghost CMS.",
+            "image": "https://www.blakerain.com/content/Screenshot-2021-08-01-at-18.29.16.jpg",
+            "date_modified": "2021-08-01T17:41:22.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/overlays-with-custom-widgets-in-gtk",
+            "url": "https://www.blakerain.com/blog/overlays-with-custom-widgets-in-gtk",
+            "title": "Overlays with Custom Widgets in GTK",
+            "summary": "In this post I show how to build a collapsible controls overlay in GTK, rendered over a simple custom widget.",
+            "image": "https://www.blakerain.com/content/Collapsible-Controls-Overlay-Demo_2102.png",
+            "date_modified": "2021-01-14T21:27:19.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/allocating-memory-for-dma-in-linux",
+            "url": "https://www.blakerain.com/blog/allocating-memory-for-dma-in-linux",
+            "title": "Allocating Memory for DMA in Linux",
+            "summary": "In this post we take a look at allocating memory on Linux using huge pages with the intention of sharing that memory with PCIe devices that use DMA.",
+            "image": "https://www.blakerain.com/content/harrison-broadbent-ING1Uf1Fc30-unsplash.jpg",
+            "date_modified": "2020-12-11T18:30:00.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/bitmap-tri-color-marking",
+            "url": "https://www.blakerain.com/blog/bitmap-tri-color-marking",
+            "title": "Bitmap Tri-Color Marking",
+            "summary": "In this post I look at a simple tri-color marking implementation that uses bitmap operations to walk the heap.",
+            "image": "https://www.blakerain.com/content/cover.jpg",
+            "date_modified": "2020-12-05T15:12:33.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/updated-site-search",
+            "url": "https://www.blakerain.com/blog/updated-site-search",
+            "title": "Updated Site Search",
+            "summary": "In this post we look at an updated implementation of the site search feature.",
+            "image": "https://www.blakerain.com/content/Selection_2059.png",
+            "date_modified": "2020-11-27T18:40:09.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/adding-search-to-ghost",
+            "url": "https://www.blakerain.com/blog/adding-search-to-ghost",
+            "title": "Adding Search to Ghost",
+            "summary": "I wanted to add search functionality to the Ghost CMS. In this post I show the way that I achieved this.",
+            "image": "https://www.blakerain.com/content/photo-1546277838-f1e7a049a490.jpg",
+            "date_modified": "2019-11-02T08:30:00.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        },
+        {
+            "id": "https://www.blakerain.com/blog/new-site-and-blog",
+            "url": "https://www.blakerain.com/blog/new-site-and-blog",
+            "title": "New Site and Blog",
+            "summary": "I have a new website and blog using the Ghost platform. Here I touch on the setup and the goals for this site.",
+            "image": "https://www.blakerain.com/content/nong-vang-h6-KSsXLSkI-unsplash.jpg",
+            "date_modified": "2019-10-31T19:44:00.000Z",
+            "author": {
+                "name": "Blake Rain",
+                "url": "https://www.blakerain.com/about"
+            }
+        }
+    ]
+}
