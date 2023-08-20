@@ -112,10 +112,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let template = Template::load(dist_dir.join("index.html")).await?;
 
     let out_dir = root_dir.join("output");
-    log::info!("Creating output directory: {out_dir:?}");
+
+    log::info!("Removing existing output directory: {out_dir:?}");
     tokio::fs::remove_dir_all(&out_dir).await?;
+    log::info!("Creating output directory: {out_dir:?}");
     tokio::fs::create_dir_all(&out_dir).await?;
 
+    log::info!("Copying resources to output directory");
     copy_resources(&dist_dir, &out_dir).await?;
 
     for RenderRoute { url, path } in collect_routes(&root_dir).await? {

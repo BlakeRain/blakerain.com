@@ -26,12 +26,26 @@ name = "site"
 yew = { version = "0.20" }
 yew-router = { version = "0.17" }
 log = { version = "0.4" }
-futures = { version = "0.3", features = ["std"], default-features = false }
+
+[dependencies.time]
+version = "0.3"
+features = [
+  "formatting",
+  "local-offset",
+  "macros",
+  "parsing",
+  "serde"
+]
 
 [dependencies.yew_icons]
 version = "0.7"
 features = [
   "LucideRss"
+]
+
+[target.'cfg(target_arch = "wasm32")']
+required-features = [
+  "time/wasm-bindgen"
 ]
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]

@@ -2,11 +2,17 @@ use site::app::App;
 
 fn main() {
     #[cfg(target_arch = "wasm32")]
-    wasm_logger::init(wasm_logger::Config::new(log::Level::Trace));
+    wasm_logger::init(wasm_logger::Config::default());
 
     #[cfg(feature = "hydration")]
-    yew::Renderer::<App>::new().hydrate();
+    {
+        log::info!("Hydration build; hydrating application");
+        yew::Renderer::<App>::new().hydrate();
+    }
 
     #[cfg(not(feature = "hydration"))]
-    yew::Renderer::<App>::new().render();
+    {
+        log::info!("Standard build; rendering application");
+        yew::Renderer::<App>::new().render();
+    }
 }
