@@ -19,6 +19,10 @@ pub enum Route {
     BlogPost { slug: String },
     #[at("/disclaimer")]
     Disclaimer,
+    #[at("/tags")]
+    Tags,
+    #[at("/tags/{slug}")]
+    Tag { slug: String },
 }
 
 impl Route {
@@ -29,6 +33,8 @@ impl Route {
             Self::Blog => html! { <blog::Page /> },
             Self::BlogPost { slug } => html! { <blog_post::Page slug={slug} /> },
             Self::Disclaimer => html! { <disclaimer::Page /> },
+            Self::Tags => unimplemented!(),
+            Self::Tag { .. } => unimplemented!(),
         }
     }
 }

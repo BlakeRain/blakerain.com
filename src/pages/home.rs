@@ -1,22 +1,30 @@
-use yew::{function_component, html, use_state, Callback, Html};
-use yew_router::prelude::Link;
+use yew::{function_component, html, use_context, use_state, Html};
+use yew_hooks::{use_async_with_options, UseAsyncOptions};
 
-use crate::pages::Route;
+use crate::{
+    components::blog::post_card_list::PostCardList,
+    model::source::{ModelSource, ModelSourceWrapper, SourceError},
+};
 
 #[function_component(Page)]
 pub fn page() -> Html {
-    let count = use_state(|| 0);
+    let source = use_context::<ModelSourceWrapper>().expect("ModelSource to be provided");
+    let posts = use_state(Vec::new);
 
-    let button_click = {
-        let count = count.clone();
-        Callback::from(move |_| count.set(*count + 1))
-    };
+    {
+        let posts = posts.clone();
+        use_async_with_options::<_, (), SourceError>(
+            async move {
+                posts.set(source.get_posts().await?);
+                Ok(())
+            },
+            UseAsyncOptions::enable_auto(),
+        );
+    }
 
     html! {
         <>
-            <h1>{"Home"}</h1>
-            <button type="button" onclick={button_click}>{format!("Clicked {} times", *count)}</button>
-            <Link<Route> to={Route::About}>{"About"}</Link<Route>>
+            <PostCardList posts={(*posts).clone()} />
         </>
     }
 }

@@ -1,12 +1,13 @@
 module.exports = {
   theme: {
     extend: {
+      fontFamily: {
+        text: ["Noto Serif", "serif"],
+      },
       colors: {
         primary: {
-          dark: "#0D1B2A",
-          DEFAULT: "#1B263B",
-          light: "#415A77",
-          lighter: "#778DA9",
+          dark: "#22293D",
+          DEFAULT: "#13304E",
         },
       },
     },
