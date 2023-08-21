@@ -4,10 +4,13 @@ tags:
   - ghost-tag
   - linux
   - aws
-excerpt: I have a new website and blog using the Ghost platform. Here I touch on
-  the setup and the goals for this site.
 published: 2019-10-31T19:44:00.000Z
-cover: /content/nong-vang-h6-KSsXLSkI-unsplash.jpg
+cover: /content/new-site-and-blog/cover.jpg
+---
+
+I have a new website and blog using the Ghost platform. Here I touch on the setup and the goals for
+this site.
+
 ---
 
 **tl;dr** New website using [Ghost](https://ghost.org/) was easy to set up.

@@ -4,10 +4,13 @@ tags:
   - ghost-tag
   - javascript
   - react
-excerpt: In this post I outline the steps that I took to make this blog a static
-  site, whilst still maintaining some of the advantages of the Ghost CMS.
 published: 2021-08-01T17:41:22.000Z
-cover: /content/Screenshot-2021-08-01-at-18.29.16.jpg
+cover: /content/moving-towards-jamstack-with-netlify/cover.jpg
+---
+
+In this post I outline the steps that I took to make this blog a static site, whilst still
+maintaining some of the advantages of the Ghost CMS.
+
 ---
 
 I've recently been tinkering with the serverless approach to application development and hosting. I decided to change this website to an entirely static site. However I didn't want to just use a GitHub repository of Markdown files, preferring to maintain some of the advantages of the Ghost CMS.

@@ -3,10 +3,10 @@ title: Bitmap Tri-Color Marking
 tags:
   - gc
   - cpp
-excerpt: In this post I look at a simple tri-color marking implementation that
-  uses bitmap operations to walk the heap.
 published: 2020-12-05T15:12:33.000Z
-cover: /content/cover.jpg
+cover: /content/bitmap-tri-color-marking/cover.jpg
+---
+In this post I look at a simple tri-color marking implementation that uses bitmap operations to walk the heap.
 ---
 
 Recently I've been experimenting with various garbage collection implementations, with an eye towards one of my possible future projects. This has lead me down all manner of paths, many of them false, and all of them great fun. One particular approach stuck with me for quite some time after I had abandoned it, so I thought I would share this approach.

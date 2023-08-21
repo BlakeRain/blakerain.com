@@ -2,11 +2,11 @@
 title: Moving to Mastodon
 tags:
   - mastodon
-excerpt: |
-  Much like a great number of other people, I have followed the trend towards Mastodon, and have found it to be quite a
-  wonderful experience.
 published: 2022-11-13T15:38:33.000Z
 cover: /content/moving-to-mastodon/cover.jpg
+---
+Much like a great number of other people, I have followed the trend towards Mastodon, and have
+found it to be quite a wonderful experience.
 ---
 
 This week one of my favourite actors [Stephen Fry] posted a final message to his now closed Twitter account and moved
