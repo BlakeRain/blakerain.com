@@ -27,6 +27,11 @@ enabled. This will build a WebAssembly module with the hydration support. Afterw
 `cargo run` to run the `site-build` app with the `static` feature set, which allows us to generate
 all the static pages.
 
+```
+trunk build --release --features hydration
+cargo run --features static --bin site-build
+```
+
 [blakerain.com]: https://blakerain.com/
 [Yew]: https://yew.rs/
 [S3]: https://aws.amazon.com/s3/
