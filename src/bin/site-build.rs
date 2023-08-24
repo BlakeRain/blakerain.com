@@ -113,8 +113,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let out_dir = root_dir.join("output");
 
-    log::info!("Removing existing output directory: {out_dir:?}");
-    tokio::fs::remove_dir_all(&out_dir).await?;
+    if out_dir.exists() {
+        log::info!("Removing existing output directory: {out_dir:?}");
+        tokio::fs::remove_dir_all(&out_dir).await?;
+    }
+
     log::info!("Creating output directory: {out_dir:?}");
     tokio::fs::create_dir_all(&out_dir).await?;
 
