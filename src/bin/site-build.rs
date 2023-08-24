@@ -80,23 +80,62 @@ async fn copy_resources(
     dist_dir: impl AsRef<Path>,
     out_dir: impl AsRef<Path>,
 ) -> std::io::Result<()> {
-    let mut resources = tokio::fs::read_dir(dist_dir).await?;
-    while let Some(entry) = resources.next_entry().await? {
-        let Ok(file_type) = entry.file_type().await else {
-            log::error!("Could not get file type for: {:?}", entry.path());
-            continue;
-        };
+    let mut stack: Vec<(PathBuf, PathBuf)> = vec![(
+        dist_dir.as_ref().to_path_buf(),
+        out_dir.as_ref().to_path_buf(),
+    )];
 
-        if file_type.is_file() {
-            if entry.file_name() == "index.html" {
+    while let Some((dist_dir, out_dir)) = stack.pop() {
+        if !out_dir.exists() {
+            log::info!("Creaing output directory: {out_dir:?}");
+            tokio::fs::create_dir(&out_dir).await?;
+        }
+
+        let mut resources = tokio::fs::read_dir(&dist_dir).await?;
+        while let Some(entry) = resources.next_entry().await? {
+            let Ok(file_type) = entry.file_type().await else {
+                log::error!("Could not get file type for: {:?}", entry.path());
                 continue;
+            };
+
+            if file_type.is_file() {
+                if entry.file_name() == "index.html" {
+                    continue;
+                }
+
+                let path = entry.path();
+                log::info!("Copying resource: {:?}", path);
+                tokio::fs::copy(path, out_dir.join(entry.file_name())).await?;
             }
 
-            let path = entry.path();
-            log::info!("Copying resource: {:?}", path);
-            tokio::fs::copy(path, out_dir.as_ref().join(entry.file_name())).await?;
+            if file_type.is_dir() {
+                let name = entry.file_name();
+                let out_dir = out_dir.join(name.clone());
+                let dist_dir = dist_dir.join(name.clone());
+                stack.push((dist_dir, out_dir));
+            }
         }
     }
+
+    Ok(())
+}
+
+async fn write_data(out_dir: impl AsRef<Path>) -> std::io::Result<()> {
+    log::info!("Writing tags.json ...");
+    let tags = site::model::source::get_tags();
+    tokio::fs::write(
+        out_dir.as_ref().join("tags.json"),
+        serde_json::to_string(&tags)?,
+    )
+    .await?;
+
+    log::info!("Writing posts.json ...");
+    let posts = site::model::source::get_posts();
+    tokio::fs::write(
+        out_dir.as_ref().join("posts.json"),
+        serde_json::to_string(&posts)?,
+    )
+    .await?;
 
     Ok(())
 }
@@ -136,6 +175,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         log::info!("Writing route to file: {path:?}");
         tokio::fs::write(path, html).await?;
     }
+
+    log::info!("Writing data");
+    write_data(&out_dir).await?;
 
     Ok(())
 }

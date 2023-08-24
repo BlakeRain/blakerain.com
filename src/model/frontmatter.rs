@@ -2,8 +2,6 @@ use gray_matter::{engine::YAML, Matter, ParsedEntity};
 use serde::Deserialize;
 use time::OffsetDateTime;
 
-use super::source::SourceError;
-
 #[derive(Debug, Clone, PartialEq, Deserialize)]
 pub struct FrontMatter {
     pub title: String,
@@ -16,20 +14,21 @@ pub struct FrontMatter {
     pub cover: Option<String>,
 }
 
-pub fn parse_front_matter(
-    content: &[u8],
-) -> Result<(Option<FrontMatter>, ParsedEntity), SourceError> {
+pub fn parse_front_matter(content: &[u8]) -> (Option<FrontMatter>, ParsedEntity) {
     let content = unsafe { std::str::from_utf8_unchecked(content) };
     let matter = Matter::<YAML>::new().parse(content);
 
     let info: Option<FrontMatter> = if let Some(data) = &matter.data {
-        Some(data.deserialize().map_err(|err| {
-            log::error!("Failed to parse front matter: {err:?}");
-            SourceError::InvalidFrontMatter(err.to_string())
-        })?)
+        match data.deserialize() {
+            Ok(info) => Some(info),
+            Err(err) => {
+                log::error!("Failed to parse front matter: {err:?}");
+                None
+            }
+        }
     } else {
         None
     };
 
-    Ok((info, matter))
+    (info, matter)
 }

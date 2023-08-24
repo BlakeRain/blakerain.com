@@ -1,13 +1,12 @@
 pub mod frontmatter;
 pub mod source;
-pub mod tags;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use time::OffsetDateTime;
 
 use self::frontmatter::FrontMatter;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DocInfo {
     /// The slug used to form the URL for this document.
     pub slug: String,
@@ -19,7 +18,7 @@ pub struct DocInfo {
     pub published: Option<OffsetDateTime>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PostInfo {
     /// Document information.
     pub doc_info: DocInfo,
@@ -31,7 +30,7 @@ pub struct PostInfo {
     pub cover_image: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Post {
     /// Information about the post
     pub info: PostInfo,
@@ -66,7 +65,7 @@ impl PostInfo {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Tag {
     /// The slug of the tag
     pub slug: String,
@@ -78,7 +77,7 @@ pub struct Tag {
     pub description: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum TagVisibility {
     #[serde(rename = "public")]
     Public,

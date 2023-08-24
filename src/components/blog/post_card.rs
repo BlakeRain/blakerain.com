@@ -5,7 +5,7 @@ use yew_router::prelude::Link;
 
 use crate::{
     components::layout::intersperse::Intersperse,
-    model::{tags::TagsContext, PostInfo},
+    model::{source::TagsContext, PostInfo},
     pages::Route,
 };
 
@@ -40,11 +40,13 @@ fn post_card_details(info: &PostInfo, tags: &TagsContext) -> Html {
     let tags = Intersperse::from_iter(
         html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> },
         info.tags.iter().map(|tag| {
-            if let Some(tag) = tags.get_tag(tag) {
+            if let Some(tag) = tags.get(tag) {
                 html! {
                     <Link<Route>
                         classes="text-sky-500 hover:text-sky-600"
-                        to={Route::Tag { slug: tag.slug }}>{tag.name}</Link<Route>>
+                        to={Route::Tag { slug: tag.slug.clone() }}>
+                        {tag.name.clone()}
+                    </Link<Route>>
                 }
             } else {
                 html! {

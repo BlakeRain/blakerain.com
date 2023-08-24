@@ -10,24 +10,16 @@ use yew_router::{
 #[cfg(not(feature = "static"))]
 use yew_router::BrowserRouter;
 
-use crate::{
-    components::layout::Layout,
-    model::{source::ModelProvider, tags::TagsProvider},
-    pages::Route,
-};
+use crate::{components::layout::Layout, pages::Route};
 
 #[function_component(AppContent)]
 fn app_content() -> Html {
     html! {
-        <ModelProvider>
-            <TagsProvider>
-                <Layout>
-                    <main>
-                        <Switch<Route> render={Route::switch} />
-                    </main>
-                </Layout>
-            </TagsProvider>
-        </ModelProvider>
+        <Layout>
+            <main>
+                <Switch<Route> render={Route::switch} />
+            </main>
+        </Layout>
     }
 }
 
@@ -43,6 +35,7 @@ pub struct AppProps {
 pub fn app(props: &AppProps) -> Html {
     #[cfg(feature = "static")]
     {
+        log::info!("Application is running in static mode");
         let history = AnyHistory::from(MemoryHistory::default());
         history.push(&props.url);
         html! {
