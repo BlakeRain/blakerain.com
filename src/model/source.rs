@@ -26,7 +26,7 @@ pub fn provide_tags(props: &ProvideTagsProps) -> Html {
 
 pub fn get_tags() -> TagsContext {
     let file = CONTENT_DIR.get_file("tags.yaml").expect("tags.yaml");
-    match serde_yaml::from_slice::<Vec<Tag>>(file.contents()) {
+    let tags = match serde_yaml::from_slice::<Vec<Tag>>(file.contents()) {
         Ok(tags) => tags
             .into_iter()
             .map(|tag| (tag.slug.clone(), tag))
@@ -34,7 +34,10 @@ pub fn get_tags() -> TagsContext {
         Err(err) => {
             panic!("Failed to parse tags.yaml: {err}");
         }
-    }
+    };
+
+    log::info!("Loaded {} tags", tags.len());
+    tags
 }
 
 #[derive(Properties, PartialEq)]
@@ -58,6 +61,7 @@ pub fn get_posts() -> PostsContext {
     let files = CONTENT_DIR.get_dir("posts").expect("posts dir").files();
     let mut posts = files.filter_map(load_post_info).collect::<Vec<_>>();
     posts.sort_by(|a, b| b.doc_info.published.cmp(&a.doc_info.published));
+    log::info!("Loaded {} posts", posts.len());
     posts
 }
 
