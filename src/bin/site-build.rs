@@ -120,26 +120,6 @@ async fn copy_resources(
     Ok(())
 }
 
-async fn write_data(out_dir: impl AsRef<Path>) -> std::io::Result<()> {
-    log::info!("Writing tags.json ...");
-    let tags = site::model::source::get_tags();
-    tokio::fs::write(
-        out_dir.as_ref().join("tags.json"),
-        serde_json::to_string(&tags)?,
-    )
-    .await?;
-
-    log::info!("Writing posts.json ...");
-    let posts = site::model::source::get_posts();
-    tokio::fs::write(
-        out_dir.as_ref().join("posts.json"),
-        serde_json::to_string(&posts)?,
-    )
-    .await?;
-
-    Ok(())
-}
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
@@ -175,9 +155,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         log::info!("Writing route to file: {path:?}");
         tokio::fs::write(path, html).await?;
     }
-
-    log::info!("Writing data");
-    write_data(&out_dir).await?;
 
     Ok(())
 }
