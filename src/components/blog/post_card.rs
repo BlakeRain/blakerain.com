@@ -98,14 +98,14 @@ pub fn post_card(props: &PostCardProps) -> Html {
         html! {
             <>
                 {post_card_image(&props.post.doc_info.slug, &props.post.cover_image)}
-                <div class="col-span-2">
+                <div class="xl:col-span-2 md:mt-4 lg:mt-0">
                     {post_card_description(&props.post, &tags)}
                 </div>
             </>
         }
     } else {
         html! {
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 md:mt-20 lg:mt-0">
                 {post_card_image(&props.post.doc_info.slug, &props.post.cover_image)}
                 {post_card_description(&props.post, &tags)}
             </div>
