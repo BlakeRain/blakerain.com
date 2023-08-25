@@ -41,14 +41,17 @@ There was one issue I had that ended up taking some time to remediate: the chang
 
 In order to render the site I decided to use React Static: a static site generator for React. I chose this approach over other [much easier options](https://ghost.org/docs/jamstack/) as I wanted to move away from Ghost themes – and I really enjoy using React :)
 
-<Bookmark
-url="https://github.com/react-static/react-static"
-title="GitHub - react-static/react-static: ⚛️ 🚀 A progressive static site generator for React."
-description="⚛️ 🚀 A progressive static site generator for React. - GitHub - react-static/react-static: ⚛️ 🚀 A progressive static site generator for React."
-author="react-static"
-publisher="GitHub"
-thumbnail="https://repository-images.githubusercontent.com/102987907/733d9200-6288-11e9-9f58-538c156753f8"
-icon="https://github.com/fluidicon.png" />
+```bookmark
+url: "https://github.com/react-static/react-static"
+title: "GitHub - react-static/react-static: ⚛️ 🚀 A progressive static site generator for React."
+description: |
+    ⚛️ 🚀 A progressive static site generator for React. - GitHub - react-static/react-static:
+    ⚛️ 🚀 A progressive static site generator for React.
+author: react-static
+publisher: GitHub
+thumbnail: "https://repository-images.githubusercontent.com/102987907/733d9200-6288-11e9-9f58-538c156753f8"
+icon: "https://github.com/fluidicon.png"
+```
 
 I used the Ghost [Content API](https://ghost.org/docs/content-api/) to extract the navigation, posts, and pages. I then render them using React. The site is a very simple React application, with only a few components.
 
@@ -73,14 +76,15 @@ In order to achieve this I created a new Docker container on the same machine. T
 
 As a security precaution, GitHub encourage you to not attach a self-hosted runner to a public repository. Therefore it was necessary for me to create a private repository which contains the workflow for building and deploying the site. As the repository is private, I have reproduced the workflow as a Gist:
 
-<Bookmark
-  url="https://gist.github.com/BlakeRain/cae8edfa273d7603d25e5527c6821984"
-  title="Workflow to build and deploy the static blakerain.com"
-  description="Workflow to build and deploy the static blakerain.com - deploy.yml"
-  author="262588213843476"
-  publisher="Gist"
-  thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
-  icon="https://gist.github.com/fluidicon.png" />
+```bookmark
+url: "https://gist.github.com/BlakeRain/cae8edfa273d7603d25e5527c6821984"
+title: "Workflow to build and deploy the static blakerain.com"
+description: "Workflow to build and deploy the static blakerain.com - deploy.yml"
+author: Blake Rain
+publisher: GitHub Gist
+thumbnail: "https://github.githubassets.com/images/modules/gists/gist-og-image.png"
+icon: "https://gist.github.com/fluidicon.png"
+```
 
 The final piece of the puzzle was to connect Ghost to GitHub: when I make a change to the site I wanted the GitHub workflow to execute. As the GitHub API requires authentication, I created a small [lambda function](https://github.com/BlakeRain/blakerain.com/blob/main/lambda/ghost-post-actions/index.js). This function processes the POST request from the Ghost CMS [webhook](https://ghost.org/docs/webhooks/) and in turn makes a call to the GitHub API to trigger a [workflow dispatch event](https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event).
 
@@ -90,11 +94,14 @@ Now that I have a static version of the site, hosted for free at Netlify, I'm su
 
 As before, all the sources for the site are available on GitHub. This includes the cobbled together bits and pieces for the S3 storage adapter and the GitHub Actions Runner Docker image.
 
-<Bookmark
-  url="https://github.com/BlakeRain/blakerain.com"
-  title="GitHub - BlakeRain/blakerain.com: Repository for the static generator for my blog"
-  description="Repository for the static generator for my blog. Contribute to BlakeRain/blakerain.com development by creating an account on GitHub."
-  author="BlakeRain"
-  publisher="GitHub"
-  thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
-  icon="https://github.com/fluidicon.png" />
+```bookmark
+url: "https://github.com/BlakeRain/blakerain.com"
+title: "GitHub - BlakeRain/blakerain.com: Repository for the static generator for my blog"
+description: |
+  Repository for the static generator for my blog. Contribute to BlakeRain/blakerain.com development
+  by creating an account on GitHub.
+author: BlakeRain
+publisher: GitHub
+thumbnail: "https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
+icon: "https://github.com/fluidicon.png"
+```

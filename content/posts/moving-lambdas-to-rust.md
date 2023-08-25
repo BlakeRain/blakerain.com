@@ -21,14 +21,17 @@ November, Aleksandr wrote about the performance of [x86 vs
 ARM](https://filia-aleks.medium.com/aws-lambda-battle-x86-vs-arm-graviton2-perfromance-3581aaef75d9)
 on AWS Lambda, which again showed Rust to be quite performant, and even more so on ARM.
 
-<Bookmark
-  url="https://github.com/awslabs/aws-lambda-rust-runtime"
-  title="GitHub - awslabs/aws-lambda-rust-runtime: A Rust runtime for AWS Lambda"
-  description="A Rust runtime for AWS Lambda. Contribute to awslabs/aws-lambda-rust-runtime development by creating an account on GitHub."
-  author="awslabs"
-  publisher="GitHub"
-  thumbnail="https://opengraph.githubassets.com/e6c849253e37fbc1db7ae49d6368cc42988843123134001207eff64f7c470c9f/awslabs/aws-lambda-rust-runtime"
-  icon="https://github.com/fluidicon.png" />
+```bookmark
+url: "https://github.com/awslabs/aws-lambda-rust-runtime"
+title: "GitHub - awslabs/aws-lambda-rust-runtime: A Rust runtime for AWS Lambda"
+description: |
+   A Rust runtime for AWS Lambda. Contribute to awslabs/aws-lambda-rust-runtime development by
+   creating an account on GitHub.
+author: awslabs
+publisher: GitHub
+thumbnail: "https://opengraph.githubassets.com/e6c849253e37fbc1db7ae49d6368cc42988843123134001207eff64f7c470c9f/awslabs/aws-lambda-rust-runtime"
+icon: "https://github.com/fluidicon.png"
+```
 
 ## Site Analytics
 
@@ -60,14 +63,18 @@ crate. This seemed to only arise when I compiled in Docker on the M1 when target
 support for ARM in Lambda is quite recent, none of the AWS Lambda Rust build images I looked at
 currently seemed to support it.
 
-<Bookmark
-  url="https://github.com/softprops/lambda-rust"
-  title="GitHub - softprops/lambda-rust: 🐳 🦀 a dockerized lambda build env for rust applications"
-  description="This docker image extends lambda ci provided.al2 builder docker image, a faithful reproduction of the actual AWS 'provided.al2' Lambda runtime environment, and installs rustup and the stable rust toolchain."
-  author="awslabs"
-  publisher="GitHub"
-  thumbnail="https://opengraph.githubassets.com/31c9066c430630fe306c04d47e6ef314b5395bc6ce40867c9d890c2e5e13e21a/softprops/lambda-rust"
-  icon="https://github.com/fluidicon.png" />
+```bookmark
+url: "https://github.com/softprops/lambda-rust"
+title: "GitHub - softprops/lambda-rust: 🐳 🦀 a dockerized lambda build env for rust applications"
+description: |
+  This docker image extends lambda ci provided.al2 builder docker image, a faithful reproduction of
+  the actual AWS 'provided.al2' Lambda runtime environment, and installs rustup and the stable rust
+  toolchain.
+author: awslabs
+publisher: GitHub
+thumbnail: "https://opengraph.githubassets.com/31c9066c430630fe306c04d47e6ef314b5395bc6ce40867c9d890c2e5e13e21a/softprops/lambda-rust"
+icon: "https://github.com/fluidicon.png"
+```
 
 I'm sure that at some point they will support ARM, but for the time being it was necessary for me
 to create a [Dockerfile] that used the `al2-arm64` image provided by AWS in the [ECR]. This

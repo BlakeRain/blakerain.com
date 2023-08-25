@@ -24,11 +24,11 @@ the time of writing, he has already amassed 51k followers.
 
 ```bookmark
 url: "https://mastodonapp.uk/@stephenfry"
-title: @stephenfry@mastodonapp.uk
+title: "@stephenfry@mastodonapp.uk"
 description: Stephen Fry on Mastodon
 author: Stephen Fry
 publisher: Mastodon
-thumbnail: /content/moving-to-mastodon/fry-mastodon.jpg
+thumbnail: "/content/moving-to-mastodon/fry-mastodon.jpg"
 icon: "https://cdn.simpleicons.org/mastodon/6364FF"
 ```
 
