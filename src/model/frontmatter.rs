@@ -12,6 +12,7 @@ pub struct FrontMatter {
     )]
     pub published: Option<OffsetDateTime>,
     pub cover: Option<String>,
+    pub excerpt: Option<String>,
 }
 
 pub fn parse_front_matter(content: &[u8]) -> (Option<FrontMatter>, ParsedEntity) {

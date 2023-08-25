@@ -6,11 +6,9 @@ tags:
   - cpp
 published: 2020-12-11T18:30:00.000Z
 cover: /content/allocating-memory-for-dma-in-linux/cover.jpg
----
-
-In this post we take a look at allocating memory on Linux using huge pages with the intention of
-sharing that memory with PCIe devices that use DMA.
-
+excerpt: |
+  In this post we take a look at allocating memory on Linux using huge pages with the intention of
+  sharing that memory with PCIe devices that use DMA.
 ---
 
 I've recently had the pleasure of writing some user-space code that takes control of an Ethernet card – specifically the [Intel i350](https://ark.intel.com/content/www/us/en/ark/products/59062/intel-ethernet-server-adapter-i350-t2.html) and it's kin. Part of the interface with the device requires sharing memory that contains packet descriptors and buffers. The device uses this memory for the communication of transmitted and received Ethernet packets.

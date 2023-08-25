@@ -6,8 +6,8 @@ tags:
   - python
 published: 2019-11-02T08:30:00.000Z
 cover: /content/adding-search-to-ghost/cover.jpg
----
-I wanted to add search functionality to the Ghost CMS. In this post I show the way that I achieved this.
+excerpt: |
+  I wanted to add search functionality to the Ghost CMS. In this post I show the way that I achieved this.
 ---
 
 **tl;dr** I added search with a couple of Python scripts ([here](https://github.com/HalfWayMan/blakerain.com/blob/master/populate-db.py) and [here](https://github.com/HalfWayMan/blakerain.com/blob/master/simple-search.py)).

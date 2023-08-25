@@ -109,7 +109,7 @@ fn load_post(file: &File) -> Option<Post> {
     let reading_time = words_count::count(&matter.content).words / 200;
 
     Some(Post {
-        info: PostInfo::from_front_matter(slug, Some(reading_time), matter.excerpt, front_matter),
+        info: PostInfo::from_front_matter(slug, Some(reading_time), front_matter),
         content: matter.content,
     })
 }

@@ -4,9 +4,9 @@ tags:
   - mastodon
 published: 2022-11-13T15:38:33.000Z
 cover: /content/moving-to-mastodon/cover.jpg
----
-Much like a great number of other people, I have followed the trend towards Mastodon, and have
-found it to be quite a wonderful experience.
+excerpt: |
+  Much like a great number of other people, I have followed the trend towards Mastodon, and have
+  found it to be quite a wonderful experience.
 ---
 
 This week one of my favourite actors [Stephen Fry] posted a final message to his now closed Twitter account and moved
@@ -22,14 +22,15 @@ tweets were at times few and far between.
 In the same Reddit thread I learned that he had already created an account on the [mastodonapp.uk] instance where, at
 the time of writing, he has already amassed 51k followers.
 
-<Bookmark
-  url="https://mastodonapp.uk/@stephenfry"
-  title="@stephenfry@mastodonapp.uk"
-  description="Stephen Fry on Mastodon"
-  author="Stephen Fry"
-  publisher="Mastodon"
-  thumbnail="/content/moving-to-mastodon/fry-mastodon.jpg"
-  icon="https://cdn.simpleicons.org/mastodon/6364FF" />
+```bookmark
+url: "https://mastodonapp.uk/@stephenfry"
+title: @stephenfry@mastodonapp.uk
+description: Stephen Fry on Mastodon
+author: Stephen Fry
+publisher: Mastodon
+thumbnail: /content/moving-to-mastodon/fry-mastodon.jpg
+icon: "https://cdn.simpleicons.org/mastodon/6364FF"
+```
 
 Not wanting to be left out of what appeared to be a growing trend, Fry's departure from Twitter provided the impetus for
 me to give Mastodon a go. On Wednesday I decided to create my own Mastodon account, on the same [mastodonapp.uk]
@@ -70,12 +71,15 @@ One of the people I found was Hugh Rundle. Hugh has made some interesting points
 think is an important read to anybody moving to Mastodon from Twitter. Hugh tells an important part of the story that
 I'm not sure is being considered.
 
-<Quote author="Hugh Rundle" url="https://www.hughrundle.net/home-invasion/">
-There's another, smaller group of people mourning a social media experience that was destroyed this week — the people
-who were active on Mastodon and the broader fediverse prior to November 2022. The nightclub has a new brash owner, and
-the dancefloor has emptied. People are pouring in to the quiet houseparty around the corner, cocktails still in hand,
-demanding that the music be turned up, walking mud into the carpet, and yelling over the top of the quiet conversation.
-</Quote>
+```quote
+author: Hugh Rundle
+url: "https://www.hughrundle.net/home-invasion/"
+quote: |
+    There's another, smaller group of people mourning a social media experience that was destroyed this week — the people
+    who were active on Mastodon and the broader fediverse prior to November 2022. The nightclub has a new brash owner, and
+    the dancefloor has emptied. People are pouring in to the quiet houseparty around the corner, cocktails still in hand,
+    demanding that the music be turned up, walking mud into the carpet, and yelling over the top of the quiet conversation.
+```
 
 I really hope that we can behave in a way that doesn't ruin the house party.
 

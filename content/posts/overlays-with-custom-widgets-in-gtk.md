@@ -5,11 +5,9 @@ tags:
   - gtk
 published: 2021-01-14T21:27:19.000Z
 cover: /content/overlays-with-custom-widgets-in-gtk/cover.png
----
-
-In this post I show how to build a collapsible controls overlay in GTK, rendered over a simple
-custom widget.
-
+excerpt: |
+  In this post I show how to build a collapsible controls overlay in GTK, rendered over a simple
+  custom widget.
 ---
 
 Recently I've been building a GTK application that includes a custom drawing widget for editing a simple 2D map. When elements are selected in the map I wanted a nice way to edit those elements within the map itself.

@@ -42,12 +42,12 @@ impl PostInfo {
     pub fn from_front_matter(
         slug: String,
         reading_time: Option<usize>,
-        excerpt: Option<String>,
         FrontMatter {
             title,
             tags,
             published,
             cover,
+            excerpt,
         }: FrontMatter,
     ) -> Self {
         PostInfo {

@@ -5,8 +5,8 @@ tags:
   - rust
 published: 2022-02-07T20:04:44.000Z
 cover: /content/moving-lambdas-to-rust/jay-heike-Fc-0gi4YylM-unsplash.jpg
----
-My experience changing the AWS Lambda functions for this website from Python to Rust.
+excerpt: |
+  My experience changing the AWS Lambda functions for this website from Python to Rust.
 ---
 
 Since I've started using Rust quite a bit more at work and in some personal projects, I've been

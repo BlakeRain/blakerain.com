@@ -7,8 +7,8 @@ tags:
   - react
 published: 2020-11-27T18:40:09.000Z
 cover: /content/updated-site-search/cover.png
----
-In this post we look at an updated implementation of the site search feature.
+excerpt: |
+  In this post we look at an updated implementation of the site search feature.
 ---
 
 I decided to re-visit the search functionality that I [had added](http://localhost:2368/blog/adding-search-to-ghost/) to this site to provide a slightly better search mechanism. I had three objectives that I wanted to achieve:
