@@ -5,4 +5,27 @@
     @apply bg-white text-neutral-800;
     @apply dark:bg-zinc-900 dark:text-neutral-200;
   }
+
+  .markdown {
+    @apply font-text text-xl;
+    @apply text-neutral-800 dark:text-neutral-300;
+
+    p {
+      @apply mb-6 leading-relaxed;
+    }
+
+    a {
+      @apply underline text-blue-500 dark:text-blue-200;
+      @apply hover:text-blue-600 dark:hover:text-blue-300;
+    }
+
+    figure {
+      @apply mb-6 flex flex-col items-center;
+    }
+
+    figcaption {
+      @apply mt-4 font-sans text-sm text-center;
+      @apply text-neutral-600 dark:text-neutral-500;
+    }
+  }
 }

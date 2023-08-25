@@ -1,3 +1,4 @@
+use gray_matter::engine::Engine;
 use include_dir::{include_dir, Dir, File};
 use std::collections::HashMap;
 use yew::{function_component, html, Children, ContextProvider, Html, Properties};
@@ -62,7 +63,11 @@ pub fn provide_post(props: &ProvidePostProps) -> Html {
 
 pub fn get_tags() -> TagsContext {
     let file = CONTENT_DIR.get_file("tags.yaml").expect("tags.yaml");
-    let tags = match serde_yaml::from_slice::<Vec<Tag>>(file.contents()) {
+    let tags = match gray_matter::engine::YAML::parse(
+        file.contents_utf8().expect("tags.yaml to be utf-8"),
+    )
+    .deserialize::<Vec<Tag>>()
+    {
         Ok(tags) => tags
             .into_iter()
             .map(|tag| (tag.slug.clone(), tag))

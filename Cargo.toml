@@ -38,7 +38,6 @@ pulldown-cmark = { version = "0.9" }
 reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
-serde_yaml = { version = "0.9" }
 thiserror = { version = "1.0" }
 words-count = { version = "0.1" }
 

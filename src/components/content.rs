@@ -38,7 +38,7 @@ pub fn post_content(_: &PostContentProps) -> Html {
                     </div>
                 </div>
             </header>
-            <div class="container mx-auto">
+            <div class="container mx-auto my-12 px-16 markdown">
                 {markdown(&post.content)}
             </div>
         </article>

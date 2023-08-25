@@ -1,10 +1,71 @@
-use std::{collections::HashMap, fmt::Write};
+use std::{collections::HashMap, fmt::Write, str::FromStr};
 
+use gray_matter::engine::Engine;
 use pulldown_cmark::{CodeBlockKind, CowStr, Event, HeadingLevel, Options, Parser, Tag};
+use serde::Deserialize;
 use yew::{
+    html,
     virtual_dom::{VList, VNode, VTag, VText},
     Html,
 };
+
+#[derive(Deserialize)]
+struct BookmarkDecl {
+    url: String,
+    title: String,
+    description: String,
+    author: String,
+    publisher: Option<String>,
+    thumbnail: Option<String>,
+    icon: Option<String>,
+}
+
+impl BookmarkDecl {
+    fn generate(self) -> VNode {
+        html! {
+            <figure>
+                <a href={self.url}>
+                    <div>
+                        <h1>{self.title}</h1>
+                    </div>
+                </a>
+            </figure>
+        }
+    }
+}
+
+enum GeneratorBlock {
+    Bookmark(BookmarkDecl),
+}
+
+impl GeneratorBlock {
+    fn new_bookmark(content: String) -> Self {
+        let decl = gray_matter::engine::YAML::parse(&content)
+            .deserialize()
+            .expect("BookmarkDecl");
+        Self::Bookmark(decl)
+    }
+
+    fn generate(self) -> VNode {
+        match self {
+            Self::Bookmark(decl) => decl.generate(),
+        }
+    }
+}
+
+struct Generator(pub Box<dyn Fn(String) -> GeneratorBlock>);
+
+impl FromStr for Generator {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "bookmark" {
+            Ok(Generator(Box::new(GeneratorBlock::new_bookmark)))
+        } else {
+            Err(())
+        }
+    }
+}
 
 struct Writer<'a, I> {
     tokens: I,
@@ -54,6 +115,17 @@ where
             Tag::BlockQuote => self.stack.push(VTag::new("blockquote")),
 
             Tag::CodeBlock(kind) => {
+                if let CodeBlockKind::Fenced(language) = &kind {
+                    if let Ok(generator) = language.parse::<Generator>() {
+                        if let Ok(content) = self.raw_text() {
+                            let block = (generator.0)(content);
+                            let tag = block.generate();
+                            self.stack.push(tag);
+                            return;
+                        }
+                    }
+                }
+
                 let mut pre = VTag::new("pre");
                 let mut code = VTag::new("code");
                 if let CodeBlockKind::Fenced(language) = kind {
@@ -86,30 +158,68 @@ where
             Tag::Strikethrough => self.stack.push(VTag::new("s")),
 
             Tag::Link(_, href, title) => {
-                let mut tag = VTag::new("a");
-                tag.add_attribute("href", href.to_string());
-                tag.add_attribute("title", title.to_string());
-                self.stack.push(tag);
+                let mut anchor = VTag::new("a");
+                anchor.add_attribute("href", href.to_string());
+                anchor.add_attribute("title", title.to_string());
+                self.stack.push(anchor);
             }
 
             Tag::Image(_, href, title) => {
-                let mut tag = VTag::new("img");
-                tag.add_attribute("src", href.to_string());
-                tag.add_attribute("title", title.to_string());
-                if let Ok(alt) = self.raw_text() {
-                    tag.add_attribute("alt", alt);
+                // Note that we do not get an `Event::End` for the image tag.
+                let mut img = VTag::new("img");
+                img.add_attribute("loading", "lazy");
+                img.add_attribute("src", href.to_string());
+                img.add_attribute("title", title.to_string());
+
+                let alt = if let Ok(alt) = self.raw_text() {
+                    img.add_attribute("alt", alt.clone());
+                    Some(alt)
+                } else {
+                    None
+                };
+
+                // If the currently open tag is a <p> tag, then we want to replace it with a
+                // <figure>. If not, we'll add our own <figure> tag.
+
+                let top_p = self
+                    .stack
+                    .last()
+                    .map(|top| top.tag() == "p")
+                    .unwrap_or_default();
+                if top_p {
+                    self.stack.pop();
                 }
-                self.stack.push(tag);
+
+                let mut figure = VTag::new("figure");
+                figure.add_child(img.into());
+
+                if let Some(alt) = alt {
+                    let mut caption = VTag::new("figcaption");
+                    caption.add_child(VText::new(alt).into());
+                    figure.add_child(caption.into());
+                }
+
+                // Put the <figure> onto the stack. This will be popped by the `Event::End` for the
+                // `<p>` tag that Markdown likes to wrap around images.
+                self.stack.push(figure);
             }
         }
     }
 
     fn end_tag(&mut self, tag: Tag) {
-        let top = self.stack.pop().unwrap_or_else(|| {
-            panic!("Expected stack to have an element at end of tag: {tag:?}");
-        });
+        let element = self
+            .stack
+            .pop()
+            .unwrap_or_else(|| {
+                panic!("Expected stack to have an element at end of tag: {tag:?}");
+            })
+            .into();
 
-        self.output.push(top.into());
+        if let Some(top) = self.stack.last_mut() {
+            top.add_child(element);
+        } else {
+            self.output.push(element);
+        }
     }
 
     fn raw_text(&mut self) -> Result<String, std::fmt::Error> {
@@ -150,15 +260,19 @@ where
 
     fn run(mut self) -> Html {
         while let Some(event) = self.tokens.next() {
+            log::info!("{event:?}");
+
             match event {
                 Event::Start(tag) => self.start_tag(tag),
                 Event::End(tag) => self.end_tag(tag),
+
                 Event::Text(text) => {
                     if let Some(top) = self.stack.last_mut() {
                         let text = VText::new(text.to_string());
                         top.add_child(text.into());
                     }
                 }
+
                 Event::Code(text) => {
                     if let Some(top) = self.stack.last_mut() {
                         let text = VText::new(text.to_string());
@@ -167,22 +281,30 @@ where
                         top.add_child(code.into());
                     }
                 }
+
                 Event::Html(_) => {
                     log::info!("Ignoring html: {event:?}")
                 }
                 Event::FootnoteReference(_) => todo!(),
-                Event::SoftBreak => {}
+
+                Event::SoftBreak => {
+                    if let Some(top) = self.stack.last_mut() {
+                        let text = VText::new("\n");
+                        top.add_child(text.into());
+                    }
+                }
+
                 Event::HardBreak => {}
                 Event::Rule => {}
                 Event::TaskListMarker(_) => todo!(),
             }
         }
 
-        // debug_assert!(
-        //     self.stack.is_empty(),
-        //     "Stack is not empty: {:?}",
-        //     self.stack
-        // );
+        debug_assert!(
+            self.stack.is_empty(),
+            "Stack is not empty: {:?}",
+            self.stack
+        );
 
         VList::with_children(self.output, None).into()
     }
