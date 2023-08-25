@@ -15,13 +15,13 @@ pub enum Route {
     About,
     #[at("/blog")]
     Blog,
-    #[at("/blog/{slug}")]
+    #[at("/blog/:slug")]
     BlogPost { slug: String },
     #[at("/disclaimer")]
     Disclaimer,
     #[at("/tags")]
     Tags,
-    #[at("/tags/{slug}")]
+    #[at("/tags/:slug")]
     Tag { slug: String },
 }
 

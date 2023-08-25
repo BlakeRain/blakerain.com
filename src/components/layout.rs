@@ -15,9 +15,7 @@ pub fn layout(props: &LayoutProps) -> Html {
     html! {
         <div class="flex flex-col">
             <navigation::Navigation />
-            <div class="container mx-auto">
-                {props.children.clone()}
-            </div>
+            {props.children.clone()}
             <footer::Footer />
         </div>
     }

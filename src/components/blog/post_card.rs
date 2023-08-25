@@ -1,5 +1,5 @@
 use time::{format_description::FormatItem, macros::format_description};
-use yew::{function_component, html, use_context, Html, Properties};
+use yew::{classes, function_component, html, use_context, Html, Properties};
 use yew_icons::{Icon, IconId};
 use yew_router::prelude::Link;
 
@@ -25,7 +25,7 @@ fn post_card_image(slug: &str, image: &Option<String>) -> Html {
     }
 }
 
-fn post_card_details(info: &PostInfo, tags: &TagsContext) -> Html {
+pub fn post_card_details(horizontal: bool, info: &PostInfo, tags: &TagsContext) -> Html {
     let mut facts =
         Intersperse::new(html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> });
 
@@ -57,7 +57,12 @@ fn post_card_details(info: &PostInfo, tags: &TagsContext) -> Html {
     );
 
     html! {
-        <div class="flex flex-col uppercase text-sm">
+        <div class={classes!("flex", "uppercase", "text-sm",
+                             if horizontal {
+                                 "flex-row justify-between"
+                             } else {
+                                 "flex-col"
+                             })}>
             <div class="flex flex-row">
                 {facts.finish()}
             </div>
@@ -79,7 +84,7 @@ fn post_card_description(info: &PostInfo, tags: &TagsContext) -> Html {
                     }
                 </div>
             </Link<Route>>
-            {post_card_details(info, tags)}
+            {post_card_details(false, info, tags)}
         </div>
     }
 }
