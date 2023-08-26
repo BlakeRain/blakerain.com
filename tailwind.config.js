@@ -12,6 +12,11 @@ module.exports = {
       },
     },
   },
-  content: ["./src/**/*.rs", "./index.html", "./style/**/*.css"],
+  content: [
+    "./macros/src/**/*.rs",
+    "./src/**/*.rs",
+    "./index.html",
+    "./style/**/*.css",
+  ],
   plugins: [require("@tailwindcss/forms")],
 };
