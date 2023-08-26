@@ -143,11 +143,14 @@ Something to note is that this search implementation – whilst very simple to i
 
 As mentioned earlier, you can find all the source in the GitHub repository:
 
-<Bookmark
-  url="https://github.com/BlakeRain/blakerain.com"
-  title="BlakeRain/blakerain.com"
-  description="Repository for the Ghost theme of my blog. Contribute to BlakeRain/blakerain.com development by creating an account on GitHub."
-  author="BlakeRain"
-  publisher="GitHub"
-  thumbnail="https://avatars2.githubusercontent.com/u/8750438?s=400&v=4"
-  icon="https://github.githubassets.com/favicons/favicon.svg" />
+```bookmark
+title: "BlakeRain/blakerain.com"
+url: "https://github.com/BlakeRain/blakerain.com"
+description: |
+  Repository for the Ghost theme of my blog. Contribute to BlakeRain/blakerain.com development by
+  creating an account on GitHub.
+author: BlakeRain
+publisher: GitHub
+thumbnail: "https://avatars2.githubusercontent.com/u/8750438?s=400&v=4"
+icon: "https://github.githubassets.com/favicons/favicon.svg"
+```

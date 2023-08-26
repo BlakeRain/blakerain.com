@@ -641,14 +641,16 @@ Preparing memory for use with DMA may seem a bit more complex than necessary. As
 
 I hope that this post may be of some use to those of you that need to communicate memory with devices connected to the PCI bus. You can find the complete listing as a GitHub gist:
 
-<Bookmark
-  url="https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595"
-  title="Allocation of hugepages for DMA in Linux"
-  description="Allocation of hugepages for DMA in Linux. GitHub Gist: instantly share code, notes, and snippets."
-  author="262588213843476"
-  publisher="Gist"
-  thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
-  icon="https://github.githubassets.com/favicons/favicon.svg" />
+```bookmark
+title: Allocation of hugepages for DMA in Linux
+url: "https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595"
+description: |
+  Allocation of hugepages for DMA in Linux. GitHub Gist: instantly share code, notes, and snippets.
+author: Blake Rain
+publisher: GitHub Gist
+thumbnail: "https://github.githubassets.com/images/modules/gists/gist-og-image.png"
+icon: "https://github.githubassets.com/favicons/favicon.svg"
+```
 
 <small>
     Cover image courtesy of Harrison Broadbent (<a href="https://unsplash.com/@harrisonbroadbent?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">@harrisonbroadbent</a>) on unsplash.
