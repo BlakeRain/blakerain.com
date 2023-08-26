@@ -7,11 +7,11 @@ use pulldown_cmark::{
     Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, Tag,
 };
 use serde::Deserialize;
-use syntect::{highlighting::ThemeSet, html::highlighted_html_for_string, parsing::SyntaxSet};
+use syntect::html::highlighted_html_for_string;
 
 use crate::parse::properties::{parse_language, parse_language_properties};
 
-use super::highlight::{create_syntaxset, SYNTAX_SET, THEME_SET};
+use super::highlight::{SYNTAX_SET, THEME_SET};
 
 #[derive(Deserialize)]
 struct Bookmark {
@@ -43,7 +43,7 @@ fn generate_component_bookmark<W: StrWrite>(mut output: W, source: &str) -> std:
     write!(output, "\" class=\"")?;
     write!(
         output,
-        "plain w-full flex flex-col lg:flex-row rounded-md shadow-md min-h-[148px]"
+        "plain w-full flex flex-col lg:flex-row rounded-md shadow-md min-h-[148px] "
     )?;
     write!(
         output,

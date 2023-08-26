@@ -8,8 +8,11 @@ use yew::{function_component, html, use_memo, Children, ContextProvider, Html, P
 macros::tags!("content/tags.yaml");
 
 pub mod blog {
-    use crate::components::document::bookmark::Bookmark;
     macros::documents!("content/blog");
+}
+
+pub mod pages {
+    macros::documents!("content/pages");
 }
 
 #[derive(Properties, PartialEq)]
