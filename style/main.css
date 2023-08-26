@@ -77,7 +77,7 @@
     }
 
     ul {
-      @apply list-disc;
+      @apply list-disc pl-10;
     }
 
     figure {

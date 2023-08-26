@@ -1,6 +1,9 @@
 use yew::{function_component, html, Html, Properties};
 
-use crate::{components::content::PostContent, model::ProvideTags};
+use crate::{
+    components::{content::PostContent, layout::goto_top::GotoTop},
+    model::ProvideTags,
+};
 
 #[derive(Properties, PartialEq)]
 pub struct PageProps {
@@ -23,6 +26,7 @@ pub fn page(props: &PageProps) -> Html {
     html! {
         <ProvideTags>
             <PostContent details={details} content={content} />
+            <GotoTop />
         </ProvideTags>
     }
 }

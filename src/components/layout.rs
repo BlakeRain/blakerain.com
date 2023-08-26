@@ -1,6 +1,7 @@
 use yew::{function_component, html, Children, Html, Properties};
 
 mod footer;
+pub mod goto_top;
 pub mod intersperse;
 mod navigation;
 
