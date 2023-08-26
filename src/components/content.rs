@@ -18,7 +18,7 @@ pub fn post_content(props: &PostContentProps) -> Html {
             cover_image
         )
     } else {
-        "background-color: #000".to_string()
+        "background-color: transparent".to_string()
     };
 
     html! {
