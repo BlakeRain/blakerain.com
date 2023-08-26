@@ -120,5 +120,55 @@
       @apply mt-4 font-sans text-sm text-center;
       @apply text-neutral-600 dark:text-neutral-500;
     }
+
+    table {
+      @apply mb-6 border-collapse table-auto min-w-full;
+
+      thead {
+        @apply bg-transparent dark:bg-neutral-800;
+        @apply dark:text-white;
+        @apply border-b border-neutral-500;
+
+        tr {
+          th {
+            @apply px-6 py-4;
+
+            &.left {
+              @apply text-left;
+            }
+
+            &.right {
+              @apply text-right;
+            }
+
+            &.center {
+              @apply text-center;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          @apply border-b border-neutral-400 dark:border-neutral-600;
+
+          td {
+            @apply whitespace-nowrap px-6 py-4;
+
+            &.left {
+              @apply text-left;
+            }
+
+            &.right {
+              @apply text-right;
+            }
+
+            &.center {
+              @apply text-center;
+            }
+          }
+        }
+      }
+    }
   }
 }

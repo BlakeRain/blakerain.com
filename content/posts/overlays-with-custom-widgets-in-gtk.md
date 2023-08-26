@@ -30,7 +30,7 @@ It's interesting to me that we don't often see this kind of UI in many GTK appli
 
 In this article I thought it would be fun to walk through creating a simple GTK application that uses an [overlay](https://developer.gnome.org/gtk3/stable/GtkOverlay.html) widget to render a set of controls over the top of a custom drawn widget.
 
-![Simple application using an overlay widget](/content/overlays-with-custom-widgets-in-gtk/Collapsible-Controls-Overlay-Demo_2102-1.png)
+![Simple application using an overlay widget](/content/overlays-with-custom-widgets-in-gtk/Collapsible-Controls-Overlay-Demo_2102.png)
 
 As we're only focusing on the GTK side of things, I decided to use Python instead of C++.
 
@@ -646,11 +646,12 @@ After this final change to the `ControlPanel` widget we should have a demo that 
 
 If you want to download the source code for this demo you can find it at the following GitHub Gist:
 
-<Bookmark
-  url="https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b"
-  title="collapse-controls.py"
-  description="GitHub Gist: instantly share code, notes, and snippets."
-  author="262588213843476"
-  publisher="Gist"
-  thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
-  icon="https://github.githubassets.com/favicons/favicon.svg" />
+```bookmark
+title: collapsible-controls.py
+url: "https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b"
+description: "GitHub Gist: instantly share code, notes, and snippets."
+author: Blake Rain
+publisher: GitHub Gist
+thumbnail: "https://github.githubassets.com/images/modules/gists/gist-og-image.png"
+icon: "https://github.githubassets.com/favicons/favicon.svg"
+```

@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Write, str::FromStr};
 
 use gray_matter::engine::Engine;
-use pulldown_cmark::{CodeBlockKind, CowStr, Event, HeadingLevel, Options, Parser, Tag};
+use pulldown_cmark::{Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, Options, Parser, Tag};
 use serde::Deserialize;
 use yew::{
     html,
@@ -147,6 +147,9 @@ struct Writer<'a, I> {
     output: Vec<VNode>,
     stack: Vec<VNode>,
     footnotes: HashMap<CowStr<'a>, usize>,
+    table_align: Vec<Alignment>,
+    table_head: bool,
+    table_colidx: usize,
 }
 
 impl<'a, I> Writer<'a, I>
@@ -159,7 +162,16 @@ where
             output: Vec::new(),
             stack: Vec::new(),
             footnotes: HashMap::new(),
+            table_align: Vec::new(),
+            table_head: false,
+            table_colidx: 0,
         }
+    }
+
+    fn pop(&mut self) -> VNode {
+        self.stack.pop().unwrap_or_else(|| {
+            panic!("Stack underflow");
+        })
     }
 
     fn output(&mut self, node: VNode) {
@@ -242,10 +254,41 @@ where
 
             Tag::FootnoteDefinition(_) => todo!(),
 
-            Tag::Table(_) => todo!(),
-            Tag::TableHead => todo!(),
-            Tag::TableRow => todo!(),
-            Tag::TableCell => todo!(),
+            Tag::Table(align) => {
+                self.table_align = align;
+                self.stack.push(VTag::new("table").into());
+            }
+
+            Tag::TableHead => {
+                self.table_head = true;
+                self.stack.push(VTag::new("thead").into());
+                self.stack.push(VTag::new("tr").into());
+            }
+
+            Tag::TableRow => {
+                self.table_colidx = 0;
+                self.stack.push(VTag::new("tr").into());
+            }
+            Tag::TableCell => {
+                let mut cell = if self.table_head {
+                    VTag::new("th")
+                } else {
+                    VTag::new("td")
+                };
+
+                match self.table_align.get(self.table_colidx) {
+                    Some(&Alignment::Left) => {
+                        cell.add_attribute("class", "left");
+                    }
+                    Some(&Alignment::Right) => {
+                        cell.add_attribute("class", "right");
+                    }
+                    Some(&Alignment::Center) => cell.add_attribute("class", "center"),
+                    _ => {}
+                }
+
+                self.stack.push(cell.into());
+            }
 
             Tag::Emphasis => self.stack.push(VTag::new("em").into()),
             Tag::Strong => self.stack.push(VTag::new("strong").into()),
@@ -304,11 +347,34 @@ where
     }
 
     fn end_tag(&mut self, tag: Tag) {
-        let element = self.stack.pop().unwrap_or_else(|| {
-            panic!("Expected stack to have an element at end of tag: {tag:?}");
-        });
+        match tag {
+            Tag::Table(_) => {
+                // Pop the <tbody> and then the <table>
+                let tbody = self.pop();
+                self.output(tbody);
+                let table = self.pop();
+                self.output(table);
+            }
+            Tag::TableHead => {
+                // Pop the <tr>, the <thead>, and then enter the <tbody>.
+                let row = self.pop();
+                self.output(row);
+                let thead = self.pop();
+                self.output(thead);
 
-        self.output(element);
+                self.table_head = false;
+                self.stack.push(VTag::new("tbody").into());
+            }
+            Tag::TableCell => {
+                let cell = self.pop();
+                self.output(cell);
+                self.table_colidx += 1;
+            }
+            _ => {
+                let element = self.pop();
+                self.output(element);
+            }
+        }
     }
 
     fn raw_text(&mut self) -> Result<String, std::fmt::Error> {
