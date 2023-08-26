@@ -10,6 +10,24 @@ use yew::{
 };
 use yew_icons::{Icon, IconId};
 
+use crate::model::properties::{Properties, PropertiesParseError};
+
+fn parse_language_properties(input: &str) -> Result<(String, Properties), PropertiesParseError> {
+    let input = input.trim();
+    if let Some((language, rest)) = input.split_once(' ') {
+        let rest = rest.trim();
+        let properties = if rest.is_empty() {
+            Properties::default()
+        } else {
+            Properties::from_str(rest)?
+        };
+
+        Ok((language.to_string(), properties))
+    } else {
+        Ok((input.to_string(), Properties::default()))
+    }
+}
+
 #[derive(Deserialize)]
 struct BookmarkDecl {
     url: String,
@@ -225,16 +243,41 @@ where
 
                     let mut pre = VTag::new("pre");
                     let mut code = VTag::new("code");
-                    if let CodeBlockKind::Fenced(language) = kind {
+
+                    let properties = if let CodeBlockKind::Fenced(language) = kind {
                         if !language.is_empty() {
+                            let (language, properties) = parse_language_properties(&language)
+                                .expect("valid language and properties");
+
                             code.add_attribute("class", format!("lang-{language}"));
+                            Some(properties)
+                        } else {
+                            None
                         }
+                    } else {
+                        None
                     }
+                    .unwrap_or_default();
 
                     code.add_child(VText::new(content).into());
 
                     pre.add_child(code.into());
                     figure.add_child(pre.into());
+
+                    if properties.has("caption") {
+                        let mut figcap = VTag::new("figcaption");
+                        figcap.add_child(
+                            VText::new(
+                                properties
+                                    .get("caption")
+                                    .map(ToString::to_string)
+                                    .unwrap_or_default(),
+                            )
+                            .into(),
+                        );
+                        figure.add_child(figcap.into());
+                    }
+
                     self.output(figure.into());
                 } else {
                     self.stack.push(VTag::new("pre").into());

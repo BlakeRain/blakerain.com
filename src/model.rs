@@ -1,4 +1,5 @@
 pub mod frontmatter;
+pub mod properties;
 pub mod source;
 
 use serde::{Deserialize, Serialize};
