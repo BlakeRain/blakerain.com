@@ -61,7 +61,7 @@
     dl,
     ul,
     ol {
-      @apply w-full self-start mb-6;
+      @apply w-full self-start mb-8;
 
       li {
         @apply break-words mt-2.5 pl-1.5;
@@ -81,10 +81,14 @@
     }
 
     figure {
-      @apply w-full mb-6 flex flex-col items-center;
+      @apply w-full mb-8 flex flex-col items-center;
 
       pre {
-        @apply w-full;
+        @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4;
+
+        code {
+          @apply font-mono leading-snug;
+        }
       }
 
       &.quote {
@@ -103,7 +107,7 @@
 
         p {
           @apply italic mb-0;
-          @apply text-neutral-600 dark:text-neutral-500;
+          @apply text-neutral-600 dark:text-neutral-400;
         }
 
         cite {
@@ -121,8 +125,20 @@
       @apply text-neutral-600 dark:text-neutral-500;
     }
 
+    blockquote {
+      @apply w-full mb-8 border-l-4 border-l-blue-400 px-8;
+
+      p {
+        @apply italic text-neutral-600 dark:text-neutral-400;
+
+        &:last-child {
+          @apply mb-0;
+        }
+      }
+    }
+
     table {
-      @apply mb-6 border-collapse table-auto min-w-full;
+      @apply min-w-full mb-8 border-collapse table-auto;
 
       thead {
         @apply bg-transparent dark:bg-neutral-800;
