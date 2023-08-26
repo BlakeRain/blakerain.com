@@ -28,19 +28,18 @@ name = "site"
 
 [dependencies]
 async-trait = { version = "0.1" }
-gray_matter = { version = "0.2", default-features = false, features = ["yaml"] }
 include_dir = { version = "0.7" }
 log = { version = "0.4" }
-nom = { version = "7.1" }
-pulldown-cmark = { version = "0.9" }
 reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
 thiserror = { version = "1.0" }
-words-count = { version = "0.1" }
 yew = { version = "0.20" }
 yew-hooks = { version = "0.2" }
 yew-router = { version = "0.17" }
+
+macros = { path = "./macros" }
+model = { path = "./model" }
 
 [dependencies.time]
 version = "0.3"

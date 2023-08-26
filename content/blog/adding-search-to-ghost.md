@@ -227,7 +227,7 @@ Oct 27 16:07:12 ip-?-?-? simple-search.py[11080]: 127.0.0.1 - - [27/Oct/2019 16:
 
 Now that I new the API service was in place I needed to configure NGINX so that it would proxy HTTPS from port 9443 to the service port 5000. This meant adding a file in the directory `/etc/nginx/sites-available` that contained the configuration for NGINX. This file also needed to contain the links to the SSL certificate that [Let's Encrypt](https://letsencrypt.org) had set up when Ghost was being installed. Checking in `/etc/letsencrypt` showed a directory called `blakerain.com` that contain the certificate chain and the private key. I could use the default SSL settings from `/etc/nginx/snippets/ssl-params.conf` for the rest.
 
-```nginx
+```
 server {
   listen 9443 ssl http2;
   listen [::]:9443 ssl http2;

@@ -1,13 +1,10 @@
+use model::document::Details;
 use time::{format_description::FormatItem, macros::format_description};
 use yew::{classes, function_component, html, use_context, Html, Properties};
 use yew_icons::{Icon, IconId};
 use yew_router::prelude::Link;
 
-use crate::{
-    components::layout::intersperse::Intersperse,
-    model::{source::TagsContext, PostInfo},
-    pages::Route,
-};
+use crate::{components::layout::intersperse::Intersperse, model::TagsContext, pages::Route};
 
 const DATE_FORMAT: &[FormatItem] =
     format_description!("[day padding:none] [month repr:short] [year]");
@@ -25,11 +22,11 @@ fn post_card_image(slug: &str, image: &Option<String>) -> Html {
     }
 }
 
-pub fn post_card_details(horizontal: bool, info: &PostInfo, tags: &TagsContext) -> Html {
+pub fn post_card_details(horizontal: bool, info: &Details, tags: &TagsContext) -> Html {
     let mut facts =
         Intersperse::new(html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> });
 
-    if let Some(published) = info.doc_info.published {
+    if let Some(published) = info.summary.published {
         facts.push(html! { <div>{published.format(DATE_FORMAT).expect("valid format")}</div> });
     }
 
@@ -73,13 +70,13 @@ pub fn post_card_details(horizontal: bool, info: &PostInfo, tags: &TagsContext) 
     }
 }
 
-fn post_card_description(info: &PostInfo, tags: &TagsContext) -> Html {
+fn post_card_description(info: &Details, tags: &TagsContext) -> Html {
     html! {
         <div class="grow flex flex-col gap-4 justify-between">
-            <Link<Route> classes="unstyled" to={Route::BlogPost { slug: info.doc_info.slug.clone() }}>
+            <Link<Route> classes="unstyled" to={Route::BlogPost { slug: info.summary.slug.clone() }}>
                 <div class="flex flex-col gap-4">
-                    <h1 class="text-2xl font-bold">{&info.doc_info.title}</h1>
-                    if let Some(excerpt) = &info.doc_info.excerpt {
+                    <h1 class="text-2xl font-bold">{&info.summary.title}</h1>
+                    if let Some(excerpt) = &info.summary.excerpt {
                         <p class="text-gray-500 font-text text-xl">{excerpt}</p>
                     }
                 </div>
@@ -92,7 +89,7 @@ fn post_card_description(info: &PostInfo, tags: &TagsContext) -> Html {
 #[derive(Properties, PartialEq)]
 pub struct PostCardProps {
     pub first: bool,
-    pub post: PostInfo,
+    pub post: Details,
 }
 
 #[function_component(PostCard)]
@@ -102,7 +99,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
     if props.first {
         html! {
             <>
-                {post_card_image(&props.post.doc_info.slug, &props.post.cover_image)}
+                {post_card_image(&props.post.summary.slug, &props.post.cover_image)}
                 <div class="xl:col-span-2 md:mt-4 lg:mt-0">
                     {post_card_description(&props.post, &tags)}
                 </div>
@@ -111,7 +108,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
     } else {
         html! {
             <div class="flex flex-col gap-4 md:mt-20 lg:mt-0">
-                {post_card_image(&props.post.doc_info.slug, &props.post.cover_image)}
+                {post_card_image(&props.post.summary.slug, &props.post.cover_image)}
                 {post_card_description(&props.post, &tags)}
             </div>
         }

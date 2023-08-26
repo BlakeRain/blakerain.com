@@ -94,7 +94,7 @@ has a green check, as my website has a link back to my Mastodon profile.
 This was achieved by adding a `rel="me"` to the anchor that links back to my Mastodon profile in the navigation header
 at the top of this site:
 
-```typescript
+```ts
 const MastodonLink: FC = () => {
   return (
     <a

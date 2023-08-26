@@ -1,9 +1,6 @@
 use yew::{function_component, html, Html, Properties};
 
-use crate::{
-    components::content::PostContent,
-    model::source::{ProvidePost, ProvideTags},
-};
+use crate::{components::content::PostContent, model::ProvideTags};
 
 #[derive(Properties, PartialEq)]
 pub struct PageProps {
@@ -12,11 +9,20 @@ pub struct PageProps {
 
 #[function_component(Page)]
 pub fn page(props: &PageProps) -> Html {
+    let Some((details, content)) = crate::model::blog::render(&props.slug) else {
+        log::error!("Could not find blog post with slug '{}'", &props.slug);
+        return html! {
+            <div class="container mx-auto my-12 px-16">
+                <h1 class="text-5xl font-bold text-center text-white">
+                    { "Page not found" }
+                </h1>
+            </div>
+        };
+    };
+
     html! {
         <ProvideTags>
-            <ProvidePost slug={props.slug.clone()}>
-                <PostContent />
-            </ProvidePost>
+            <PostContent details={details} content={content} />
         </ProvideTags>
     }
 }

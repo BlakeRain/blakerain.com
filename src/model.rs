@@ -1,87 +1,51 @@
-pub mod frontmatter;
-pub mod properties;
-pub mod source;
+// pub mod source;
 
-use serde::{Deserialize, Serialize};
-use time::OffsetDateTime;
+use std::{collections::HashMap, rc::Rc};
 
-use self::frontmatter::FrontMatter;
+use model::{document::Details, tag::Tag};
+use yew::{function_component, html, use_memo, Children, ContextProvider, Html, Properties};
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct DocInfo {
-    /// The slug used to form the URL for this document.
-    pub slug: String,
-    /// The rendered title for the document.
-    pub title: String,
-    /// Any given excerpt.
-    pub excerpt: Option<String>,
-    /// The date on which this document was published.
-    pub published: Option<OffsetDateTime>,
+macros::tags!("content/tags.yaml");
+
+pub mod blog {
+    use crate::components::document::bookmark::Bookmark;
+    macros::documents!("content/blog");
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct PostInfo {
-    /// Document information.
-    pub doc_info: DocInfo,
-    /// Tags attached to this post.
-    pub tags: Vec<String>,
-    /// The read time (in seconds).
-    pub reading_time: Option<usize>,
-    /// The URL to the cover image.
-    pub cover_image: Option<String>,
+#[derive(Properties, PartialEq)]
+pub struct ProvideTagsProps {
+    #[prop_or_default]
+    pub children: Children,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Post {
-    /// Information about the post
-    pub info: PostInfo,
-    /// The main content
-    pub content: String,
-}
+pub type TagsContext = Rc<HashMap<String, Tag>>;
 
-impl PostInfo {
-    pub fn from_front_matter(
-        slug: String,
-        reading_time: Option<usize>,
-        FrontMatter {
-            title,
-            tags,
-            published,
-            cover,
-            excerpt,
-        }: FrontMatter,
-    ) -> Self {
-        PostInfo {
-            doc_info: DocInfo {
-                slug,
-                title,
-                excerpt,
-                published,
-            },
+#[function_component(ProvideTags)]
+pub fn provide_tags(props: &ProvideTagsProps) -> Html {
+    let tags = use_memo(|_| tags(), 0);
 
-            tags,
-            reading_time,
-            cover_image: cover,
-        }
+    html! {
+        <ContextProvider<TagsContext> context={tags}>
+            {props.children.clone()}
+        </ContextProvider<TagsContext>>
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Tag {
-    /// The slug of the tag
-    pub slug: String,
-    /// The display name of the tag
-    pub name: String,
-    /// Whether the tag is visible or not
-    pub visibility: TagVisibility,
-    /// A description of the tag
-    pub description: Option<String>,
+#[derive(Properties, PartialEq)]
+pub struct ProvideBlogDetailsProps {
+    #[prop_or_default]
+    pub children: Children,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub enum TagVisibility {
-    #[serde(rename = "public")]
-    Public,
-    #[serde(rename = "private")]
-    Private,
+pub type BlogDetailsContext = Rc<Vec<Details>>;
+
+#[function_component(ProvideBlogDetails)]
+pub fn provide_blog_details(props: &ProvideBlogDetailsProps) -> Html {
+    let details = use_memo(|_| blog::documents(), 0);
+
+    html! {
+        <ContextProvider<BlogDetailsContext> context={details}>
+            {props.children.clone()}
+        </ContextProvider<BlogDetailsContext>>
+    }
 }

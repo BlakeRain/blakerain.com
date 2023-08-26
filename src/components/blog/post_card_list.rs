@@ -1,10 +1,10 @@
 use yew::{function_component, html, use_context, Html};
 
-use crate::{components::blog::post_card::PostCard, model::source::PostsContext};
+use crate::{components::blog::post_card::PostCard, model::BlogDetailsContext};
 
 #[function_component(PostCardList)]
 pub fn post_card_list() -> Html {
-    let posts = use_context::<PostsContext>().expect("PostsContext to be provided");
+    let posts = use_context::<BlogDetailsContext>().expect("BlogDetailsContext to be provided");
 
     html! {
         <div class="container mx-auto">

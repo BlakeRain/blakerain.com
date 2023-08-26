@@ -315,7 +315,7 @@ HugePage::~HugePage() {
 
 When writing the interface with the Ethernet card, I needed to be able to ensure that each huge page was carved up into a number of fixed size buffers. Moreover, these buffers had specific alignment considerations that could vary by device. To facilitate this, I laid out all the buffers in a huge page as follows:
 
-```box-drawing
+```plain
                                 A  ◀─╴size╶─▶  B  ◀─╴size╶─▶       ◀─╴size╶─▶
 ┌─────┬───┬───┬─────┬───┬─────┬───┬──────────┬───┬──────────┬─────┬──────────┐
 │  C  │ H │ H │  …  │ H │  …  │▒▒▒│ Buffer 0 │░░░│ Buffer 1 │  …  │ Buffer n │
