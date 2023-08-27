@@ -217,6 +217,10 @@ where
             );
 
             let mut img = RenderElement::new(TagName::Img);
+            img.add_attribute(
+                AttributeName::Class,
+                "absolute top-0 left-0 w-full h-full rounded-r-md object-cover",
+            );
             img.add_attribute(AttributeName::Src, thumbnail);
             img.add_attribute(AttributeName::Alt, title.clone());
             img.add_attribute(AttributeName::Loading, "lazy");
@@ -590,12 +594,35 @@ where
         match event {
             Event::Start(tag) => self.start(tag),
             Event::End(tag) => self.end(tag),
+
             Event::Text(text) => {
                 if let Some(highlight) = &mut self.highlight {
                     highlight.content.push_str(&text);
                 } else {
                     self.output(RenderText::new(text.to_string()))
                 }
+            }
+
+            Event::Code(text) => {
+                let mut code = RenderElement::new(TagName::Code);
+                code.add_child(RenderText::new(text.to_string()));
+                self.output(code)
+            }
+
+            Event::Html(html) => {
+                eprintln!("Ignoring html: {html:#?}")
+            }
+
+            Event::SoftBreak => {
+                if let Some(highlight) = &mut self.highlight {
+                    highlight.content.push('\n');
+                } else {
+                    self.output(RenderText::new("\n".to_string()));
+                }
+            }
+
+            Event::HardBreak => {
+                self.output(RenderElement::new(TagName::Br));
             }
 
             _ => {}
