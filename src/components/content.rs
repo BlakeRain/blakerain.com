@@ -1,12 +1,15 @@
-use model::document::Details;
+use model::document::{Details, RenderNode};
 use yew::{function_component, html, use_context, Html, Properties};
 
-use crate::{components::blog::post_card::post_card_details, model::TagsContext};
+use crate::{
+    components::{blog::post_card::post_card_details, render::Render},
+    model::TagsContext,
+};
 
 #[derive(Properties, PartialEq)]
 pub struct PostContentProps<S: PartialEq> {
     pub details: Details<S>,
-    pub content: Html,
+    pub content: Vec<RenderNode>,
 }
 
 #[function_component(PostContent)]
@@ -39,7 +42,12 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                 </div>
             </header>
             <div class="container mx-auto my-12 px-16 markdown">
-                {props.content.clone()}
+                {
+                    props.content.iter().map(|node| html! {
+                        <Render node={node.clone()} />
+                    })
+                    .collect::<Html>()
+                }
             </div>
         </article>
     }

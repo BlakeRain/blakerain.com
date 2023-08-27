@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
-use model::document::{Details, Document};
+use model::document::{encode_nodes, Details, Document};
 use proc_macro::TokenStream;
-use pulldown_cmark::{Options, Parser};
 use quote::{quote, TokenStreamExt};
 use syn::{
     parse::{Parse, ParseStream},
@@ -15,10 +14,8 @@ use crate::{
     slug::{slug_constr, slug_ident},
 };
 
-use self::writer::Writer;
-
 mod highlight;
-mod writer;
+mod markdown;
 
 fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
     let mut root_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -144,20 +141,13 @@ fn generate_document(generator: &mut Generator, document: Document<String>) -> R
     let render_ident =
         parse_str::<Ident>(&format!("render_{ident}")).expect("document render identifier");
 
-    let html = {
-        let mut html = String::new();
-        Writer::new(
-            Parser::new_ext(&document.content, Options::all()),
-            &mut html,
-        )
-        .run()
-        .expect("HTML");
-        html
-    };
+    let html = markdown::render(&document.content);
+    let html = encode_nodes(html);
+    let html = proc_macro2::Literal::byte_string(&html);
 
     generator.render_funcs.append_all(quote! {
-        fn #render_ident() -> yew::Html {
-            yew::Html::from_html_unchecked(yew::AttrValue::from(#html))
+        fn #render_ident() -> Vec<RenderNode> {
+            decode_nodes(#html)
         }
     });
 
@@ -233,7 +223,7 @@ pub fn generate(input: DocumentsInput) -> Result<TokenStream, Error> {
 
         #render_funcs
 
-        pub fn render(ident: DocId) -> Option<(Details<DocId>, yew::Html)> {
+        pub fn render(ident: DocId) -> Option<(Details<DocId>, Vec<RenderNode>)> {
             match ident {
                 #render_matches
                 _ => None
