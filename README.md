@@ -29,7 +29,7 @@ all the static pages.
 
 ```
 trunk build --release --features hydration
-cargo run --features static --bin site-build
+cargo run --release --features static --bin site-build
 ```
 
 [blakerain.com]: https://blakerain.com/
