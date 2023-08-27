@@ -8,7 +8,7 @@ if [[ "$TRUNK_PROFILE" = "debug" ]]; then
   ENV=""
 elif [[ "$TRUNK_PROFILE" = "release" ]]; then
   LABEL="Release"
-  ENV=""
+  ENV="production"
 else
   echo "Unrecognized 'TRUNK_PROFILE' value '$TRUN_PROFILE'; expected either 'debug' or 'release'"
   exit 1
