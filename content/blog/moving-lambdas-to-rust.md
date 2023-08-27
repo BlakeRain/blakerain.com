@@ -214,6 +214,4 @@ Rust Lambda functions found in the
 [named-value]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html
 [attributevalue]: https://docs.rs/aws-sdk-dynamodb/0.6.0/aws_sdk_dynamodb/model/enum.AttributeValue.html
 
-<small>
-  Cover image courtesy of Jay Heike (<a href="https://unsplash.com/@jayrheike">@jayrheike</a>) on unsplash.
-</small>
+> Cover image courtesy of Jay Heike ([@jayrheike](https://unsplash.com/@jayrheike) on unsplash).

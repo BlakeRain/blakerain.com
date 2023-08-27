@@ -652,6 +652,4 @@ thumbnail: "https://github.githubassets.com/images/modules/gists/gist-og-image.p
 icon: "https://github.githubassets.com/favicons/favicon.svg"
 ```
 
-<small>
-    Cover image courtesy of Harrison Broadbent (<a href="https://unsplash.com/@harrisonbroadbent?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit">@harrisonbroadbent</a>) on unsplash.
-</small>
+> Cover image courtesy of Harrison Broadbent ([@harrisonbroadbent](https://unsplash.com/@harrisonbroadbent?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit) on unsplash)
