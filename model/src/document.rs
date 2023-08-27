@@ -125,7 +125,9 @@ impl RenderElement {
 pub enum TagName {
     A,
     BlockQuote,
+    Br,
     Cite,
+    Code,
     Div,
     Em,
     FigCaption,
@@ -158,7 +160,9 @@ impl TagName {
         match self {
             TagName::A => "a",
             TagName::BlockQuote => "blockquote",
+            TagName::Br => "br",
             TagName::Cite => "cite",
+            TagName::Code => "code",
             TagName::Div => "div",
             TagName::Em => "em",
             TagName::FigCaption => "figcaption",
