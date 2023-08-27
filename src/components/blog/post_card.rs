@@ -56,7 +56,7 @@ pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsCont
     html! {
         <div class={classes!("flex", "uppercase", "text-sm",
                              if horizontal {
-                                 "flex-row justify-between"
+                                 "flex-col md:flex-row md:justify-between"
                              } else {
                                  "flex-col"
                              })}>

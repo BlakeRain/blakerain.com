@@ -41,7 +41,7 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                     </div>
                 </div>
             </header>
-            <div class="container mx-auto my-12 px-16 markdown">
+            <div class="container mx-auto mt-12 mb-20 px-16 markdown">
                 {
                     props.content.iter().map(|node| html! {
                         <Render node={node.clone()} />

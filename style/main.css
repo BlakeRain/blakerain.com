@@ -84,7 +84,7 @@
       @apply w-full mb-8 flex flex-col items-center;
 
       pre {
-        @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4;
+        @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
 
         code {
           @apply font-mono leading-snug;
