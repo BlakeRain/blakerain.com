@@ -9,26 +9,18 @@ use syn::{
     parse_str, Ident, LitStr,
 };
 
-use crate::{error::Error, parse::frontmatter::parse_front_matter};
+use crate::{
+    error::Error,
+    parse::frontmatter::parse_front_matter,
+    slug::{slug_constr, slug_ident},
+};
 
 use self::writer::Writer;
 
 mod highlight;
 mod writer;
 
-pub struct DocumentsInput {
-    pub directory: LitStr,
-}
-
-impl Parse for DocumentsInput {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Self {
-            directory: input.parse()?,
-        })
-    }
-}
-
-fn load_documents(directory: &str) -> Result<Vec<Document>, Error> {
+fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
     let mut root_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     root_dir.pop();
     root_dir.push(directory);
@@ -69,10 +61,36 @@ fn load_documents(directory: &str) -> Result<Vec<Document>, Error> {
     Ok(results)
 }
 
-fn generate_document(
-    document: Document,
-) -> Result<(Ident, proc_macro2::TokenStream, proc_macro2::TokenStream), Error> {
+#[derive(Default)]
+struct Generator {
+    enumerators: proc_macro2::TokenStream,
+    display: proc_macro2::TokenStream,
+    from_str: proc_macro2::TokenStream,
+    detail_funcs: proc_macro2::TokenStream,
+    detail_names: Vec<Ident>,
+    render_funcs: proc_macro2::TokenStream,
+    render_matches: proc_macro2::TokenStream,
+}
+
+fn generate_document(generator: &mut Generator, document: Document<String>) -> Result<(), Error> {
     let slug = document.details.summary.slug;
+    let ident = slug_ident(&slug);
+
+    let constr = slug_constr(&slug);
+    let constr = parse_str::<Ident>(&constr).expect("document constructor");
+
+    generator.enumerators.append_all(quote! {
+        #constr,
+    });
+
+    generator.display.append_all(quote! {
+        Self::#constr => #slug,
+    });
+
+    generator.from_str.append_all(quote! {
+        #slug => Ok(Self::#constr),
+    });
+
     let title = document.details.summary.title;
     let excerpt = match document.details.summary.excerpt {
         Some(excerpt) => quote! { Some(#excerpt.to_string()) },
@@ -103,22 +121,15 @@ fn generate_document(
         .into_iter()
         .map(|tag| quote! { #tag.to_string() });
 
-    // Replace the use of '-' with '_' in the document slug to get the name of the document as a
-    // Rust identifier.
-    let name = slug.replace('-', "_");
-    let doc_ident = parse_str::<Ident>(&(format!("document_{name}"))).expect("document identifier");
-    let render_ident =
-        parse_str::<Ident>(&(format!("render_{name}"))).expect("document identifier");
+    let details_ident =
+        parse_str::<Ident>(&format!("document_{ident}")).expect("document details identifier");
 
-    let parser = Parser::new_ext(&document.content, Options::all());
-    let mut html = String::new();
-    Writer::new(parser, &mut html).run().expect("HTML");
-
-    let doc_func = quote! {
-        fn #doc_ident() -> Details {
+    generator.detail_names.push(details_ident.clone());
+    generator.detail_funcs.append_all(quote! {
+        fn #details_ident() -> Details<DocId> {
             Details {
                 summary: Summary {
-                    slug: #slug.to_string(),
+                    slug: DocId::#constr,
                     title: #title.to_string(),
                     excerpt: #excerpt,
                     published: #published
@@ -128,47 +139,103 @@ fn generate_document(
                 cover_image: #cover_image,
             }
         }
+    });
 
+    let render_ident =
+        parse_str::<Ident>(&format!("render_{ident}")).expect("document render identifier");
+
+    let html = {
+        let mut html = String::new();
+        Writer::new(
+            Parser::new_ext(&document.content, Options::all()),
+            &mut html,
+        )
+        .run()
+        .expect("HTML");
+        html
+    };
+
+    generator.render_funcs.append_all(quote! {
         fn #render_ident() -> yew::Html {
             yew::Html::from_html_unchecked(yew::AttrValue::from(#html))
         }
-    };
+    });
 
-    Ok((
-        doc_ident.clone(),
-        doc_func,
-        quote! {
-            #slug => Some((#doc_ident(), #render_ident())),
-        },
-    ))
+    generator.render_matches.append_all(quote! {
+        DocId::#constr => Some((#details_ident(), #render_ident())),
+    });
+
+    Ok(())
+}
+
+pub struct DocumentsInput {
+    pub directory: LitStr,
+}
+
+impl Parse for DocumentsInput {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            directory: input.parse()?,
+        })
+    }
 }
 
 pub fn generate(input: DocumentsInput) -> Result<TokenStream, Error> {
-    let documents = load_documents(&input.directory.value())?;
+    let Generator {
+        enumerators,
+        display,
+        from_str,
+        detail_funcs,
+        detail_names,
+        render_funcs,
+        render_matches,
+    } = {
+        let mut generator = Generator::default();
+        for document in load_documents(&input.directory.value())? {
+            generate_document(&mut generator, document)?;
+        }
 
-    let mut combined = quote! {};
-    let mut doc_funcs = Vec::new();
-    let mut doc_renders = Vec::new();
-
-    for document in documents {
-        let (doc_ident, doc_func, doc_render) = generate_document(document)?;
-        combined.append_all(doc_func);
-        doc_funcs.push(doc_ident);
-        doc_renders.push(doc_render);
-    }
+        generator
+    };
 
     Ok(TokenStream::from(quote! {
         use model::document::*;
 
-        #combined
-
-        pub fn documents() -> Vec<Details> {
-            vec![ #(#doc_funcs()),* ]
+        #[derive(Debug, Copy, Clone, PartialEq, enum_iterator::Sequence)]
+        pub enum DocId {
+            #enumerators
         }
 
-        pub fn render(slug: &str) -> Option<(Details, yew::Html)> {
-            match slug {
-                #(#doc_renders)*
+        impl std::fmt::Display for DocId {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", match self {
+                    #display
+                })
+            }
+        }
+
+        impl std::str::FromStr for DocId {
+            type Err = String;
+
+            fn from_str(s: &str) -> Result<Self, Self::Err> {
+                match s {
+                    #from_str
+                    _ => Err(format!("Unknown document '{}'", s))
+                }
+            }
+        }
+
+        #detail_funcs
+
+        pub fn documents() -> Vec<Details<DocId>> {
+            vec![ #(#detail_names()),* ]
+        }
+
+        #render_funcs
+
+        pub fn render(ident: DocId) -> Option<(Details<DocId>, yew::Html)> {
+            match ident {
+                #render_matches
                 _ => None
             }
         }

@@ -6,6 +6,7 @@ use tags::TagsInput;
 mod documents;
 mod error;
 mod parse;
+mod slug;
 mod tags;
 
 #[proc_macro]

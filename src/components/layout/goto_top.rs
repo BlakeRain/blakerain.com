@@ -1,6 +1,6 @@
 use wasm_bindgen::{prelude::Closure, JsCast};
 use web_sys::{window, Element, IntersectionObserver, IntersectionObserverEntry, ScrollToOptions};
-use yew::{classes, function_component, html, use_effect, use_state, use_state_eq, Callback, Html};
+use yew::{classes, function_component, html, use_effect, use_state_eq, Callback, Html};
 
 #[function_component(GotoTop)]
 pub fn goto_top() -> Html {
@@ -38,25 +38,23 @@ pub fn goto_top() -> Html {
         "transform: translateY(100px)".to_string()
     };
 
-    let observe = {
-        Closure::<dyn Fn(Vec<IntersectionObserverEntry>)>::wrap(Box::new(
-            move |entries: Vec<IntersectionObserverEntry>| {
-                for entry in entries {
-                    let tag_name = entry.target().tag_name();
-                    if tag_name == "NAV" {
-                        log::info!("NAV visible: {}", entry.is_intersecting());
-                        visible.set(!entry.is_intersecting());
-                    } else if tag_name == "FOOTER" {
-                        log::info!("FOOTER visible: {}", entry.is_intersecting());
-                        footer_visible.set(entry.is_intersecting());
-                    }
-                }
-            },
-        ))
-    };
-
     {
         use_effect(move || {
+            let observe = {
+                Closure::<dyn Fn(Vec<IntersectionObserverEntry>)>::wrap(Box::new(
+                    move |entries: Vec<IntersectionObserverEntry>| {
+                        for entry in entries {
+                            let tag_name = entry.target().tag_name();
+                            if tag_name == "NAV" {
+                                visible.set(!entry.is_intersecting());
+                            } else if tag_name == "FOOTER" {
+                                footer_visible.set(entry.is_intersecting());
+                            }
+                        }
+                    },
+                ))
+            };
+
             let document = window().expect("window").document().expect("document");
             let header = document
                 .query_selector("nav:first-of-type")

@@ -4,14 +4,18 @@ use yew::{classes, function_component, html, use_context, Html, Properties};
 use yew_icons::{Icon, IconId};
 use yew_router::prelude::Link;
 
-use crate::{components::layout::intersperse::Intersperse, model::TagsContext, pages::Route};
+use crate::{
+    components::layout::intersperse::Intersperse,
+    model::{blog::DocId, TagsContext},
+    pages::Route,
+};
 
 const DATE_FORMAT: &[FormatItem] =
     format_description!("[day padding:none] [month repr:short] [year]");
 
-fn post_card_image(slug: &str, image: &Option<String>) -> Html {
+fn post_card_image(doc_id: DocId, image: &Option<String>) -> Html {
     html! {
-        <Link<Route> classes="unstyled" to={Route::BlogPost { slug: slug.to_string() }}>
+        <Link<Route> classes="unstyled" to={Route::BlogPost { doc_id }}>
             <div class="relative w-full h-[240px]">
                 if let Some(cover_image) = image {
                     <img class="rounded-xl object-cover absolute w-full h-full"
@@ -22,7 +26,7 @@ fn post_card_image(slug: &str, image: &Option<String>) -> Html {
     }
 }
 
-pub fn post_card_details(horizontal: bool, info: &Details, tags: &TagsContext) -> Html {
+pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsContext) -> Html {
     let mut facts =
         Intersperse::new(html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> });
 
@@ -41,7 +45,7 @@ pub fn post_card_details(horizontal: bool, info: &Details, tags: &TagsContext) -
                 html! {
                     <Link<Route>
                         classes="text-sky-500 hover:text-sky-600"
-                        to={Route::Tag { slug: tag.slug.clone() }}>
+                        to={Route::Tags}>
                         {tag.name.clone()}
                     </Link<Route>>
                 }
@@ -70,10 +74,10 @@ pub fn post_card_details(horizontal: bool, info: &Details, tags: &TagsContext) -
     }
 }
 
-fn post_card_description(info: &Details, tags: &TagsContext) -> Html {
+fn post_card_description(info: &Details<DocId>, tags: &TagsContext) -> Html {
     html! {
         <div class="grow flex flex-col gap-4 justify-between">
-            <Link<Route> classes="unstyled" to={Route::BlogPost { slug: info.summary.slug.clone() }}>
+            <Link<Route> classes="unstyled" to={Route::BlogPost { doc_id: info.summary.slug }}>
                 <div class="flex flex-col gap-4">
                     <h1 class="text-2xl font-bold">{&info.summary.title}</h1>
                     if let Some(excerpt) = &info.summary.excerpt {
@@ -89,7 +93,7 @@ fn post_card_description(info: &Details, tags: &TagsContext) -> Html {
 #[derive(Properties, PartialEq)]
 pub struct PostCardProps {
     pub first: bool,
-    pub post: Details,
+    pub post: Details<DocId>,
 }
 
 #[function_component(PostCard)]
@@ -99,7 +103,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
     if props.first {
         html! {
             <>
-                {post_card_image(&props.post.summary.slug, &props.post.cover_image)}
+                {post_card_image(props.post.summary.slug, &props.post.cover_image)}
                 <div class="xl:col-span-2 md:mt-4 lg:mt-0">
                     {post_card_description(&props.post, &tags)}
                 </div>
@@ -108,7 +112,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
     } else {
         html! {
             <div class="flex flex-col gap-4 md:mt-20 lg:mt-0">
-                {post_card_image(&props.post.summary.slug, &props.post.cover_image)}
+                {post_card_image(props.post.summary.slug, &props.post.cover_image)}
                 {post_card_description(&props.post, &tags)}
             </div>
         }

@@ -7,13 +7,8 @@ use yew::{function_component, html, use_memo, Children, ContextProvider, Html, P
 
 macros::tags!("content/tags.yaml");
 
-pub mod blog {
-    macros::documents!("content/blog");
-}
-
-pub mod pages {
-    macros::documents!("content/pages");
-}
+pub mod blog;
+pub mod pages;
 
 #[derive(Properties, PartialEq)]
 pub struct ProvideTagsProps {
@@ -40,7 +35,7 @@ pub struct ProvideBlogDetailsProps {
     pub children: Children,
 }
 
-pub type BlogDetailsContext = Rc<Vec<Details>>;
+pub type BlogDetailsContext = Rc<Vec<Details<blog::DocId>>>;
 
 #[function_component(ProvideBlogDetails)]
 pub fn provide_blog_details(props: &ProvideBlogDetailsProps) -> Html {

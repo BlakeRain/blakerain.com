@@ -1,13 +1,16 @@
+use enum_iterator::Sequence;
+use yew::{html, Html};
+use yew_router::Routable;
+
 mod about;
 mod blog;
 mod blog_post;
 mod disclaimer;
 mod home;
+mod not_found;
+mod tags;
 
-use yew::{html, Html};
-use yew_router::Routable;
-
-#[derive(Debug, Clone, PartialEq, Eq, Routable)]
+#[derive(Debug, Clone, PartialEq, Sequence, Routable)]
 pub enum Route {
     #[at("/")]
     Home,
@@ -15,14 +18,15 @@ pub enum Route {
     About,
     #[at("/blog")]
     Blog,
-    #[at("/blog/:slug")]
-    BlogPost { slug: String },
+    #[at("/blog/:doc_id")]
+    BlogPost { doc_id: crate::model::blog::DocId },
     #[at("/disclaimer")]
     Disclaimer,
     #[at("/tags")]
     Tags,
-    #[at("/tags/:slug")]
-    Tag { slug: String },
+    #[not_found]
+    #[at("/404")]
+    NotFound,
 }
 
 impl Route {
@@ -31,10 +35,10 @@ impl Route {
             Self::Home => html! { <home::Page /> },
             Self::About => html! { <about::Page /> },
             Self::Blog => html! { <blog::Page /> },
-            Self::BlogPost { slug } => html! { <blog_post::Page slug={slug} /> },
+            Self::BlogPost { doc_id } => html! { <blog_post::Page {doc_id} /> },
             Self::Disclaimer => html! { <disclaimer::Page /> },
-            Self::Tags => unimplemented!(),
-            Self::Tag { .. } => unimplemented!(),
+            Self::Tags => html! { <tags::Page /> },
+            Self::NotFound => html! { <not_found::Page /> },
         }
     }
 }

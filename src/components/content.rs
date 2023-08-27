@@ -4,13 +4,13 @@ use yew::{function_component, html, use_context, Html, Properties};
 use crate::{components::blog::post_card::post_card_details, model::TagsContext};
 
 #[derive(Properties, PartialEq)]
-pub struct PostContentProps {
-    pub details: Details,
+pub struct PostContentProps<S: PartialEq> {
+    pub details: Details<S>,
     pub content: Html,
 }
 
 #[function_component(PostContent)]
-pub fn post_content(props: &PostContentProps) -> Html {
+pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
     let tags = use_context::<TagsContext>().expect("TagsContext to be provided");
     let style = if let Some(cover_image) = &props.details.cover_image {
         format!(

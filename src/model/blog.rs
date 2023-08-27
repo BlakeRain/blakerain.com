@@ -1,0 +1,1 @@
+macros::documents!("content/blog");

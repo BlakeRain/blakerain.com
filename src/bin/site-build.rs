@@ -1,7 +1,11 @@
 use std::path::{Path, PathBuf};
 
-use site::app::{App, AppProps};
+use site::{
+    app::{App, AppProps},
+    pages::Route,
+};
 use yew::ServerRenderer;
+use yew_router::Routable;
 
 struct Template {
     content: String,
@@ -40,40 +44,19 @@ struct RenderRoute {
     pub path: PathBuf,
 }
 
-const STATIC_ROUTES: &[&str] = &["/", "/about", "/blog", "/disclaimer"];
-
-async fn collect_routes(root_dir: impl AsRef<Path>) -> std::io::Result<Vec<RenderRoute>> {
-    let root_dir = root_dir.as_ref();
-    let mut routes = Vec::new();
-    for route in STATIC_ROUTES {
-        routes.push(RenderRoute {
-            url: route.to_string(),
-            path: if *route == "/" {
+fn collect_routes() -> Vec<RenderRoute> {
+    enum_iterator::all::<Route>()
+        .map(|route| {
+            let url = route.to_path();
+            let path = if url == "/" {
                 PathBuf::from("index.html")
             } else {
-                PathBuf::from(&route[1..]).with_extension("html")
-            },
+                PathBuf::from(&url[1..]).with_extension("html")
+            };
+
+            RenderRoute { url, path }
         })
-    }
-
-    let posts_dir = root_dir.join("content").join("posts");
-    log::info!("Collecting blog posts from: {posts_dir:?}");
-    let mut posts = tokio::fs::read_dir(posts_dir).await?;
-    while let Some(entry) = posts.next_entry().await? {
-        let filename = PathBuf::from(entry.file_name());
-        let url = format!(
-            "/blog/{}",
-            filename
-                .file_stem()
-                .expect("there to be a filename")
-                .to_str()
-                .unwrap()
-        );
-        let path = Path::new("blog").join(filename.with_extension("html"));
-        routes.push(RenderRoute { url, path })
-    }
-
-    Ok(routes)
+        .collect()
 }
 
 async fn copy_resources(
@@ -99,13 +82,23 @@ async fn copy_resources(
             };
 
             if file_type.is_file() {
-                if entry.file_name() == "index.html" {
+                let file_name = entry
+                    .file_name()
+                    .to_str()
+                    .expect("valid filename")
+                    .to_string();
+
+                if file_name == "index.html" {
+                    continue;
+                }
+
+                if file_name.starts_with('.') {
                     continue;
                 }
 
                 let path = entry.path();
                 log::info!("Copying resource: {:?}", path);
-                tokio::fs::copy(path, out_dir.join(entry.file_name())).await?;
+                tokio::fs::copy(path, out_dir.join(file_name)).await?;
             }
 
             if file_type.is_dir() {
@@ -143,7 +136,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     log::info!("Copying resources to output directory");
     copy_resources(&dist_dir, &out_dir).await?;
 
-    for RenderRoute { url, path } in collect_routes(&root_dir).await? {
+    for RenderRoute { url, path } in collect_routes() {
         log::info!("Rendering route: {url}");
         let html = render_route(&template, url).await;
         let path = out_dir.clone().join(path);

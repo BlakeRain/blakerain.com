@@ -3,9 +3,9 @@ use time::OffsetDateTime;
 use crate::frontmatter::FrontMatter;
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Summary {
+pub struct Summary<S> {
     /// The slug used to form the URL for this document.
-    pub slug: String,
+    pub slug: S,
     /// The rendered title for the document.
     pub title: String,
     /// Any given excerpt.
@@ -15,9 +15,9 @@ pub struct Summary {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Details {
+pub struct Details<S> {
     /// Document summary.
-    pub summary: Summary,
+    pub summary: Summary<S>,
     /// Tags attached to this post.
     pub tags: Vec<String>,
     /// The read time (in seconds).
@@ -27,16 +27,16 @@ pub struct Details {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Document {
+pub struct Document<S> {
     /// Document details
-    pub details: Details,
+    pub details: Details<S>,
     /// The main content
     pub content: String,
 }
 
-impl Details {
+impl<S> Details<S> {
     pub fn from_front_matter(
-        slug: String,
+        slug: S,
         reading_time: Option<usize>,
         FrontMatter {
             title,
