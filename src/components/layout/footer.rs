@@ -22,9 +22,6 @@ pub fn footer(_: &FooterProps) -> Html {
                     <Link<Route> classes="hover:text-neutral-50" to={Route::Blog}>
                         {"Latest Posts"}
                     </Link<Route>>
-                    <Link<Route> classes="hover:text-neutral-50" to={Route::Tags}>
-                        {"Tags"}
-                    </Link<Route>>
                     <Link<Route> classes="hover:text-neutral-50" to={Route::Disclaimer}>
                         {"Disclaimer"}
                     </Link<Route>>
