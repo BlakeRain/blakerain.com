@@ -8,7 +8,6 @@ mod blog_post;
 mod disclaimer;
 mod home;
 mod not_found;
-mod tags;
 
 #[derive(Debug, Clone, PartialEq, Sequence, Routable)]
 pub enum Route {
@@ -22,8 +21,6 @@ pub enum Route {
     BlogPost { doc_id: crate::model::blog::DocId },
     #[at("/disclaimer")]
     Disclaimer,
-    #[at("/tags")]
-    Tags,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -37,7 +34,6 @@ impl Route {
             Self::Blog => html! { <blog::Page /> },
             Self::BlogPost { doc_id } => html! { <blog_post::Page {doc_id} /> },
             Self::Disclaimer => html! { <disclaimer::Page /> },
-            Self::Tags => html! { <tags::Page /> },
             Self::NotFound => html! { <not_found::Page /> },
         }
     }

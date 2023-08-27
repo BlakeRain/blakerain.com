@@ -43,11 +43,7 @@ pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsCont
         info.tags.iter().map(|tag| {
             if let Some(tag) = tags.get(tag) {
                 html! {
-                    <Link<Route>
-                        classes="text-sky-500 hover:text-sky-600"
-                        to={Route::Tags}>
-                        {tag.name.clone()}
-                    </Link<Route>>
+                    <span class="text-sky-500">{tag.name.clone()}</span>
                 }
             } else {
                 html! {
