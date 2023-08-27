@@ -1,7 +1,7 @@
 use yew::{function_component, html, Html};
 
 use crate::{
-    components::blog::post_card_list::PostCardList,
+    components::{blog::post_card_list::PostCardList, title::Title},
     model::{ProvideBlogDetails, ProvideTags},
 };
 
@@ -9,6 +9,7 @@ use crate::{
 pub fn page() -> Html {
     html! {
         <ProvideTags>
+            <Title title={"Blake Rain"} />
             <ProvideBlogDetails>
                 <PostCardList />
             </ProvideBlogDetails>

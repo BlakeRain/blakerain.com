@@ -1,7 +1,7 @@
 use yew::{function_component, html, Html};
 
 use crate::{
-    components::content::PostContent,
+    components::{content::PostContent, title::Title},
     model::{
         pages::{render, DocId},
         ProvideTags,
@@ -16,6 +16,7 @@ pub fn page() -> Html {
 
     html! {
         <ProvideTags>
+            <Title title={details.summary.title.clone()} />
             <PostContent<DocId> details={details} content={content} />
         </ProvideTags>
     }
