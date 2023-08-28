@@ -28,8 +28,7 @@ fn post_card_image(doc_id: DocId, title: &str, image: &Option<String>) -> Html {
 }
 
 pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsContext) -> Html {
-    let mut facts =
-        Intersperse::new(html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> });
+    let mut facts = Intersperse::new(html! { <span class="text-gray-500">{"•"}</span> });
 
     if let Some(published) = info.summary.published {
         facts.push(html! { <div>{published.format(DATE_FORMAT).expect("valid format")}</div> });
@@ -40,11 +39,11 @@ pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsCont
     }
 
     let tags = Intersperse::from_iter(
-        html! { <Icon class="text-gray-500" icon_id={IconId::BootstrapDot} /> },
+        html! { <span class="text-gray-500">{"•"}</span> },
         info.tags.iter().map(|tag| {
             if let Some(tag) = tags.get(tag) {
                 html! {
-                    <span class="text-sky-500">{tag.name.clone()}</span>
+                    <span class="text-sky-700 dark:text-sky-500">{tag.name.clone()}</span>
                 }
             } else {
                 html! {
@@ -61,10 +60,10 @@ pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsCont
                              } else {
                                  "flex-col"
                              })}>
-            <div class="flex flex-row">
+            <div class="flex flex-row gap-1">
                 {facts.finish()}
             </div>
-            <div class="flex flex-row">
+            <div class="flex flex-row gap-1">
                 {tags.finish()}
             </div>
         </div>
