@@ -47,7 +47,7 @@ async function min_html(filepath) {
     minifyCSS: true,
     minifyJS: true,
     processConditionalComments: true,
-    removeAttributeQuotes: true,
+    removeAttributeQuotes: false,
     removeComments: true,
     removeEmptyAttributes: true,
     removeOptionalTags: false,
