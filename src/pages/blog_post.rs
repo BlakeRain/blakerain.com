@@ -2,11 +2,12 @@
 use yew::{function_component, html, Html, Properties};
 
 use crate::{
-    components::{content::PostContent, layout::goto_top::GotoTop, title::Title},
+    components::{content::PostContent, layout::goto_top::GotoTop, seo::BlogPostSeo, title::Title},
     model::{
         blog::{render, DocId},
         ProvideTags,
     },
+    pages::Route,
 };
 
 #[derive(Properties, PartialEq)]
@@ -30,6 +31,13 @@ pub fn page(props: &PageProps) -> Html {
     html! {
         <ProvideTags>
             <Title title={details.summary.title.clone()} />
+            <BlogPostSeo
+                route={Route::BlogPost { doc_id: props.doc_id }}
+                image={details.cover_image.clone()}
+                title={details.summary.title.clone()}
+                excerpt={details.summary.excerpt.clone()}
+                published={details.summary.published}
+                tags={details.tags.clone()} />
             <PostContent<DocId> details={details} content={content} />
             <GotoTop />
         </ProvideTags>
