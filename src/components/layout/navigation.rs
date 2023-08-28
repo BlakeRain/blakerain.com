@@ -44,6 +44,7 @@ pub fn navigation(_: &NavigationProps) -> Html {
                     </Link<Route>>
                     <button type="button" class="md:hidden" onclick={on_open_click}>
                         <Icon icon_id={IconId::LucideMenu} />
+                        <span class="sr-only">{"Toggle Menu"}</span>
                     </button>
                 </div>
                 <div class={classes!("md:flex", "flex-col", "md:flex-row",
