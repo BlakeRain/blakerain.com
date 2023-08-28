@@ -1,10 +1,15 @@
-use std::path::{Path, PathBuf};
+use std::{
+    fmt::Write,
+    path::{Path, PathBuf},
+};
 
 use site::{
     app::{HeadWriter, StaticApp, StaticAppProps},
     pages::Route,
 };
 
+use chrono::Datelike;
+use time::format_description::well_known::{Rfc2822, Rfc3339};
 use yew::ServerRenderer;
 use yew_router::Routable;
 
@@ -97,6 +102,15 @@ impl Env {
 
         tokio::fs::write(path, s).await
     }
+
+    async fn write_u8<P: AsRef<Path>>(&self, path: P, d: &[u8]) -> std::io::Result<()> {
+        let path = self.out_dir.clone().join(path);
+        if let Some(parent) = path.parent() {
+            tokio::fs::create_dir_all(parent).await?;
+        }
+
+        tokio::fs::write(path, d).await
+    }
 }
 
 struct RenderRoute {
@@ -188,6 +202,226 @@ async fn copy_resources(env: &Env) -> std::io::Result<()> {
     Ok(())
 }
 
+async fn generate_sitemap(env: &Env) -> std::io::Result<()> {
+    println!("Rendering sitemap.xml ...");
+    let now = time::OffsetDateTime::now_utc()
+        .format(&Rfc3339)
+        .expect("formatted time");
+
+    let common =
+        format!("<lastmod>{now}</lastmod><changefreq>daily</changefeq><priority>0.7</priority>");
+
+    let mut result = String::new();
+    write!(result, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>").expect("write to string");
+    write!(
+        result,
+        "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"
+    )
+    .expect("write to string");
+
+    for route in enum_iterator::all::<Route>() {
+        let url = route.to_path();
+        write!(
+            result,
+            "<url><loc>https://blakerain.com{url}</loc>{common}</url>"
+        )
+        .expect("write to string");
+    }
+
+    write!(result, "</urlset>").expect("write to string");
+    env.write_str("sitemap.xml", &result).await?;
+
+    Ok(())
+}
+
+async fn generate_rss(env: &Env) -> std::io::Result<()> {
+    println!("Rendering feed.xml ...");
+
+    let now = time::OffsetDateTime::now_utc();
+
+    let items = site::model::blog::documents()
+        .into_iter()
+        .map(|doc| {
+            let mut item = rss::ItemBuilder::default();
+
+            item.title(doc.summary.title)
+                .author(Some("blake.rain@blakerain.com (Blake Rain)".to_string()))
+                .link(format!(
+                    "https://blakerain.com{}",
+                    Route::BlogPost {
+                        doc_id: doc.summary.slug
+                    }
+                    .to_path()
+                ))
+                .guid(
+                    rss::GuidBuilder::default()
+                        .value(format!(
+                            "https://blakerain.com{}",
+                            Route::BlogPost {
+                                doc_id: doc.summary.slug
+                            }
+                            .to_path()
+                        ))
+                        .permalink(true)
+                        .build(),
+                );
+
+            if let Some(published) = doc.summary.published {
+                item.pub_date(published.format(&Rfc2822).expect("formatted time"));
+            }
+
+            if let Some(excerpt) = doc.summary.excerpt {
+                item.description(excerpt);
+            }
+
+            if let Some(cover_image) = doc.cover_image {
+                item.enclosure(
+                    rss::EnclosureBuilder::default()
+                        .url(format!("https://blakerain.com{}", cover_image))
+                        .mime_type("image/jpeg")
+                        .build(),
+                );
+            }
+
+            item.build()
+        })
+        .collect::<Vec<_>>();
+
+    let channel = rss::ChannelBuilder::default()
+        .title("Blake Rain")
+        .link("https://blakerain.com/")
+        .description("Feed of blog posts on Blake Rain's website")
+        .language(Some("en".to_string()))
+        .copyright(format!("All Rights Reserved {}, Blake Rain", now.year()))
+        .last_build_date(Some(now.format(&Rfc2822).expect("formatted time")))
+        .docs(Some(
+            "https://validator.w3.org/feed/docs/rss2.html".to_string(),
+        ))
+        .image(Some(
+            rss::ImageBuilder::default()
+                .title("Blake Rain")
+                .url("https://blakerain.com/media/logo-text.png")
+                .link("https://blakerain.com/")
+                .build(),
+        ))
+        .items(items)
+        .build();
+
+    let mut result = Vec::new();
+    channel.write_to(&mut result).expect("RSS");
+
+    env.write_u8("feeds/feed.xml", &result).await
+}
+
+async fn generate_atom(env: &Env) -> std::io::Result<()> {
+    println!("Rendering atom.xml ...");
+
+    let now = chrono::offset::Utc::now();
+
+    let items = site::model::blog::documents()
+        .into_iter()
+        .map(|doc| {
+            let mut entry = atom_syndication::EntryBuilder::default();
+
+            entry
+                .title(
+                    atom_syndication::TextBuilder::default()
+                        .value(doc.summary.title)
+                        .build(),
+                )
+                .id(format!(
+                    "https://blakerain.com{}",
+                    Route::BlogPost {
+                        doc_id: doc.summary.slug
+                    }
+                    .to_path()
+                ))
+                .link(
+                    atom_syndication::LinkBuilder::default()
+                        .href(format!(
+                            "https://blakerain.com{}",
+                            Route::BlogPost {
+                                doc_id: doc.summary.slug
+                            }
+                            .to_path()
+                        ))
+                        .build(),
+                )
+                .author(
+                    atom_syndication::PersonBuilder::default()
+                        .name("Blake Rain")
+                        .email(Some("blake.rain@blakerain.com".to_string()))
+                        .uri(Some("https://blakerain.com".to_string()))
+                        .build(),
+                );
+
+            if let Some(published) = doc.summary.published {
+                let chrono_bullshit = chrono::DateTime::from_utc(
+                    chrono::naive::NaiveDateTime::from_timestamp_opt(published.unix_timestamp(), 0)
+                        .expect("time to be simple"),
+                    chrono::offset::FixedOffset::west_opt(0).expect("time to be simple"),
+                );
+                entry.published(Some(chrono_bullshit));
+            }
+
+            if let Some(excerpt) = doc.summary.excerpt {
+                entry.summary(
+                    atom_syndication::TextBuilder::default()
+                        .value(excerpt.to_string())
+                        .build(),
+                );
+            }
+
+            entry.build()
+        })
+        .collect::<Vec<_>>();
+
+    let feed = atom_syndication::FeedBuilder::default()
+        .title("Blake Rain")
+        .id("https://blakerain.com")
+        .subtitle(Some(
+            atom_syndication::TextBuilder::default()
+                .value("Feed of blog posts on Blake Rain's website")
+                .build(),
+        ))
+        .logo(Some(
+            "https://blakerain.com/media/logo-text.png".to_string(),
+        ))
+        .icon(Some("https://blakerain.com/favicon.png".to_string()))
+        .rights(Some(
+            atom_syndication::TextBuilder::default()
+                .value(format!("All Right Reserved {}, Blake Rain", now.year()))
+                .build(),
+        ))
+        .updated(now)
+        .author(
+            atom_syndication::PersonBuilder::default()
+                .name("Blake Rain")
+                .email(Some("blake.rain@blakerain.com".to_string()))
+                .uri(Some("https://blakerain.com".to_string()))
+                .build(),
+        )
+        .link(
+            atom_syndication::LinkBuilder::default()
+                .rel("alternate")
+                .href("https://blakerain.com")
+                .build(),
+        )
+        .link(
+            atom_syndication::LinkBuilder::default()
+                .rel("self")
+                .href("https://blakerain.com/feeds/atom.xml")
+                .build(),
+        )
+        .entries(items)
+        .build();
+
+    let mut result = Vec::new();
+    feed.write_to(&mut result).expect("Atom");
+
+    env.write_u8("feeds/atom.xml", &result).await
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize the logger for the site application
@@ -196,11 +430,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create our environment.
     let env = Env::new().await?;
 
-    // Render all the routes
+    // Render all the routes.
     render_routes(&env).await?;
 
     // Copy over all the other resources.
     copy_resources(&env).await?;
+
+    // Generate the sitemap.
+    generate_sitemap(&env).await?;
+
+    // Generate the feeds.
+    generate_rss(&env).await?;
+    generate_atom(&env).await?;
 
     Ok(())
 }
