@@ -57,7 +57,7 @@ description: |
   a production server running Ubuntu 16.04 or 18.04.
 author: Ghost
 publisher: Ghost
-thumbnail: "https://ghost.org/images/meta/Ghost-Docs.jpg"
+thumbnail: "https://ghost.org/images/meta/ghost-docs.png"
 icon: "https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5"
 ```
 
@@ -117,7 +117,7 @@ description: |
   Keep your stack aligned and integrate your most used tools & apps with your Ghost site:
   automation, analytics, marketing, support and much more! 👉
 publisher: Ghost
-thumbnail: "https://ghost.org/images/meta/Ghost-Integrations.jpg"
+thumbnail: "https://ghost.org/images/meta/ghost-integrations.png"
 icon: "https://ghost.org/icons/icon-512x512.png?v=188b8b6d743c6338ba2eab2e35bab4f5"
 ```
 
