@@ -461,6 +461,18 @@ where
             }
 
             Tag::Image(_, src, title) => {
+                // If the element we're to be inserted into is going to be a <p>, then we want to
+                // discard it: we can't construct: <p><figure>...</figure></p> as that is invalid
+                // HTML.
+                let p = if let Some(RenderElement {
+                    tag: TagName::P, ..
+                }) = self.stack.last()
+                {
+                    self.stack.pop()
+                } else {
+                    None
+                };
+
                 let mut figure = RenderElement::new(TagName::Figure);
                 let mut img = RenderElement::new(TagName::Img);
                 img.add_attribute(AttributeName::Src, src.to_string());
@@ -474,6 +486,9 @@ where
                 figcaption.add_child(RenderText::new(alt));
                 figure.add_child(figcaption);
                 self.output(figure);
+
+                // If we ended up removing the <p>, then we want to reinstate it.
+                p.map(|p| self.enter(p));
             }
 
             _ => {}
@@ -482,7 +497,26 @@ where
 
     fn end(&mut self, tag: Tag) {
         match tag {
-            Tag::Paragraph => self.leave(TagName::P),
+            Tag::Paragraph => {
+                // We behave here very similarly to `Self::leave()`, except we want to make sure we
+                // don't push any empty paragraphs. This can happen when Markdown places images
+                // inside paragraphs and we discard them.
+
+                let Some(top) = self.stack.pop() else {
+                    panic!("Stack undeflow");
+                };
+
+                assert!(
+                    top.tag == TagName::P,
+                    "Expected to pop <p>, found <{}>",
+                    top.tag.as_str(),
+                );
+
+                if !top.children.is_empty() {
+                    self.output(top);
+                }
+            }
+
             Tag::Heading(level, _, _) => self.leave(heading_for_level(level)),
             Tag::BlockQuote => self.leave(TagName::BlockQuote),
 
