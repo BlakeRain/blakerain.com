@@ -122,7 +122,7 @@
 
     figcaption {
       @apply mt-4 font-sans text-sm text-center;
-      @apply text-neutral-600 dark:text-neutral-500;
+      @apply text-neutral-600 dark:text-neutral-400;
     }
 
     blockquote {
