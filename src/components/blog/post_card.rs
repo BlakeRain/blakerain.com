@@ -1,7 +1,6 @@
 use model::document::Details;
 use time::{format_description::FormatItem, macros::format_description};
 use yew::{classes, function_component, html, use_context, Html, Properties};
-use yew_icons::{Icon, IconId};
 use yew_router::prelude::Link;
 
 use crate::{
