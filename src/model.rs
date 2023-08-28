@@ -1,5 +1,3 @@
-// pub mod source;
-
 use std::{collections::HashMap, rc::Rc};
 
 use model::{document::Details, tag::Tag};

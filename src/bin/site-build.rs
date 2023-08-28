@@ -1,15 +1,17 @@
 use std::path::{Path, PathBuf};
 
 use site::{
-    app::{App, AppProps},
+    app::{HeadWriter, StaticApp, StaticAppProps},
     pages::Route,
 };
+
 use yew::ServerRenderer;
 use yew_router::Routable;
 
 struct Template {
     content: String,
-    index: usize,
+    head_index: usize,
+    body_index: usize,
 }
 
 impl Template {
@@ -17,19 +19,30 @@ impl Template {
         println!("Loading template from: {:?}", path.as_ref());
         let content = tokio::fs::read_to_string(path).await?;
 
-        let Some(index) = content.find("</body>") else {
+        let Some(head_index) = content.find("</head>") else {
+            eprintln!("error: Failed to find index of '</head>' close tag in 'dist/index.html'");
+            return Err(std::io::Error::new(std::io::ErrorKind::Other, "Malformed index.html"));
+        };
+
+        let Some(body_index) = content.find("</body>") else {
             eprintln!("error: Failed to find index of '</body>' close tag in 'dist/index.html'");
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "Malformed index.html"));
         };
 
-        Ok(Self { content, index })
+        Ok(Self {
+            content,
+            head_index,
+            body_index,
+        })
     }
 
-    async fn render(&self, app: ServerRenderer<App>) -> String {
+    async fn render(&self, head: String, body: String) -> String {
         let mut result = String::with_capacity(self.content.len());
-        result.push_str(&self.content[..self.index]);
-        app.render_to_string(&mut result).await;
-        result.push_str(&self.content[self.index..]);
+        result.push_str(&self.content[..self.head_index]);
+        result.push_str(&head);
+        result.push_str(&self.content[self.head_index..self.body_index]);
+        result.push_str(&body);
+        result.push_str(&self.content[self.body_index..]);
         result
     }
 }
@@ -63,8 +76,17 @@ impl Env {
     }
 
     async fn render_route(&self, url: String) -> String {
-        let render = ServerRenderer::<App>::with_props(move || AppProps { url });
-        self.template.render(render).await
+        let head = HeadWriter::default();
+
+        let render = {
+            let head = head.clone();
+            ServerRenderer::<StaticApp>::with_props(move || StaticAppProps { url, head })
+        };
+
+        let mut body = String::new();
+        render.render_to_string(&mut body).await;
+
+        self.template.render(head.take(), body).await
     }
 
     async fn write_str<P: AsRef<Path>>(&self, path: P, s: &str) -> std::io::Result<()> {
