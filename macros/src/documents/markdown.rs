@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use gray_matter::engine::Engine;
 use model::{
-    document::{AttributeName, RenderElement, RenderNode, RenderText, TagName},
+    document::{AttributeName, RenderElement, RenderIcon, RenderNode, RenderText, TagName},
     properties::Properties,
 };
 use pulldown_cmark::{
@@ -15,9 +15,93 @@ use syntect::{
     util::LinesWithEndings,
 };
 
-use crate::parse::properties::{parse_language, parse_language_properties};
+use crate::parse::properties::parse_language_properties;
 
 use super::highlight::{SYNTAX_SET, THEME_SET};
+
+enum CalloutKind {
+    Note,
+    Info,
+    Todo,
+    Tip,
+    Success,
+    Question,
+    Warning,
+    Failure,
+    Danger,
+    Bug,
+    Example,
+}
+
+impl CalloutKind {
+    fn parse(name: &str) -> Option<Self> {
+        let name = name.trim();
+        match name {
+            "note" => Some(Self::Note),
+            "info" => Some(Self::Info),
+            "todo" => Some(Self::Todo),
+            "tip" => Some(Self::Tip),
+            "success" => Some(Self::Success),
+            "question" => Some(Self::Question),
+            "warn" => Some(Self::Warning),
+            "warning" => Some(Self::Warning),
+            "error" => Some(Self::Failure),
+            "failure" => Some(Self::Failure),
+            "danger" => Some(Self::Danger),
+            "bug" => Some(Self::Bug),
+            "example" => Some(Self::Example),
+            _ => None,
+        }
+    }
+
+    fn classname(&self) -> &'static str {
+        match self {
+            Self::Note => "note",
+            Self::Info => "note",
+            Self::Todo => "note",
+            Self::Tip => "tip",
+            Self::Success => "success",
+            Self::Question => "question",
+            Self::Warning => "warning",
+            Self::Failure => "danger",
+            Self::Danger => "danger",
+            Self::Bug => "danger",
+            Self::Example => "example",
+        }
+    }
+
+    fn title(&self) -> &'static str {
+        match self {
+            Self::Note => "Note",
+            Self::Info => "Information",
+            Self::Todo => "Todo",
+            Self::Tip => "Tip",
+            Self::Success => "Success",
+            Self::Question => "Question",
+            Self::Warning => "Warning",
+            Self::Failure => "Failure",
+            Self::Danger => "Danger",
+            Self::Bug => "Bug",
+            Self::Example => "Example",
+        }
+    }
+
+    fn icon(&self) -> RenderIcon {
+        match self {
+            Self::Note => RenderIcon::Note,
+            Self::Info => RenderIcon::Info,
+            Self::Todo => RenderIcon::Todo,
+            Self::Tip => RenderIcon::Flame,
+            Self::Success => RenderIcon::Success,
+            Self::Question => RenderIcon::Question,
+            Self::Warning => RenderIcon::Warning,
+            Self::Failure => RenderIcon::X,
+            Self::Danger => RenderIcon::Lightning,
+            Self::Bug => RenderIcon::Bug,
+            Self::Example => RenderIcon::List,
+        }
+    }
+}
 
 pub fn heading_for_level(level: HeadingLevel) -> TagName {
     match level {
@@ -57,7 +141,7 @@ impl Highlighting {
     pub fn finish(self) -> RenderElement {
         let syntax = SYNTAX_SET
             .find_syntax_by_token(&self.language)
-            .unwrap_or_else(|| panic!("Unknown language: {}", self.language));
+            .unwrap_or_else(|| panic!("Unknown language: '{}'", self.language));
 
         let theme = THEME_SET.themes.get("base16-ocean.dark").expect("theme");
         let bg = theme.settings.background.unwrap_or(Color::WHITE);
@@ -331,8 +415,40 @@ where
         self.output(figure);
     }
 
-    fn component(&mut self, name: &str) -> bool {
-        match name {
+    fn generate_callout(&mut self, source: &str, properties: &Properties) {
+        let kind = properties
+            .get("type")
+            .and_then(CalloutKind::parse)
+            .unwrap_or(CalloutKind::Note);
+
+        let mut callout = RenderElement::new(TagName::Div);
+        callout.add_attribute(
+            AttributeName::Class,
+            format!("callout {}", kind.classname()),
+        );
+
+        let mut heading = RenderElement::new(TagName::Div);
+        heading.add_attribute(AttributeName::Class, "heading");
+        heading.add_child(kind.icon());
+
+        let mut title = RenderElement::new(TagName::Div);
+        title.add_child(RenderText::new(
+            properties.get("title").unwrap_or_else(|| kind.title()),
+        ));
+        heading.add_child(title);
+
+        callout.add_child(heading);
+
+        let mut body = RenderElement::new(TagName::Div);
+        body.add_attribute(AttributeName::Class, "body");
+        body.add_children(render(source));
+
+        callout.add_child(body);
+        self.output(callout);
+    }
+
+    fn component(&mut self, language: &str, properties: &Properties) -> bool {
+        match language {
             "bookmark" => {
                 let content = self.raw_text();
                 self.generate_bookmark(&content);
@@ -342,6 +458,12 @@ where
             "quote" => {
                 let content = self.raw_text();
                 self.generate_quote(&content);
+                true
+            }
+
+            "callout" => {
+                let content = self.raw_text();
+                self.generate_callout(&content, properties);
                 true
             }
 
@@ -371,22 +493,26 @@ where
             Tag::BlockQuote => self.enter(RenderElement::new(TagName::BlockQuote)),
 
             Tag::CodeBlock(kind) => {
-                if let CodeBlockKind::Fenced(language) = &kind {
-                    if self.component(language) {
+                let (language, properties) = if let CodeBlockKind::Fenced(language) = &kind {
+                    let (language, properties) = parse_language_properties(&language)
+                        .expect("valid language and properties");
+                    (
+                        if language.is_empty() {
+                            None
+                        } else {
+                            Some(language)
+                        },
+                        properties,
+                    )
+                } else {
+                    (None, Properties::default())
+                };
+
+                if let Some(language) = &language {
+                    if self.component(language, &properties) {
                         return;
                     }
                 }
-
-                let language = if let CodeBlockKind::Fenced(language) = kind {
-                    if !language.is_empty() {
-                        let language = parse_language(&language);
-                        Some(language)
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                };
 
                 let mut figure = RenderElement::new(TagName::Figure);
                 figure.add_attribute(AttributeName::Class, "code");

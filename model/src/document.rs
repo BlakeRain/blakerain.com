@@ -66,6 +66,7 @@ impl<S> Details<S> {
 pub enum RenderNode {
     Text(RenderText),
     Element(RenderElement),
+    Icon(RenderIcon),
 }
 
 impl From<RenderText> for RenderNode {
@@ -80,6 +81,12 @@ impl From<RenderElement> for RenderNode {
     }
 }
 
+impl From<RenderIcon> for RenderNode {
+    fn from(value: RenderIcon) -> Self {
+        Self::Icon(value)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RenderText {
     pub content: String,
@@ -91,6 +98,21 @@ impl RenderText {
             content: content.into(),
         }
     }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
+pub enum RenderIcon {
+    Bug,
+    Flame,
+    Info,
+    Lightning,
+    List,
+    Note,
+    Question,
+    Success,
+    Todo,
+    Warning,
+    X,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -118,6 +140,11 @@ impl RenderElement {
 
     pub fn add_child<C: Into<RenderNode>>(&mut self, child: C) {
         self.children.push(child.into());
+    }
+
+    pub fn add_children<C: Into<RenderNode>, I: IntoIterator<Item = C>>(&mut self, children: I) {
+        let mut children = children.into_iter().map(Into::into).collect::<Vec<_>>();
+        self.children.append(&mut children);
     }
 }
 

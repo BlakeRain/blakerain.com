@@ -62,9 +62,20 @@ version = "0.7"
 features = [
   "BootstrapDot",
   "BootstrapGithub",
+  "BootstrapLightningChargeFill",
   "BootstrapMastodon",
+  "HeroiconsSolidInformationCircle",
+  "HeroiconsSolidQuestionMarkCircle",
+  "LucideAlertTriangle",
+  "LucideBug",
+  "LucideCheck",
+  "LucideCheckCircle",
+  "LucideFlame",
+  "LucideList",
   "LucideMenu",
-  "LucideRss"
+  "LucidePencil",
+  "LucideRss",
+  "LucideX"
 ]
 
 [dependencies.web-sys]

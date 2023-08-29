@@ -77,12 +77,3 @@ pub fn parse_language_properties(
         Ok((input.to_string(), Properties::default()))
     }
 }
-
-pub fn parse_language(input: &str) -> String {
-    let input = input.trim();
-    if let Some((language, _)) = input.split_once(' ') {
-        language.to_string()
-    } else {
-        input.to_string()
-    }
-}

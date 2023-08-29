@@ -1,9 +1,26 @@
-use model::document::{RenderElement, RenderNode, RenderText};
+use model::document::{RenderElement, RenderIcon, RenderNode, RenderText};
 use yew::{
-    function_component,
+    function_component, html,
     virtual_dom::{VTag, VText},
     Html, Properties,
 };
+use yew_icons::{Icon, IconId};
+
+fn icon_id_for_icon(icon: RenderIcon) -> IconId {
+    match icon {
+        RenderIcon::Bug => IconId::LucideBug,
+        RenderIcon::Flame => IconId::LucideFlame,
+        RenderIcon::Info => IconId::HeroiconsSolidInformationCircle,
+        RenderIcon::Lightning => IconId::BootstrapLightningChargeFill,
+        RenderIcon::List => IconId::LucideList,
+        RenderIcon::Note => IconId::LucidePencil,
+        RenderIcon::Question => IconId::HeroiconsSolidQuestionMarkCircle,
+        RenderIcon::Success => IconId::LucideCheck,
+        RenderIcon::Todo => IconId::LucideCheckCircle,
+        RenderIcon::Warning => IconId::LucideAlertTriangle,
+        RenderIcon::X => IconId::LucideX,
+    }
+}
 
 fn render_node(node: &RenderNode) -> Html {
     match node {
@@ -25,6 +42,10 @@ fn render_node(node: &RenderNode) -> Html {
             }
 
             tag.into()
+        }
+
+        RenderNode::Icon(icon) => {
+            html! { <Icon icon_id={icon_id_for_icon(*icon)} /> }
         }
     }
 }
