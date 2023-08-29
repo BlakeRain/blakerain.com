@@ -27,16 +27,16 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
     html! {
         <article>
             <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed pt-20" {style}>
-                <div class="container mx-auto">
-                    <h1 class="text-5xl font-bold text-center text-white">
+                <div class="container mx-auto flex flex-col items-center">
+                    <h1 class="text-5xl font-bold text-white">
                         { &props.details.summary.title }
                     </h1>
                     if let Some(excerpt) = &props.details.summary.excerpt {
-                        <p class="font-text text-2xl text-white text-center mt-5">
+                        <p class="font-text text-2xl text-white mt-5 w-full xl:w-2/3">
                             { excerpt }
                         </p>
                     }
-                    <div class="mt-12 pt-8 px-16 bg-white dark:bg-zinc-900 rounded-t">
+                    <div class="mt-12 pt-8 px-16 bg-white dark:bg-zinc-900 rounded-t w-full">
                         {post_card_details(true, &props.details, &tags)}
                     </div>
                 </div>
