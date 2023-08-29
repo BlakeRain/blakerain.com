@@ -2,24 +2,10 @@
 # tags.yaml
 #
 
-- slug: getting-started
-  name: Getting Started
-  visibility: public
-
-- slug: haskell
-  name: Haskell
-  visibility: public
-  description: Posts that feature the Haskell programming language.
-
 - slug: reviews
   name: Reviews
   visibility: public
   description: Reviews of books or other articles
-
-- slug: electronics
-  name: Electronics
-  visibility: public
-  description: Posts that feature electronic circuits.
 
 - slug: javascript
   name: JavaScript
@@ -51,22 +37,10 @@
   visibility: public
   description: Posts that feature the Linux operating system.
 
-- slug: cairo
-  name: Cairo
-  visibility: public
-  description: Posts that feature the Cairo vector-based graphics library.
-
 - slug: cpp
   name: C++
   visibility: public
   description: Posts that feature the C++ programming language.
-
-- slug: yesod
-  name: Yesod
-  visibility: public
-  description:
-    Posts which feature the Yesod web application development framework
-    for the Haskell programming language.
 
 - slug: ethernet
   name: Ethernet
@@ -83,11 +57,6 @@
   visibility: public
   description: Posts that relate to garbage collection and memory management.
 
-- slug: sqlite
-  name: SQLite
-  visibility: public
-  description: Posts that feature the SQLite embedded relational database.
-
 - slug: chakracore
   name: ChakraCore
   visibility: public
@@ -97,11 +66,6 @@
   name: PCI
   visibility: public
   description: Articles related to programming PCI express devices.
-
-- slug: usb
-  name: USB
-  visibility: public
-  description: Posts that relate to working with the Universal Serial Bus
 
 - slug: intel-i350
   name: Intel i350
@@ -117,3 +81,8 @@
   name: Mastodon
   visibility: public
   description: Posts that feature the Mastodon social network.
+
+- slug: yew
+  name: Yew
+  visibility: public
+  description: Posts that relate to the Yew web framework.
