@@ -138,7 +138,9 @@ pub enum TagName {
     H4,
     H5,
     H6,
+    Hr,
     Img,
+    Input,
     Li,
     Ol,
     P,
@@ -146,6 +148,7 @@ pub enum TagName {
     S,
     Span,
     Strong,
+    Sup,
     TBody,
     THead,
     Table,
@@ -173,7 +176,9 @@ impl TagName {
             TagName::H4 => "h4",
             TagName::H5 => "h5",
             TagName::H6 => "h6",
+            TagName::Hr => "hr",
             TagName::Img => "img",
+            TagName::Input => "input",
             TagName::Li => "li",
             TagName::Ol => "ol",
             TagName::P => "p",
@@ -181,6 +186,7 @@ impl TagName {
             TagName::S => "s",
             TagName::Span => "span",
             TagName::Strong => "strong",
+            TagName::Sup => "sup",
             TagName::TBody => "tbody",
             TagName::THead => "thead",
             TagName::Table => "table",
@@ -201,8 +207,10 @@ pub struct RenderAttribute {
 #[derive(Debug, Copy, Clone, PartialEq, Serialize, Deserialize)]
 pub enum AttributeName {
     Alt,
+    Checked,
     Class,
     Decoding,
+    Disabled,
     Href,
     Id,
     Loading,
@@ -210,14 +218,17 @@ pub enum AttributeName {
     Start,
     Style,
     Title,
+    Type,
 }
 
 impl AttributeName {
     pub fn as_str(&self) -> &'static str {
         match self {
             AttributeName::Alt => "alt",
+            AttributeName::Checked => "checked",
             AttributeName::Class => "class",
             AttributeName::Decoding => "decoding",
+            AttributeName::Disabled => "disabled",
             AttributeName::Href => "href",
             AttributeName::Id => "id",
             AttributeName::Loading => "loading",
@@ -225,6 +236,7 @@ impl AttributeName {
             AttributeName::Start => "start",
             AttributeName::Style => "style",
             AttributeName::Title => "title",
+            AttributeName::Type => "type",
         }
     }
 }

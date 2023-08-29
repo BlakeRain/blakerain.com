@@ -158,6 +158,11 @@ where
         }
     }
 
+    fn get_footnote_ix(&mut self, name: CowStr<'a>) -> usize {
+        let next = self.footnotes.len() + 1;
+        *self.footnotes.entry(name).or_insert(next)
+    }
+
     fn output<N: Into<RenderNode>>(&mut self, node: N) {
         if let Some(top) = self.stack.last_mut() {
             top.add_child(node)
@@ -342,7 +347,7 @@ where
         }
     }
 
-    fn start(&mut self, tag: Tag) {
+    fn start(&mut self, tag: Tag<'a>) {
         match tag {
             Tag::Paragraph => self.enter(RenderElement::new(TagName::P)),
 
@@ -491,7 +496,23 @@ where
                 p.map(|p| self.enter(p));
             }
 
-            _ => {}
+            Tag::FootnoteDefinition(name) => {
+                let mut div = RenderElement::new(TagName::Div);
+                div.add_attribute(AttributeName::Class, "footnote");
+                div.add_attribute(AttributeName::Id, name.to_string());
+
+                let index = self.get_footnote_ix(name);
+                let mut left = RenderElement::new(TagName::Div);
+                left.add_attribute(AttributeName::Class, "footnote-index");
+                left.add_child(RenderText::new(index.to_string()));
+                div.add_child(left);
+
+                let mut right = RenderElement::new(TagName::Div);
+                right.add_attribute(AttributeName::Class, "footnote-def");
+
+                self.enter(div);
+                self.enter(right);
+            }
         }
     }
 
@@ -587,8 +608,12 @@ where
             Tag::Strong => self.leave(TagName::Strong),
             Tag::Strikethrough => self.leave(TagName::S),
             Tag::Link(_, _, _) => self.leave(TagName::A),
+            Tag::Image(_, _, _) => {}
 
-            _ => {}
+            Tag::FootnoteDefinition(_) => {
+                self.leave(TagName::Div); // <div .right>
+                self.leave(TagName::Div); // <div .footnote>
+            }
         }
     }
 
@@ -611,9 +636,12 @@ where
                 Event::SoftBreak | Event::HardBreak | Event::Rule => output.push(' '),
 
                 Event::FootnoteReference(name) => {
-                    let next = self.footnotes.len() + 1;
-                    let footnote = *self.footnotes.entry(name).or_insert(next);
-                    output.push_str(&format!("[{footnote}]"));
+                    let ix = {
+                        let next = self.footnotes.len() + 1;
+                        *self.footnotes.entry(name).or_insert(next)
+                    };
+
+                    output.push_str(&format!("[{ix}]"));
                 }
 
                 Event::TaskListMarker(true) => output.push_str("[x]"),
@@ -624,7 +652,7 @@ where
         output
     }
 
-    fn event(&mut self, event: Event) {
+    fn event(&mut self, event: Event<'a>) {
         match event {
             Event::Start(tag) => self.start(tag),
             Event::End(tag) => self.end(tag),
@@ -659,7 +687,34 @@ where
                 self.output(RenderElement::new(TagName::Br));
             }
 
-            _ => {}
+            Event::Rule => {
+                self.output(RenderElement::new(TagName::Hr));
+            }
+
+            Event::FootnoteReference(name) => {
+                let mut sup = RenderElement::new(TagName::Sup);
+                let mut anchor = RenderElement::new(TagName::A);
+                anchor.add_attribute(AttributeName::Href, format!("#{name}"));
+
+                let ix = self.get_footnote_ix(name);
+                anchor.add_child(RenderText::new(ix.to_string()));
+
+                sup.add_child(anchor);
+                self.output(sup);
+            }
+
+            Event::TaskListMarker(checked) => {
+                let mut input = RenderElement::new(TagName::Input);
+                input.add_attribute(AttributeName::Type, "checkbox");
+                input.add_attribute(AttributeName::Disabled, "");
+                input.add_attribute(AttributeName::Class, "mr-2");
+
+                if checked {
+                    input.add_attribute(AttributeName::Checked, "");
+                }
+
+                self.output(input);
+            }
         }
     }
 
