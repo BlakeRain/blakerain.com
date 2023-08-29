@@ -5,7 +5,9 @@ use model::{
     document::{AttributeName, RenderElement, RenderNode, RenderText, TagName},
     properties::Properties,
 };
-use pulldown_cmark::{Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, Options, Parser, Tag};
+use pulldown_cmark::{
+    Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, LinkType, Options, Parser, Tag,
+};
 use serde::Deserialize;
 use syntect::{
     easy::HighlightLines,
@@ -457,6 +459,13 @@ where
             Tag::Emphasis => self.enter(RenderElement::new(TagName::Em)),
             Tag::Strong => self.enter(RenderElement::new(TagName::Strong)),
             Tag::Strikethrough => self.enter(RenderElement::new(TagName::S)),
+
+            Tag::Link(LinkType::Email, dest, title) => {
+                let mut a = RenderElement::new(TagName::A);
+                a.add_attribute(AttributeName::Title, title.to_string());
+                a.add_attribute(AttributeName::Href, format!("mailto:{dest}"));
+                self.enter(a);
+            }
 
             Tag::Link(_, href, title) => {
                 let mut a = RenderElement::new(TagName::A);
