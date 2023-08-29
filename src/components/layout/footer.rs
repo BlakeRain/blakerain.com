@@ -12,7 +12,7 @@ pub fn footer(_: &FooterProps) -> Html {
     let year = OffsetDateTime::now_utc().year();
 
     html! {
-        <footer class="bg-primary text-neutral-400 text-sm mt-4">
+        <footer class="bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem]">
             <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
                 <div>
                     {format!("Blake Rain © {year}")}
