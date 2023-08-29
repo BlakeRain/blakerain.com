@@ -5,8 +5,9 @@ use yew::{classes, function_component, html, use_effect, use_state_eq, Callback,
 #[function_component(GotoTop)]
 pub fn goto_top() -> Html {
     let footer_el = use_state_eq(|| None::<Element>);
-    let visible = use_state_eq(|| false);
+    let nav_visible = use_state_eq(|| false);
     let footer_visible = use_state_eq(|| false);
+    let visible = !*nav_visible;
 
     let class = classes!(
         "cursor-pointer",
@@ -22,7 +23,7 @@ pub fn goto_top() -> Html {
         "right-8",
         "transition-all",
         "transition-200",
-        if *visible { "opacity-100" } else { "opacity-0" },
+        if visible { "block" } else { "hidden" },
     );
 
     let style = if *footer_visible {
@@ -33,7 +34,7 @@ pub fn goto_top() -> Html {
         };
 
         format!("transform: translateY({}px)", height)
-    } else if *visible {
+    } else if visible {
         "transform: translateY(0px)".to_string()
     } else {
         "transform: translateY(100px)".to_string()
@@ -47,7 +48,7 @@ pub fn goto_top() -> Html {
                         for entry in entries {
                             let tag_name = entry.target().tag_name();
                             if tag_name == "NAV" {
-                                visible.set(!entry.is_intersecting());
+                                nav_visible.set(entry.is_intersecting());
                             } else if tag_name == "FOOTER" {
                                 footer_visible.set(entry.is_intersecting());
                             }
