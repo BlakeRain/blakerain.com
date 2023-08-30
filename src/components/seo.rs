@@ -11,16 +11,6 @@ pub struct LdJsonProps {
 
 #[function_component(LdJson)]
 pub fn ld_json(props: &LdJsonProps) -> Html {
-    #[cfg(feature = "static")]
-    {
-        let head = use_context::<crate::app::HeadWriter>().expect("HeadContext to be provided");
-        write!(
-            head,
-            "<script type=\"application/ld+json\">{}</script>",
-            props.json
-        );
-    }
-
     html! {
         <Head>
             <script type="application/ld+json">
@@ -73,26 +63,6 @@ pub fn web_page_seo(props: &WebPageSeoProps) -> Html {
     } else {
         "noindex,nofollow"
     };
-
-    #[cfg(feature = "static")]
-    {
-        let head = use_context::<crate::app::HeadWriter>().expect("HeadContext to be provided");
-        write!(head, "<meta name=\"robots\" content=\"{robots}\">");
-        write!(
-            head,
-            "<meta property=\"og:title\" content=\"{}\">",
-            props.title
-        );
-        write!(head, "<meta property=\"og:url\" content=\"{url}\">");
-
-        if let Some(excerpt) = &props.excerpt {
-            write!(head, "<meta name=\"description\" content=\"{excerpt}\">");
-            write!(
-                head,
-                "<meta property=\"org:description\" content=\"{excerpt}\">"
-            );
-        }
-    }
 
     html! {
         <>
@@ -195,54 +165,6 @@ pub fn blog_post_seo(props: &BlogPostSeoProps) -> Html {
             tags.clone(),
         ),
     );
-
-    #[cfg(feature = "static")]
-    {
-        let head = use_context::<crate::app::HeadWriter>().expect("HeadWriter to be provided");
-
-        if let Some(excerpt) = &props.excerpt {
-            write!(head, "<meta name=\"description\" content=\"{excerpt}\">");
-            write!(
-                head,
-                "<meta property=\"og:description\" content=\"{excerpt}\">"
-            );
-        }
-
-        write!(head, "<meta property=\"og:type\" content=\"article\">");
-        write!(
-            head,
-            "<meta property=\"og:title\" content=\"{}\">",
-            props.title
-        );
-        write!(head, "<meta property=\"og:url\" content=\"{url}\">");
-
-        if let Some(published) = &published {
-            write!(
-                head,
-                "<meta property=\"article:published_time\" content=\"{published}\">"
-            );
-        }
-
-        write!(
-            head,
-            "<meta property=\"article:author\" content=\"Blake Rain\">"
-        );
-
-        if let Some(image) = &image {
-            write!(head, "<meta property=\"og:image\" content=\"{image}\" />");
-            write!(
-                head,
-                "<meta property=\"og:image:alt\" content=\"{}\" />",
-                props.title
-            );
-        }
-
-        for tag in tags.iter() {
-            write!(head, "<meta property=\"article:tag\" content=\"{tag}\">");
-        }
-
-        write!(head, "<link rel=\"canonical\" href=\"{url}\">");
-    }
 
     html! {
         <>

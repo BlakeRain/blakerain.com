@@ -4,13 +4,14 @@ use std::{
 };
 
 use site::{
-    app::{HeadWriter, StaticApp, StaticAppProps},
+    app::{StaticApp, StaticAppProps},
+    components::head::{HeadContext, HeadRender, HeadRenderProps},
     pages::Route,
 };
 
 use chrono::Datelike;
 use time::format_description::well_known::{Rfc2822, Rfc3339};
-use yew::ServerRenderer;
+use yew::LocalServerRenderer;
 use yew_router::Routable;
 
 struct Template {
@@ -24,8 +25,8 @@ impl Template {
         println!("Loading template from: {:?}", path.as_ref());
         let content = tokio::fs::read_to_string(path).await?;
 
-        let Some(head_index) = content.find("</head>") else {
-            eprintln!("error: Failed to find index of '</head>' close tag in 'dist/index.html'");
+        let Some(head_index) = content.find("<script id=\"head-ssg-after\"") else {
+            eprintln!("error: Failed to find index of 'head-ssg-after' tag in 'dist/index.html'");
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "Malformed index.html"));
         };
 
@@ -81,17 +82,23 @@ impl Env {
     }
 
     async fn render_route(&self, route: Route) -> String {
-        let head = HeadWriter::default();
+        let head = HeadContext::default();
 
         let render = {
             let head = head.clone();
-            ServerRenderer::<StaticApp>::with_props(move || StaticAppProps { route, head })
+            LocalServerRenderer::<StaticApp>::with_props(StaticAppProps { route, head })
         };
 
         let mut body = String::new();
         render.render_to_string(&mut body).await;
 
-        self.template.render(head.take(), body).await
+        let render =
+            LocalServerRenderer::<HeadRender>::with_props(HeadRenderProps { context: head });
+
+        let mut head = String::new();
+        render.render_to_string(&mut head).await;
+
+        self.template.render(head, body).await
     }
 
     async fn write_str<P: AsRef<Path>>(&self, path: P, s: &str) -> std::io::Result<()> {

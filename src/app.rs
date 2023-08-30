@@ -1,12 +1,13 @@
-use std::sync::{Arc, Mutex};
-
-use yew::{function_component, html, ContextProvider, Html, Properties};
+use yew::{function_component, html, html::PhantomComponent, ContextProvider, Html, Properties};
 use yew_router::{
     history::{AnyHistory, MemoryHistory},
     BrowserRouter, Routable, Router, Switch,
 };
 
-use crate::{components::layout::Layout, pages::Route};
+use crate::{
+    components::{head::HeadContext, layout::Layout},
+    pages::Route,
+};
 
 #[function_component(AppContent)]
 fn app_content() -> Html {
@@ -19,60 +20,21 @@ fn app_content() -> Html {
     }
 }
 
-#[derive(Default, Properties, PartialEq)]
-pub struct AppProps {}
-
 #[function_component(App)]
-#[allow(unused_variables)]
-pub fn app(props: &AppProps) -> Html {
-    let head = HeadWriter::default();
-
+pub fn app() -> Html {
     html! {
-        <ContextProvider<HeadWriter> context={head}>
+        <PhantomComponent<ContextProvider<HeadContext>>>
             <BrowserRouter>
                 <AppContent />
             </BrowserRouter>
-        </ContextProvider<HeadWriter>>
-    }
-}
-
-#[derive(Default)]
-pub struct HeadWriter {
-    content: Arc<Mutex<String>>,
-}
-
-impl PartialEq for HeadWriter {
-    fn eq(&self, _: &Self) -> bool {
-        true
-    }
-}
-
-impl Clone for HeadWriter {
-    fn clone(&self) -> Self {
-        Self {
-            content: Arc::clone(&self.content),
-        }
-    }
-}
-
-impl HeadWriter {
-    pub fn take(self) -> String {
-        let mut content = self.content.lock().unwrap();
-        let mut taken = String::new();
-        std::mem::swap(&mut taken, &mut *content);
-        taken
-    }
-
-    pub fn write_fmt(&self, args: std::fmt::Arguments<'_>) {
-        let mut content = self.content.lock().unwrap();
-        std::fmt::Write::write_fmt(&mut *content, args).unwrap();
+        </PhantomComponent<ContextProvider<HeadContext>>>
     }
 }
 
 #[derive(Properties, PartialEq)]
 pub struct StaticAppProps {
     pub route: Route,
-    pub head: HeadWriter,
+    pub head: HeadContext,
 }
 
 impl StaticAppProps {
@@ -88,10 +50,10 @@ pub fn static_app(props: &StaticAppProps) -> Html {
     let history = props.create_history();
 
     html! {
-        <ContextProvider<HeadWriter> context={props.head.clone()}>
+        <ContextProvider<HeadContext> context={props.head.clone()}>
             <Router history={history}>
                 <AppContent />
             </Router>
-        </ContextProvider<HeadWriter>>
+        </ContextProvider<HeadContext>>
     }
 }
