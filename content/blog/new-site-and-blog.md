@@ -19,7 +19,7 @@ So for this first post I wanted to share some information relating to how I set 
 
 See here for adding search: [https://blakerain.com/blog/adding-search-to-ghost](http://localhost:2368/blog/adding-search-to-ghost)
 
-### Ghost CMS
+# Ghost CMS
 
 I've used [Ghost](https://ghost.org) to create this website. Ghost is a CMS, written in JavaScript, that provides a nice set of features without seeming to be too bloated.
 
@@ -45,7 +45,7 @@ Apart from it's small size and not being built in PHP, some of the features that
 - I quite like working with JavaScript.
 - Ghost seemed easy to self-host, which is usually my preferred option.
 
-### Deploying Ghost
+# Deploying Ghost
 
 For the most part, installation of Ghost required following the instructions on the Ghost website. I roughly followed the guide for Ubuntu, as that is the distribution I chose:
 
@@ -100,7 +100,7 @@ Finally I could make sure that the site was running using `ghost ls`, which gave
 
 ![](/content/new-site-and-blog/image-17.png)
 
-### Customizing Ghost
+# Customizing Ghost
 
 Once I had an installation that was working I wanted to be able to customize it. The first thing I wanted to do was to make sure that the site was not generally available. Conveniently Ghost includes a simple way of doing this by switching the site to private, disabling access, SEO and social features. This option can be found in the **General** settings of the administration portal:
 

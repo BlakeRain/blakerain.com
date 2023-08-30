@@ -33,7 +33,7 @@ thumbnail: "https://opengraph.githubassets.com/e6c849253e37fbc1db7ae49d6368cc429
 icon: "https://github.com/fluidicon.png"
 ```
 
-## Site Analytics
+# Site Analytics
 
 A few months ago I decided to change the analytics for this website over to a custom analytics
 implementation, replacing my use of [Simple Analytics](https://simpleanalytics.com). The analytics
@@ -54,7 +54,7 @@ point for a few reasons:
    use-case for a Lambda function.
 3. There's little pressure for these to be performant or stable, as it only effects this site 😆
 
-## Building Rust for AWS Lambda
+# Building Rust for AWS Lambda
 
 I initially had a number of issues compiling Rust code for AWS Lambda using the method described in the
 [README](https://github.com/awslabs/aws-lambda-rust-runtime#deployment) in the AWS Lambda Rust
@@ -98,7 +98,7 @@ cp $(ldd "$EXE_PATH" | grep ssl | awk '{print $3}') "$OUTPUT_DIR/lib/"
 Now that my executables could be run by Lambda, I could start iterating the API and trigger
 functions.
 
-## Implementing the API
+# Implementing the API
 
 The initial implementation of the API in Rust has gone very easily, mostly due to the structures
 provided in various crates available to Rust, including the [lambda-http] crate. I was able to
@@ -178,7 +178,7 @@ using `unwrap` and `expect` and allowing the Lambda function to panic.
 i32::from_str_radix(item["ViewCount"].as_n().unwrap(), 10).unwrap() // 😤
 ```
 
-## Implementing the Trigger
+# Implementing the Trigger
 
 Once I had come to understand the structures and functions in the Rust AWS client crates, I had a
 far easier time building the trigger function. This function simply responds to events received
@@ -191,7 +191,7 @@ I was somewhat worried about the parsing of user agent strings: in Python I did 
 [woothee](https://crates.io/crates/woothee) that performs the same operation just as well for my
 use case.
 
-## Conclusion
+# Conclusion
 
 I was pleasantly suprised at how well the process went. Apart from the somewhat slow start getting
 Rust code compiled for AWS Lambda on ARM, once I had my bearings it was quite easy going.

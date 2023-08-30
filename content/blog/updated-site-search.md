@@ -25,7 +25,7 @@ The new search comprises two main components: a front-end interface and a back-e
 
 In this post I go into some detail of how the search is implemented. All the source code is available in the GitHub repository for this [blog](https://github.com/BlakeRain/blakerain.com).
 
-### Using a Prefix Tree
+# Using a Prefix Tree
 
 One of my goals for the new search is that it should be interactive, and quite fast. That means it must quickly give the user reasonably useful results. Moreover, as I wanted to simplify the implementation, I would like to maintain very few dependencies.
 
@@ -85,7 +85,7 @@ Searching for occurrences from this node, the first leaf we reach is for the wor
 
 Building the results in this way allows us to quickly ascertain that words starting with the two letters `"be"` can be found in _Document 2_ primarily (there are six occurrences) and in _Document 1_, where we find one occurence.
 
-### Generating the Search Data
+# Generating the Search Data
 
 To build the prefix tree I decided to create a GitHub action. This action would be configured to be run at a certain interval (such as every hour) to regenerate the search data.
 
@@ -119,7 +119,7 @@ Once the search data has been built and the file has been generated, the GitHub 
 
 This data is then loaded and parsed by the search front-end.
 
-### Search Front-End
+# Search Front-End
 
 The search interface is a small amount of React code that is complied along with the customized Casper theme for the site. The interface loads and parses the search data from S3. For profiling it outputs a console message indicating how many posts and trie nodes were loaded from the search data, and the time it took:
 
@@ -135,7 +135,7 @@ When a link is clicked in the search results, the page opened. The link contains
 
 ![](/content/updated-site-search/Selection_2056.png)
 
-### Conclusion
+# Conclusion
 
 I find this search implementation to be far simpler to maintain and use. We use a similar search system in our internal compliance management system at [Neo](https://neotechnologiesltd.com/). This removes the reliance on a secondary server that was solely used to service search queries. This leads to a cleaner approach that will also simplify moving the site to a CDN.
 

@@ -17,7 +17,7 @@ When writing a user-space program that shares memory with a hardware device, we 
 
 To begin to understand this requires us to be notionally aware of the manner in which devices will access the memory that we share with them, and how to ask the OS to respect the physical location of the memory.
 
-### How Devices Can Access Memory
+# How Devices Can Access Memory
 
 These days, devices that are connected to a computer are typically connected via PCI Express (usually abbreviate to PCIe). Such devices will typically include support for accessing memory via DMA (Direct Memory Access).
 
@@ -31,7 +31,7 @@ In this more recent model of PCI, the [North Bridge](<https://en.wikipedia.org/w
 
 When programming a device connected via PCIe, you will typically be writing a base address for a region of memory that you have prepared for the device to access. However, this memory cannot be allocated in the usual way. This is due to the way memory addresses are translated by the [MMU](https://en.wikipedia.org/wiki/Memory_management_unit) and the operating system – the memory that we traditionally allocate from the operating system is _virtual_.
 
-### Virtual and Physical Addresses
+# Virtual and Physical Addresses {#virt-and-phy-addresses}
 
 Typical memory allocation, such as when we use `malloc` or `new`, ultimately uses memory the operating system has reserved for our process. The address that we receive from the OS will be an address in the [virtual memory](https://en.wikipedia.org/wiki/Virtual_memory) maintained by the OS.
 
@@ -48,7 +48,7 @@ It is important, therefore, that for any allocated memory we are able to obtain 
 
 In order to address these two primary concerns we need to look to an alternative means of memory allocation than the traditional `malloc` and `new`. Moreover, as we are likely to need more than a standard page's worth of space (typically 4Kib), we need to allocate memory using larger pages of memory.
 
-### Establishing Physical Addresses
+# Establishing Physical Addresses {#physical-addresses}
 
 We understand that a process operates on virtual memory, and that memory is arranged in pages. The question now arises as to how we can establish the corresponding physical address for any given virtual address.
 
@@ -130,7 +130,7 @@ static uintptr_t virtual_to_physical(const void *vaddr) {
 
 We can now use the `virtual_to_physical` function to ascertain the physical address of some memory that we allocate from the operating system. This is the address that we pass on to our hardware.
 
-### Linux Huge Pages
+# Linux Huge Pages {#hugepages}
 
 Now we know how to establish the physical address corresponding to a virtual address, the problem still remains that we need to obtain an address for _contiguous physical memory_, rather than merely the physical address of a single page. We are also still limited by the fact that the operating system may subject our memory to swapping and other operations.
 
@@ -165,7 +165,7 @@ Something to note is that the kernel will try and balance the huge page pool ove
 
 Huge pages provide a rather nice solution to our problem of obtaining large contiguous regions of memory that are not going to be swapped out by the operating system.
 
-### Establishing Huge Page Availability
+# Establishing Huge Page Availability {#hugepage-availability}
 
 The first step towards allocating huge pages is to establish what huge pages are available to us. To do so we're going to query some files in the `/sys/kernel/mm/hugepages` directory. If any huge pages are configured, this directory will contain sub-directories for each huge page size:
 
@@ -257,7 +257,7 @@ std::vector<HugePageInfo> HugePageInfo::load() {
 }
 ```
 
-### Allocating a Huge Page
+# Allocating a Huge Page {#allocating}
 
 Each huge page allocation is described by a `HugePage` structure. This structure encapsulates the virtual and physical address of an allocated huge page along with the size of the page in bytes.
 
@@ -296,7 +296,7 @@ HugePage::Ref HugePageInfo::allocate() const {
 
 The value that we return from `allocate` constructs a `HugePage` with the virtual address that we received from `mmap`, the equivalent physical address as calculated by our `virtual_to_physical` function and the size of the huge page.
 
-### Deallocating a Hugepage
+# Deallocating a Hugepage {#deallocating}
 
 Once we no longer wish to retain a huge page we need to release it back into the huge page pool maintained by the operating system.
 
@@ -309,7 +309,7 @@ HugePage::~HugePage() {
 }
 ```
 
-### Dividing Up a Hugepage into Buffers
+# Dividing Up a Hugepage into Buffers {#dividing-into-buffers}
 
 **Note:** _If you only wanted to know about the allocation of huge pages then you can skip to the [conclusion](#conclusion)._
 
@@ -635,7 +635,7 @@ DMAPool::~DMAPool() {
 
 With the `DMAPool` implemented we can begin to portion out buffers of the required size and alignment to hardware. Hardware will require the physical address of each `Buffer` we allocate from the pool, which is available in the `Buffer::phy` field. Our process is also able to access this memory via the pointer in the `Buffer::address` field.
 
-### Conclusion
+# Conclusion {#conclusion}
 
 Preparing memory for use with DMA may seem a bit more complex than necessary. As developers we're often shielded from the details of memory management by useful abstractions such as those provided by `malloc` and `new`. This can mean that we are rarely exposed to the manner in which memory is managed by the operating system and our programs.
 

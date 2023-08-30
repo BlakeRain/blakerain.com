@@ -13,7 +13,7 @@ Recently I've been experimenting with various garbage collection implementations
 
 Before we get going with the details of this approach, I thought I'd set the scene a little with an overview of the garbage collection mechanism known as _tri-color marking_.
 
-### What is Tri-color Marking
+# What is Tri-color Marking
 
 Tri-color marking was first described I think by [Dijkstra et al](https://www.cs.utexas.edu/users/EWD/transcriptions/EWD05xx/EWD520.html) as part of the garbage collector for a LISP system. This algorithm is used as an enhancement to a simpler mark-and-sweep approach.
 
@@ -130,7 +130,7 @@ These two behaviours manifested in different ways during testing. The first feat
 
 The second behaviour – the number of passes are a function of the longest object chain – became quite apparent in tests that involved long chains of objects. Again, the JSON parser was a culprit of this behaviour of the marking process. If the GC executed whilst the parse tree was being referenced, multiple passes were required to walk all the nodes of the AST. Indeed this was quite likely: the JSON file was quite large, and the memory pressure increased quite drastically, often triggering multiple minor GC passes whilst the tree was being built.
 
-### Bitmap Marking
+# Bitmap Marking
 
 The part of the approach that stuck with me was the use of bitmaps to perform the tricolor marking process. To start this off, imagine we performed allocations within a set of _blocks._ Each block describes a region of memory that our allocator will meter out for each allocation request.
 
@@ -177,7 +177,7 @@ We can see that this represents four allocations in a block of 16 cells. The use
 
 The last three fields of the `BlockInfo` structure are the white, grey and black sets. These bitmaps are not based on the size of a cell, but on the size of a pointer: each bit represents a region that is exactly the number of bytes in a pointer.
 
-### Populating the Bitmaps
+## Populating the Bitmaps
 
 The first step to performing our tri-color marking is to populate the white and grey bitmaps for every block. We maintain all our blocks in a `BlockSet` structure. This structure has `begin` and `end` methods that let us iterate over the blocks in the set.
 
@@ -546,17 +546,17 @@ black bitmap TTTTTTTT TTTT---- TTTTTTTT ------TT
                                         XXXX
 ```
 
-### Lingering Thoughts
+# Lingering Thoughts
 
 I abandoned this approach to tri-color marking in it's current guise. The process of performing the actual marking was, for most of my tests, quite performant for my needs. However, I found that the GC it was implemented in had a number of significant performance issues. Most of these were due to the way I'd implemented the GC, rather than specifically with the bitmap-based approach to tri-color marking.
 
-#### Too Many Variables and Not Enough Rigour
+## Too Many Variables and Not Enough Rigour
 
 Fine-tuning all the variables in the GC didn't go well. There were quite a few variables, such as the size of each allocation cell in a page, the size of these pages, and so on. I never seemed to be able to balance these variables to provide a general configuration that was suitable for the range of workloads I anticipated.
 
 I'm sure that I could have tuned these variables by taking a more rigorous approach to the design and testing of the GC. Better yet, a smarter GC could have tuned itself to a certain extent based on how it was being used. More likely would be that I would never find a "best fit" set of parameters, but I might learn something along the way.
 
-#### Maintaining Remembered Sets
+## Maintaining Remembered Sets
 
 In order to be able to populate the white set with pointers in each block I decided to use smart pointers. This ended up being a terrible decision. The problem was exacerbated by these pointers being passed around all over the place. Turns out programs do this a lot. Who knew.
 
@@ -572,7 +572,7 @@ I think that a more suitable approach would have been to simply stop the world a
 
 You know, like nearly every other GC does.
 
-#### Not Incremental or Concurrent
+## Not Incremental or Concurrent
 
 Because I was treating the tri-colour marking process as distinct from the allocator and mutator, the GC was constantly re-building white and grey bitmaps for every block, ever time it entered into a GC pass.
 
@@ -584,7 +584,7 @@ The marking process as implemented did not lend itself to being concurrent. I di
 
 The problem was that the marking process synchronizes the blocks by their grey bitmaps in the `promote` function. When we promote a white pointer, we fill in the grey bitmap of the pointed to block. This means that we can end up filling in the grey bitmap of a block being processed by another thread. I did find a few alternatives to this, such as work queues and incoming grey bitmaps, but it really seemed to be a bit of a hopeless pursuit by that point.
 
-#### No Generations
+## No Generations
 
 I've saved what I felt was the the best for last: one of the biggest failings of this implementation was that there's no consideration of object generations.
 
@@ -592,7 +592,7 @@ The generational hypothesis lends us a great advantage. If you've not heard of i
 
 The upshot of this is that objects which are retained beyond an initial one or two passes of the GC should be moved to a subsequent generation. These later generations can be collected with a lower frequency.
 
-### Conclusion
+# Conclusion
 
 I think that the bitmap based marking is a nice approach to tri-color, as the marking process is quite efficient. It requires virtually no memory allocation beyond a few bitmaps, and those can be allocated along with the block and reused for each pass. The main bottleneck ended up being the promotion of white pointers.
 

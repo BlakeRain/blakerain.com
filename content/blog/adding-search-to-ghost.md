@@ -30,7 +30,7 @@ So I decided to build a simple Python script that I can run as a cron job on the
 
 To provide the actual search function, I decided that I'd add a simple Python web server that operating on a separate port to the main site (actually port [9443](https://blakerain.com:9443/search/not+a+search+term)), which provides an API that the client-side JavaScript can call to get search results.
 
-### Populating the Database
+# Populating the Database
 
 The first step to developing the extractor script that would populate the search database was to get the shebang and imports out of the way. I knew that I wanted to have SQLite3, but I also needed the [requests](https://realpython.com/python-requests/) library to send HTTP requests to the Content API and the `os` module to allow me to pass the location of the database file and other settings as environment variables.
 
@@ -139,7 +139,7 @@ With that out of the way I copied the Python script to the server, placing that 
 
 Confident that everything would magically work I moved on to the search API.
 
-### Executing Search Queries
+# Executing Search Queries
 
 In order for the FTS3 table to be searched by some client-side JavaScript I decided to create another Python script that would use [Flask-RESTful](https://flask-restful.readthedocs.io/en/latest/) to provide an API. This API would accept a single search term, query the database, and then return any results as JSON. The client-side JavaScript could then use this JSON to render the search results.
 
@@ -280,7 +280,7 @@ curl https://blakerain.com:9443/search/not+a+search
 []
 ```
 
-### Client-Side Search
+# Client-Side Search
 
 Now that the back-end of the search seems to be working okay (although I've not seen it bring through any results yet), I started out on the client side. I knew that I wanted two things:
 
@@ -373,7 +373,7 @@ A couple of things I will note, however:
 1. Ghost lets you add some injection for specific pages, which is where I added some specific styling for the result HTML.
 1. Be aware that if the search API doesn't specify an `Access-Control-Allow-Origin` then the web browser will refuse to make the request, even though the domain is actually the same.
 
-### Conclusion
+# Conclusion
 
 In conclusion it seems that adding a separate search facility to Ghost was a lot easier than I was worried it might be. I had originally concerned myself with modifying Ghost itself (I've no idea what JAMstack is or how Ghost actually works). After seeing the other implementations I was inspired to take this approach, which seems to have worked quite well. The search is fairly fast, and will probably remain so for the foreseeable future.
 
@@ -385,7 +385,7 @@ For now, you can find the Python scripts and the configuration files used on the
 
 There you will find the sources such as `simple-search.py`.
 
-### Future Improvements
+## Future Improvements
 
 There are a few things that I want to add to the search to improve it somewhat:
 

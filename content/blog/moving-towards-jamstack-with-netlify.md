@@ -27,7 +27,7 @@ My goal was to remove the EC2 and RDS instances and change the structure of the 
 1. Images would be stored in Amazon S3 by a custom storage adapter, and
 1. A static site is generated, and then hosted by [Netlify](https://www.netlify.com).
 
-### Ghost and Docker
+# Ghost and Docker
 
 I wanted to move the Ghost CMS from the EC2 instance into a Docker container on a local server at my home. To build this Docker container I used the [official Docker image](http://localhost:2368/p/754d8315-38fa-49ad-8ac1-62ffc1f02c2e/) as the base. I needed to add a [custom storage adapter](https://ghost.org/docs/config/#creating-a-custom-storage-adapter) that would make use of the AWS SDK to store images in S3. Therefore I needed to ensure that the [AWS SDK](https://www.npmjs.com/package/aws-sdk) was available in the image.
 
@@ -37,7 +37,7 @@ Once I had the Ghost instance up and running, migrating the data from one instan
 
 There was one issue I had that ended up taking some time to remediate: the changeover of the storage adapter. Because I'd changed over to using S3 as the storage back-end, the URLs for the images in each of the blog posts was now incorrect. The first fix I considered was using SQL to find-and-replace all the URLs in the posts. However, in the end I opted for just editing each post and replacing the image. This is quite easy to do with the Ghost authoring tools. Moreover, this also gave me the opportunity to fix some of the screenshots.
 
-### Generating the Static Site
+# Generating the Static Site
 
 In order to render the site I decided to use React Static: a static site generator for React. I chose this approach over other [much easier options](https://ghost.org/docs/jamstack/) as I wanted to move away from Ghost themes – and I really enjoy using React :)
 
@@ -55,7 +55,7 @@ icon: "https://github.com/fluidicon.png"
 
 I used the Ghost [Content API](https://ghost.org/docs/content-api/) to extract the navigation, posts, and pages. I then render them using React. The site is a very simple React application, with only a few components.
 
-### Deploying to Netlify
+# Deploying to Netlify
 
 Deploying the site to Netlify is as easy as using the [Netlify CLI](https://docs.netlify.com/cli/get-started/) on the command line after building the static site using React Static. All I required was a Netlify personal access token and the API ID of the site. Both of which can be easilly found in the Netlify interface.
 
@@ -88,7 +88,7 @@ icon: "https://gist.github.com/fluidicon.png"
 
 The final piece of the puzzle was to connect Ghost to GitHub: when I make a change to the site I wanted the GitHub workflow to execute. As the GitHub API requires authentication, I created a small [lambda function](https://github.com/BlakeRain/blakerain.com/blob/main/lambda/ghost-post-actions/index.js). This function processes the POST request from the Ghost CMS [webhook](https://ghost.org/docs/webhooks/) and in turn makes a call to the GitHub API to trigger a [workflow dispatch event](https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event).
 
-### Final Thoughts
+# Final Thoughts
 
 Now that I have a static version of the site, hosted for free at Netlify, I'm sure that I'll enjoy the cost saving (around $55 per month). Moreover the site loads significantly faster from the Netlify CDN than it did from the little EC2 instance. I feel much safer with the Ghost CMS administration interface running on a local server rather than it being exposed to the Internet.
 
