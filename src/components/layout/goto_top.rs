@@ -23,7 +23,7 @@ pub fn goto_top() -> Html {
         "right-8",
         "transition-all",
         "transition-200",
-        if visible { "block" } else { "hidden" },
+        if visible { "hidden md:block" } else { "hidden" },
         "print:hidden",
     );
 
