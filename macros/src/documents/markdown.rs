@@ -555,6 +555,11 @@ where
 
             Tag::Table(align) => {
                 self.table_align = align;
+
+                let mut div = RenderElement::new(TagName::Div);
+                div.add_attribute(AttributeName::Class, "table");
+
+                self.enter(div);
                 self.enter(RenderElement::new(TagName::Table));
             }
 
@@ -728,6 +733,7 @@ where
             Tag::Table(_) => {
                 self.leave(TagName::TBody);
                 self.leave(TagName::Table);
+                self.leave(TagName::Div);
             }
 
             Tag::TableRow => self.leave(TagName::Tr),

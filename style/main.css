@@ -239,6 +239,10 @@
       }
     }
 
+    div.table {
+      @apply flex overflow-x-scroll;
+    }
+
     table {
       @apply min-w-full mb-8 border-collapse table-auto;
 
