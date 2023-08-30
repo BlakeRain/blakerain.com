@@ -18,27 +18,55 @@ pub fn footer(_: &FooterProps) -> Html {
                     {format!("Blake Rain © {year}")}
                     <SizeIndicator />
                 </div>
-                <div class="flex flex-col md:flex-row gap-4 md:gap-3">
-                    <Link<Route> classes="hover:text-neutral-50" to={Route::Blog}>
-                        {"Latest Posts"}
-                    </Link<Route>>
-                    <Link<Route> classes="hover:text-neutral-50" to={Route::Disclaimer}>
-                        {"Disclaimer"}
-                    </Link<Route>>
-                    <a href="https://github.com/BlakeRain"
-                        class="hover:text-neutral-50"
-                        title="GitHub"
-                        target="_blank"
-                        rel="noreferrer">
-                        {"GitHub"}
-                    </a>
-                    <a href="https://mastodonapp.uk/@BlakeRain"
-                        class="hover:text-neutral-50"
-                        title="@BlakeRain@mastodonapp.uk"
-                        target="_blank"
-                        rel="noreferrer">
-                        {"Mastodon"}
-                    </a>
+                <div class="flex flex-col gap-4 md:gap-1 md:items-end">
+                    <div class="flex flex-col md:flex-row gap-4 md:gap-3">
+                        <Link<Route> classes="hover:text-neutral-50" to={Route::Blog}>
+                            {"Latest Posts"}
+                        </Link<Route>>
+                        <Link<Route> classes="hover:text-neutral-50" to={Route::Disclaimer}>
+                            {"Disclaimer"}
+                        </Link<Route>>
+                        <a href="https://github.com/BlakeRain"
+                            class="hover:text-neutral-50"
+                            title="GitHub"
+                            target="_blank"
+                            rel="noreferrer">
+                            {"GitHub"}
+                        </a>
+                        <a href="https://mastodonapp.uk/@BlakeRain"
+                            class="hover:text-neutral-50"
+                            title="@BlakeRain@mastodonapp.uk"
+                            target="_blank"
+                            rel="noreferrer">
+                            {"Mastodon"}
+                        </a>
+                    </div>
+                    <div>
+                        {"Powered by "}
+                        <a href="https://yew.rs"
+                           class="hover:text-neutral-50"
+                           title="Yew Web Framework"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"Yew"}
+                        </a>
+                        {", "}
+                        <a href="https://www.rust-lang.org/"
+                           class="hover:text-neutral-50"
+                           title="Rust Programming Language"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"Rust"}
+                        </a>
+                        {", and "}
+                        <a href="https://webassembly.org/"
+                           class="hover:text-neutral-50"
+                           title="WebAssembly"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"WebAssembly"}
+                        </a>
+                    </div>
                 </div>
             </div>
         </footer>
