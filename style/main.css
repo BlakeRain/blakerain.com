@@ -11,6 +11,67 @@
     @apply font-text text-xl;
     @apply text-neutral-800 dark:text-neutral-300;
 
+    counter-reset: h1-outline-counter;
+
+    h1:not(.no-outline) {
+      counter-increment: h1-outline-counter;
+      counter-reset: h2-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) ". ";
+      }
+    }
+
+    h2:not(.no-outline) {
+      counter-increment: h2-outline-counter;
+      counter-reset: h3-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) "." counter(h2-outline-counter) " ";
+      }
+    }
+
+    h3:not(.no-outline) {
+      counter-increment: h3-outline-counter;
+      counter-reset: h4-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+          counter(h3-outline-counter) " ";
+      }
+    }
+
+    h4:not(.no-outline) {
+      counter-increment: h4-outline-counter;
+      counter-reset: h5-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+          counter(h3-outline-counter) "." counter(h4-outline-counter) " ";
+      }
+    }
+
+    h5:not(.no-outline) {
+      counter-increment: h5-outline-counter;
+      counter-reset: h6-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+          counter(h3-outline-counter) "." counter(h4-outline-counter) "."
+          counter(h5-outline-counter) " ";
+      }
+    }
+
+    h6:not(.no-outline) {
+      counter-increment: h6-outline-counter;
+
+      &:before {
+        content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+          counter(h3-outline-counter) "." counter(h4-outline-counter) "."
+          counter(h5-outline-counter) "." counter(h6-outline-counter) " ";
+      }
+    }
+
     h1,
     h2,
     h3,
