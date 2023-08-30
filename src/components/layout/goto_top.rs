@@ -24,6 +24,7 @@ pub fn goto_top() -> Html {
         "transition-all",
         "transition-200",
         if visible { "block" } else { "hidden" },
+        "print:hidden",
     );
 
     let style = if *footer_visible {

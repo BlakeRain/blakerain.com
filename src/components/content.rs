@@ -26,7 +26,13 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
 
     html! {
         <article>
-            <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed pt-20" {style}>
+            <header class="hidden print:block container print:max-w-full mx-auto">
+                <h1 class="text-3xl font-bold">
+                    { &props.details.summary.title }
+                </h1>
+                {post_card_details(true, &props.details, &tags)}
+            </header>
+            <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed pt-20" {style}>
                 <div class="container mx-auto flex flex-col items-center">
                     <h1 class="text-5xl font-bold text-white">
                         { &props.details.summary.title }
@@ -41,7 +47,7 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                     </div>
                 </div>
             </header>
-            <div class="container mx-auto mt-12 mb-20 px-16 markdown">
+            <div class="container mx-auto mt-12 mb-20 px-16 print:px-0 print:max-w-full markdown">
                 {
                     props.content.iter().map(|node| html! {
                         <Render node={node.clone()} />

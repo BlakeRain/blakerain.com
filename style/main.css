@@ -8,7 +8,7 @@
 
   .markdown {
     @apply flex flex-col;
-    @apply font-text text-xl;
+    @apply font-text text-xl print:text-base;
     @apply text-neutral-800 dark:text-neutral-300;
 
     counter-reset: h1-outline-counter;
@@ -109,7 +109,7 @@
     }
 
     h1 {
-      @apply text-5xl font-bold mt-8 mb-4;
+      @apply text-5xl print:text-3xl font-bold mt-8 mb-4;
     }
 
     h2 {
@@ -186,6 +186,7 @@
 
       pre {
         @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
+        @apply print:border-neutral-800 print:p-2;
 
         code {
           @apply font-mono leading-snug;
@@ -290,6 +291,7 @@
 
     .callout {
       @apply flex flex-col gap-2 rounded-md p-4 text-base mb-8;
+      @apply print:border-2 print:p-2;
 
       > .heading {
         @apply flex flex-row gap-1 font-sans;
@@ -310,7 +312,7 @@
       }
 
       &.note {
-        @apply bg-blue-200 dark:bg-blue-950;
+        @apply bg-blue-200 print:bg-transparent print:border-blue-200 dark:bg-blue-950;
 
         > .heading {
           @apply text-blue-600 dark:text-blue-500;
@@ -322,7 +324,7 @@
       }
 
       &.tip {
-        @apply bg-teal-100 dark:bg-teal-900;
+        @apply bg-teal-100 print:bg-transparent print:border-teal-900 dark:bg-teal-900;
 
         > .heading {
           @apply text-teal-600 dark:text-teal-300;
@@ -330,7 +332,7 @@
       }
 
       &.success {
-        @apply bg-green-100 dark:bg-green-900;
+        @apply bg-green-100 print:bg-transparent print:border-green-900 dark:bg-green-900;
 
         > .heading {
           @apply text-green-600 dark:text-green-400;
@@ -338,7 +340,7 @@
       }
 
       &.question {
-        @apply bg-amber-200/10;
+        @apply bg-amber-200/10 print:bg-transparent print:border-amber-500;
 
         > .heading {
           @apply text-amber-500 dark:text-amber-200;
@@ -346,7 +348,7 @@
       }
 
       &.warning {
-        @apply bg-orange-500/10;
+        @apply bg-orange-500/10 print:bg-transparent print:border-orange-500;
 
         > .heading {
           @apply text-orange-600;
@@ -354,7 +356,7 @@
       }
 
       &.danger {
-        @apply bg-red-500/25;
+        @apply bg-red-500/25 print:bg-transparent print:border-red-500;
 
         > .heading {
           @apply text-red-500;
@@ -362,7 +364,7 @@
       }
 
       &.example {
-        @apply bg-violet-900/25;
+        @apply bg-violet-900/25 print:bg-transparent print:border-violet-900;
 
         > .heading {
           @apply text-violet-600 dark:text-violet-400;

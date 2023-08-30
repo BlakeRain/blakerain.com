@@ -32,7 +32,7 @@ pub fn navigation(_: &NavigationProps) -> Html {
     };
 
     html! {
-        <nav class="bg-primary shadow-md text-neutral-200">
+        <nav class="print:hidden bg-primary shadow-md text-neutral-200">
             <div class="container mx-auto flex flex-col md:flex-row px-4 sm:px-0">
                 <div class="flex flex-row justify-between items-center my-4 md:my-0">
                     <Link<Route> classes="block mr-4" to={Route::Home}>
