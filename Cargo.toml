@@ -71,6 +71,7 @@ features = [
   "LucideCheck",
   "LucideCheckCircle",
   "LucideFlame",
+  "LucideLink",
   "LucideList",
   "LucideMenu",
   "LucidePencil",

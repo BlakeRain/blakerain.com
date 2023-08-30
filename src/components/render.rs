@@ -12,6 +12,7 @@ fn icon_id_for_icon(icon: RenderIcon) -> IconId {
         RenderIcon::Flame => IconId::LucideFlame,
         RenderIcon::Info => IconId::HeroiconsSolidInformationCircle,
         RenderIcon::Lightning => IconId::BootstrapLightningChargeFill,
+        RenderIcon::Link => IconId::LucideLink,
         RenderIcon::List => IconId::LucideList,
         RenderIcon::Note => IconId::LucidePencil,
         RenderIcon::Question => IconId::HeroiconsSolidQuestionMarkCircle,

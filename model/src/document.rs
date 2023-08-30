@@ -106,6 +106,7 @@ pub enum RenderIcon {
     Flame,
     Info,
     Lightning,
+    Link,
     List,
     Note,
     Question,
