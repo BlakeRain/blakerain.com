@@ -110,7 +110,7 @@ pub fn post_card(props: &PostCardProps) -> Html {
         }
     } else {
         html! {
-            <div class="flex flex-col gap-4 md:mt-20 lg:mt-0">
+            <div class="flex flex-col gap-4 mt-20 lg:mt-0">
                 {post_card_image(props.post.summary.slug,
                                  &props.post.summary.title,
                                  &props.post.cover_image)}

@@ -34,11 +34,11 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
             </header>
             <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed pt-20" {style}>
                 <div class="container mx-auto flex flex-col items-center">
-                    <h1 class="text-5xl font-bold text-white">
+                    <h1 class="text-5xl text-center font-bold text-white mx-2">
                         { &props.details.summary.title }
                     </h1>
                     if let Some(excerpt) = &props.details.summary.excerpt {
-                        <p class="font-text text-2xl text-white mt-5 w-full xl:w-2/3">
+                        <p class="font-text text-2xl text-center text-white mt-5 mx-2 w-full xl:w-2/3">
                             { excerpt }
                         </p>
                     }
@@ -47,7 +47,7 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                     </div>
                 </div>
             </header>
-            <div class="container mx-auto mt-12 mb-20 px-16 print:px-0 print:max-w-full markdown">
+            <div class="container mx-auto mt-12 mb-20 px-2 sm:px-16 print:px-0 print:max-w-full markdown">
                 {
                     props.content.iter().map(|node| html! {
                         <Render node={node.clone()} />
