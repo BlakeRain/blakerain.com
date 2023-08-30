@@ -1,0 +1,9 @@
+[[hooks]]
+stage = "pre_build"
+command = "bash"
+command_arguments = [ "tools/prepare.sh" ]
+
+[[hooks]]
+stage = "post_build"
+command = "node"
+command_arguments = [ "tools/finalize.js" ]

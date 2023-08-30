@@ -1,0 +1,105 @@
+[package]
+name = "site"
+version = "2.0.0"
+edition = "2021"
+publish = false
+
+[profile.release]
+lto = true
+opt-level = 'z'
+
+[features]
+hydration = [
+  "yew/hydration"
+]
+
+static = [
+  "atom_syndication",
+  "chrono",
+  "rss",
+  "yew/ssr"
+]
+
+[[bin]]
+name = "site-build"
+required-features = [
+  "static",
+]
+
+[[bin]]
+name = "site"
+
+[dependencies]
+async-trait = { version = "0.1" }
+enum-iterator = { version = "1.4" }
+gloo = { version = "0.10" }
+include_dir = { version = "0.7" }
+log = { version = "0.4" }
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+thiserror = { version = "1.0" }
+wasm-bindgen = { version = "0.2" }
+yew = { version = "0.20" }
+yew-hooks = { version = "0.2" }
+yew-router = { version = "0.17" }
+
+macros = { path = "./macros" }
+model = { path = "./model" }
+
+[dependencies.time]
+version = "0.3"
+features = [
+  "formatting",
+  "local-offset",
+  "macros",
+  "parsing",
+  "serde",
+  "wasm-bindgen"
+]
+[dependencies.yew_icons]
+version = "0.7"
+features = [
+  "BootstrapDot",
+  "BootstrapGithub",
+  "BootstrapLightningChargeFill",
+  "BootstrapMastodon",
+  "HeroiconsSolidInformationCircle",
+  "HeroiconsSolidQuestionMarkCircle",
+  "LucideAlertTriangle",
+  "LucideBug",
+  "LucideCheck",
+  "LucideCheckCircle",
+  "LucideFlame",
+  "LucideLink",
+  "LucideList",
+  "LucideMenu",
+  "LucidePencil",
+  "LucideRss",
+  "LucideX"
+]
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "Document",
+  "DomRect",
+  "Element",
+  "IntersectionObserver",
+  "IntersectionObserverEntry",
+  "ScrollBehavior",
+  "ScrollToOptions",
+  "Window"
+]
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = { version = "0.4" }
+wasm-logger = { version = "0.2" }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+atom_syndication = { version = "0.12", optional = true }
+chrono = { version = "0.4", optional = true, features = ["clock"] }
+rss = { version = "2.0", optional = true }
+tokio = { version = "1.32", features = ["full"] }
+env_logger = { version = "0.10" }
+
