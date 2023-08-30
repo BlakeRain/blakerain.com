@@ -43,6 +43,14 @@ impl Template {
     }
 
     async fn render(&self, head: String, body: String) -> String {
+        if head.is_empty() {
+            eprintln!("warning: empty <head>");
+        }
+
+        if body.is_empty() {
+            eprintln!("warning: empty <body>");
+        }
+
         let mut result = String::with_capacity(self.content.len());
         result.push_str(&self.content[..self.head_index]);
         result.push_str(&head);
