@@ -475,11 +475,13 @@ where
         match tag {
             Tag::Paragraph => self.enter(RenderElement::new(TagName::P)),
 
-            Tag::Heading(level, ident, classes) => {
+            Tag::Heading(level, ident, mut classes) => {
                 let mut heading = RenderElement::new(heading_for_level(level));
 
                 if let Some(ident) = ident {
                     heading.add_attribute(AttributeName::Id, ident.to_string());
+                    classes.push("with-anchor");
+                    classes.push("group");
                 }
 
                 if !classes.is_empty() {
@@ -488,6 +490,14 @@ where
                 }
 
                 self.enter(heading);
+
+                if let Some(ident) = ident {
+                    let mut anchor = RenderElement::new(TagName::A);
+                    anchor.add_attribute(AttributeName::Href, format!("#{}", ident));
+                    anchor.add_attribute(AttributeName::Class, "group-hover:block");
+                    anchor.add_child(RenderIcon::Link);
+                    self.output(anchor);
+                }
             }
 
             Tag::BlockQuote => self.enter(RenderElement::new(TagName::BlockQuote)),
