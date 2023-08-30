@@ -102,7 +102,7 @@ In order for the dynamic elements of the site to be available once the staticall
 been loaded by the web browser, the Yew application needs to be attached to the DOM using hydration.
 
 In order to enable component hydration in Yew, the `hydration` feature needs to be enabled for the
-`yew` crate. I also needed to make sure to call the [`Rendered::hydrate`] method rather than the
+`yew` crate. I also needed to make sure to call the [`Renderer::hydrate`] method rather than the
 usual `render` method.
 
 To ensure this is the case, I added a `hydration` feature to the main crate and this flag is set
@@ -205,8 +205,7 @@ function, was wrapped in a Yew [`VRaw`]. The `VRaw` type allows us to insert raw
 application.
 
 This worked very well at first. The pages loaded very quickly, and the rendered HTML strings were
-not that large. Unfortunately this quickly ran into a problem: just like a `VPortal`, Yew cannot
-hydrate a `VRaw` 🤬.
+not that large. Unfortunately this quickly ran into a problem: Yew cannot hydrate a `VRaw` 🤬.
 
 ### Third Attempt
 
@@ -725,13 +724,13 @@ other posts in the works that I need to finish off.
 [`HTMLHeadElement`]: https://docs.rs/web-sys/0.3.64/web_sys/struct.HtmlHeadElement.html
 [`use_effect_once`]: https://docs.rs/yew-hooks/0.2.0/yew_hooks/fn.use_effect_once.html
 [`VPortal`]: https://docs.rs/yew/0.20.0/yew/virtual_dom/struct.VPortal.html
-[`Rendered::hydrate`]: https://docs.rs/yew/0.20.0/yew/struct.Renderer.html#method.hydrate
+[`Renderer::hydrate`]: https://docs.rs/yew/0.20.0/yew/struct.Renderer.html#method.hydrate
 [`PhantomComponent`]: https://docs.rs/yew/0.20.0/yew/html/struct.PhantomComponent.html
 [include_dir]: https://docs.rs/include_dir/0.7.3/include_dir/index.html
 [`VRaw`]: https://docs.rs/yew/0.20.0/yew/virtual_dom/struct.VRaw.html
 [`Event`]: https://docs.rs/pulldown-cmark/0.9.3/pulldown_cmark/enum.Event.html
 [`Tag`]: https://docs.rs/pulldown-cmark/0.9.3/pulldown_cmark/enum.Tag.html
-[`number of locals`]: https://github.com/bytecodealliance/wasm-tools/blob/03d21b8d9f0dd29441c5de4d6a2fc1505a9fd0d5/crates/wasmparser/src/validator/operators.rs#L3425C10-L3425C10
+[number of locals]: https://github.com/bytecodealliance/wasm-tools/blob/03d21b8d9f0dd29441c5de4d6a2fc1505a9fd0d5/crates/wasmparser/src/validator/operators.rs#L3425C10-L3425C10
 [Firefox]: https://github.com/mozilla/gecko-dev/blob/132ffbfd6842e5ecd3813673c24da849d3c9acf8/js/src/wasm/WasmConstants.h#L1097
 [Chrome]: https://github.com/v8/v8/blob/3c8f523f939680fb5f8ba48ee6dc80adfb22fe83/src/wasm/wasm-limits.h#L51
 [postcard]: https://docs.rs/postcard/1.0.6/postcard/index.html
