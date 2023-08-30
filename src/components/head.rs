@@ -1,4 +1,4 @@
-use std::sync::{Arc, Mutex};
+use std::{cell::RefCell, rc::Rc};
 
 use web_sys::HtmlHeadElement;
 use yew::{
@@ -71,7 +71,7 @@ pub fn head(props: &HeadProps) -> Html {
 
 #[derive(Default)]
 pub struct HeadContext {
-    content: Arc<Mutex<Vec<Html>>>,
+    content: Rc<RefCell<Vec<Html>>>,
 }
 
 impl PartialEq for HeadContext {
@@ -83,20 +83,18 @@ impl PartialEq for HeadContext {
 impl Clone for HeadContext {
     fn clone(&self) -> Self {
         Self {
-            content: Arc::clone(&self.content),
+            content: Rc::clone(&self.content),
         }
     }
 }
 
 impl HeadContext {
     pub fn take(&self) -> Vec<Html> {
-        let content = self.content.lock().unwrap();
-        content.clone()
+        (*self.content).borrow().clone()
     }
 
     pub fn append(&self, html: Html) {
-        let mut content = self.content.lock().unwrap();
-        content.push(html);
+        self.content.borrow_mut().push(html);
     }
 }
 
