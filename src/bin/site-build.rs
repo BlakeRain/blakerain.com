@@ -80,12 +80,12 @@ impl Env {
         })
     }
 
-    async fn render_route(&self, url: String) -> String {
+    async fn render_route(&self, route: Route) -> String {
         let head = HeadWriter::default();
 
         let render = {
             let head = head.clone();
-            ServerRenderer::<StaticApp>::with_props(move || StaticAppProps { url, head })
+            ServerRenderer::<StaticApp>::with_props(move || StaticAppProps { route, head })
         };
 
         let mut body = String::new();
@@ -114,31 +114,31 @@ impl Env {
 }
 
 struct RenderRoute {
-    pub url: String,
+    pub route: Route,
     pub path: PathBuf,
 }
 
 fn collect_routes() -> Vec<RenderRoute> {
     enum_iterator::all::<Route>()
         .map(|route| {
-            let url = route.to_path();
-            let path = if url == "/" {
+            let path = route.to_path();
+            let path = if path == "/" {
                 PathBuf::from("index.html")
             } else {
-                PathBuf::from(&url[1..]).with_extension("html")
+                PathBuf::from(&path[1..]).with_extension("html")
             };
 
-            RenderRoute { url, path }
+            RenderRoute { route, path }
         })
         .collect()
 }
 
 async fn render_routes(env: &Env) -> std::io::Result<()> {
     println!("Rendering routes ...");
-    for RenderRoute { url, path } in collect_routes() {
-        println!("Rendering route: {url}");
+    for RenderRoute { route, path } in collect_routes() {
+        println!("Rendering route: {}", route.to_path());
 
-        let html = env.render_route(url).await;
+        let html = env.render_route(route).await;
         env.write_str(path, &html).await?;
     }
 

@@ -2,8 +2,8 @@ use std::sync::{Arc, Mutex};
 
 use yew::{function_component, html, ContextProvider, Html, Properties};
 use yew_router::{
-    history::{AnyHistory, History, MemoryHistory},
-    BrowserRouter, Router, Switch,
+    history::{AnyHistory, MemoryHistory},
+    BrowserRouter, Routable, Router, Switch,
 };
 
 use crate::{components::layout::Layout, pages::Route};
@@ -71,14 +71,21 @@ impl HeadWriter {
 
 #[derive(Properties, PartialEq)]
 pub struct StaticAppProps {
-    pub url: String,
+    pub route: Route,
     pub head: HeadWriter,
+}
+
+impl StaticAppProps {
+    fn create_history(&self) -> AnyHistory {
+        let path = self.route.to_path();
+        let history = MemoryHistory::with_entries(vec![path]);
+        history.into()
+    }
 }
 
 #[function_component(StaticApp)]
 pub fn static_app(props: &StaticAppProps) -> Html {
-    let history = AnyHistory::from(MemoryHistory::default());
-    history.push(&props.url);
+    let history = props.create_history();
 
     html! {
         <ContextProvider<HeadWriter> context={props.head.clone()}>
