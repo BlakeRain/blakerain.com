@@ -25,6 +25,7 @@ jobs:
         with:
           path: |
             ${{ github.workspace }}/node_modules
+            **/target
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Rust Toolchain
