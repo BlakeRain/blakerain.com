@@ -224,7 +224,7 @@ async fn generate_sitemap(env: &Env) -> std::io::Result<()> {
         .expect("formatted time");
 
     let common =
-        format!("<lastmod>{now}</lastmod><changefreq>daily</changefeq><priority>0.7</priority>");
+        format!("<lastmod>{now}</lastmod><changefreq>daily</changefreq><priority>0.7</priority>");
 
     let mut result = String::new();
     write!(result, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>").expect("write to string");
@@ -235,6 +235,10 @@ async fn generate_sitemap(env: &Env) -> std::io::Result<()> {
     .expect("write to string");
 
     for route in enum_iterator::all::<Route>() {
+        if !route.should_index() {
+            continue;
+        }
+
         let url = route.to_path();
         write!(
             result,

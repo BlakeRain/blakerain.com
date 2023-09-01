@@ -27,6 +27,10 @@ pub enum Route {
 }
 
 impl Route {
+    pub fn should_index(&self) -> bool {
+        !matches!(self, Self::Disclaimer)
+    }
+
     pub fn switch(self) -> Html {
         match self {
             Self::Home => html! { <home::Page /> },
