@@ -19,6 +19,8 @@ fn main() {
         }
     );
 
+    log::info!("Compiled {}", env!("BUILD_TIME"));
+
     let app = yew::Renderer::<App>::new();
 
     #[cfg(feature = "hydration")]

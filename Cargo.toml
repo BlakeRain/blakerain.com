@@ -29,6 +29,9 @@ required-features = [
 [[bin]]
 name = "site"
 
+[build-dependencies]
+time = { version = "0.3", features = ["formatting"] }
+
 [dependencies]
 async-trait = { version = "0.1" }
 enum-iterator = { version = "1.4" }
