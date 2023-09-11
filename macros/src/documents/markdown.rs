@@ -1,8 +1,10 @@
-use std::collections::HashMap;
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 use gray_matter::engine::Engine;
 use model::{
-    document::{AttributeName, RenderElement, RenderIcon, RenderNode, RenderText, TagName},
+    document::{
+        AttributeName, RenderElement, RenderIcon, RenderNode, RenderText, TagName, TextNodeId,
+    },
     properties::Properties,
 };
 use pulldown_cmark::{
@@ -18,6 +20,37 @@ use syntect::{
 use crate::parse::properties::parse_language_properties;
 
 use super::highlight::{SYNTAX_SET, THEME_SET};
+
+struct TextNodeIdGen {
+    inner: Rc<RefCell<TextNodeIdGenInner>>,
+}
+
+struct TextNodeIdGenInner {
+    next_id: TextNodeId,
+}
+
+impl TextNodeIdGen {
+    fn new() -> Self {
+        Self {
+            inner: Rc::new(RefCell::new(TextNodeIdGenInner { next_id: 0 })),
+        }
+    }
+
+    fn next(&mut self) -> TextNodeId {
+        let mut inner = self.inner.borrow_mut();
+        let id = inner.next_id;
+        inner.next_id += 1;
+        id
+    }
+}
+
+impl Clone for TextNodeIdGen {
+    fn clone(&self) -> Self {
+        Self {
+            inner: Rc::clone(&self.inner),
+        }
+    }
+}
 
 enum CalloutKind {
     Note,
@@ -133,12 +166,13 @@ pub struct Quote {
 }
 
 struct Highlighting {
+    text_id: TextNodeIdGen,
     language: String,
     content: String,
 }
 
 impl Highlighting {
-    pub fn finish(self) -> RenderElement {
+    pub fn finish(mut self) -> RenderElement {
         let syntax = SYNTAX_SET
             .find_syntax_by_token(&self.language)
             .unwrap_or_else(|| panic!("Unknown language: '{}'", self.language));
@@ -168,7 +202,7 @@ impl Highlighting {
                 };
 
                 if unify_style {
-                    let text = RenderText::new(text.to_string());
+                    let text = RenderText::new(self.text_id.next(), text.to_string());
                     active.as_mut().unwrap().1.add_child(text);
                 } else {
                     if let Some(active) = active.take() {
@@ -202,7 +236,7 @@ impl Highlighting {
 
                     let mut span = RenderElement::new(TagName::Span);
                     span.add_attribute(AttributeName::Style, style_attr.join(";"));
-                    span.add_child(RenderText::new(text.to_string()));
+                    span.add_child(RenderText::new(self.text_id.next(), text.to_string()));
                     active = Some((style, span));
                 }
             }
@@ -218,6 +252,7 @@ impl Highlighting {
 
 pub struct Renderer<'a, I> {
     tokens: I,
+    text_id: TextNodeIdGen,
     output: Vec<RenderNode>,
     stack: Vec<RenderElement>,
     footnotes: HashMap<CowStr<'a>, usize>,
@@ -234,6 +269,7 @@ where
     pub fn new(tokens: I) -> Self {
         Self {
             tokens,
+            text_id: TextNodeIdGen::new(),
             output: vec![],
             stack: vec![],
             footnotes: HashMap::new(),
@@ -330,7 +366,7 @@ where
         container.add_child({
             let mut title_div = RenderElement::new(TagName::Div);
             title_div.add_attribute(AttributeName::Class, "font-semibold");
-            title_div.add_child(RenderText::new(title));
+            title_div.add_child(RenderText::new(self.text_id.next(), title));
             title_div
         });
 
@@ -339,7 +375,7 @@ where
                 let mut descr_div = RenderElement::new(TagName::Div);
                 descr_div
                     .add_attribute(AttributeName::Class, "grow overflow-y-hidden mt-3 max-h-12");
-                descr_div.add_child(RenderText::new(description));
+                descr_div.add_child(RenderText::new(self.text_id.next(), description));
                 descr_div
             });
         }
@@ -363,19 +399,19 @@ where
 
         if let Some(publisher) = publisher {
             let mut span = RenderElement::new(TagName::Span);
-            span.add_child(RenderText::new(publisher));
+            span.add_child(RenderText::new(self.text_id.next(), publisher));
             details.add_child(span);
 
             if author.is_some() {
                 let mut dot = RenderElement::new(TagName::Span);
-                dot.add_child(RenderText::new("•"));
+                dot.add_child(RenderText::new(self.text_id.next(), "•"));
                 details.add_child(dot);
             }
         }
 
         if let Some(author) = author {
             let mut span = RenderElement::new(TagName::Span);
-            span.add_child(RenderText::new(author));
+            span.add_child(RenderText::new(self.text_id.next(), author));
             details.add_child(span);
         }
 
@@ -394,7 +430,7 @@ where
         figure.add_attribute(AttributeName::Class, "quote");
 
         let mut p = RenderElement::new(TagName::P);
-        p.add_child(RenderText::new(quote));
+        p.add_child(RenderText::new(self.text_id.next(), quote));
         figure.add_child(p);
 
         if let Some(author) = author {
@@ -403,10 +439,10 @@ where
             if let Some(url) = url {
                 let mut link = RenderElement::new(TagName::A);
                 link.add_attribute(AttributeName::Href, url);
-                link.add_child(RenderText::new(author));
+                link.add_child(RenderText::new(self.text_id.next(), author));
                 cite.add_child(link);
             } else {
-                cite.add_child(RenderText::new(author));
+                cite.add_child(RenderText::new(self.text_id.next(), author));
             }
 
             figure.add_child(cite);
@@ -433,6 +469,7 @@ where
 
         let mut title = RenderElement::new(TagName::Div);
         title.add_child(RenderText::new(
+            self.text_id.next(),
             properties.get("title").unwrap_or_else(|| kind.title()),
         ));
         heading.add_child(title);
@@ -532,6 +569,7 @@ where
                 if let Some(language) = &language {
                     if language != "plain" {
                         self.highlight = Some(Highlighting {
+                            text_id: self.text_id.clone(),
                             language: language.to_string(),
                             content: String::new(),
                         });
@@ -638,7 +676,7 @@ where
                 figure.add_child(img);
 
                 let mut figcaption = RenderElement::new(TagName::FigCaption);
-                figcaption.add_child(RenderText::new(alt));
+                figcaption.add_child(RenderText::new(self.text_id.next(), alt));
                 figure.add_child(figcaption);
                 self.output(figure);
 
@@ -654,7 +692,7 @@ where
                 let index = self.get_footnote_ix(name);
                 let mut left = RenderElement::new(TagName::Div);
                 left.add_attribute(AttributeName::Class, "footnote-index");
-                left.add_child(RenderText::new(index.to_string()));
+                left.add_child(RenderText::new(self.text_id.next(), index.to_string()));
                 div.add_child(left);
 
                 let mut right = RenderElement::new(TagName::Div);
@@ -715,7 +753,7 @@ where
 
                 if let Some(caption) = properties.get("caption") {
                     let mut figcap = RenderElement::new(TagName::FigCaption);
-                    figcap.add_child(RenderText::new(caption.to_string()));
+                    figcap.add_child(RenderText::new(self.text_id.next(), caption.to_string()));
                     self.output(figcap);
                 }
 
@@ -804,6 +842,8 @@ where
     }
 
     fn event(&mut self, event: Event<'a>) {
+        let mut text_id = self.text_id.clone();
+
         match event {
             Event::Start(tag) => self.start(tag),
             Event::End(tag) => self.end(tag),
@@ -812,13 +852,13 @@ where
                 if let Some(highlight) = &mut self.highlight {
                     highlight.content.push_str(&text);
                 } else {
-                    self.output(RenderText::new(text.to_string()))
+                    self.output(RenderText::new(text_id.next(), text.to_string()))
                 }
             }
 
             Event::Code(text) => {
                 let mut code = RenderElement::new(TagName::Code);
-                code.add_child(RenderText::new(text.to_string()));
+                code.add_child(RenderText::new(self.text_id.next(), text.to_string()));
                 self.output(code)
             }
 
@@ -830,7 +870,7 @@ where
                 if let Some(highlight) = &mut self.highlight {
                     highlight.content.push('\n');
                 } else {
-                    self.output(RenderText::new("\n".to_string()));
+                    self.output(RenderText::new(text_id.next(), "\n".to_string()));
                 }
             }
 
@@ -848,7 +888,7 @@ where
                 anchor.add_attribute(AttributeName::Href, format!("#{name}"));
 
                 let ix = self.get_footnote_ix(name);
-                anchor.add_child(RenderText::new(ix.to_string()));
+                anchor.add_child(RenderText::new(self.text_id.next(), ix.to_string()));
 
                 sup.add_child(anchor);
                 self.output(sup);

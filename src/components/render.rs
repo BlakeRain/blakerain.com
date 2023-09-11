@@ -25,7 +25,7 @@ fn icon_id_for_icon(icon: RenderIcon) -> IconId {
 
 fn render_node(node: &RenderNode) -> Html {
     match node {
-        RenderNode::Text(RenderText { content }) => VText::new(content.to_string()).into(),
+        RenderNode::Text(RenderText { id: _, content }) => VText::new(content.to_string()).into(),
         RenderNode::Element(RenderElement {
             tag,
             attributes,

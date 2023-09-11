@@ -26,6 +26,7 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
     let mut results = Vec::new();
     for entry in std::fs::read_dir(root_dir)? {
         let entry = entry?;
+        let id = results.len() as u32;
         let content = std::fs::read(entry.path())?;
 
         let (Some(front_matter), matter) = parse_front_matter(&content[..])? else {
@@ -43,7 +44,7 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
         let reading_time = words_count::count(&matter.content).words / 200;
 
         results.push(Document {
-            details: Details::from_front_matter(slug, Some(reading_time), front_matter),
+            details: Details::from_front_matter(id, slug, Some(reading_time), front_matter),
             content: matter.content,
         })
     }
@@ -58,6 +59,24 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
     Ok(results)
 }
 
+struct RenderedDocument {
+    document: Document<String>,
+    data: Vec<u8>,
+}
+
+fn render_documents(documents: Vec<Document<String>>) -> Result<Vec<RenderedDocument>, Error> {
+    let mut result = Vec::new();
+
+    for document in documents {
+        let html = markdown::render(&document.content);
+        let data = encode_nodes(html);
+
+        result.push(RenderedDocument { document, data });
+    }
+
+    Ok(result)
+}
+
 #[derive(Default)]
 struct Generator {
     enumerators: proc_macro2::TokenStream,
@@ -69,7 +88,10 @@ struct Generator {
     render_matches: proc_macro2::TokenStream,
 }
 
-fn generate_document(generator: &mut Generator, document: Document<String>) -> Result<(), Error> {
+fn generate_document(
+    generator: &mut Generator,
+    RenderedDocument { document, data }: RenderedDocument,
+) -> Result<(), Error> {
     let slug = document.details.summary.slug;
     let ident = slug_ident(&slug);
 
@@ -88,6 +110,7 @@ fn generate_document(generator: &mut Generator, document: Document<String>) -> R
         #slug => Ok(Self::#constr),
     });
 
+    let id = document.details.summary.id;
     let title = document.details.summary.title;
     let excerpt = match document.details.summary.excerpt {
         Some(excerpt) => quote! { Some(#excerpt.to_string()) },
@@ -126,6 +149,7 @@ fn generate_document(generator: &mut Generator, document: Document<String>) -> R
         fn #details_ident() -> Details<DocId> {
             Details {
                 summary: Summary {
+                    id: #id,
                     slug: DocId::#constr,
                     title: #title.to_string(),
                     excerpt: #excerpt,
@@ -141,13 +165,11 @@ fn generate_document(generator: &mut Generator, document: Document<String>) -> R
     let render_ident =
         parse_str::<Ident>(&format!("render_{ident}")).expect("document render identifier");
 
-    let html = markdown::render(&document.content);
-    let html = encode_nodes(html);
-    let html = proc_macro2::Literal::byte_string(&html);
+    let data = proc_macro2::Literal::byte_string(&data);
 
     generator.render_funcs.append_all(quote! {
         fn #render_ident() -> Vec<RenderNode> {
-            decode_nodes(#html)
+            decode_nodes(#data)
         }
     });
 
@@ -180,8 +202,11 @@ pub fn generate(input: DocumentsInput) -> Result<TokenStream, Error> {
         render_funcs,
         render_matches,
     } = {
+        let documents = load_documents(&input.directory.value())?;
+        let rendered = render_documents(documents)?;
+
         let mut generator = Generator::default();
-        for document in load_documents(&input.directory.value())? {
+        for document in rendered {
             generate_document(&mut generator, document)?;
         }
 

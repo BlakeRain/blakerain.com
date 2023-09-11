@@ -82,6 +82,11 @@
   visibility: public
   description: Posts that feature the Mastodon social network.
 
+- slug: wasm
+  name: WebAssembly
+  visibility: public
+  description: Posts that relate to the WebAssembly VM.
+
 - slug: yew
   name: Yew
   visibility: public

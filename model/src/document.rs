@@ -3,8 +3,12 @@ use time::OffsetDateTime;
 
 use crate::frontmatter::FrontMatter;
 
+pub type DocId = u32;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Summary<S> {
+    /// The unique ID of the document (generated at compile time).
+    pub id: DocId,
     /// The slug used to form the URL for this document.
     pub slug: S,
     /// The rendered title for the document.
@@ -37,6 +41,7 @@ pub struct Document<S> {
 
 impl<S> Details<S> {
     pub fn from_front_matter(
+        id: DocId,
         slug: S,
         reading_time: Option<usize>,
         FrontMatter {
@@ -49,6 +54,7 @@ impl<S> Details<S> {
     ) -> Self {
         Self {
             summary: Summary {
+                id,
                 slug,
                 title,
                 excerpt,
@@ -87,14 +93,18 @@ impl From<RenderIcon> for RenderNode {
     }
 }
 
+pub type TextNodeId = u32;
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RenderText {
+    pub id: TextNodeId,
     pub content: String,
 }
 
 impl RenderText {
-    pub fn new<S: Into<String>>(content: S) -> Self {
+    pub fn new<S: Into<String>>(id: TextNodeId, content: S) -> Self {
         Self {
+            id,
             content: content.into(),
         }
     }
