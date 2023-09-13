@@ -2,6 +2,8 @@ use web_sys::{window, ScrollBehavior, ScrollToOptions};
 use yew::{function_component, html, use_effect_with_deps, Children, Html, Properties};
 use yew_router::prelude::use_location;
 
+use crate::components::analytics::Analytics;
+
 mod footer;
 pub mod goto_top;
 pub mod intersperse;
@@ -34,6 +36,7 @@ pub fn layout(props: &LayoutProps) -> Html {
             <navigation::Navigation />
             {props.children.clone()}
             <footer::Footer />
+            <Analytics />
         </div>
     }
 }

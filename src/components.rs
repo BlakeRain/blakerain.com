@@ -1,3 +1,4 @@
+pub mod analytics;
 pub mod blog;
 pub mod content;
 pub mod head;

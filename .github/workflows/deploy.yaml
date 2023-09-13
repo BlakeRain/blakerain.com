@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  deploy-site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
@@ -20,18 +20,13 @@ jobs:
         with:
           node-version: 18
 
-      - name: Configure Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ github.workspace }}/node_modules
-            **/target
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
+
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
 
       - name: Install Trunk
         uses: jetli/trunk-action@v0.4.0
@@ -63,3 +58,49 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+
+  deploy-analytics-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install the Stable Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Zig Toolchain
+        uses: korandoru/setup-zig@v1
+        with:
+          zig-version: 0.10.0
+
+      - name: Install Cargo Lambda
+        uses: jaxxstorm/action-install-gh-release@v1.9.0
+        with:
+          repo: cargo-lambda/cargo-lambda
+
+      - name: Build Lambda Function
+        run: cargo lambda build --release --arm64 --output-format zip
+
+      - name: Configure AWS CLI
+        run: |
+          mkdir ~/.aws
+          echo "[default]" > ~/.aws/config
+          echo "credential_source = Environment" >> ~/.aws/config
+
+      - name: Deploy Lambda Function
+        run: |
+          aws lambda update-function-code --function-name analytics_lambda \
+            --zip-file "fileb://$(pwd)/target/lambda/analytics/bootstrap.zip" --publish
+        env:
+          AWS_DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: "${{ secrets.ANALYTICS_DEPLOYER_ACCESS_KEY_ID }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.ANALYTICS_DEPLOYER_SECRET_ACCESS_KEY }}"
