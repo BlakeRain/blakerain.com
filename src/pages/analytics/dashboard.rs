@@ -181,7 +181,7 @@ fn dashboard_content() -> Html {
                     {"Refresh"}
                 </button>
             </div>
-            <div class="grid xl:grid-cols-2 gap-4">
+            <div class="grid 2xl:grid-cols-2 gap-4">
                 <div>
                     <div class="border border-primary rounded-md pr-4">
                         {month_view_chart(*year, *month, bar_hover.clone(), &month_result.views)}
