@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS page_views (
   timezone TEXT,
   referrer TEXT,
   beacon BOOLEAN NOT NULL,
-  duration REAL,
-  scroll REAL
+  duration FLOAT8,
+  scroll FLOAT8
 );
 
 CREATE TABLE IF NOT EXISTS page_views_day (
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS page_views_day (
   hour INTEGER NOT NULL,
   count INTEGER NOT NULL,
   total_beacon INTEGER NOT NULL,
-  total_scroll REAL NOT NULL,
-  total_duration REAL NOT NULL,
+  total_scroll FLOAT8 NOT NULL,
+  total_duration FLOAT8 NOT NULL,
 
   CONSTRAINT unique_page_views_day
   UNIQUE (path, year, month, day, hour)
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS page_views_week (
   dow INTEGER NOT NULL,
   count INTEGER NOT NULL,
   total_beacon INTEGER NOT NULL,
-  total_scroll REAL NOT NULL,
-  total_duration REAL NOT NULL,
+  total_scroll FLOAT8 NOT NULL,
+  total_duration FLOAT8 NOT NULL,
 
   CONSTRAINT unique_page_views_week
   UNIQUE (path, year, week, dow)
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS page_views_month (
   day INTEGER NOT NULL,
   count INTEGER NOT NULL,
   total_beacon INTEGER NOT NULL,
-  total_scroll REAL NOT NULL,
-  total_duration REAL NOT NULL,
+  total_scroll FLOAT8 NOT NULL,
+  total_duration FLOAT8 NOT NULL,
 
   CONSTRAINT unique_page_views_month
   UNIQUE (path, year, month, day)

@@ -1,5 +1,6 @@
 use std::io::Read;
 
+use fernet::Fernet;
 use lambda_runtime::Error;
 use serde::Deserialize;
 
@@ -41,7 +42,10 @@ pub fn load_from_file() -> Result<Config, Error> {
 pub async fn load_from_env() -> Result<Config, Error> {
     let endpoint = std::env::var("DATABASE_ENDPOINT")?;
     let password = std::env::var("DATABASE_PASSWORD")?;
-    let token_key = std::env::var("TOKEN_KEY")?;
+    let token_key = std::env::var("TOKEN_KEY").unwrap_or_else(|_| {
+        log::info!("Unable to find TOKEN_KEY environment variable; falling back to generated key");
+        Fernet::generate_key()
+    });
 
     let db = DbConfig {
         endpoint,

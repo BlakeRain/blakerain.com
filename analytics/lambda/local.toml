@@ -1,0 +1,9 @@
+[db]
+endpoint = "localhost"
+port = 5101
+username = "analytics_local"
+password = "analytics_local"
+dbname = "analytics_local"
+
+[auth]
+token_key = "q7AGUNUgiPsj776lnwYCLcfOLx8Fswu07UZDqttEJPs="

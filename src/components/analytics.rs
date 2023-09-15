@@ -274,7 +274,7 @@ impl AnalyticsBeaconData {
     }
 }
 
-fn get_analytics_host() -> String {
+pub fn get_analytics_host() -> String {
     let mut host = std::option_env!("ANALYTICS_HOST")
         .unwrap_or("https://analytics.blakerain.com")
         .to_string();

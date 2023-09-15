@@ -1,14 +1,16 @@
 use analytics_lambda::{
     config::{load_from_env, load_from_file},
+    endpoints::auth::AuthContext,
     env::Env,
     handlers::{
-        auth::{new_password, signin},
+        auth::{new_password, signin, validate_token},
         page_view::{append_page_view, record_page_view},
+        query::query_month_view,
     },
 };
 use analytics_model::MIGRATOR;
 use lambda_runtime::Error;
-use poem::{middleware, post, Endpoint, EndpointExt, Route};
+use poem::{get, middleware, post, Endpoint, EndpointExt, Route};
 
 async fn create() -> Result<impl Endpoint, Error> {
     let config = if cfg!(feature = "local") {
@@ -25,9 +27,12 @@ async fn create() -> Result<impl Endpoint, Error> {
         .at("/page_view/:id", post(append_page_view))
         .at("/auth/sign_in", post(signin))
         .at("/auth/new_password", post(new_password))
-        .data(env)
+        .at("/auth/validate", post(validate_token))
+        .at("/query/month/:year/:month", get(query_month_view))
+        .with(AuthContext::new(&["/auth", "/page_view"], env.clone()))
         .with(middleware::Cors::new())
-        .with(middleware::Tracing))
+        .with(middleware::Tracing)
+        .data(env))
 }
 
 #[tokio::main]

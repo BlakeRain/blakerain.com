@@ -9,6 +9,6 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE (username)
 );
 
--- Create an intial user that has a temporary password
+-- Create an intial user that has a temporary password. The password is: admin
 INSERT INTO users (username, password, enabled, reset_password)
-  VALUES("admin", "admin", TRUE, TRUE);
+  VALUES('admin', '$pbkdf2-sha256$i=600000,l=32$V62SYtsc1HWC2hV3jbevjg$OrOHoTwo1YPmNrPUnAUy3Vfg4Lrw90mxOTTISVHmjnk', TRUE, TRUE);

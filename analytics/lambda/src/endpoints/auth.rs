@@ -5,23 +5,46 @@ use poem::{
     error::InternalServerError,
     http::StatusCode,
     web::headers::{self, authorization::Bearer, HeaderMapExt},
-    Endpoint, Request,
+    Endpoint, Middleware, Request,
 };
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
 use uuid::Uuid;
 
+use crate::env::Env;
+
+pub struct AuthContext {
+    skip_prefixes: Vec<String>,
+    env: Env,
+}
+
+impl AuthContext {
+    pub fn new(skip_prefixes: &[&str], env: Env) -> Self {
+        Self {
+            skip_prefixes: skip_prefixes.iter().map(ToString::to_string).collect(),
+            env,
+        }
+    }
+}
+
+impl<E: Endpoint> Middleware<E> for AuthContext {
+    type Output = AuthEndpoint<E>;
+
+    fn transform(&self, ep: E) -> Self::Output {
+        AuthEndpoint::new(self.skip_prefixes.clone(), self.env.clone(), ep)
+    }
+}
+
 pub struct AuthEndpoint<E: Endpoint> {
-    pool: PgPool,
-    fernet: Fernet,
+    skip_prefixes: Vec<String>,
+    env: Env,
     endpoint: E,
 }
 
 impl<E: Endpoint> AuthEndpoint<E> {
-    pub fn new(pool: PgPool, fernet: Fernet, endpoint: E) -> Self {
+    fn new(skip_prefixes: Vec<String>, env: Env, endpoint: E) -> Self {
         Self {
-            pool,
-            fernet,
+            skip_prefixes,
+            env,
             endpoint,
         }
     }
@@ -32,6 +55,12 @@ impl<E: Endpoint> Endpoint for AuthEndpoint<E> {
     type Output = E::Output;
 
     async fn call(&self, mut request: Request) -> poem::Result<Self::Output> {
+        for skip_prefix in &self.skip_prefixes {
+            if request.uri().path().starts_with(skip_prefix) {
+                return self.endpoint.call(request).await;
+            }
+        }
+
         // Make sure that we have an 'Authorization' header that has a 'Bearer' token.
         let Some(auth) = request.headers().typed_get::<headers::Authorization<Bearer>>() else {
             log::info!("Missing 'Authorization' header with 'Bearer' token");
@@ -39,7 +68,7 @@ impl<E: Endpoint> Endpoint for AuthEndpoint<E> {
         };
 
         // Ensure that we can decrypt the token using the provided Fernet key.
-        let Token { user_id } = match Token::decode(&self.fernet, auth.token()) {
+        let Token { user_id } = match Token::decode(&self.env.fernet, auth.token()) {
             Some(token) => token,
             None => {
                 log::error!("Failed to decode authentication token");
@@ -49,9 +78,9 @@ impl<E: Endpoint> Endpoint for AuthEndpoint<E> {
 
         // If the user no longer exists, then a simple 401 will suffice.
         let Some(user) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
-            .bind(user_id).fetch_optional(&self.pool).await.map_err(InternalServerError)? else {
-                log::error!("User '{user_id}' no longer exists");
-                return Err(poem::Error::from_status(StatusCode::UNAUTHORIZED));
+            .bind(user_id).fetch_optional(&self.env.pool).await.map_err(InternalServerError)? else {
+            log::error!("User '{user_id}' no longer exists");
+            return Err(poem::Error::from_status(StatusCode::UNAUTHORIZED));
         };
 
         // Make sure that the user is still enabled.

@@ -1,4 +1,4 @@
-use analytics_model::user::{authenticate, reset_password};
+use analytics_model::user::{authenticate, reset_password, User};
 use poem::{
     error::InternalServerError,
     handler,
@@ -29,6 +29,18 @@ pub struct NewPasswordBody {
     old_password: String,
     #[serde(rename = "newPassword")]
     new_password: String,
+}
+
+#[derive(Deserialize)]
+pub struct ValidateTokenBody {
+    token: String,
+}
+
+#[derive(Serialize)]
+#[serde(tag = "type")]
+pub enum ValidateTokenResponse {
+    Invalid,
+    Valid { token: String },
 }
 
 #[handler]
@@ -69,4 +81,31 @@ pub async fn new_password(
     let token = Token::new(user.id);
     let token = token.encode(&env.fernet);
     Ok(Json(SignInResponse::Successful { token }))
+}
+
+#[handler]
+pub async fn validate_token(
+    env: Data<&Env>,
+    Json(ValidateTokenBody { token }): Json<ValidateTokenBody>,
+) -> poem::Result<Json<ValidateTokenResponse>> {
+    let Some(Token { user_id }) = Token::decode(&env.fernet, &token) else {
+        log::error!("Failed to decode authentication token");
+        return Ok(Json(ValidateTokenResponse::Invalid));
+    };
+
+    let Some(user) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+        .bind(user_id).fetch_optional(&env.pool).await.map_err(InternalServerError)? else {
+        log::error!("User '{user_id}' no longer exists");
+        return Ok(Json(ValidateTokenResponse::Invalid));
+    };
+
+    if !user.enabled {
+        log::error!("User '{user_id}' is not enabled");
+        return Ok(Json(ValidateTokenResponse::Invalid));
+    }
+
+    let token = Token::new(user.id);
+    let token = token.encode(&env.fernet);
+
+    Ok(Json(ValidateTokenResponse::Valid { token }))
 }

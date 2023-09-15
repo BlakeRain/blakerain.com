@@ -1,3 +1,4 @@
+use serde::Serialize;
 use sqlx::PgPool;
 use time::OffsetDateTime;
 use uuid::Uuid;
@@ -19,9 +20,9 @@ pub struct PageView {
     pub scroll: Option<f64>,
 }
 
-#[derive(Debug, Clone, sqlx::FromRow)]
+#[derive(Debug, Clone, sqlx::FromRow, Serialize)]
 pub struct PageViewsDay {
-    pub id: i32,
+    pub id: Uuid,
     pub path: String,
     pub year: i32,
     pub month: i32,
@@ -33,9 +34,9 @@ pub struct PageViewsDay {
     pub total_duration: f64,
 }
 
-#[derive(Debug, Clone, sqlx::FromRow)]
+#[derive(Debug, Clone, sqlx::FromRow, Serialize)]
 pub struct PageViewsWeek {
-    pub id: i32,
+    pub id: Uuid,
     pub path: String,
     pub year: i32,
     pub week: i32,
@@ -46,9 +47,9 @@ pub struct PageViewsWeek {
     pub total_duration: f64,
 }
 
-#[derive(Debug, Clone, sqlx::FromRow)]
+#[derive(Debug, Clone, sqlx::FromRow, Serialize)]
 pub struct PageViewsMonth {
-    pub id: i32,
+    pub id: Uuid,
     pub path: String,
     pub year: i32,
     pub month: i32,
@@ -134,7 +135,6 @@ async fn update_count_accumulators(
     .bind(time.year())
     .bind(time.iso_week() as i32)
     .bind(time.weekday().number_days_from_sunday() as i32)
-    .bind(time.hour() as i32)
     .execute(pool)
     .await?;
 
@@ -153,7 +153,6 @@ async fn update_count_accumulators(
     .bind(time.year())
     .bind(time.month() as i32)
     .bind(time.day() as i32)
-    .bind(time.hour() as i32)
     .execute(pool)
     .await?;
 

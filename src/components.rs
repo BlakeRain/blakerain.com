@@ -1,6 +1,7 @@
 pub mod analytics;
 pub mod blog;
 pub mod content;
+pub mod display;
 pub mod head;
 pub mod layout;
 pub mod render;

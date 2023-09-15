@@ -82,6 +82,7 @@ features = [
   "LucideList",
   "LucideMenu",
   "LucidePencil",
+  "LucideRefreshCw",
   "LucideRss",
   "LucideX"
 ]
@@ -93,6 +94,7 @@ features = [
   "Document",
   "DomRect",
   "Element",
+  "HtmlSelectElement",
   "IntersectionObserver",
   "IntersectionObserverEntry",
   "Navigator",
