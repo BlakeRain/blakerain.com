@@ -364,7 +364,7 @@ pub fn analytics() -> Html {
     {
         let send_beacon = send_beacon.clone();
         use_effect_with_deps(
-            move |loc| {
+            move |_| {
                 send_beacon.run();
                 send_analytics.run();
             },
