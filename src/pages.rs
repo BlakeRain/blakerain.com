@@ -1,16 +1,18 @@
 use enum_iterator::Sequence;
 use yew::{html, Html};
-use yew_router::{Routable, Switch};
-
-use self::analytics::AnalyticsRoute;
+use yew_router::Routable;
 
 mod about;
-mod analytics;
 mod blog;
 mod blog_post;
 mod disclaimer;
 mod home;
 mod not_found;
+
+mod analytics {
+    mod auth;
+    pub mod dashboard;
+}
 
 #[derive(Debug, Clone, PartialEq, Sequence, Routable)]
 pub enum Route {
@@ -25,8 +27,6 @@ pub enum Route {
     #[at("/disclaimer")]
     Disclaimer,
     #[at("/analytics")]
-    AnalyticsRoot,
-    #[at("/analytics/*")]
     Analytics,
     #[not_found]
     #[at("/404")]
@@ -38,10 +38,6 @@ impl Route {
         !matches!(self, Self::Disclaimer)
     }
 
-    pub fn should_render(&self) -> bool {
-        !matches!(self, Self::AnalyticsRoot | Self::Analytics)
-    }
-
     pub fn switch(self) -> Html {
         match self {
             Self::Home => html! { <home::Page /> },
@@ -50,9 +46,7 @@ impl Route {
             Self::BlogPost { doc_id } => html! { <blog_post::Page {doc_id} /> },
             Self::Disclaimer => html! { <disclaimer::Page /> },
             Self::NotFound => html! { <not_found::Page /> },
-            Self::AnalyticsRoot | Self::Analytics => {
-                html! { <Switch<AnalyticsRoute> render={AnalyticsRoute::switch} /> }
-            }
+            Self::Analytics => html! { <analytics::dashboard::Page /> },
         }
     }
 }

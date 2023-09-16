@@ -40,7 +40,7 @@ pub fn footer(_: &FooterProps) -> Html {
                             rel="noreferrer">
                             {"Mastodon"}
                         </a>
-                        <Link<Route> classes="hover:text-neutral-50" to={Route::AnalyticsRoot}>
+                        <Link<Route> classes="hover:text-neutral-50" to={Route::Analytics}>
                             {"Analytics"}
                         </Link<Route>>
                     </div>

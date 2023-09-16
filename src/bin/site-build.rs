@@ -90,11 +90,6 @@ impl Env {
     }
 
     async fn render_route(&self, route: Route) -> String {
-        assert!(
-            route.should_render(),
-            "Route {route:?} should not be rendered"
-        );
-
         let head = HeadContext::default();
 
         let render = {
@@ -141,10 +136,6 @@ struct RenderRoute {
 fn collect_routes() -> Vec<RenderRoute> {
     enum_iterator::all::<Route>()
         .filter_map(|route| {
-            if !route.should_render() {
-                return None;
-            }
-
             let path = route.to_path();
             let path = if path == "/" {
                 PathBuf::from("index.html")
