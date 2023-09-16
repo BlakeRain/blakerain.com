@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use gloo::storage::{errors::StorageError, Storage};
+use gloo::storage::Storage;
 use serde::Deserialize;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, InputEvent, SubmitEvent};
@@ -39,7 +39,15 @@ impl AuthState {
         }
     }
 
+    #[cfg(not(target_family = "wasm"))]
     pub fn get_stored_token() -> Option<String> {
+        None
+    }
+
+    #[cfg(target_family = "wasm")]
+    pub fn get_stored_token() -> Option<String> {
+        use gloo::storage::errors::StorageError;
+
         match gloo::storage::LocalStorage::get(STORED_TOKEN_ID) {
             Ok(token) => Some(token),
             Err(err) => match err {
