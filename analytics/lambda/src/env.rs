@@ -35,7 +35,7 @@ pub struct Inner {
 }
 
 impl Env {
-    pub async fn new(config: Config) -> Self {
+    pub async fn create_pool(config: &Config) -> sqlx::PgPool {
         let mut connection_opts = PgConnectOptions::new()
             .host(&config.db.endpoint)
             .username(&config.db.username)
@@ -48,8 +48,13 @@ impl Env {
             connection_opts = connection_opts.port(port);
         }
 
+        sqlx::PgPool::connect_with(connection_opts).await.unwrap()
+    }
+
+    pub async fn new(config: Config) -> Self {
+        let pool = Self::create_pool(&config).await;
         let inner = Inner {
-            pool: sqlx::PgPool::connect_with(connection_opts).await.unwrap(),
+            pool,
             fernet: Fernet::new(&config.auth.token_key).expect("valid fernet key"),
         };
 
