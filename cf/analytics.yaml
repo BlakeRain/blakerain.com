@@ -175,6 +175,7 @@ Resources:
       Environment:
         Variables:
           RUST_LOG: info
+          TOKEN_KEY: "{{resolve:ssm:analytics_lambda_token_key}}"
           DATABASE_ENDPOINT: !GetAtt AnalyticsDatabase.Endpoint.Address
           DATABASE_PASSWORD: "{{resolve:ssm:analytics_database_password}}"
       VpcConfig:
@@ -195,6 +196,21 @@ Resources:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref AnalyticsLambdaDeployer
+
+  AnalyticsLambdaDeployerPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: analytics_lambda_deployer_policy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:UpdateFunctionCode
+            Resource:
+              - !GetAtt AnalyticsLambda.Arn
+      Users:
+        - !Ref AnalyticsLambdaDeployer
 
   AnalyticsApi:
     Type: AWS::ApiGatewayV2::Api
