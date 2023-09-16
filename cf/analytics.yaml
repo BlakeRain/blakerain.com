@@ -51,11 +51,6 @@ Resources:
     Properties:
       VpcId: !Ref AnalyticsVpc
       GroupDescription: Lambda security group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: "2049"
-          ToPort: "2049"
-          CidrIp: "10.0.0.0/16"
 
   AnalyticsDatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
