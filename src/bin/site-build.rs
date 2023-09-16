@@ -91,7 +91,7 @@ impl Env {
 
     async fn render_route(&self, route: Route) -> String {
         assert!(
-            route.shoud_render(),
+            route.should_render(),
             "Route {route:?} should not be rendered"
         );
 
