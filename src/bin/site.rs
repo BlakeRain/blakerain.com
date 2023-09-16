@@ -5,7 +5,7 @@ fn main() {
     wasm_logger::init(wasm_logger::Config::default());
 
     log::info!(
-        "blakerain.com {}, {} {} build",
+        "blakerain.com {}, {} {} build, compiled {}",
         env!("CARGO_PKG_VERSION"),
         if cfg!(debug_assertions) {
             "debug"
@@ -16,10 +16,9 @@ fn main() {
             "hydration"
         } else {
             "standard"
-        }
+        },
+        env!("BUILD_TIME")
     );
-
-    log::info!("Compiled {}", env!("BUILD_TIME"));
 
     let app = yew::Renderer::<App>::new();
 
@@ -31,7 +30,7 @@ fn main() {
 
     #[cfg(not(feature = "hydration"))]
     {
-        log::info!("Rendering application");
+        log::info!("Mounting application");
         app.render();
     }
 }

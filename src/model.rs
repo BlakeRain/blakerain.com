@@ -5,6 +5,7 @@ use yew::{function_component, html, use_memo, Children, ContextProvider, Html, P
 
 macros::tags!("content/tags.yaml");
 
+pub mod analytics;
 pub mod blog;
 pub mod pages;
 

@@ -1,3 +1,10 @@
+[watch]
+ignore = [
+  "analytics",
+  "cf",
+  "media"
+]
+
 [[hooks]]
 stage = "pre_build"
 command = "bash"
