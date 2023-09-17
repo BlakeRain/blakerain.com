@@ -5,18 +5,20 @@ use serde::Deserialize;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, InputEvent, SubmitEvent};
 use yew::{
-    function_component, html, use_reducer, Callback, Children, ContextProvider, Html, Properties,
-    Reducible, UseReducerHandle,
+    function_component, html, use_effect_with_deps, use_reducer, Callback, Children,
+    ContextProvider, Html, Properties, Reducible, UseReducerHandle,
 };
 use yew_hooks::{use_async, use_async_with_options, use_interval, UseAsyncHandle, UseAsyncOptions};
 use yew_icons::{Icon, IconId};
 
 use crate::components::analytics::get_analytics_host;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 enum AuthState {
     // There is no authentication information
     Empty,
+    // The user needs to sign in
+    SignIn,
     // We have a stored authentication token that we want to validate.
     Validating { token: String },
     // We have a valid authentication token.
@@ -24,6 +26,7 @@ enum AuthState {
 }
 
 enum AuthStateAction {
+    LoadStoredToken,
     UseToken(String),
     Clear,
 }
@@ -32,19 +35,9 @@ const STORED_TOKEN_ID: &str = "blakerain-analytics-token";
 
 impl AuthState {
     pub fn new() -> Self {
-        if let Some(token) = Self::get_stored_token() {
-            Self::Validating { token }
-        } else {
-            Self::Empty
-        }
+        Self::Empty
     }
 
-    #[cfg(not(target_family = "wasm"))]
-    pub fn get_stored_token() -> Option<String> {
-        None
-    }
-
-    #[cfg(target_family = "wasm")]
     pub fn get_stored_token() -> Option<String> {
         use gloo::storage::errors::StorageError;
 
@@ -81,6 +74,14 @@ impl Reducible for AuthState {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
+            AuthStateAction::LoadStoredToken => {
+                if let Some(token) = Self::get_stored_token() {
+                    Self::Validating { token }
+                } else {
+                    Self::SignIn
+                }
+            }
+
             AuthStateAction::UseToken(token) => {
                 Self::set_stored_token(&token);
                 Self::Valid { token }
@@ -88,7 +89,7 @@ impl Reducible for AuthState {
 
             AuthStateAction::Clear => {
                 Self::remove_stored_token();
-                Self::Empty
+                Self::SignIn
             }
         }
         .into()
@@ -180,11 +181,31 @@ pub fn with_auth(props: &WithAuthProps) -> Html {
         )
     };
 
+    {
+        let deps_state = state.clone();
+        let state = state.clone();
+        let submission = submission.clone();
+
+        use_effect_with_deps(
+            move |_| {
+                if let AuthState::Empty = *state {
+                    state.dispatch(AuthStateAction::LoadStoredToken);
+                    submission.run();
+                }
+            },
+            (*deps_state).clone(),
+        );
+    }
+
     // Every five minutes: refresh and revalidate the token.
     use_interval(move || submission.run(), 5 * 60 * 1000);
 
     match &*state {
         AuthState::Empty => {
+            html! {}
+        }
+
+        AuthState::SignIn => {
             html! {
                 <SignIn host={host.clone()} state={state} />
             }
