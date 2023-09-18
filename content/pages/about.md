@@ -13,7 +13,7 @@ some Unix thrown in for variety. Recently I've moved to the Apple M1 for my dail
 
 I currently work at [Neo Technologies](https://neotechnologiesltd.com/) as the Technical Director.
 
-### Projects I've worked on
+# Projects I've worked on
 
 I have had the fortune of working on a wide range of projects in different industries: from film processing to industry
 automation to property management.
