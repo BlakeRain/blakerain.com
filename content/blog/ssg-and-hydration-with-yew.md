@@ -2,6 +2,7 @@
 title: SSG and Hydration with Yew
 tags:
   - rust
+  - wasm
   - yew
 published: 2023-08-30T18:50:17.000Z
 cover: /content/ssg-and-hydration-with-yew/cover.jpeg

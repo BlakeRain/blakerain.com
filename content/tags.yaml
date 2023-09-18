@@ -86,3 +86,8 @@
   name: Yew
   visibility: public
   description: Posts that relate to the Yew web framework.
+
+- slug: wasm
+  name: WebAssembly
+  visibility: public
+  description: Posts related to WebAssembly.
