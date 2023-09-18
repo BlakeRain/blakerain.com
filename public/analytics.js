@@ -29,6 +29,25 @@ export function getPosition() {
   }
 }
 
+// export async function sendRequest(method, url, body, token) {
+//   const opts = {
+//     method,
+//     headers: {},
+//   };
+//
+//   if (method === "POST" && body) {
+//     opts.headers["content-type"] = "application/json";
+//     opts.body = body;
+//   }
+//
+//   if (typeof token === "string") {
+//     opts.headers["authorization"] = "Bearer " + token;
+//   }
+//
+//   const res = await fetch(url, opts);
+//   return await res.json();
+// }
+
 export function sendBeacon(url, body) {
   return fetch(url, {
     keepalive: true,

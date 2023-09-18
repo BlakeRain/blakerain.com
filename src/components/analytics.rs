@@ -1,5 +1,6 @@
 use std::rc::Rc;
 
+use gloo::net::http::Request;
 use js_sys::Promise;
 use serde::{Deserialize, Serialize};
 use time::{Duration, OffsetDateTime};
@@ -303,22 +304,20 @@ pub fn analytics() -> Html {
                 }
 
                 let data = AnalyticsData::capture();
-
-                let res = reqwest::Client::new()
-                    .post(format!("{host}page_view"))
+                let res = Request::post(&format!("{host}page_view"))
                     .json(&data)
+                    .expect("JSON")
                     .send()
                     .await
                     .map_err(|err| {
-                        log::error!("Unable to send analytics data: {err:?}");
-                        "Unable to send analytics data"
+                        log::error!("Failed to send analytics request: {err:?}");
+                        "Unable to send analyitcs request"
                     })?;
 
-                let AnalyticsResponse { id } =
-                    res.json::<AnalyticsResponse>().await.map_err(|err| {
-                        log::error!("Unable to parse analytics response: {err:?}");
-                        "Unable to parse analytics response"
-                    })?;
+                let AnalyticsResponse { id } = res.json().await.map_err(|err| {
+                    log::error!("Unable to parse analytics response: {err:?}");
+                    "Unable to parse analytics response"
+                })?;
 
                 if let Some(id) = id {
                     log::info!(

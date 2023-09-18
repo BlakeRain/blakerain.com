@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use gloo::storage::Storage;
+use gloo::{net::http::Request, storage::Storage};
 use serde::Deserialize;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlInputElement, InputEvent, SubmitEvent};
@@ -141,21 +141,21 @@ pub fn with_auth(props: &WithAuthProps) -> Html {
                 if let AuthState::Validating { token } = &*state {
                     log::info!("Validating and regenerating authentication token");
 
-                    let res = reqwest::Client::new()
-                        .post(format!("{host}auth/validate"))
+                    let res = Request::post(&format!("{host}auth/validate"))
                         .json(&serde_json::json!({
                             "token": token
                         }))
+                        .expect("JSON")
                         .send()
                         .await
                         .map_err(|err| {
                             log::error!(
-                                "Unable to validate analytics authentication token: {err:?}"
+                                "Failed to validate analytics authentication token: {err:?}"
                             );
-                            "Unable to validate analytics authentication token"
+                            "Failed to validate analytics authentication token"
                         })?;
 
-                    let res = res.json::<ValidateTokenResponse>().await.map_err(|err| {
+                    let res = res.json().await.map_err(|err| {
                         log::error!("Unable to parse analytics token validation response: {err:?}");
                         "Unable to parse analytics token validation response"
                     })?;
@@ -432,13 +432,15 @@ fn sign_in(SignInProps { host, state }: &SignInProps) -> Html {
 
         use_async(async move {
             {
-                let res = reqwest::Client::new()
-                    .post(if sign_in_state.new_password.is_some() {
-                        format!("{host}auth/new_password")
-                    } else {
-                        format!("{host}auth/sign_in")
-                    })
+                let url = if sign_in_state.new_password.is_some() {
+                    format!("{host}auth/new_password")
+                } else {
+                    format!("{host}auth/sign_in")
+                };
+
+                let res = Request::post(&url)
                     .json(&payload)
+                    .expect("JSON")
                     .send()
                     .await
                     .map_err(|err| {
@@ -446,7 +448,7 @@ fn sign_in(SignInProps { host, state }: &SignInProps) -> Html {
                         "Error communicating with authentication server"
                     })?;
 
-                let res = res.json::<SignInResponse>().await.map_err(|err| {
+                let res = res.json().await.map_err(|err| {
                     log::error!("Failed to decode sign in response: {err:?}");
                     "Error communicating with authentication server"
                 })?;

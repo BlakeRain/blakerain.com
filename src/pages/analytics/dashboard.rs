@@ -1,3 +1,4 @@
+use gloo::net::http::Request;
 use time::{Month, OffsetDateTime};
 use wasm_bindgen::JsCast;
 use yew::{function_component, html, use_context, use_state, Callback, Html, UseStateHandle};
@@ -16,20 +17,19 @@ async fn get_month_views(
     year: i32,
     month: i32,
 ) -> Result<PageViewsMonthResult, &'static str> {
-    reqwest::Client::new()
-        .get(format!("{host}query/month/{year}/{month}"))
-        .header("Authorization", format!("Bearer {token}"))
+    Request::get(&format!("{host}query/month/{year}/{month}"))
+        .header("Authorization", &format!("Bearer {token}"))
         .send()
         .await
         .map_err(|err| {
-            log::error!("Unable to query analytics API: {err:?}");
-            "Unable to query analytics API"
+            log::error!("Failed to validate analytics authentication token: {err:?}");
+            "Failed to validate analytics authentication token"
         })?
         .json()
         .await
         .map_err(|err| {
-            log::error!("Unable to deserialize response from analytics API: {err:?}");
-            "Unable to deserialize response from analytics API"
+            log::error!("Unable to parse analytics token validation response: {err:?}");
+            "Unable to parse analytics token validation response"
         })
 }
 
