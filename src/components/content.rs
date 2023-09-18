@@ -38,7 +38,7 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                         { &props.details.summary.title }
                     </h1>
                     if let Some(excerpt) = &props.details.summary.excerpt {
-                        <p class="font-text text-2xl text-center text-white mt-5 mx-2 w-full xl:w-2/3">
+                        <p class="font-sans text-lg text-center text-white mt-5 mx-2 w-full xl:w-2/3">
                             { excerpt }
                         </p>
                     }

@@ -37,7 +37,7 @@
 
   .markdown {
     @apply flex flex-col;
-    @apply font-text text-xl print:text-base;
+    @apply font-sans font-normal text-lg print:text-base;
     @apply text-neutral-800 dark:text-neutral-300;
 
     counter-reset: h1-outline-counter;
@@ -138,27 +138,27 @@
     }
 
     h1 {
-      @apply text-5xl print:text-3xl font-bold mt-8 mb-4;
+      @apply text-5xl print:text-3xl font-normal mt-8 mb-4;
     }
 
     h2 {
-      @apply text-4xl font-bold mt-8 mb-4;
+      @apply text-4xl font-normal mt-8 mb-4;
     }
 
     h3 {
-      @apply text-3xl font-bold mt-6 mb-3;
+      @apply text-3xl font-normal mt-6 mb-3;
     }
 
     h4 {
-      @apply text-2xl font-semibold mt-6 mb-2;
+      @apply text-2xl font-normal mt-6 mb-2;
     }
 
     h6 {
-      @apply text-xl font-semibold mt-4 mb-2;
+      @apply text-xl font-normal mt-4 mb-2;
     }
 
     p {
-      @apply w-full mb-8 leading-relaxed;
+      @apply w-full mb-6 leading-relaxed;
     }
 
     a:not(.plain) {
@@ -167,7 +167,7 @@
     }
 
     .footnote {
-      @apply mb-8 flex flex-row gap-1 text-base text-gray-500 dark:text-gray-400;
+      @apply mb-6 flex flex-row gap-1 text-base text-gray-500 dark:text-gray-400;
 
       &:has(+ .footnote) {
         @apply mb-0;
@@ -191,7 +191,7 @@
     dl,
     ul,
     ol {
-      @apply w-full self-start mb-8;
+      @apply w-full self-start mb-6;
 
       li {
         @apply break-words mt-2.5 pl-1.5;
@@ -211,7 +211,7 @@
     }
 
     figure {
-      @apply w-full mb-8 flex flex-col items-center;
+      @apply w-full mb-6 flex flex-col items-center;
 
       pre {
         @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
@@ -257,7 +257,7 @@
     }
 
     blockquote {
-      @apply w-full mb-8 border-l-4 border-l-blue-400 px-8;
+      @apply w-full mb-6 border-l-4 border-l-blue-400 px-8;
 
       p {
         @apply italic text-neutral-600 dark:text-neutral-400;
@@ -269,7 +269,7 @@
     }
 
     .callout {
-      @apply flex flex-col gap-2 rounded-md p-4 text-base mb-8;
+      @apply flex flex-col gap-2 rounded-md p-4 text-base mb-6;
       @apply print:border-2 print:p-2;
 
       > .heading {
@@ -357,7 +357,7 @@
   }
 
   table {
-    @apply min-w-full mb-8 border-collapse table-auto;
+    @apply min-w-full mb-6 border-collapse table-auto;
 
     thead {
       @apply bg-transparent dark:bg-neutral-800;

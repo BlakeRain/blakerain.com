@@ -12,14 +12,27 @@ use crate::{
 const DATE_FORMAT: &[FormatItem] =
     format_description!("[day padding:none] [month repr:short] [year]");
 
-fn post_card_image(doc_id: DocId, title: &str, image: &Option<String>) -> Html {
+fn post_card_image(doc_id: DocId, title: &str, image: &Option<String>, first: bool) -> Html {
+    let class = classes!(
+        "rounded-xl",
+        "object-cover",
+        "absolute",
+        "w-full",
+        "h-full",
+        if !first {
+            "lg:grayscale-[50%] lg:group-hover:grayscale-0 transition"
+        } else {
+            ""
+        }
+    );
+
     html! {
         <Link<Route> classes="unstyled" to={Route::BlogPost { doc_id }}>
             <div class="relative w-full h-[240px]">
                 if let Some(cover_image) = image {
-                    <img class="rounded-xl object-cover absolute w-full h-full"
-                            alt={title.to_string()}
-                            src={cover_image.clone()} />
+                    <img class={class}
+                         alt={title.to_string()}
+                         src={cover_image.clone()} />
                 }
             </div>
         </Link<Route>>
@@ -76,7 +89,7 @@ fn post_card_description(info: &Details<DocId>, tags: &TagsContext) -> Html {
                 <div class="flex flex-col gap-4">
                     <h1 class="text-2xl font-bold">{&info.summary.title}</h1>
                     if let Some(excerpt) = &info.summary.excerpt {
-                        <p class="text-gray-500 dark:text-gray-400 font-text text-xl leading-relaxed">
+                        <p class="text-gray-500 dark:text-gray-400 md:group-hover:text-gray-600 md:dark:group-hover:text-gray-300 transition-colors font-sans text-lg leading-relaxed">
                             {excerpt}
                         </p>
                     }
@@ -102,18 +115,20 @@ pub fn post_card(props: &PostCardProps) -> Html {
             <>
                 {post_card_image(props.post.summary.slug,
                                  &props.post.summary.title,
-                                 &props.post.cover_image)}
-                <div class="xl:col-span-2 md:mt-4 lg:mt-0">
+                                 &props.post.cover_image,
+                                 true)}
+                <div class="xl:col-span-2 md:mt-4 lg:mt-0 group">
                     {post_card_description(&props.post, &tags)}
                 </div>
             </>
         }
     } else {
         html! {
-            <div class="flex flex-col gap-4 mt-20 lg:mt-0">
+            <div class="group flex flex-col gap-4 mt-20 lg:mt-0">
                 {post_card_image(props.post.summary.slug,
                                  &props.post.summary.title,
-                                 &props.post.cover_image)}
+                                 &props.post.cover_image,
+                                 false)}
                 {post_card_description(&props.post, &tags)}
             </div>
         }

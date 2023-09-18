@@ -1,9 +1,6 @@
 module.exports = {
   theme: {
     extend: {
-      fontFamily: {
-        text: ["Noto Serif", "serif"],
-      },
       colors: {
         primary: {
           dark: "#22293D",
