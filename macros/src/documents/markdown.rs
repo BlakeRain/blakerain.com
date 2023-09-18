@@ -296,7 +296,7 @@ where
         link.add_attribute(AttributeName::Href, url);
         link.add_attribute(
             AttributeName::Class,
-            "plain w-full flex flex-col lg:flex-row rounded-md shadow-md \
+            "plain w-full flex flex-col lg:flex-row rounded-md shadow-md dark:shadow-none \
             min-h-[148px] border border-neutral-300 dark:border-neutral-700",
         );
 
