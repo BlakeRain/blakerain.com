@@ -44,7 +44,7 @@ async function min_html(filepath) {
     collapseWhitespace: true,
     decodeEntities: true,
     html5: true,
-    minifyCSS: true,
+    minifyCSS: false,
     minifyJS: true,
     processConditionalComments: true,
     removeAttributeQuotes: false,
