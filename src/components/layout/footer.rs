@@ -16,7 +16,32 @@ pub fn footer(_: &FooterProps) -> Html {
             <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
                 <div>
                     {format!("Blake Rain © {year}")}
-                    <SizeIndicator />
+                    <div>
+                        {"Powered by "}
+                        <a href="https://yew.rs"
+                           class="hover:text-neutral-50"
+                           title="Yew Web Framework"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"Yew"}
+                        </a>
+                        {", "}
+                        <a href="https://www.rust-lang.org/"
+                           class="hover:text-neutral-50"
+                           title="Rust Programming Language"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"Rust"}
+                        </a>
+                        {", and "}
+                        <a href="https://webassembly.org/"
+                           class="hover:text-neutral-50"
+                           title="WebAssembly"
+                           target="_blank"
+                           rel="noreferrer">
+                           {"WebAssembly"}
+                        </a>
+                    </div>
                 </div>
                 <div class="flex flex-col gap-4 md:gap-1 md:items-end">
                     <div class="flex flex-col md:flex-row gap-4 md:gap-3">
@@ -44,32 +69,7 @@ pub fn footer(_: &FooterProps) -> Html {
                             {"Analytics"}
                         </Link<Route>>
                     </div>
-                    <div>
-                        {"Powered by "}
-                        <a href="https://yew.rs"
-                           class="hover:text-neutral-50"
-                           title="Yew Web Framework"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"Yew"}
-                        </a>
-                        {", "}
-                        <a href="https://www.rust-lang.org/"
-                           class="hover:text-neutral-50"
-                           title="Rust Programming Language"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"Rust"}
-                        </a>
-                        {", and "}
-                        <a href="https://webassembly.org/"
-                           class="hover:text-neutral-50"
-                           title="WebAssembly"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"WebAssembly"}
-                        </a>
-                    </div>
+                    <SizeIndicator />
                 </div>
             </div>
         </footer>
