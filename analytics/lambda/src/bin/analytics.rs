@@ -5,7 +5,7 @@ use analytics_lambda::{
     handlers::{
         auth::{new_password, signin, validate_token},
         page_view::{append_page_view, record_page_view},
-        query::query_month_view,
+        query::{query_day_view, query_month_view, query_week_view},
     },
 };
 use analytics_model::MIGRATOR;
@@ -29,6 +29,8 @@ async fn create() -> Result<impl Endpoint, Error> {
         .at("/auth/new_password", post(new_password))
         .at("/auth/validate", post(validate_token))
         .at("/query/month/:year/:month", get(query_month_view))
+        .at("/query/week/:year/:week", get(query_week_view))
+        .at("/query/day/:year/:month/:day", get(query_day_view))
         .with(AuthContext::new(&["/auth", "/page_view"], env.clone()))
         .with(middleware::Cors::new())
         .with(middleware::Tracing)
