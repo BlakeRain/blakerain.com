@@ -10,7 +10,6 @@ mod home;
 mod not_found;
 
 mod analytics {
-    mod auth;
     pub mod dashboard;
 }
 

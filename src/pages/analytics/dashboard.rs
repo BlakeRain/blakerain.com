@@ -1,4 +1,3 @@
-use gloo::net::http::Request;
 use time::{Month, OffsetDateTime};
 use wasm_bindgen::JsCast;
 use yew::{function_component, html, use_context, use_state, Callback, Html, UseStateHandle};
@@ -6,32 +5,12 @@ use yew_hooks::{use_async_with_options, UseAsyncHandle, UseAsyncOptions};
 use yew_icons::{Icon, IconId};
 
 use crate::{
-    components::{analytics::get_analytics_host, display::bar_chart::BarChart},
-    model::analytics::{PageViewsMonth, PageViewsMonthResult},
-    pages::analytics::auth::{AuthTokenContext, WithAuth},
+    analytics::{
+        api::{get_month_views, PageViewsMonth, PageViewsMonthResult},
+        auth::{AuthTokenContext, WithAuth},
+    },
+    components::display::bar_chart::BarChart,
 };
-
-async fn get_month_views(
-    host: &str,
-    token: &str,
-    year: i32,
-    month: i32,
-) -> Result<PageViewsMonthResult, &'static str> {
-    Request::get(&format!("{host}query/month/{year}/{month}"))
-        .header("Authorization", &format!("Bearer {token}"))
-        .send()
-        .await
-        .map_err(|err| {
-            log::error!("Failed to validate analytics authentication token: {err:?}");
-            "Failed to validate analytics authentication token"
-        })?
-        .json()
-        .await
-        .map_err(|err| {
-            log::error!("Unable to parse analytics token validation response: {err:?}");
-            "Unable to parse analytics token validation response"
-        })
-}
 
 fn month_view_chart(
     year: i32,
@@ -96,7 +75,6 @@ fn month_select_options(active: Month) -> Html {
 #[function_component(DashboardContent)]
 fn dashboard_content() -> Html {
     let now = OffsetDateTime::now_local().expect("local time");
-    let host = get_analytics_host();
     let token = use_context::<AuthTokenContext>().expect("AuthTokenContext to be provided");
 
     let year = use_state(|| now.year());
@@ -111,7 +89,7 @@ fn dashboard_content() -> Html {
 
         use_async_with_options(
             async move {
-                let mut result = get_month_views(&host, &token.0, *year, (*month) as i32).await?;
+                let mut result = get_month_views(&token.0, *year, (*month) as i32).await?;
 
                 result.paths.sort_by(|a, b| {
                     let a = a.count + a.beacons;

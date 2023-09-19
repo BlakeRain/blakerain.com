@@ -24,13 +24,11 @@ fn main() {
 
     #[cfg(feature = "hydration")]
     {
-        log::info!("Hydrating application");
         app.hydrate();
     }
 
     #[cfg(not(feature = "hydration"))]
     {
-        log::info!("Mounting application");
         app.render();
     }
 }
