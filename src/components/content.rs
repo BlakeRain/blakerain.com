@@ -1,5 +1,5 @@
 use model::document::{Details, RenderNode};
-use yew::{function_component, html, use_context, Html, Properties};
+use yew::{classes, function_component, html, use_context, Html, Properties};
 
 use crate::{
     components::{blog::post_card::post_card_details, render::Render},
@@ -32,22 +32,54 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
                 </h1>
                 {post_card_details(true, &props.details, &tags)}
             </header>
-            <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed pt-20" {style}>
+            <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed" {style}>
                 <div class="container mx-auto flex flex-col items-center">
-                    <h1 class="text-5xl text-center font-bold text-white mx-2">
+                    <h1 class={classes!(
+                        "mx-2",
+                        "md:mx-0",
+                        if props.details.cover_image.is_some() {
+                            "mt-20"
+                        } else {
+                            "mt-10"
+                        },
+                        "mb-10",
+                        "text-5xl",
+                        "text-center",
+                        "font-bold",
+                        if props.details.cover_image.is_some() {
+                            "text-white"
+                        } else {
+                            "text-neutral-800 dark:text-neutral-200"
+                        })}>
                         { &props.details.summary.title }
                     </h1>
                     if let Some(excerpt) = &props.details.summary.excerpt {
-                        <p class="font-sans text-lg text-center text-white mt-5 mx-2 w-full xl:w-2/3">
+                        <p class={classes!(
+                            "font-sans",
+                            "text-lg",
+                            "text-center",
+                            "mx-5",
+                            "md:mx-0",
+                            if props.details.cover_image.is_some() {
+                                "mb-20"
+                            } else {
+                                "mb-10"
+                            },
+                            "lg:w-2/3",
+                            if props.details.cover_image.is_some() {
+                                "text-white"
+                            } else {
+                                "text-neutral-800 dark:text-neutral-200"
+                            })}>
                             { excerpt }
                         </p>
                     }
-                    <div class="mt-12 pt-8 px-16 bg-white dark:bg-zinc-900 rounded-t w-full">
+                    <div class="pt-8 px-2 sm:px-16 bg-white dark:bg-zinc-900 sm:rounded-t w-full">
                         {post_card_details(true, &props.details, &tags)}
                     </div>
                 </div>
             </header>
-            <div class="container mx-auto mt-12 mb-20 px-2 sm:px-16 print:px-0 print:max-w-full markdown">
+            <div class="container mx-auto mt-6 lg:mt-12 mb-20 px-2 sm:px-16 print:px-0 print:max-w-full markdown numbered-headings">
                 {
                     props.content.iter().map(|node| html! {
                         <Render node={node.clone()} />

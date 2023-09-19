@@ -16,7 +16,7 @@ pub fn footer(_: &FooterProps) -> Html {
             <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
                 <div>
                     {format!("Blake Rain © {year}")}
-                    <div>
+                    <div class="invisible md:visible">
                         {"Powered by "}
                         <a href="https://yew.rs"
                            class="hover:text-neutral-50"

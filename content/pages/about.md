@@ -4,16 +4,26 @@ published: 2018-10-22T07:21:38.000Z
 excerpt: Some information about me, what I do and have done.
 ---
 
-I like to believe I'm a software engineer. The languages that I use in my everyday work are primarily Rust, C++, and
-[Haskell](https://www.haskell.org/), although I also end up writing a lot of Python and JavaScript. My current editor of
-choice is [neovim](https://neovim.io), although I sometimes use [vscode](https://code.visualstudio.com/) and
-the venerable [emacs](https://www.gnu.org/software/emacs/) for those [irreplaceable](https://orgmode.org/) modes.
-[Linux](https://www.linux.org/) has almost always been my main operating system both personally and professionally, with
-some Unix thrown in for variety. Recently I've moved to the Apple M1 for my daily driver.
+Hello! I'm Blake Rain, a UK-based software engineer with a passion for Rust, C++, and Haskell,
+though you'll often find me dabbling in Python and JavaScript. I'm a seasoned user of [neovim] and
+a Linux and Unix enthusiast, recently transitioning to the Apple M1 as my everyday compute. As the
+current Technical Director at [Neo Technologies], I work to bring innovative compliance solutions to
+life.
 
-I currently work at [Neo Technologies](https://neotechnologiesltd.com/) as the Technical Director.
+Over the years, I have been privileged to work across diverse sectors, from film processing and
+industrial automation to property management. My projects range from developing accelerated
+post-processing software for the emerging digital film industry, prototyping control boards for
+industrial automation, to creating tools to boost commercial property investment and contact centre
+automation. Currently, I am working on a set of compliance tools related to PCI-DSS de-scoping.
 
-# Projects I've worked on
+These experiences have lead me to develop skills in system design, low-level system development,
+Unix and Linux kernel development, electronic design, network development, firmware development for
+embedded systems, functional programming, and user interface development.
+
+[neovim]: https://neovim.io
+[Neo Technologies]: https://eclipse-pci.com/
+
+# Projects I've worked on { .no-outline }
 
 I have had the fortune of working on a wide range of projects in different industries: from film processing to industry
 automation to property management.

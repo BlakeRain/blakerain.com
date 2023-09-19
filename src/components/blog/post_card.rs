@@ -20,7 +20,7 @@ fn post_card_image(doc_id: DocId, title: &str, image: &Option<String>, first: bo
         "w-full",
         "h-full",
         if !first {
-            "lg:grayscale-[50%] lg:group-hover:grayscale-0 transition"
+            "lg:grayscale-[50%] lg:group-hover:grayscale-0 transition duration-300"
         } else {
             ""
         }
@@ -68,7 +68,7 @@ pub fn post_card_details<S>(horizontal: bool, info: &Details<S>, tags: &TagsCont
     html! {
         <div class={classes!("flex", "uppercase", "text-sm",
                              if horizontal {
-                                 "flex-col md:flex-row md:justify-between"
+                                 "flex-col md:flex-row items-center md:justify-between"
                              } else {
                                  "flex-col"
                              })}>
@@ -89,7 +89,7 @@ fn post_card_description(info: &Details<DocId>, tags: &TagsContext) -> Html {
                 <div class="flex flex-col gap-4">
                     <h1 class="text-2xl font-bold">{&info.summary.title}</h1>
                     if let Some(excerpt) = &info.summary.excerpt {
-                        <p class="text-gray-500 dark:text-gray-400 md:group-hover:text-gray-600 md:dark:group-hover:text-gray-300 transition-colors font-sans text-lg leading-relaxed">
+                        <p class="text-gray-500 dark:text-gray-400 md:group-hover:text-gray-600 md:dark:group-hover:text-gray-300 transition-colors duration-200 font-sans text-lg leading-relaxed">
                             {excerpt}
                         </p>
                     }
