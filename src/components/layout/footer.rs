@@ -43,8 +43,8 @@ pub fn footer(_: &FooterProps) -> Html {
                         </a>
                     </div>
                 </div>
-                <div class="flex flex-col gap-4 md:gap-1 md:items-end">
-                    <div class="flex flex-col md:flex-row gap-4 md:gap-3">
+                <div class="flex flex-col gap-4 lg:gap-1 lg:items-end">
+                    <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
                         <Link<Route> classes="hover:text-neutral-50" to={Route::Blog}>
                             {"Latest Posts"}
                         </Link<Route>>
