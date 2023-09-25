@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use gloo::storage::Storage;
+use gloo::storage::{errors::StorageError, Storage};
 use serde::{Deserialize, Serialize};
 use yew::Reducible;
 
@@ -32,6 +32,7 @@ impl Default for Account {
 }
 
 pub enum AccountAction {
+    Load,
     SetPlaces { places: usize },
     SetCurrency { currency: Currency },
     SetExchangeRates { exchange_rates: ExchangeRates },
@@ -44,7 +45,9 @@ impl Reducible for Account {
     type Action = AccountAction;
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
-        match action {
+        let account = match action {
+            AccountAction::Load => Self::load(),
+
             AccountAction::SetPlaces { places } => Self {
                 places,
                 ..(*self).clone()
@@ -74,8 +77,10 @@ impl Reducible for Account {
                 position_risk: risk,
                 ..(*self).clone()
             },
-        }
-        .into()
+        };
+
+        account.save();
+        account.into()
     }
 }
 
@@ -83,10 +88,17 @@ impl Account {
     pub fn load() -> Self {
         match gloo::storage::LocalStorage::get("trading.account") {
             Ok(stored) => stored,
-            Err(err) => {
-                log::error!("Failed to retrieve trading account from local storage: {err:?}");
-                Self::default()
-            }
+            Err(err) => match err {
+                StorageError::KeyNotFound(_) => {
+                    log::info!("No stored trading account found, using defaults");
+                    Self::default()
+                }
+
+                _ => {
+                    log::error!("Failed to retrieve trading account from local storage: {err:?}");
+                    Self::default()
+                }
+            },
         }
     }
 
