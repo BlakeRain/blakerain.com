@@ -1,5 +1,9 @@
 @import "tailwind.css";
 
+:root {
+  --toggle-size: 2rem;
+}
+
 @layer components {
   body {
     @apply bg-white text-neutral-800;
@@ -20,6 +24,10 @@
     }
   }
 
+  label {
+    @apply font-semibold;
+  }
+
   select,
   input[type="text"],
   input[type="number"],
@@ -27,11 +35,87 @@
     @apply border-primary rounded-md;
     @apply text-neutral-800 placeholder:text-neutral-300;
     @apply dark:bg-zinc-800 dark:text-neutral-200 dark:placeholder:text-neutral-700;
+    @apply disabled:bg-gray-200 dark:disabled:bg-zinc-900 dark:disabled:text-neutral-500;
     @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 focus:ring-slate-400;
+    @apply transition;
 
     &:disabled {
       @apply text-neutral-500 dark:text-neutral-500;
       @apply dark:bg-zinc-900;
+    }
+  }
+
+  .input-icons {
+    @apply relative;
+
+    svg:first-child,
+    svg:last-child {
+      @apply pointer-events-none absolute top-1/2 -mt-2.5 text-gray-300 dark:text-gray-500;
+    }
+
+    svg:first-child {
+      @apply left-3;
+    }
+
+    svg:last-child {
+      @apply right-3;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"],
+    input[type="password"] {
+      &.icon-left {
+        @apply pl-10;
+      }
+
+      &.icon-right {
+        @apply pr-10;
+      }
+    }
+  }
+
+  .toggle {
+    @apply block relative cursor-pointer;
+
+    width: calc(2 * var(--toggle-size));
+    height: var(--toggle-size);
+
+    &.active {
+      .toggle-background {
+        @apply bg-slate-800 dark:bg-indigo-300;
+      }
+
+      .toggle-inner {
+        right: 0rem;
+      }
+    }
+
+    .toggle-background {
+      @apply absolute bg-slate-300 dark:bg-gray-600;
+
+      width: calc(2 * var(--toggle-size));
+      height: calc(0.5 * var(--toggle-size));
+      top: calc(0.25 * var(--toggle-size));
+
+      border-radius: calc(0.5 * var(--toggle-size));
+
+      transition: background-color 0.125s ease-in-out;
+    }
+
+    .toggle-inner {
+      @apply absolute bg-white;
+
+      width: var(--toggle-size);
+      height: var(--toggle-size);
+      top: 0;
+      right: var(--toggle-size);
+
+      border-radius: calc(0.5 * var(--toggle-size));
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+      transition: right 0.125s ease-in-out;
     }
   }
 
@@ -259,6 +343,10 @@
       @apply text-neutral-600 dark:text-neutral-400;
     }
 
+    div.table {
+      @apply mb-6;
+    }
+
     blockquote {
       @apply w-full mb-6 border-l-4 border-l-blue-400 px-8;
 
@@ -360,12 +448,11 @@
   }
 
   table {
-    @apply min-w-full mb-6 border-collapse table-auto;
+    @apply min-w-full border-collapse table-auto;
 
     thead {
       @apply bg-transparent dark:bg-neutral-800;
       @apply dark:text-white;
-      @apply border-b border-neutral-500;
 
       tr {
         th {
@@ -388,8 +475,6 @@
 
     tbody {
       tr {
-        @apply border-b border-neutral-400 dark:border-neutral-600;
-
         td {
           @apply whitespace-nowrap px-6 py-4;
 
@@ -412,6 +497,23 @@
       thead tr th,
       tbody tr td {
         @apply px-3 py-2;
+      }
+    }
+
+    &.tighter {
+      thead tr th,
+      tbody tr td {
+        @apply px-1 py-1;
+      }
+    }
+
+    &:not(.borderless) {
+      thead {
+        @apply border-b border-neutral-500;
+      }
+
+      tbody tr {
+        @apply border-b border-neutral-400 dark:border-neutral-600;
       }
     }
   } /* table */
