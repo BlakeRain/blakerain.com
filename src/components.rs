@@ -13,6 +13,7 @@ pub mod blog {
 
 pub mod display {
     pub mod bar_chart;
+    pub mod client_only;
     pub mod clipboard;
     pub mod tooltip;
 }

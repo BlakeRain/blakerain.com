@@ -7,7 +7,10 @@ use yew_hooks::{use_async, UseAsyncHandle};
 
 use crate::{
     components::{
-        display::tooltip::{Tooltip, TooltipPosition},
+        display::{
+            client_only::ClientOnly,
+            tooltip::{Tooltip, TooltipPosition},
+        },
         fields::{
             currency::CurrencySelect,
             label::Label,
@@ -1340,18 +1343,20 @@ pub fn page() -> Html {
     html! {
         <AccountProvider>
             <PositionProvider>
-                <div class="container mx-auto my-8">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <AccountInfo />
-                        <PositionInfo />
+                <ClientOnly>
+                    <div class="container mx-auto my-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <AccountInfo />
+                            <PositionInfo />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                            <ReportPositionSize />
+                            <ReportStopLoss />
+                            <ReportTakeProfit />
+                            <ReportPlannedStopLoss />
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                        <ReportPositionSize />
-                        <ReportStopLoss />
-                        <ReportTakeProfit />
-                        <ReportPlannedStopLoss />
-                    </div>
-                </div>
+                </ClientOnly>
             </PositionProvider>
         </AccountProvider>
     }
