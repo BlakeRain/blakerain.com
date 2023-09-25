@@ -1,8 +1,8 @@
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 use web_sys::FocusEvent;
 use yew::{
-    classes, function_component, html, use_node_ref, use_state, AttrValue, Callback, Classes, Html,
-    Properties, TargetCast,
+    classes, function_component, html, use_effect_with_deps, use_node_ref, use_state, AttrValue,
+    Callback, Classes, Html, Properties, TargetCast,
 };
 use yew_hooks::use_timeout;
 use yew_icons::{Icon, IconId};
@@ -102,6 +102,23 @@ pub fn number(props: &NumberProps) -> Html {
     // text when the user focuses the input. Doing this in the event handler is not having the
     // desired effect without a small delay.
     let input_ref = use_node_ref();
+
+    // When the value passed to this field changes, we want to update our state.
+    {
+        let input_value = input_value.clone();
+        let focused = focused.clone();
+        use_effect_with_deps(
+            move |(value, places)| {
+                if !*focused {
+                    input_value.set(
+                        format_number(*value, false, *places, None, None)
+                            .expect("format_number to work"),
+                    );
+                }
+            },
+            (value, props.places),
+        );
+    }
 
     let timeout = {
         let focused = focused.clone();
