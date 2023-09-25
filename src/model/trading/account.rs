@@ -85,7 +85,7 @@ impl Account {
             Ok(stored) => stored,
             Err(err) => {
                 log::error!("Failed to retrieve trading account from local storage: {err:?}");
-                return Self::default();
+                Self::default()
             }
         }
     }

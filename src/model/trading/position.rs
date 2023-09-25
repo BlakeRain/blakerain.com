@@ -266,13 +266,9 @@ impl StopLoss {
             available_quote,
             quantity,
             distance,
-            actual: if let Some(stop_loss) = position.stop_loss {
-                Some(ActualStopLoss::compute(
-                    account, position, quantity, p_rate, q_rate, stop_loss,
-                ))
-            } else {
-                None
-            },
+            actual: position.stop_loss.map(|stop_loss| {
+                ActualStopLoss::compute(account, position, quantity, p_rate, q_rate, stop_loss)
+            }),
         }
     }
 }

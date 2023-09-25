@@ -98,9 +98,6 @@ impl ExchangeRates {
 
 #[derive(Debug, Deserialize)]
 struct ExchangeRateResult {
-    success: bool,
-    base: String,
-    date: String,
     rates: HashMap<String, f64>,
 }
 
