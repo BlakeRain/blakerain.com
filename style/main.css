@@ -1,5 +1,10 @@
 @import "tailwind.css";
 
+:root {
+  --toggle-size: 2rem;
+  --primary-color: #13304e;
+}
+
 @layer components {
   body {
     @apply bg-white text-neutral-800;
@@ -7,17 +12,29 @@
   }
 
   .button {
-    @apply inline-flex items-center justify-center border border-transparent;
+    @apply inline-flex items-center justify-center;
+    @apply border border-transparent rounded-md;
+
     @apply px-4 py-2;
-    @apply rounded-md shadow-sm text-sm text-gray-300 bg-primary;
-    @apply disabled:bg-slate-300 dark:disabled:bg-gray-600 dark:disabled:text-gray-400;
-    @apply hover:text-white dark:disabled:hover:text-gray-400;
-    @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 focus:ring-slate-400;
-    @apply transition-colors;
+    @apply text-sm;
+
+    @apply text-neutral-200 hover:text-neutral-100;
+    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+
+    @apply bg-primary;
+    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
+    @apply active:bg-primary-light;
+
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply transition;
 
     > svg {
       @apply mr-1;
     }
+  }
+
+  label {
+    @apply font-semibold;
   }
 
   select,
@@ -25,13 +42,141 @@
   input[type="number"],
   input[type="password"] {
     @apply border-primary rounded-md;
-    @apply text-neutral-800 placeholder:text-neutral-300;
-    @apply dark:bg-zinc-800 dark:text-neutral-200 dark:placeholder:text-neutral-700;
-    @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 focus:ring-slate-400;
+    @apply disabled:border-transparent;
 
-    &:disabled {
-      @apply text-neutral-500 dark:text-neutral-500;
-      @apply dark:bg-zinc-900;
+    @apply text-neutral-800 placeholder:text-neutral-300;
+    @apply dark:text-neutral-200 placeholder:text-neutral-500;
+    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+
+    @apply bg-white dark:bg-zinc-800;
+    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
+
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply transition;
+  }
+
+  .input-icons {
+    @apply relative;
+
+    svg:first-child,
+    svg:last-child {
+      @apply pointer-events-none absolute top-1/2 -mt-2.5 text-gray-300 dark:text-gray-500;
+    }
+
+    svg:first-child {
+      @apply left-3;
+    }
+
+    svg:last-child {
+      @apply right-3;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"],
+    input[type="password"] {
+      &.icon-left {
+        @apply pl-10;
+      }
+
+      &.icon-right {
+        @apply pr-10;
+      }
+    }
+  }
+
+  .toggle {
+    @apply block relative cursor-pointer;
+
+    width: calc(2 * var(--toggle-size));
+    height: var(--toggle-size);
+
+    &.active {
+      .toggle-background {
+        @apply bg-slate-800 dark:bg-indigo-300;
+      }
+
+      .toggle-inner {
+        right: 0rem;
+      }
+    }
+
+    .toggle-background {
+      @apply absolute bg-slate-300 dark:bg-gray-600;
+
+      width: calc(2 * var(--toggle-size));
+      height: calc(0.5 * var(--toggle-size));
+      top: calc(0.25 * var(--toggle-size));
+
+      border-radius: calc(0.5 * var(--toggle-size));
+
+      transition: background-color 0.125s ease-in-out;
+    }
+
+    .toggle-inner {
+      @apply absolute bg-white;
+
+      width: var(--toggle-size);
+      height: var(--toggle-size);
+      top: 0;
+      right: var(--toggle-size);
+
+      border-radius: calc(0.5 * var(--toggle-size));
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+      transition: right 0.125s ease-in-out;
+    }
+  }
+
+  .tooltip {
+    @apply absolute z-10 w-max max-w-xs min-h-fit p-4;
+    @apply text-sm text-center text-neutral-50 whitespace-pre-wrap;
+    @apply bg-primary border border-primary rounded-md shadow-md;
+
+    &:after {
+      @apply absolute w-0 h-0;
+      content: "";
+    }
+
+    &.top {
+      @apply bottom-full left-1/2 -translate-x-1/2 mb-4;
+      &:after {
+        @apply top-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-top: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.bottom {
+      @apply top-full left-1/2 -translate-x-1/2 mt-4;
+      &:after {
+        @apply bottom-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-bottom: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.left {
+      @apply -top-3 right-full mr-4;
+      &:after {
+        @apply top-1.5 left-full mr-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-left: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.right {
+      @apply -top-3 left-full ml-4;
+      &:after {
+        @apply top-1.5 right-full ml-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-right: 1rem solid var(--primary-color);
+      }
     }
   }
 
@@ -259,6 +404,10 @@
       @apply text-neutral-600 dark:text-neutral-400;
     }
 
+    div.table {
+      @apply mb-6;
+    }
+
     blockquote {
       @apply w-full mb-6 border-l-4 border-l-blue-400 px-8;
 
@@ -360,12 +509,11 @@
   }
 
   table {
-    @apply min-w-full mb-6 border-collapse table-auto;
+    @apply min-w-full border-collapse table-auto;
 
     thead {
       @apply bg-transparent dark:bg-neutral-800;
       @apply dark:text-white;
-      @apply border-b border-neutral-500;
 
       tr {
         th {
@@ -388,8 +536,6 @@
 
     tbody {
       tr {
-        @apply border-b border-neutral-400 dark:border-neutral-600;
-
         td {
           @apply whitespace-nowrap px-6 py-4;
 
@@ -412,6 +558,23 @@
       thead tr th,
       tbody tr td {
         @apply px-3 py-2;
+      }
+    }
+
+    &.tighter {
+      thead tr th,
+      tbody tr td {
+        @apply px-1 py-1;
+      }
+    }
+
+    &:not(.borderless) {
+      thead {
+        @apply border-b border-neutral-500;
+      }
+
+      tbody tr {
+        @apply border-b border-neutral-400 dark:border-neutral-600;
       }
     }
   } /* table */

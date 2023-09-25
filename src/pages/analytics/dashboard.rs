@@ -9,7 +9,8 @@ use crate::{
         api::{get_month_views, PageViewsMonth, PageViewsMonthResult},
         auth::{AuthTokenContext, WithAuth},
     },
-    components::display::bar_chart::BarChart,
+    components::{display::bar_chart::BarChart, seo::WebPageSeo, title::Title},
+    pages::Route,
 };
 
 fn month_view_chart(
@@ -242,8 +243,17 @@ fn dashboard_content() -> Html {
 #[function_component(Page)]
 pub fn page() -> Html {
     html! {
-        <WithAuth>
-            <DashboardContent />
-        </WithAuth>
+        <>
+            <Title title={"Analytics Dashboard"} />
+            <WebPageSeo
+                route={Route::Analytics}
+                title={"Analytics Dashboard"}
+                excerpt={Some("Analytics Dashboard")}
+                index={false}
+                follow={false} />
+            <WithAuth>
+                <DashboardContent />
+            </WithAuth>
+        </>
     }
 }

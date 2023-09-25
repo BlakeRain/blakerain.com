@@ -13,6 +13,10 @@ mod analytics {
     pub mod dashboard;
 }
 
+mod trading {
+    pub mod position_size;
+}
+
 #[derive(Debug, Clone, PartialEq, Sequence, Routable)]
 pub enum Route {
     #[at("/")]
@@ -27,6 +31,8 @@ pub enum Route {
     Disclaimer,
     #[at("/analytics")]
     Analytics,
+    #[at("/trading/position-size")]
+    PositionSize,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -46,6 +52,7 @@ impl Route {
             Self::Disclaimer => html! { <disclaimer::Page /> },
             Self::NotFound => html! { <not_found::Page /> },
             Self::Analytics => html! { <analytics::dashboard::Page /> },
+            Self::PositionSize => html! { <trading::position_size::Page /> },
         }
     }
 }

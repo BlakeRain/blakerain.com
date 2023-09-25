@@ -6,7 +6,13 @@ use yew::{function_component, html, use_memo, Children, ContextProvider, Html, P
 macros::tags!("content/tags.yaml");
 
 pub mod blog;
+pub mod currency;
 pub mod pages;
+
+pub mod trading {
+    pub mod account;
+    pub mod position;
+}
 
 #[derive(Properties, PartialEq)]
 pub struct ProvideTagsProps {
