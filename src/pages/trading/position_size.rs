@@ -17,6 +17,8 @@ use crate::{
             number::{format_number, Number},
             toggle::Toggle,
         },
+        seo::WebPageSeo,
+        title::Title,
     },
     model::{
         currency::{get_exchange_rates, Currency},
@@ -28,6 +30,7 @@ use crate::{
             },
         },
     },
+    pages::Route,
 };
 
 type AccountHandle = UseReducerHandle<Account>;
@@ -1341,23 +1344,32 @@ fn position_provider(props: &PositionProviderProps) -> Html {
 #[function_component(Page)]
 pub fn page() -> Html {
     html! {
-        <AccountProvider>
-            <PositionProvider>
-                <ClientOnly>
-                    <div class="container mx-auto my-8">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <AccountInfo />
-                            <PositionInfo />
+        <>
+            <Title title={"Position Size Calculator"} />
+            <WebPageSeo
+                route={Route::PositionSize}
+                title={"Position Size Calculator"}
+                excerpt={Some("A tool to help you calculate the size of a position given account risk limits")}
+                index={true}
+                follow={true} />
+            <AccountProvider>
+                <PositionProvider>
+                    <ClientOnly>
+                        <div class="container mx-auto my-8">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <AccountInfo />
+                                <PositionInfo />
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                                <ReportPositionSize />
+                                <ReportStopLoss />
+                                <ReportTakeProfit />
+                                <ReportPlannedStopLoss />
+                            </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-                            <ReportPositionSize />
-                            <ReportStopLoss />
-                            <ReportTakeProfit />
-                            <ReportPlannedStopLoss />
-                        </div>
-                    </div>
-                </ClientOnly>
-            </PositionProvider>
-        </AccountProvider>
+                    </ClientOnly>
+                </PositionProvider>
+            </AccountProvider>
+        </>
     }
 }
