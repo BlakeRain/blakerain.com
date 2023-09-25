@@ -5,8 +5,10 @@ edition = "2021"
 publish = false
 
 [profile.release]
-lto = true
+panic = "abort"
+codegen-units = 1
 opt-level = 'z'
+lto = true
 
 [features]
 hydration = [
