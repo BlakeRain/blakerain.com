@@ -2,6 +2,7 @@
 
 :root {
   --toggle-size: 2rem;
+  --primary-color: #13304e;
 }
 
 @layer components {
@@ -11,13 +12,21 @@
   }
 
   .button {
-    @apply inline-flex items-center justify-center border border-transparent;
+    @apply inline-flex items-center justify-center;
+    @apply border border-transparent rounded-md;
+
     @apply px-4 py-2;
-    @apply rounded-md shadow-sm text-sm text-gray-300 bg-primary;
-    @apply disabled:bg-slate-300 dark:disabled:bg-gray-600 dark:disabled:text-gray-400;
-    @apply hover:text-white dark:disabled:hover:text-gray-400;
-    @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 focus:ring-slate-400;
-    @apply transition-colors;
+    @apply text-sm;
+
+    @apply text-neutral-200 hover:text-neutral-100;
+    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+
+    @apply bg-primary;
+    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
+    @apply active:bg-primary-light;
+
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply transition;
 
     > svg {
       @apply mr-1;
@@ -33,16 +42,17 @@
   input[type="number"],
   input[type="password"] {
     @apply border-primary rounded-md;
-    @apply text-neutral-800 placeholder:text-neutral-300;
-    @apply dark:bg-zinc-800 dark:text-neutral-200 dark:placeholder:text-neutral-700;
-    @apply disabled:bg-gray-200 dark:disabled:bg-zinc-900 dark:disabled:text-neutral-500;
-    @apply focus:outline-none focus:ring focus:ring-offset-2 focus:ring-opacity-50 focus:ring-slate-400;
-    @apply transition;
+    @apply disabled:border-transparent;
 
-    &:disabled {
-      @apply text-neutral-500 dark:text-neutral-500;
-      @apply dark:bg-zinc-900;
-    }
+    @apply text-neutral-800 placeholder:text-neutral-300;
+    @apply dark:text-neutral-200 placeholder:text-neutral-500;
+    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+
+    @apply bg-white dark:bg-zinc-800;
+    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
+
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply transition;
   }
 
   .input-icons {
@@ -116,6 +126,57 @@
       box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 
       transition: right 0.125s ease-in-out;
+    }
+  }
+
+  .tooltip {
+    @apply absolute z-10 w-max max-w-xs min-h-fit p-4;
+    @apply text-sm text-center text-neutral-50 whitespace-pre-wrap;
+    @apply bg-primary border border-primary rounded-md shadow-md;
+
+    &:after {
+      @apply absolute w-0 h-0;
+      content: "";
+    }
+
+    &.top {
+      @apply bottom-full left-1/2 -translate-x-1/2 mb-4;
+      &:after {
+        @apply top-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-top: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.bottom {
+      @apply top-full left-1/2 -translate-x-1/2 mt-4;
+      &:after {
+        @apply bottom-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-bottom: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.left {
+      @apply -top-3 right-full mr-4;
+      &:after {
+        @apply top-1.5 left-full mr-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-left: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.right {
+      @apply -top-3 left-full ml-4;
+      &:after {
+        @apply top-1.5 right-full ml-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-right: 1rem solid var(--primary-color);
+      }
     }
   }
 
