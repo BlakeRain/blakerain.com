@@ -40,11 +40,11 @@ impl PageViewsQuery for PageViewsDay {
 
     fn add_conditions(cond: &mut Separated<sqlx::Postgres, &str>, (year, month, day): &Self::Args) {
         cond.push("year = ");
-        cond.push_bind_unseparated(*year);
+        cond.push_bind(*year);
         cond.push("month = ");
-        cond.push_bind_unseparated(*month);
+        cond.push_bind(*month);
         cond.push("day = ");
-        cond.push_bind_unseparated(*day);
+        cond.push_bind(*day);
     }
 }
 
@@ -61,9 +61,9 @@ impl PageViewsQuery for PageViewsWeek {
 
     fn add_conditions(cond: &mut Separated<sqlx::Postgres, &str>, (year, week): &Self::Args) {
         cond.push("year = ");
-        cond.push_bind_unseparated(*year);
+        cond.push_bind(*year);
         cond.push("week = ");
-        cond.push_bind_unseparated(*week);
+        cond.push_bind(*week);
     }
 }
 
@@ -80,9 +80,9 @@ impl PageViewsQuery for PageViewsMonth {
 
     fn add_conditions(cond: &mut Separated<sqlx::Postgres, &str>, (year, month): &Self::Args) {
         cond.push("year = ");
-        cond.push_bind_unseparated(*year);
+        cond.push_bind(*year);
         cond.push("month = ");
-        cond.push_bind_unseparated(*month);
+        cond.push_bind(*month);
     }
 }
 
@@ -96,8 +96,8 @@ where
 
     {
         let mut cond = query.separated(" AND ");
-        cond.push_unseparated("path = ");
-        cond.push_bind_unseparated(path);
+        cond.push("path =");
+        cond.push_bind(path);
         T::add_conditions(&mut cond, args);
     }
 
