@@ -29,7 +29,9 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
         let content = std::fs::read(entry.path())?;
 
         let (Some(front_matter), matter) = parse_front_matter(&content[..])? else {
-            return Err(Error::MissingFrontMatter(entry.path().to_string_lossy().to_string()))
+            return Err(Error::MissingFrontMatter(
+                entry.path().to_string_lossy().to_string(),
+            ));
         };
 
         let slug = entry
@@ -60,13 +62,22 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
 
 #[derive(Default)]
 struct Generator {
+    directory: String,
     enumerators: proc_macro2::TokenStream,
     display: proc_macro2::TokenStream,
     from_str: proc_macro2::TokenStream,
     detail_funcs: proc_macro2::TokenStream,
     detail_names: Vec<Ident>,
-    render_funcs: proc_macro2::TokenStream,
-    render_matches: proc_macro2::TokenStream,
+    detail_matches: proc_macro2::TokenStream,
+}
+
+impl Generator {
+    fn new(dircetory: &str) -> Self {
+        Self {
+            directory: dircetory.to_string(),
+            ..Default::default()
+        }
+    }
 }
 
 fn generate_document(generator: &mut Generator, document: Document<String>) -> Result<(), Error> {
@@ -138,22 +149,27 @@ fn generate_document(generator: &mut Generator, document: Document<String>) -> R
         }
     });
 
-    let render_ident =
-        parse_str::<Ident>(&format!("render_{ident}")).expect("document render identifier");
+    generator.detail_matches.append_all(quote! {
+        DocId::#constr => #details_ident(),
+    });
 
     let html = markdown::render(&document.content);
     let html = encode_nodes(html);
-    let html = proc_macro2::Literal::byte_string(&html);
 
-    generator.render_funcs.append_all(quote! {
-        fn #render_ident() -> Vec<RenderNode> {
-            decode_nodes(#html)
-        }
-    });
+    let mut dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    dir.pop();
+    dir.push("target");
+    dir.push(&generator.directory);
+    if !dir.exists() {
+        std::fs::create_dir_all(&dir)?;
+    }
 
-    generator.render_matches.append_all(quote! {
-        DocId::#constr => Some((#details_ident(), #render_ident())),
-    });
+    dir.push(PathBuf::from(&slug).with_extension("bin"));
+
+    {
+        eprintln!("Writing: {}", dir.display());
+        std::fs::write(dir, html)?;
+    }
 
     Ok(())
 }
@@ -177,11 +193,11 @@ pub fn generate(input: DocumentsInput) -> Result<TokenStream, Error> {
         from_str,
         detail_funcs,
         detail_names,
-        render_funcs,
-        render_matches,
+        detail_matches,
+        ..
     } = {
-        let mut generator = Generator::default();
-        for document in load_documents(&input.directory.value())? {
+        let mut generator = Generator::new(&input.directory.value());
+        for document in load_documents(&generator.directory)? {
             generate_document(&mut generator, document)?;
         }
 
@@ -221,12 +237,9 @@ pub fn generate(input: DocumentsInput) -> Result<TokenStream, Error> {
             vec![ #(#detail_names()),* ]
         }
 
-        #render_funcs
-
-        pub fn render(ident: DocId) -> Option<(Details<DocId>, Vec<RenderNode>)> {
-            match ident {
-                #render_matches
-                _ => None
+        pub fn details(doc: DocId) -> Details<DocId> {
+            match doc {
+                #detail_matches
             }
         }
     }))

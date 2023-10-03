@@ -2,18 +2,13 @@ use yew::{function_component, html, Html};
 
 use crate::{
     components::{content::PostContent, seo::WebPageSeo, title::Title},
-    model::{
-        pages::{render, DocId},
-        ProvideTags,
-    },
+    model::{pages::DocId, ProvideDoc, ProvideTags},
     pages::Route,
 };
 
 #[function_component(Page)]
 pub fn page() -> Html {
-    let Some((details, content)) = render(DocId::Disclaimer) else {
-        panic!("Could not find disclaimer page");
-    };
+    let details = crate::model::pages::details(DocId::Disclaimer);
 
     html! {
         <ProvideTags>
@@ -24,7 +19,9 @@ pub fn page() -> Html {
                 excerpt={details.summary.excerpt.clone()}
                 index={false}
                 follow={false} />
-            <PostContent<DocId> details={details} content={content} />
+            <ProvideDoc dir={"pages"} slug={DocId::Disclaimer.to_string()}>
+                <PostContent<DocId> details={details} />
+            </ProvideDoc>
         </ProvideTags>
     }
 }

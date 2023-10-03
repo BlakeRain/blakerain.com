@@ -2,18 +2,13 @@ use yew::{function_component, html, Html};
 
 use crate::{
     components::{content::PostContent, seo::WebPageSeo, title::Title},
-    model::{
-        pages::{render, DocId},
-        ProvideTags,
-    },
+    model::{pages::DocId, ProvideDoc, ProvideTags},
     pages::Route,
 };
 
 #[function_component(Page)]
 pub fn page() -> Html {
-    let Some((details, content)) = render(DocId::About) else {
-        panic!("Could not find about page");
-    };
+    let details = crate::model::pages::details(DocId::About);
 
     html! {
         <ProvideTags>
@@ -24,7 +19,9 @@ pub fn page() -> Html {
                 excerpt={details.summary.excerpt.clone()}
                 index={true}
                 follow={true} />
-            <PostContent<DocId> details={details.clone()} content={content} />
+            <ProvideDoc dir={"pages"} slug={DocId::About.to_string()}>
+                <PostContent<DocId> details={details.clone()}  />
+            </ProvideDoc>
         </ProvideTags>
     }
 }

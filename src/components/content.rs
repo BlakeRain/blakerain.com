@@ -9,12 +9,12 @@ use crate::{
 #[derive(Properties, PartialEq)]
 pub struct PostContentProps<S: PartialEq> {
     pub details: Details<S>,
-    pub content: Vec<RenderNode>,
 }
 
 #[function_component(PostContent)]
 pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
     let tags = use_context::<TagsContext>().expect("TagsContext to be provided");
+    let content = use_context::<Vec<RenderNode>>().expect("Vec<RenderNode> to be provided");
     let style = if let Some(cover_image) = &props.details.cover_image {
         format!(
             "background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url({})",
@@ -81,7 +81,7 @@ pub fn post_content<S: PartialEq>(props: &PostContentProps<S>) -> Html {
             </header>
             <div class="container mx-auto mt-6 lg:mt-12 mb-20 px-2 sm:px-16 print:px-0 print:max-w-full markdown numbered-headings">
                 {
-                    props.content.iter().map(|node| html! {
+                    content.iter().map(|node| html! {
                         <Render node={node.clone()} />
                     })
                     .collect::<Html>()
