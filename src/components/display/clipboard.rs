@@ -1,4 +1,4 @@
-use yew::{function_component, html, use_effect_with_deps, use_state, Callback, Html, Properties};
+use yew::{function_component, html, use_effect_with, use_state, Callback, Html, Properties};
 use yew_hooks::use_clipboard;
 use yew_icons::{Icon, IconId};
 
@@ -26,12 +26,9 @@ pub fn copy_to_clipboard(props: &CopyToClipboardProps) -> Html {
 
     {
         let copied = copied.clone();
-        use_effect_with_deps(
-            move |_| {
-                copied.set(false);
-            },
-            props.value.clone(),
-        );
+        use_effect_with(props.value.clone(), move |_| {
+            copied.set(false);
+        });
     }
 
     html! {

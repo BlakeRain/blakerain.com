@@ -1,5 +1,5 @@
 use yew::{
-    function_component, html, use_effect_with_deps, use_reducer, Children, ContextProvider, Html,
+    function_component, html, use_effect_with, use_reducer, Children, ContextProvider, Html,
     Properties,
 };
 use yew_hooks::{use_async_with_options, use_interval, UseAsyncHandle, UseAsyncOptions};
@@ -68,15 +68,12 @@ pub fn with_auth(props: &WithAuthProps) -> Html {
         let state = state.clone();
         let submission = submission.clone();
 
-        use_effect_with_deps(
-            move |_| {
-                if let AuthState::Empty = *state {
-                    state.dispatch(AuthStateAction::LoadStoredToken);
-                    submission.run();
-                }
-            },
-            (*deps_state).clone(),
-        );
+        use_effect_with((*deps_state).clone(), move |_| {
+            if let AuthState::Empty = *state {
+                state.dispatch(AuthStateAction::LoadStoredToken);
+                submission.run();
+            }
+        });
     }
 
     // Every five minutes: refresh and revalidate the token.

@@ -1,7 +1,7 @@
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 use web_sys::FocusEvent;
 use yew::{
-    classes, function_component, html, use_effect_with_deps, use_node_ref, use_state, AttrValue,
+    classes, function_component, html, use_effect_with, use_node_ref, use_state, AttrValue,
     Callback, Classes, Html, Properties, TargetCast,
 };
 use yew_hooks::use_timeout;
@@ -21,16 +21,23 @@ extern "C" {
 
 #[derive(Properties, PartialEq)]
 pub struct NumberProps {
+    #[prop_or_default]
     pub icon_left: Option<IconId>,
+    #[prop_or_default]
     pub icon_right: Option<IconId>,
 
+    #[prop_or_default]
     pub icon_left_class: Option<Classes>,
+    #[prop_or_default]
     pub icon_right_class: Option<Classes>,
 
     #[prop_or_default]
     pub class: Classes,
+    #[prop_or_default]
     pub id: Option<AttrValue>,
+    #[prop_or_default]
     pub name: Option<AttrValue>,
+    #[prop_or_default]
     pub placeholder: Option<AttrValue>,
 
     #[prop_or_default]
@@ -42,12 +49,18 @@ pub struct NumberProps {
     pub thousands: bool,
     #[prop_or_default]
     pub places: usize,
+    #[prop_or_default]
     pub prefix: Option<AttrValue>,
+    #[prop_or_default]
     pub suffix: Option<AttrValue>,
 
+    #[prop_or_default]
     pub onfocus: Option<Callback<FocusEvent>>,
+    #[prop_or_default]
     pub onblur: Option<Callback<FocusEvent>>,
+    #[prop_or_default]
     pub onchange: Option<Callback<Option<f64>>>,
+    #[prop_or_default]
     pub oninput: Option<Callback<Option<f64>>>,
 }
 
@@ -107,17 +120,14 @@ pub fn number(props: &NumberProps) -> Html {
     {
         let input_value = input_value.clone();
         let focused = focused.clone();
-        use_effect_with_deps(
-            move |(value, places)| {
-                if !*focused {
-                    input_value.set(
-                        format_number(*value, false, *places, None, None)
-                            .expect("format_number to work"),
-                    );
-                }
-            },
-            (value, props.places),
-        );
+        use_effect_with((value, props.places), move |(value, places)| {
+            if !*focused {
+                input_value.set(
+                    format_number(*value, false, *places, None, None)
+                        .expect("format_number to work"),
+                );
+            }
+        });
     }
 
     let timeout = {

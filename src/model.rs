@@ -24,7 +24,7 @@ pub type TagsContext = Rc<HashMap<String, Tag>>;
 
 #[function_component(ProvideTags)]
 pub fn provide_tags(props: &ProvideTagsProps) -> Html {
-    let tags = use_memo(|_| tags(), 0);
+    let tags = use_memo(0, |_| tags());
 
     html! {
         <ContextProvider<TagsContext> context={tags}>
@@ -43,7 +43,7 @@ pub type BlogDetailsContext = Rc<Vec<Details<blog::DocId>>>;
 
 #[function_component(ProvideBlogDetails)]
 pub fn provide_blog_details(props: &ProvideBlogDetailsProps) -> Html {
-    let details = use_memo(|_| blog::documents(), 0);
+    let details = use_memo(0, |_| blog::documents());
 
     html! {
         <ContextProvider<BlogDetailsContext> context={details}>

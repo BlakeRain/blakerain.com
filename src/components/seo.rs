@@ -34,6 +34,7 @@ pub struct WebPageSeoProps {
 #[function_component(WebPageSeo)]
 pub fn web_page_seo(props: &WebPageSeoProps) -> Html {
     let json = use_memo(
+        (props.title.clone(), props.excerpt.clone()),
         |(title, excerpt)| {
             serde_json::json!({
               "@context": "https://schema.org",
@@ -47,7 +48,6 @@ pub fn web_page_seo(props: &WebPageSeoProps) -> Html {
             })
             .to_string()
         },
-        (props.title.clone(), props.excerpt.clone()),
     );
 
     let url = format!("https://blakerain.com{}", props.route.to_path());
@@ -113,6 +113,14 @@ pub fn blog_post_seo(props: &BlogPostSeoProps) -> Html {
         .map(|time| time.format(&Rfc3339).expect("time format"));
 
     let json = use_memo(
+        (
+            props.title.clone(),
+            props.excerpt.clone(),
+            image.clone(),
+            url.clone(),
+            published.clone(),
+            tags.clone(),
+        ),
         |(title, excerpt, image, url, published, tags)| {
             serde_json::json!({
               "@context": "https://schema.org",
@@ -156,14 +164,6 @@ pub fn blog_post_seo(props: &BlogPostSeoProps) -> Html {
             })
             .to_string()
         },
-        (
-            props.title.clone(),
-            props.excerpt.clone(),
-            image.clone(),
-            url.clone(),
-            published.clone(),
-            tags.clone(),
-        ),
     );
 
     html! {

@@ -1,6 +1,6 @@
 use web_sys::HtmlSelectElement;
 use yew::{
-    classes, function_component, html, use_context, use_effect_with_deps, use_reducer, AttrValue,
+    classes, function_component, html, use_context, use_effect_with, use_reducer, AttrValue,
     Callback, Children, Classes, ContextProvider, Html, Properties, TargetCast, UseReducerHandle,
 };
 use yew_hooks::{use_async, UseAsyncHandle};
@@ -1014,7 +1014,7 @@ fn report_planned_stop_loss() -> Html {
     let position = use_context::<PositionHandle>().expect("PositionHandle");
 
     let Some(_) = position.stop_loss else {
-        return html! {}
+        return html! {};
     };
 
     let qc = position.quote_currency.symbol();
@@ -1159,7 +1159,7 @@ fn report_take_profit() -> Html {
     let position = use_context::<PositionHandle>().expect("PositionHandle");
 
     let Some(tp) = position.take_profit else {
-        return html! {}
+        return html! {};
     };
 
     let pc = position.position_currency.symbol();
@@ -1284,13 +1284,10 @@ fn account_provider(props: &AccountProviderProps) -> Html {
 
     {
         let account_inner = account.clone();
-        use_effect_with_deps(
-            move |_| {
-                account_inner.dispatch(AccountAction::Load);
-                get_exchange_rates.run();
-            },
-            account.currency,
-        );
+        use_effect_with(account.currency, move |_| {
+            account_inner.dispatch(AccountAction::Load);
+            get_exchange_rates.run();
+        });
     }
 
     html! {
@@ -1327,11 +1324,11 @@ fn position_provider(props: &PositionProviderProps) -> Html {
         })
     };
 
-    use_effect_with_deps(
+    use_effect_with(
+        (position.position_currency, position.quote_currency),
         move |_| {
             get_exchange_rates.run();
         },
-        (position.position_currency, position.quote_currency),
     );
 
     html! {

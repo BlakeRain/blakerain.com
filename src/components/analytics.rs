@@ -1,4 +1,4 @@
-use yew::{function_component, html, use_effect_with_deps, use_reducer, Event, Html};
+use yew::{function_component, html, use_effect_with, use_reducer, Event, Html};
 use yew_hooks::{
     use_async, use_async_with_options, use_event_with_window, UseAsyncHandle, UseAsyncOptions,
 };
@@ -75,13 +75,10 @@ pub fn analytics() -> Html {
 
     {
         let send_beacon = send_beacon.clone();
-        use_effect_with_deps(
-            move |_| {
-                send_beacon.run();
-                send_analytics.run();
-            },
-            location.map(|loc| loc.path().to_string()),
-        )
+        use_effect_with(location.map(|loc| loc.path().to_string()), move |_| {
+            send_beacon.run();
+            send_analytics.run();
+        })
     }
 
     {
