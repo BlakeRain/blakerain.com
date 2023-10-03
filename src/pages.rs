@@ -39,8 +39,9 @@ pub enum Route {
 }
 
 impl Route {
+    /// Should the route be included in the sitemap.
     pub fn should_index(&self) -> bool {
-        !matches!(self, Self::Disclaimer)
+        !matches!(self, Self::Disclaimer | Self::Analytics | Self::NotFound)
     }
 
     pub fn switch(self) -> Html {
