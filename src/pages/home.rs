@@ -1,5 +1,4 @@
 use yew::{function_component, html, Html};
-use yew_router::prelude::Link;
 
 use crate::{
     components::{blog::post_card_list::PostCardList, seo::WebPageSeo, title::Title},
