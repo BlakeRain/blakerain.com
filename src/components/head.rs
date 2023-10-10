@@ -62,11 +62,13 @@ pub fn head(props: &HeadProps) -> Html {
         })
     }
 
-    if let Some(head) = &*head {
+    let portal = if let Some(head) = &*head {
         create_portal(html! { <>{props.children.clone()}</> }, head.clone().into())
     } else {
         html! {}
-    }
+    };
+
+    html! { <div>{portal}</div> }
 }
 
 #[derive(Default)]
