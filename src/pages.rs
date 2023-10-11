@@ -9,10 +9,6 @@ mod disclaimer;
 mod home;
 mod not_found;
 
-mod analytics {
-    pub mod dashboard;
-}
-
 mod trading {
     pub mod position_size;
 }
@@ -29,8 +25,6 @@ pub enum Route {
     BlogPost { doc_id: crate::model::blog::DocId },
     #[at("/disclaimer")]
     Disclaimer,
-    #[at("/analytics")]
-    Analytics,
     #[at("/trading/position-size")]
     PositionSize,
     #[not_found]
@@ -41,7 +35,7 @@ pub enum Route {
 impl Route {
     /// Should the route be included in the sitemap.
     pub fn should_index(&self) -> bool {
-        !matches!(self, Self::Disclaimer | Self::Analytics | Self::NotFound)
+        !matches!(self, Self::Disclaimer | Self::NotFound)
     }
 
     pub fn switch(self) -> Html {
@@ -52,7 +46,6 @@ impl Route {
             Self::BlogPost { doc_id } => html! { <blog_post::Page {doc_id} /> },
             Self::Disclaimer => html! { <disclaimer::Page /> },
             Self::NotFound => html! { <not_found::Page /> },
-            Self::Analytics => html! { <analytics::dashboard::Page /> },
             Self::PositionSize => html! { <trading::position_size::Page /> },
         }
     }

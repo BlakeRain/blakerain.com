@@ -68,9 +68,13 @@ pub fn footer(_: &FooterProps) -> Html {
                         <Link<Route> classes="hover:text-neutral-50" to={Route::PositionSize}>
                             {"Position Size Calculator"}
                         </Link<Route>>
-                        <Link<Route> classes="hover:text-neutral-50" to={Route::Analytics}>
+                        <a href="https://pa.blakerain.com/"
+                            class="hover:text-neutral-50"
+                            title="Plausible Analytics"
+                            target="_blank"
+                            rel="noreferrer">
                             {"Analytics"}
-                        </Link<Route>>
+                        </a>
                     </div>
                     <SizeIndicator />
                 </div>

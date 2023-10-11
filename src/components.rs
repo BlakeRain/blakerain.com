@@ -1,4 +1,3 @@
-pub mod analytics;
 pub mod content;
 pub mod head;
 pub mod layout;
