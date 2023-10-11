@@ -209,10 +209,20 @@ fn dashboard_content() -> Html {
                                         <td class="right">{ path.count.to_string() }</td>
                                         <td class="right">{ path.beacons.to_string() }</td>
                                         <td class="right">
-                                            { format!("{:.0} s", path.avg_duration) }
+                                            if path.beacons != 0 {
+                                                { format!(
+                                                    "{:.0} s",
+                                                    path.total_duration / path.beacons as f64
+                                                ) }
+                                            }
                                         </td>
                                         <td class="right">
-                                            { format!("{:.0}%", path.avg_scroll) }
+                                            if path.beacons != 0 {
+                                                { format!(
+                                                    "{:.0}%",
+                                                    path.total_scroll / path.beacons as f64
+                                                ) }
+                                            }
                                         </td>
                                     </tr>
                                 })}
@@ -225,10 +235,20 @@ fn dashboard_content() -> Html {
                                         { month_result.site.beacons.to_string() }
                                     </td>
                                     <td class="font-bold right">
-                                        { format!("{:.0} s", month_result.site.avg_duration) }
+                                        if month_result.site.beacons != 0 {
+                                            { format!(
+                                                "{:.0} s",
+                                                month_result.site.total_duration / month_result.site.beacons as f64
+                                            ) }
+                                        }
                                     </td>
                                     <td class="font-bold right">
-                                        { format!("{:.0}%", month_result.site.avg_scroll) }
+                                        if month_result.site.beacons != 0 {
+                                            { format!(
+                                                "{:.0}%",
+                                                month_result.site.total_scroll / month_result.site.beacons as f64
+                                            ) }
+                                        }
                                     </td>
                                 </tr>
                             </tbody>

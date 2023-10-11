@@ -34,8 +34,8 @@ pub struct PageViewsPathCount {
     pub path: String,
     pub count: i64,
     pub beacons: i64,
-    pub avg_duration: f64,
-    pub avg_scroll: f64,
+    pub total_duration: f64,
+    pub total_scroll: f64,
 }
 
 #[derive(Debug, Clone, Default, Deserialize)]

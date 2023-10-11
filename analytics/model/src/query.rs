@@ -8,8 +8,8 @@ pub struct PageViewsPathCount {
     pub path: String,
     pub count: i64,
     pub beacons: i64,
-    pub avg_duration: f64,
-    pub avg_scroll: f64,
+    pub total_duration: f64,
+    pub total_scroll: f64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -116,10 +116,10 @@ where
 {
     let mut query = QueryBuilder::new("SELECT ");
     query.push("path, ");
-    query.push("SUM(count) as count, ");
-    query.push("SUM(total_beacon) as beacons, ");
-    query.push("SUM(total_duration) / SUM(total_beacon) as avg_duration, ");
-    query.push("SUM(total_scroll) / SUM(total_beacon) as avg_scroll FROM ");
+    query.push("SUM(count) AS count, ");
+    query.push("SUM(total_beacon) AS beacons, ");
+    query.push("SUM(total_duration) AS total_duration, ");
+    query.push("SUM(total_scroll) AS total_scroll FROM ");
     query.push(T::table_name());
     query.push(" WHERE ");
 
