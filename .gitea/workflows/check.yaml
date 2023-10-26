@@ -43,7 +43,7 @@ jobs:
           version: "latest"
 
       - name: Build Hydrating Application
-        run: trunk build --debug --features hydration
+        run: trunk build --features hydration
 
       - name: Perform Site Generation
-        run: cargo run --debug --features static --bin site-build
+        run: cargo run --features static --bin site-build
