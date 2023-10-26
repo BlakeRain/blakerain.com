@@ -1,21 +1,20 @@
-use time::OffsetDateTime;
 use yew::{function_component, html, Html, Properties};
 use yew_router::prelude::Link;
 
-use crate::pages::Route;
+use crate::{pages::Route, BUILD_TIME};
 
 #[derive(Properties, PartialEq)]
 pub struct FooterProps {}
 
 #[function_component(Footer)]
 pub fn footer(_: &FooterProps) -> Html {
-    let year = OffsetDateTime::now_utc().year();
+    let year = BUILD_TIME.year();
 
     html! {
         <footer class="print:hidden bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem]">
             <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
                 <div>
-                    {format!("Blake Rain © {year}")}
+                    <div>{format!("Copyright © {year} Blake Rain")}</div>
                     <div class="invisible md:visible">
                         {"Powered by "}
                         <a href="https://yew.rs"
@@ -42,6 +41,17 @@ pub fn footer(_: &FooterProps) -> Html {
                            {"WebAssembly"}
                         </a>
                     </div>
+                    <div>
+                        {format!("Built from ")}
+                        <a href={format!("https://git.blakerain.com/BlakeRain/blakerain.com/src/tag/v{}", env!("CARGO_PKG_VERSION"))}
+                           class="hover:text-neutral-50"
+                           title="Git repository"
+                           target="_blank"
+                           rel="noreferrer">
+                           {format!("v{}", env!("CARGO_PKG_VERSION"))}
+                        </a>
+                        {format!(" on {}", BUILD_TIME.date())}
+                    </div>
                 </div>
                 <div class="flex flex-col gap-4 lg:gap-1 lg:items-end">
                     <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
@@ -51,12 +61,24 @@ pub fn footer(_: &FooterProps) -> Html {
                         <Link<Route> classes="hover:text-neutral-50" to={Route::Disclaimer}>
                             {"Disclaimer"}
                         </Link<Route>>
-                        <a href="https://github.com/BlakeRain"
+                        <Link<Route> classes="hover:text-neutral-50" to={Route::PositionSize}>
+                            {"Position Size Calculator"}
+                        </Link<Route>>
+                    </div>
+                    <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
+                        <a href="https:/git.blakerain.com/BlakeRain"
                             class="hover:text-neutral-50"
-                            title="GitHub"
+                            title="My gitea"
                             target="_blank"
                             rel="noreferrer">
-                            {"GitHub"}
+                            {"Gitea"}
+                        </a>
+                        <a href="https://github.com/BlakeRain"
+                            class="hover:text-neutral-50"
+                            title="My GitHub profile"
+                            target="_blank"
+                            rel="noreferrer">
+                            {"GitHub Profile"}
                         </a>
                         <a href="https://mastodonapp.uk/@BlakeRain"
                             class="hover:text-neutral-50"
@@ -65,15 +87,12 @@ pub fn footer(_: &FooterProps) -> Html {
                             rel="noreferrer">
                             {"Mastodon"}
                         </a>
-                        <Link<Route> classes="hover:text-neutral-50" to={Route::PositionSize}>
-                            {"Position Size Calculator"}
-                        </Link<Route>>
-                        <a href="https://pa.blakerain.com/"
+                        <a href="https://static.blakerain.com/"
                             class="hover:text-neutral-50"
-                            title="Plausible Analytics"
+                            title="Service status"
                             target="_blank"
                             rel="noreferrer">
-                            {"Analytics"}
+                            {"Status"}
                         </a>
                     </div>
                     <SizeIndicator />
