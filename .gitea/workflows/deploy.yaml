@@ -26,6 +26,7 @@ jobs:
           RUSTUP_PERMIT_COPY_RENAME:
         with:
           toolchain: stable
+          target: wasm32-unknown-unknown
           cache: false
 
       - name: Install Trunk
