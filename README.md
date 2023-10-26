@@ -1,13 +1,11 @@
 # blakerain.com
 
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![AmazonDynamoDB](https://img.shields.io/badge/DynamoDB-4053D6?style=for-the-badge&logo=Amazon%20DynamoDB&logoColor=white)
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
-This repository contains the sources for my website: [blakerain.com]. The website is built using [Yew]. It also
-includes some analytics code that is written in Rust and runs in AWS. The website is stored in an [S3] bucket and served
-using the AWS [CloudFront] CDN. Deployment from this repository is performed by a GitHub workflow.
+This repository contains the sources for my website: [blakerain.com]. The website is built using
+[Yew]. The website is deployed to an [S3] bucket and served using the AWS [CloudFront] CDN.
+Deployment from this repository is performed by a [Gitea] workflow.
 
 ## Cargo Features
 
@@ -36,3 +34,4 @@ cargo run --release --features static --bin site-build
 [Yew]: https://yew.rs/
 [S3]: https://aws.amazon.com/s3/
 [CloudFront]: https://aws.amazon.com/cloudfront/
+[Gitea]: https://docs.gitea.com/usage/actions/overview
