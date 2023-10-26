@@ -27,12 +27,18 @@ impl Template {
 
         let Some(head_index) = content.find("<script id=\"head-ssg-after\"") else {
             eprintln!("error: Failed to find index of 'head-ssg-after' tag in 'dist/index.html'");
-            return Err(std::io::Error::new(std::io::ErrorKind::Other, "Malformed index.html"));
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Malformed index.html",
+            ));
         };
 
         let Some(body_index) = content.find("</body>") else {
             eprintln!("error: Failed to find index of '</body>' close tag in 'dist/index.html'");
-            return Err(std::io::Error::new(std::io::ErrorKind::Other, "Malformed index.html"));
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Malformed index.html",
+            ));
         };
 
         Ok(Self {
@@ -375,7 +381,7 @@ async fn generate_atom(env: &Env) -> std::io::Result<()> {
                 );
 
             if let Some(published) = doc.summary.published {
-                let chrono_bullshit = chrono::DateTime::from_utc(
+                let chrono_bullshit = chrono::DateTime::from_naive_utc_and_offset(
                     chrono::naive::NaiveDateTime::from_timestamp_opt(published.unix_timestamp(), 0)
                         .expect("time to be simple"),
                     chrono::offset::FixedOffset::west_opt(0).expect("time to be simple"),
