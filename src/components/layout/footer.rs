@@ -13,34 +13,8 @@ pub fn footer(_: &FooterProps) -> Html {
     html! {
         <footer class="print:hidden bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem]">
             <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
-                <div>
+                <div class="flex flex-col gap-4 lg:gap-0">
                     <div>{format!("Copyright © {year} Blake Rain")}</div>
-                    <div class="invisible md:visible">
-                        {"Powered by "}
-                        <a href="https://yew.rs"
-                           class="hover:text-neutral-50"
-                           title="Yew Web Framework"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"Yew"}
-                        </a>
-                        {", "}
-                        <a href="https://www.rust-lang.org/"
-                           class="hover:text-neutral-50"
-                           title="Rust Programming Language"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"Rust"}
-                        </a>
-                        {", and "}
-                        <a href="https://webassembly.org/"
-                           class="hover:text-neutral-50"
-                           title="WebAssembly"
-                           target="_blank"
-                           rel="noreferrer">
-                           {"WebAssembly"}
-                        </a>
-                    </div>
                     <div>
                         {format!("Built from ")}
                         <a href={format!("https://git.blakerain.com/BlakeRain/blakerain.com/src/tag/v{}", env!("CARGO_PKG_VERSION"))}
@@ -53,7 +27,7 @@ pub fn footer(_: &FooterProps) -> Html {
                         {format!(" on {}", BUILD_TIME.date())}
                     </div>
                 </div>
-                <div class="flex flex-col gap-4 lg:gap-1 lg:items-end">
+                <div class="flex flex-col gap-4 lg:gap-0 lg:items-end">
                     <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
                         <Link<Route> classes="hover:text-neutral-50" to={Route::Blog}>
                             {"Latest Posts"}
