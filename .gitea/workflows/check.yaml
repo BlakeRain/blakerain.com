@@ -1,0 +1,52 @@
+name: check
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Rust Toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        env:
+          RUSTUP_PERMIT_COPY_RENAME:
+        with:
+          toolchain: stable
+          components: clippy
+          cache: false
+
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run 'cargo check'
+        uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+      - name: Run 'cargo clippy'
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
+      - name: Install Trunk
+        uses: jetli/trunk-action@v0.4.0
+        with:
+          version: "latest"
+
+      - name: Build Hydrating Application
+        run: trunk build --debug --features hydration
+
+      - name: Perform Site Generation
+        run: cargo run --debug --features static --bin site-build
