@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install node dependencies
+        run: |
+          yarn install
+
       - name: Install rust toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         env:
