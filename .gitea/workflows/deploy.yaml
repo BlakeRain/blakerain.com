@@ -71,12 +71,3 @@ jobs:
           null
           text
           EOF
-
-      # - name: Create CloudFront Invalidation
-      #   uses: awact/cloudfront-action@master
-      #   env:
-      #     SOURCE_PATH: "/*"
-      #     AWS_REGION: "eu-west-1"
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     DISTRIBUTION_ID: ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
