@@ -52,14 +52,6 @@ jobs:
         with:
           version: "latest"
 
-      - name: Build hydrating application
-        run: |
-          mkdir dist
-          trunk build --features hydration
-
-      - name: Perform site generation
-        run: cargo run --features static --bin site-build
-
       - name: Install static file server
         run: |
           wget https://github.com/static-web-server/static-web-server/releases/download/v2.23.0/static-web-server-v2.23.0-x86_64-unknown-linux-musl.tar.gz -O target/static-web-server.tar.gz
