@@ -54,7 +54,7 @@ jobs:
 
       - name: Build hydrating application
         run: |
-          mkdir dist target
+          mkdir dist
           trunk build --features hydration
 
       - name: Perform site generation

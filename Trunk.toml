@@ -4,7 +4,6 @@ ignore = [
   "cypress",
   "dist",
   "media",
-  "target",
   "tools"
 ]
 
