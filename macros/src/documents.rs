@@ -29,7 +29,9 @@ fn load_documents(directory: &str) -> Result<Vec<Document<String>>, Error> {
         let content = std::fs::read(entry.path())?;
 
         let (Some(front_matter), matter) = parse_front_matter(&content[..])? else {
-            return Err(Error::MissingFrontMatter(entry.path().to_string_lossy().to_string()))
+            return Err(Error::MissingFrontMatter(
+                entry.path().to_string_lossy().to_string(),
+            ));
         };
 
         let slug = entry
