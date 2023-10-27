@@ -10,17 +10,17 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the Repository
+      - name: Checkout the repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: 20
 
-      - name: Install Rust Toolchain
+      - name: Install rust toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         env:
           RUSTUP_PERMIT_COPY_RENAME:
@@ -40,13 +40,29 @@ jobs:
         with:
           command: clippy
 
-      - name: Install Trunk
+      - name: Check formatting
+        run: |
+          cargo fmt --all -- --check
+
+      - name: Install trunk
         uses: jetli/trunk-action@v0.4.0
         with:
           version: "latest"
 
-      - name: Build Hydrating Application
+      - name: Build hydrating application
         run: trunk build --features hydration
 
-      - name: Perform Site Generation
+      - name: Perform site generation
         run: cargo run --features static --bin site-build
+
+      - name: Install static file server
+        run: |
+          wget https://github.com/static-web-server/static-web-server/releases/download/v2.23.0/static-web-server-v2.23.0-aarch64-unknown-linux-musl.tar.gz -O target/static-web-server.tar.gz
+          tar xfvz target/static-web-server.tar.gz -C target
+          cp target/static-web-server-v2.23.0-aarch64-unknown-linux-musl/static-web-server $HOME/.cargo/bin/static-web-server
+
+      - name: Run cypress tests (debug)
+        run: yarn run ci:debug
+
+      - name: Run cypress tests (release)
+        run: yarn run ci:release
