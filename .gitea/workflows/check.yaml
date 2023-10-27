@@ -62,9 +62,9 @@ jobs:
 
       - name: Install static file server
         run: |
-          wget https://github.com/static-web-server/static-web-server/releases/download/v2.23.0/static-web-server-v2.23.0-aarch64-unknown-linux-musl.tar.gz -O target/static-web-server.tar.gz
+          wget https://github.com/static-web-server/static-web-server/releases/download/v2.23.0/static-web-server-v2.23.0-x86_64-unknown-linux-musl.tar.gz -O target/static-web-server.tar.gz
           tar xfvz target/static-web-server.tar.gz -C target
-          cp target/static-web-server-v2.23.0-aarch64-unknown-linux-musl/static-web-server $HOME/.cargo/bin/static-web-server
+          cp target/static-web-server-v2.23.0-x86_64-unknown-linux-musl/static-web-server $HOME/.cargo/bin/static-web-server
 
       - name: Run cypress tests (debug)
         run: yarn run ci:debug
