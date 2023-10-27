@@ -1,7 +1,11 @@
 [watch]
 ignore = [
   "cf",
-  "media"
+  "cypress",
+  "dist",
+  "media",
+  "target",
+  "tools"
 ]
 
 [[hooks]]

@@ -1,7 +1,12 @@
 .DS_Store
+
 /dist
-/node_modules
 /output
 /target
+
+/node_modules
 Cargo.lock
 yarn.lock
+
+cypress/videos
+cypress/screenshots
