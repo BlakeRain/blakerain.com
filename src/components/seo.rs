@@ -96,7 +96,7 @@ pub struct BlogPostSeoProps {
 
 #[function_component(BlogPostSeo)]
 pub fn blog_post_seo(props: &BlogPostSeoProps) -> Html {
-    let tags = use_context::<TagsContext>().expect("TagsCOntext to be provided");
+    let tags = use_context::<TagsContext>().expect("TagsContext to be provided");
     let tags = props
         .tags
         .iter()

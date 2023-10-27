@@ -10,7 +10,7 @@ elif [[ "$TRUNK_PROFILE" = "release" ]]; then
   LABEL="Release"
   ENV="production"
 else
-  echo "Unrecognized 'TRUNK_PROFILE' value '$TRUN_PROFILE'; expected either 'debug' or 'release'"
+  echo "Unrecognized 'TRUNK_PROFILE' value '$TRUNK_PROFILE'; expected either 'debug' or 'release'"
   exit 1
 fi
   

@@ -105,7 +105,7 @@ provided in various crates available to Rust, including the [lambda-http] crate.
 finish most of the API code on one Sunday morning.
 
 Making the calls to DynamoDB in Rust was a very nice experience. The AWS client crate makes use of
-"builder" syntax, which works quite nicely. For example, to build a query for a particlar path and
+"builder" syntax, which works quite nicely. For example, to build a query for a particular path and
 section (the primary and sort keys for the analytics table) is quite easily comprehended, if
 somewhat verbose:
 
@@ -193,7 +193,7 @@ use case.
 
 # Conclusion
 
-I was pleasantly suprised at how well the process went. Apart from the somewhat slow start getting
+I was pleasantly surprised at how well the process went. Apart from the somewhat slow start getting
 Rust code compiled for AWS Lambda on ARM, once I had my bearings it was quite easy going.
 
 I am somewhat worried that the error handling is not as graceful as it should be. I'm somewhat

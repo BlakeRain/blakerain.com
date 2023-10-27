@@ -93,7 +93,7 @@ Now that we've read the entry from the page map we can first check to make sure 
 assert((phy & BIT(63)) != 0);
 ```
 
-Now we can compute the physical address. The value given in the lower 55 bits of `phy` is the page frame number. The physical memory is divided into contigous regions of the system page size, thus we can multiply the page frame number by the system page size to obtain the physical address.
+Now we can compute the physical address. The value given in the lower 55 bits of `phy` is the page frame number. The physical memory is divided into contiguous regions of the system page size, thus we can multiply the page frame number by the system page size to obtain the physical address.
 
 ```
 physical_address = PFN * page_size

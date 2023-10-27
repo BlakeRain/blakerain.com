@@ -1146,7 +1146,7 @@ fn report_planned_stop_loss() -> Html {
                 {margin}
             </Table>
             <p class="text-neutral-500 text-sm">
-                {"This pannel shows the maximum position size available, given "}
+                {"This panel shows the maximum position size available, given "}
                 {"the entered position stop loss and the account position risk."}
             </p>
         </Panel>

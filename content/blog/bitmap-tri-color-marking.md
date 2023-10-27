@@ -564,7 +564,7 @@ The smart pointer itself didn't know whether it was actually in the heap or on t
 
 When the GC found that a pointer resided within an actual block it would need to add the pointer to the remembered set. Moreover, it would also need to remove pointers from the remembered set when a pointer was destructed. To keep things consistent, access to the remembered set of each block was synchronized by a mutex...
 
-Well I'm sure I don't need to go into too much embarassing detail, but the result was that every thread spent a great deal of time contending for access to a handful of mutexes.
+Well I'm sure I don't need to go into too much embarrassing detail, but the result was that every thread spent a great deal of time contending for access to a handful of mutexes.
 
 This was a very poor concurrent design decision that I didn't realise until much later on in performance testing. I really should have known better.
 
@@ -576,7 +576,7 @@ You know, like nearly every other GC does.
 
 Because I was treating the tri-colour marking process as distinct from the allocator and mutator, the GC was constantly re-building white and grey bitmaps for every block, ever time it entered into a GC pass.
 
-A lot of the work of maintaining the intial white bitmap at least could have been done by the allocator.
+A lot of the work of maintaining the initial white bitmap at least could have been done by the allocator.
 
 The GC was also not incremental: there was no provision in the design for only doing a bit of the GC process.
 
@@ -596,4 +596,4 @@ The upshot of this is that objects which are retained beyond an initial one or t
 
 I think that the bitmap based marking is a nice approach to tri-color, as the marking process is quite efficient. It requires virtually no memory allocation beyond a few bitmaps, and those can be allocated along with the block and reused for each pass. The main bottleneck ended up being the promotion of white pointers.
 
-I may visit some of my other disasterous attempts to write a GC and some of the things I've learned along the way in subsequent posts. There are a few things that I think might be useful to document.
+I may visit some of my other disastrous attempts to write a GC and some of the things I've learned along the way in subsequent posts. There are a few things that I think might be useful to document.

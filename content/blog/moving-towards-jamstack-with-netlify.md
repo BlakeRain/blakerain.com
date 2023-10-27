@@ -57,7 +57,7 @@ I used the Ghost [Content API](https://ghost.org/docs/content-api/) to extract t
 
 # Deploying to Netlify
 
-Deploying the site to Netlify is as easy as using the [Netlify CLI](https://docs.netlify.com/cli/get-started/) on the command line after building the static site using React Static. All I required was a Netlify personal access token and the API ID of the site. Both of which can be easilly found in the Netlify interface.
+Deploying the site to Netlify is as easy as using the [Netlify CLI](https://docs.netlify.com/cli/get-started/) on the command line after building the static site using React Static. All I required was a Netlify personal access token and the API ID of the site. Both of which can be easily found in the Netlify interface.
 
 ```bash
 # Build the static site

@@ -83,7 +83,7 @@ Searching for occurrences from this node, the first leaf we reach is for the wor
 | Document 1 |     1 |
 | Document 2 |     6 |
 
-Building the results in this way allows us to quickly ascertain that words starting with the two letters `"be"` can be found in _Document 2_ primarily (there are six occurrences) and in _Document 1_, where we find one occurence.
+Building the results in this way allows us to quickly ascertain that words starting with the two letters `"be"` can be found in _Document 2_ primarily (there are six occurrences) and in _Document 1_, where we find one occurrence.
 
 # Generating the Search Data
 
@@ -110,7 +110,7 @@ After the documents we find the trie. Each node of the trie is encoded via a dep
 
 1. An unsigned 8-bit value representing the "key" of the trie node. This corresponds to a printable character.
 1. Two unsigned 16-bit values, giving: a. The number of occurrences recorded for the trie node, and b. The number of children of the node.
-1. Any encoded occurrences, encoded as two unsigned 16-bit values giving the ID of the post in which the term occurrs and the number of times the term occurrs in the document.
+1. Any encoded occurrences, encoded as two unsigned 16-bit values giving the ID of the post in which the term occurs and the number of times the term occurs in the document.
 1. The children of the node are recorded, recursively, using this structure.
 
 Once the search data has been built and the file has been generated, the GitHub action uploads the file to AWS S3. This file can be found at:

@@ -103,7 +103,7 @@ pub fn number(props: &NumberProps) -> Html {
     let input_value = {
         let places = props.places;
         use_state(move || {
-            format_number(value, false, places, None, None).expect("format_numbert to work")
+            format_number(value, false, places, None, None).expect("format_number to work")
         })
     };
 

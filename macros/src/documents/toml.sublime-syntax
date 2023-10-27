@@ -425,7 +425,7 @@ contexts:
         1: keyword.operator.rest.ts
         2: punctuation.definition.binding-pattern.array.ts
       push:
-        - meta_scope: meta.paramter.array-binding-pattern.ts
+        - meta_scope: meta.parameter.array-binding-pattern.ts
         - match: '\]'
           captures:
             0: punctuation.definition.binding-pattern.array.ts
@@ -1891,7 +1891,7 @@ contexts:
     - match: '(?=[\''\"\`])'
       push:
         - meta_scope: meta.object.member.ts meta.object-literal.key.ts
-        - match: '(?=:)|((?<=[\''\"\`])(?=((\s*[\(\<,}])|(\s+(as|satisifies)\s+))))'
+        - match: '(?=:)|((?<=[\''\"\`])(?=((\s*[\(\<,}])|(\s+(as|satisfies)\s+))))'
           pop: true
         - include: comment
         - include: string
@@ -1908,7 +1908,7 @@ contexts:
         )(?!\$)))
       push:
         - meta_scope: meta.object.member.ts meta.object-literal.key.ts
-        - match: '(?=:)|(?=\s*([\(\<,}])|(\s+as|satisifies\s+))'
+        - match: '(?=:)|(?=\s*([\(\<,}])|(\s+as|satisfies\s+))'
           pop: true
         - include: comment
         - include: numeric-literal
@@ -1982,7 +1982,7 @@ contexts:
         2: keyword.control.satisfies.ts
       push:
         - meta_scope: meta.object.member.ts
-        - match: '(?=[;),}\]:?\-\+\>]|\|\||\&\&|\!\=\=|$|^|((?<![_$[:alnum:]])(?:(?<=\.\.\.)|(?<!\.))(as|satisifies)\s+))'
+        - match: '(?=[;),}\]:?\-\+\>]|\|\||\&\&|\!\=\=|$|^|((?<![_$[:alnum:]])(?:(?<=\.\.\.)|(?<!\.))(as|satisfies)\s+))'
           pop: true
         - include: type
     - match: '(?=[_$[:alpha:]][_$[:alnum:]]*\s*=)'

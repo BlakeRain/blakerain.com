@@ -504,8 +504,8 @@ where
 
             Tag::CodeBlock(kind) => {
                 let (language, properties) = if let CodeBlockKind::Fenced(language) = &kind {
-                    let (language, properties) = parse_language_properties(&language)
-                        .expect("valid language and properties");
+                    let (language, properties) =
+                        parse_language_properties(language).expect("valid language and properties");
                     (
                         if language.is_empty() {
                             None
@@ -643,7 +643,9 @@ where
                 self.output(figure);
 
                 // If we ended up removing the <p>, then we want to reinstate it.
-                p.map(|p| self.enter(p));
+                if let Some(p) = p {
+                    self.enter(p)
+                }
             }
 
             Tag::FootnoteDefinition(name) => {
@@ -674,7 +676,7 @@ where
                 // inside paragraphs and we discard them.
 
                 let Some(top) = self.stack.pop() else {
-                    panic!("Stack undeflow");
+                    panic!("Stack underflow");
                 };
 
                 assert!(
