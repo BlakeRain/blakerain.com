@@ -4,7 +4,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "postcss-build": "postcss style/main.css -o target/main.css"
+    "postcss-build": "postcss style/main.css -o target/main.css",
+    "start-server": "trunk serve",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "ci": "start-server-and-test start-server http://localhost:8080 cy:run"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",
@@ -16,6 +20,7 @@
     "html-minifier": "^4.0.0",
     "postcss-cli": "^10.1.0",
     "postcss-import": "^15.1.0",
+    "start-server-and-test": "^2.0.1",
     "tailwindcss": "^3.3.2"
   },
   "volta": {
