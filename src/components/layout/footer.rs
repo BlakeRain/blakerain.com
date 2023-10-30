@@ -40,7 +40,7 @@ pub fn footer(_: &FooterProps) -> Html {
                         </Link<Route>>
                     </div>
                     <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
-                        <a href="https:/git.blakerain.com/BlakeRain"
+                        <a href="https://git.blakerain.com/BlakeRain"
                             class="hover:text-neutral-50"
                             title="My gitea"
                             target="_blank"
@@ -61,7 +61,7 @@ pub fn footer(_: &FooterProps) -> Html {
                             rel="noreferrer">
                             {"Mastodon"}
                         </a>
-                        <a href="https://static.blakerain.com/"
+                        <a href="https://status.blakerain.com/"
                             class="hover:text-neutral-50"
                             title="Service status"
                             target="_blank"
