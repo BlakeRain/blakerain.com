@@ -15,6 +15,10 @@ pub mod display {
     pub mod client_only;
     pub mod clipboard;
     pub mod tooltip;
+
+    pub mod icons {
+        pub mod gitea;
+    }
 }
 
 pub mod fields {

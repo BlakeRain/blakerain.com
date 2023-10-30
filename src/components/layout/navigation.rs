@@ -2,7 +2,7 @@ use yew::{classes, function_component, html, use_state_eq, AttrValue, Callback, 
 use yew_icons::{Icon, IconId};
 use yew_router::prelude::Link;
 
-use crate::pages::Route;
+use crate::{components::display::icons::gitea::GiteaIcon, pages::Route};
 
 fn navigation_link(target: Route, title: AttrValue) -> Html {
     html! {
@@ -54,6 +54,13 @@ pub fn navigation(_: &NavigationProps) -> Html {
                 </div>
                 <div class={classes!("hidden", "md:flex", "flex-row",
                                      "items-center", "gap-2", "ml-auto")}>
+                    <a href="https://git.blakerain.com/"
+                       class="text-neutral-200/75 hover:text-neutral-200"
+                       title="Gitea instance"
+                       target="_blank"
+                       rel="noreferrer">
+                        <GiteaIcon />
+                    </a>
                     <a href="https://github.com/BlakeRain"
                        class="text-neutral-200/75 hover:text-neutral-50"
                        title="GitHub"
