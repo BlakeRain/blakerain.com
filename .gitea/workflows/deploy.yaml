@@ -35,7 +35,7 @@ jobs:
           version: "latest"
 
       - name: Build Hydrating Application
-        run: trunk build --release --features hydration
+        run: trunk build --release --features hydration --minify
 
       - name: Perform Site Generation
         run: cargo run --release --features static --bin site-build
