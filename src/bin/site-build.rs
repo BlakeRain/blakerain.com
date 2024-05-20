@@ -3,6 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use atom_syndication::FixedDateTime;
 use site::{
     app::{StaticApp, StaticAppProps},
     components::head::{HeadContext, HeadRender, HeadRenderProps},
@@ -141,7 +142,7 @@ struct RenderRoute {
 
 fn collect_routes() -> Vec<RenderRoute> {
     enum_iterator::all::<Route>()
-        .filter_map(|route| {
+        .map(|route| {
             let path = route.to_path();
             let path = if path == "/" {
                 PathBuf::from("index.html")
@@ -149,7 +150,7 @@ fn collect_routes() -> Vec<RenderRoute> {
                 PathBuf::from(&path[1..]).with_extension("html")
             };
 
-            Some(RenderRoute { route, path })
+            RenderRoute { route, path }
         })
         .collect()
 }
@@ -381,11 +382,11 @@ async fn generate_atom(env: &Env) -> std::io::Result<()> {
                 );
 
             if let Some(published) = doc.summary.published {
-                let chrono_bullshit = chrono::DateTime::from_naive_utc_and_offset(
-                    chrono::naive::NaiveDateTime::from_timestamp_opt(published.unix_timestamp(), 0)
-                        .expect("time to be simple"),
-                    chrono::offset::FixedOffset::west_opt(0).expect("time to be simple"),
-                );
+                let chrono_bullshit = published
+                    .format(&Rfc3339)
+                    .expect("formatted time")
+                    .parse::<FixedDateTime>()
+                    .expect("time to be much easier than this");
                 entry.published(Some(chrono_bullshit));
             }
 
