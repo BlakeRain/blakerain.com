@@ -26,7 +26,7 @@ impl Template {
         println!("Loading template from: {:?}", path.as_ref());
         let content = tokio::fs::read_to_string(path).await?;
 
-        let Some(head_index) = content.find("<script id=\"head-ssg-after\"") else {
+        let Some(head_index) = content.find("<script id=head-ssg-after") else {
             eprintln!("error: Failed to find index of 'head-ssg-after' tag in 'dist/index.html'");
             return Err(std::io::Error::new(
                 std::io::ErrorKind::Other,
