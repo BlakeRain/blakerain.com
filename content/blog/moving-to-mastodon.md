@@ -71,14 +71,11 @@ One of the people I found was Hugh Rundle. Hugh has made some interesting points
 think is an important read to anybody moving to Mastodon from Twitter. Hugh tells an important part of the story that
 I'm not sure is being considered.
 
-```quote
-author: Hugh Rundle
-url: "https://www.hughrundle.net/home-invasion/"
-quote: |
-    There's another, smaller group of people mourning a social media experience that was destroyed this week — the people
-    who were active on Mastodon and the broader fediverse prior to November 2022. The nightclub has a new brash owner, and
-    the dancefloor has emptied. People are pouring in to the quiet houseparty around the corner, cocktails still in hand,
-    demanding that the music be turned up, walking mud into the carpet, and yelling over the top of the quiet conversation.
+```quote author="Hugh Rundle" url="https://www.hughrundle.net/home-invasion/"
+There's another, smaller group of people mourning a social media experience that was destroyed this week — the people
+who were active on Mastodon and the broader fediverse prior to November 2022. The nightclub has a new brash owner, and
+the dancefloor has emptied. People are pouring in to the quiet houseparty around the corner, cocktails still in hand,
+demanding that the music be turned up, walking mud into the carpet, and yelling over the top of the quiet conversation.
 ```
 
 I really hope that we can behave in a way that doesn't ruin the house party.
