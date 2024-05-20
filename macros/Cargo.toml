@@ -19,7 +19,7 @@ thiserror = { version = "1.0" }
 # Markdown content parsing
 gray_matter = { version = "0.2", default-features = false, features = ["yaml"] }
 nom = { version = "7.1" }
-pulldown-cmark = { version = "0.9" }
+pulldown-cmark = { version = "0.11" }
 syntect = { version = "5.1", features = ["default-themes", "default-syntaxes"] }
 words-count = { version = "0.1" }
 

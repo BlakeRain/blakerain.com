@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 use gray_matter::engine::Engine;
 use model::{
@@ -6,7 +6,7 @@ use model::{
     properties::Properties,
 };
 use pulldown_cmark::{
-    Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, LinkType, Options, Parser, Tag,
+    Alignment, CodeBlockKind, CowStr, Event, HeadingLevel, LinkType, Options, Parser, Tag, TagEnd,
 };
 use serde::Deserialize;
 use syntect::{
@@ -222,10 +222,19 @@ pub struct Renderer<'a, I> {
     output: Vec<RenderNode>,
     stack: Vec<RenderElement>,
     footnotes: HashMap<CowStr<'a>, usize>,
-    highlight: Option<Highlighting>,
     table_align: Vec<Alignment>,
     table_head: bool,
     table_colidx: usize,
+
+    state: VecDeque<RendererState>,
+}
+
+enum RendererState {
+    CodeBlock {
+        highlight: Option<Highlighting>,
+        collapsed: bool,
+        caption: Option<String>,
+    },
 }
 
 impl<'a, I> Renderer<'a, I>
@@ -239,11 +248,22 @@ where
             output: vec![],
             stack: vec![],
             footnotes: HashMap::new(),
-            highlight: None,
             table_align: vec![],
             table_head: false,
             table_colidx: 0,
+            state: VecDeque::new(),
         }
+    }
+
+    fn get_highlighting(&mut self) -> Option<&mut Highlighting> {
+        let Some(RendererState::CodeBlock {
+            ref mut highlight, ..
+        }) = self.state.front_mut()
+        else {
+            return None;
+        };
+
+        highlight.as_mut()
     }
 
     fn get_element_id(&mut self, prefix: &str) -> String {
@@ -482,13 +502,19 @@ where
         match tag {
             Tag::Paragraph => self.enter(RenderElement::new(TagName::P)),
 
-            Tag::Heading(level, ident, mut classes) => {
+            Tag::Heading {
+                level, id, classes, ..
+            } => {
                 let mut heading = RenderElement::new(heading_for_level(level));
+                let mut classes = classes
+                    .into_iter()
+                    .map(CowStr::into_string)
+                    .collect::<Vec<_>>();
 
-                if let Some(ident) = ident {
-                    heading.add_attribute(AttributeName::Id, ident.to_string());
-                    classes.push("with-anchor");
-                    classes.push("group");
+                if let Some(ref id) = id {
+                    heading.add_attribute(AttributeName::Id, id.to_string());
+                    classes.push("with-anchor".to_string());
+                    classes.push("group".to_string());
                 }
 
                 if !classes.is_empty() {
@@ -498,16 +524,16 @@ where
 
                 self.enter(heading);
 
-                if let Some(ident) = ident {
+                if let Some(ref id) = id {
                     let mut anchor = RenderElement::new(TagName::A);
-                    anchor.add_attribute(AttributeName::Href, format!("#{}", ident));
+                    anchor.add_attribute(AttributeName::Href, format!("#{}", id));
                     anchor.add_attribute(AttributeName::Class, "group-hover:block");
                     anchor.add_child(RenderIcon::Link);
                     self.output(anchor);
                 }
             }
 
-            Tag::BlockQuote => self.enter(RenderElement::new(TagName::BlockQuote)),
+            Tag::BlockQuote(_) => self.enter(RenderElement::new(TagName::BlockQuote)),
 
             Tag::CodeBlock(kind) => {
                 let (language, properties) = if let CodeBlockKind::Fenced(language) = &kind {
@@ -557,19 +583,25 @@ where
                 figure.add_attribute(AttributeName::Id, figure_id);
                 self.enter(figure);
 
-                self.highlight = None;
+                let mut highlight = None;
                 if let Some(language) = &language {
                     if language != "plain" {
-                        self.highlight = Some(Highlighting {
+                        highlight = Some(Highlighting {
                             language: language.to_string(),
                             content: String::new(),
                         });
                     }
                 }
 
-                if self.highlight.is_none() {
+                if highlight.is_none() {
                     self.enter(RenderElement::new(TagName::Pre));
                 }
+
+                self.state.push_front(RendererState::CodeBlock {
+                    highlight,
+                    collapsed,
+                    caption: properties.get("caption").map(str::to_owned),
+                });
             }
 
             Tag::List(ordered) => self.enter(if let Some(start) = ordered {
@@ -630,21 +662,30 @@ where
             Tag::Strong => self.enter(RenderElement::new(TagName::Strong)),
             Tag::Strikethrough => self.enter(RenderElement::new(TagName::S)),
 
-            Tag::Link(LinkType::Email, dest, title) => {
+            Tag::Link {
+                link_type: LinkType::Email,
+                dest_url,
+                title,
+                ..
+            } => {
                 let mut a = RenderElement::new(TagName::A);
                 a.add_attribute(AttributeName::Title, title.to_string());
-                a.add_attribute(AttributeName::Href, format!("mailto:{dest}"));
+                a.add_attribute(AttributeName::Href, format!("mailto:{dest_url}"));
                 self.enter(a);
             }
 
-            Tag::Link(_, href, title) => {
+            Tag::Link {
+                dest_url, title, ..
+            } => {
                 let mut a = RenderElement::new(TagName::A);
                 a.add_attribute(AttributeName::Title, title.to_string());
-                a.add_attribute(AttributeName::Href, href.to_string());
+                a.add_attribute(AttributeName::Href, dest_url.to_string());
                 self.enter(a);
             }
 
-            Tag::Image(_, src, title) => {
+            Tag::Image {
+                dest_url, title, ..
+            } => {
                 // If the element we're to be inserted into is going to be a <p>, then we want to
                 // discard it: we can't construct: <p><figure>...</figure></p> as that is invalid
                 // HTML.
@@ -659,7 +700,7 @@ where
 
                 let mut figure = RenderElement::new(TagName::Figure);
                 let mut img = RenderElement::new(TagName::Img);
-                img.add_attribute(AttributeName::Src, src.to_string());
+                img.add_attribute(AttributeName::Src, dest_url.to_string());
                 img.add_attribute(AttributeName::Title, title.to_string());
 
                 let alt = self.raw_text();
@@ -694,12 +735,15 @@ where
                 self.enter(div);
                 self.enter(right);
             }
+
+            Tag::HtmlBlock => panic!("Don't know how to handle an HTML block"),
+            Tag::MetadataBlock(_) => panic!("Don't know how to handke a metadata block"),
         }
     }
 
-    fn end(&mut self, tag: Tag) {
+    fn end(&mut self, tag: TagEnd) {
         match tag {
-            Tag::Paragraph => {
+            TagEnd::Paragraph => {
                 // We behave here very similarly to `Self::leave()`, except we want to make sure we
                 // don't push any empty paragraphs. This can happen when Markdown places images
                 // inside paragraphs and we discard them.
@@ -719,12 +763,20 @@ where
                 }
             }
 
-            Tag::Heading(level, _, _) => self.leave(heading_for_level(level)),
-            Tag::BlockQuote => self.leave(TagName::BlockQuote),
+            TagEnd::Heading(level) => self.leave(heading_for_level(level)),
 
-            Tag::CodeBlock(kind) => {
-                let mut highlight = None;
-                std::mem::swap(&mut highlight, &mut self.highlight);
+            TagEnd::BlockQuote => self.leave(TagName::BlockQuote),
+
+            TagEnd::CodeBlock => {
+                let Some(RendererState::CodeBlock {
+                    highlight,
+                    collapsed,
+                    caption,
+                }) = self.state.pop_front()
+                else {
+                    panic!("Expected code block state");
+                };
+
                 if let Some(highlight) = highlight {
                     let pre = highlight.finish();
                     self.output(pre);
@@ -732,19 +784,7 @@ where
                     self.leave(TagName::Pre); // <pre>
                 }
 
-                let properties = if let CodeBlockKind::Fenced(language) = kind {
-                    if !language.is_empty() {
-                        let (_, properties) = parse_language_properties(&language)
-                            .expect("valid language and properties");
-                        properties
-                    } else {
-                        Properties::default()
-                    }
-                } else {
-                    Properties::default()
-                };
-
-                if let Some(caption) = properties.get("caption") {
+                if let Some(caption) = caption {
                     let mut figcap = RenderElement::new(TagName::FigCaption);
                     figcap.add_child(RenderText::new(caption.to_string()));
                     self.output(figcap);
@@ -752,46 +792,31 @@ where
 
                 self.leave(TagName::Figure); // <figure>
 
-                let collapsed = match properties.get("collapsed") {
-                    None => false,
-                    Some(collapsed) => match parse_boolean(collapsed) {
-                        Ok(collapsed) => collapsed,
-                        Err(err) => panic!(
-                            "Invalid boolean value in 'collapsed' property of code block: {}",
-                            err
-                        ),
-                    },
-                };
-
                 if collapsed {
                     self.leave(TagName::Details); // <details>
                 }
             }
 
-            Tag::List(ordered) => self.leave(if ordered.is_some() {
-                TagName::Ol
-            } else {
-                TagName::Ul
-            }),
+            TagEnd::List(ordered) => self.leave(if ordered { TagName::Ol } else { TagName::Ul }),
 
-            Tag::Item => self.leave(TagName::Li),
+            TagEnd::Item => self.leave(TagName::Li),
 
-            Tag::Table(_) => {
+            TagEnd::Table => {
                 self.leave(TagName::TBody);
                 self.leave(TagName::Table);
                 self.leave(TagName::Div);
             }
 
-            Tag::TableRow => self.leave(TagName::Tr),
+            TagEnd::TableRow => self.leave(TagName::Tr),
 
-            Tag::TableHead => {
+            TagEnd::TableHead => {
                 self.leave(TagName::Tr);
                 self.leave(TagName::THead);
                 self.enter(RenderElement::new(TagName::TBody));
                 self.table_head = false;
             }
 
-            Tag::TableCell => {
+            TagEnd::TableCell => {
                 self.leave(if self.table_head {
                     TagName::Th
                 } else {
@@ -801,16 +826,19 @@ where
                 self.table_colidx += 1;
             }
 
-            Tag::Emphasis => self.leave(TagName::Em),
-            Tag::Strong => self.leave(TagName::Strong),
-            Tag::Strikethrough => self.leave(TagName::S),
-            Tag::Link(_, _, _) => self.leave(TagName::A),
-            Tag::Image(_, _, _) => {}
+            TagEnd::Emphasis => self.leave(TagName::Em),
+            TagEnd::Strong => self.leave(TagName::Strong),
+            TagEnd::Strikethrough => self.leave(TagName::S),
+            TagEnd::Link => self.leave(TagName::A),
+            TagEnd::Image => {}
 
-            Tag::FootnoteDefinition(_) => {
+            TagEnd::FootnoteDefinition => {
                 self.leave(TagName::Div); // <div .right>
                 self.leave(TagName::Div); // <div .footnote>
             }
+
+            TagEnd::MetadataBlock(_) => panic!("Don't know how to handle a metadata block"),
+            TagEnd::HtmlBlock => panic!("Don't know how to handle an HTML block"),
         }
     }
 
@@ -829,7 +857,11 @@ where
                     nest -= 1;
                 }
 
-                Event::Html(text) | Event::Code(text) | Event::Text(text) => output.push_str(&text),
+                Event::Html(text)
+                | Event::InlineHtml(text)
+                | Event::Code(text)
+                | Event::Text(text) => output.push_str(&text),
+
                 Event::SoftBreak | Event::HardBreak | Event::Rule => output.push(' '),
 
                 Event::FootnoteReference(name) => {
@@ -843,6 +875,9 @@ where
 
                 Event::TaskListMarker(true) => output.push_str("[x]"),
                 Event::TaskListMarker(false) => output.push_str("[ ]"),
+
+                Event::InlineMath(_) => panic!("Don't know how to handle inline math"),
+                Event::DisplayMath(_) => panic!("Don't know how to handle display math"),
             }
         }
 
@@ -855,7 +890,7 @@ where
             Event::End(tag) => self.end(tag),
 
             Event::Text(text) => {
-                if let Some(highlight) = &mut self.highlight {
+                if let Some(highlight) = self.get_highlighting() {
                     highlight.content.push_str(&text);
                 } else {
                     self.output(RenderText::new(text.to_string()))
@@ -872,8 +907,12 @@ where
                 eprintln!("Ignoring html: {html:#?}")
             }
 
+            Event::InlineHtml(html) => {
+                eprintln!("Ignoring inline html: {html:#?}")
+            }
+
             Event::SoftBreak => {
-                if let Some(highlight) = &mut self.highlight {
+                if let Some(highlight) = self.get_highlighting() {
                     highlight.content.push('\n');
                 } else {
                     self.output(RenderText::new("\n".to_string()));
@@ -912,6 +951,9 @@ where
 
                 self.output(input);
             }
+
+            Event::InlineMath(_) => panic!("Don't know how to handle inline math"),
+            Event::DisplayMath(_) => panic!("Don't know how to handle display math"),
         }
     }
 
