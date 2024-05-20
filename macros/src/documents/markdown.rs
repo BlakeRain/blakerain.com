@@ -15,7 +15,7 @@ use syntect::{
     util::LinesWithEndings,
 };
 
-use crate::parse::properties::parse_language_properties;
+use crate::parse::{boolean::parse_boolean, properties::parse_language_properties};
 
 use super::highlight::{SYNTAX_SET, THEME_SET};
 
@@ -218,6 +218,7 @@ impl Highlighting {
 
 pub struct Renderer<'a, I> {
     tokens: I,
+    next_id: usize,
     output: Vec<RenderNode>,
     stack: Vec<RenderElement>,
     footnotes: HashMap<CowStr<'a>, usize>,
@@ -234,6 +235,7 @@ where
     pub fn new(tokens: I) -> Self {
         Self {
             tokens,
+            next_id: 1,
             output: vec![],
             stack: vec![],
             footnotes: HashMap::new(),
@@ -242,6 +244,12 @@ where
             table_head: false,
             table_colidx: 0,
         }
+    }
+
+    fn get_element_id(&mut self, prefix: &str) -> String {
+        let next_id = self.next_id;
+        self.next_id += 1;
+        format!("{}-{}", prefix, next_id)
     }
 
     fn get_footnote_ix(&mut self, name: CowStr<'a>) -> usize {
@@ -385,16 +393,15 @@ where
         self.output(figure);
     }
 
-    fn generate_quote(&mut self, source: &str) {
-        let Quote { quote, author, url } = gray_matter::engine::YAML::parse(source)
-            .deserialize()
-            .expect("Bookmark properties");
+    fn generate_quote(&mut self, source: &str, properties: &Properties) {
+        let author = properties.get("author");
+        let url = properties.get("url");
 
         let mut figure = RenderElement::new(TagName::Figure);
         figure.add_attribute(AttributeName::Class, "quote");
 
         let mut p = RenderElement::new(TagName::P);
-        p.add_child(RenderText::new(quote));
+        p.add_child(RenderText::new(source));
         figure.add_child(p);
 
         if let Some(author) = author {
@@ -457,7 +464,7 @@ where
 
             "quote" => {
                 let content = self.raw_text();
-                self.generate_quote(&content);
+                self.generate_quote(&content, properties);
                 true
             }
 
@@ -524,8 +531,30 @@ where
                     }
                 }
 
+                let collapsed = match properties.get("collapsed") {
+                    None => false,
+                    Some(collapsed) => match parse_boolean(collapsed) {
+                        Ok(collapsed) => collapsed,
+                        Err(err) => panic!(
+                            "Invalid boolean value in 'collapsed' property of code block: {}",
+                            err
+                        ),
+                    },
+                };
+
+                if collapsed {
+                    self.enter(RenderElement::new(TagName::Details));
+                    self.enter(RenderElement::new(TagName::Summary));
+
+                    let title = properties.get("title").unwrap_or("Hidden code section");
+                    self.output(RenderText::new(title.to_string()));
+                    self.leave(TagName::Summary);
+                }
+
+                let figure_id = self.get_element_id("code");
                 let mut figure = RenderElement::new(TagName::Figure);
                 figure.add_attribute(AttributeName::Class, "code");
+                figure.add_attribute(AttributeName::Id, figure_id);
                 self.enter(figure);
 
                 self.highlight = None;
@@ -722,6 +751,21 @@ where
                 }
 
                 self.leave(TagName::Figure); // <figure>
+
+                let collapsed = match properties.get("collapsed") {
+                    None => false,
+                    Some(collapsed) => match parse_boolean(collapsed) {
+                        Ok(collapsed) => collapsed,
+                        Err(err) => panic!(
+                            "Invalid boolean value in 'collapsed' property of code block: {}",
+                            err
+                        ),
+                    },
+                };
+
+                if collapsed {
+                    self.leave(TagName::Details); // <details>
+                }
             }
 
             Tag::List(ordered) => self.leave(if ordered.is_some() {

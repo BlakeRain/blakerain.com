@@ -404,6 +404,20 @@
       @apply text-neutral-600 dark:text-neutral-400;
     }
 
+    summary {
+      @apply cursor-pointer font-bold bg-neutral-100 dark:bg-neutral-800 p-4 rounded-t-md rounded-b-md;
+    }
+
+    details[open] {
+      summary {
+        @apply rounded-b-none;
+      }
+
+      figure pre {
+        @apply rounded-t-none;
+      }
+    }
+
     div.table {
       @apply mb-6;
     }
