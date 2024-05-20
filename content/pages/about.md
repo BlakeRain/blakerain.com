@@ -4,11 +4,8 @@ published: 2018-10-22T07:21:38.000Z
 excerpt: Some information about me, what I do and have done.
 ---
 
-Hello! I'm Blake Rain, a UK-based software engineer with a passion for Rust, C++, and Haskell,
-though you'll often find me dabbling in Python and JavaScript. I'm a seasoned user of [neovim] and
-a Linux and Unix enthusiast, recently transitioning to the Apple M1 as my everyday compute. As the
-current Technical Director at [Neo Technologies], I work to bring innovative compliance solutions to
-life.
+Hello! I'm Blake Rain, a UK-based software engineer with a passion for Rust, C++, and Haskell.
+I'm a seasoned user of [neovim] and a Linux and Unix enthusiast.
 
 Over the years, I have been privileged to work across diverse sectors, from film processing and
 industrial automation to property management. My projects range from developing accelerated
@@ -58,3 +55,27 @@ These projects have led to a fairly wide ranging experience:
   automated deduction tools.
 - User interface development in terminal applications and GTK; later moving to web-application
   development for my sins.
+
+# Getting in touch { .no-outline }
+
+If you need to get in touch with me, you can either use [Mastodon] or [email]. If you need to send
+me something securely, you can use my public key below.
+
+```plain collapsed=true title="My public key"
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEZkt11RYJKwYBBAHaRw8BAQdAHvi/Zji4LBzJ/Q+0oIj8OcWZ7z0XyFxWJJ0/
+6A5mnRO0JUJsYWtlIFJhaW4gPGJsYWtlLnJhaW5AYmxha2VyYWluLmNvbT6IkwQT
+FgoAOxYhBI4qyosBdf3c6pxxmHIuzuuStTCqBQJmS3XVAhsDBQsJCAcCAiICBhUK
+CQgLAgQWAgMBAh4HAheAAAoJEHIuzuuStTCq5acA/0CsWMC9JNIdpdFPTxiE4cJF
+CzR+qda6Kc6z6xzMrIKQAQCSQlJ7wolCmAiqpOl/nbAnkozAv+1aT7z28kHEnGYH
+Cbg4BGZLddUSCisGAQQBl1UBBQEBB0D0fEdIMv0DHUWbvL052yGvI+29qQAz3/34
+m3P9lwx/FgMBCAeIeAQYFgoAIBYhBI4qyosBdf3c6pxxmHIuzuuStTCqBQJmS3XV
+AhsMAAoJEHIuzuuStTCqnLIA/1JoIn1tKOR5NFnW8ey8uB+u75iWWVeMJRd5ulRL
+r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
+=J8Ej
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+[Mastodon]: https://mastodonapp.uk/@BlakeRain
+[email]: mailto:blake.rain@blakerain.com
