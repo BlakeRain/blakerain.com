@@ -1,8 +1,0 @@
-#
-# navigation.yaml
-#
-
-- label: Blog
-  url: "/blog"
-- label: About
-  url: "/about"
