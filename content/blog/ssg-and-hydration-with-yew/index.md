@@ -21,6 +21,12 @@ interactivity. This project, whilst complete, has not been without some frustrat
 I felt it might be worth documenting some of the more interesting problems I encountered along the
 way.
 
+{{< callout type=note >}}
+This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
+whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
+the change over to using hugo.
+{{</callout>}}
+
 # What is SSG and Hydration? {#what-is-ssg-and-hydration}
 
 {{< callout type=note >}}
@@ -696,6 +702,7 @@ complexity of the components.
 In terms of this site, I think I will keep it as it is and work on some more content. I have a few
 other posts in the works that I need to finish off.
 
+[v2.2.3]: https://git.blakerain.com/BlakeRain/blakerain.com/src/tag/v2.2.3
 [Next.js]: https://nextjs.org/
 [Rust]: https://www.rust-lang.org/
 [WebAssembly]: https://webassembly.org/
