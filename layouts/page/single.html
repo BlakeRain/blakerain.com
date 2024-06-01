@@ -1,0 +1,33 @@
+{{ define "main" }}
+  {{ $cover := .Resources.GetMatch "cover.jpg" }}
+  <main>
+    <article>
+      <header class="hidden print:block container print:max-w-full mx-auto">
+        <h1 class="text-3xl font-bold">
+          {{ .Title }}
+        </h1>
+      </header>
+      <header
+        class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
+        <div class="container mx-auto flex flex-col items-center">
+          <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold
+                    {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
+            {{ .Title }}
+          </h1>
+          {{ if .Summary }}
+            <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3
+                      {{ if $cover }}mb-20 text-white{{ else }}mb-10 text-neutral-800 dark:text-neutral-200{{ end }}">
+              {{ .Summary }}
+            </p>
+          {{ end }}
+          <div class="pt-8 px-2 sm:px-16 bg-white dark:bg-zinc-900 sm:rounded-t w-full">
+            {{ partial "blog/post-card/details" (dict "post" . "horizontal" true) }}
+          </div>
+        </div>
+      </header>
+      <div class="container mx-auto mt-6 lg:mt-12 mb-20 px-2 sm:px-16 print:px-0 print:max-w-full markdown numbered-headings">
+        {{ .Content }}
+      </div>
+    </article>
+  </main>
+{{ end }}

@@ -1,0 +1,35 @@
+{{ $type := .Get "type" }}
+{{ if not $type }}
+  {{ $type = "note" }}
+{{ end }}
+{{ $icons := dict
+  "note" "pencil"
+  "info" "info"
+  "todo" "circle-check"
+  "tip" "flame"
+  "success" "check"
+  "question" "circle-help"
+  "warning" "triangle-alert"
+  "failure" "x"
+  "danger" "zap"
+  "bug" "bug"
+  "example" "list" }}
+<div class="callout {{ $type }}">
+  <div class="heading">
+    {{ $icon := index $icons $type }}
+    {{ if $icon }}
+      {{ partial "icons/icon" (dict "vendor" "lucide" "name" $icon) }}
+    {{ end }}
+    <div>
+      {{ $title := .Get "title" }}
+      {{ if $title }}
+      {{ $title }}
+      {{ else }}
+      {{ $type | title }}
+      {{ end }}
+    </div>
+  </div>
+  <div class="body">
+    {{ .Inner | markdownify }}
+  </div>
+</div>

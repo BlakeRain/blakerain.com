@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta chatset="utf-8">
+    <meta name="referer" content="no-referer-when-downgrade">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#12304c">
+
+    <meta name="msapplication-TileColor" content="#12304e">
+    <meta name="theme-color" content="#12304e">
+
+    <title>{{ block "title" . }}{{ with .Params.Title }}{{ . }} | {{ end }}{{ .Site.Title }}{{ end }}</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Blake Rain",
+        "url": "https://blakerain.com"
+      }
+    </script>
+
+    {{  partial "css" . }}
+
+    <script defer data-domain="blakerain.com" src="https://pa.blakerain.com/js/script.js" ></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="/scripts/vendor/hyperscript.js"></script>
+    <div class="flex flex-col">
+      {{ partial "navigation" . }}
+      {{ block "main" . }}{{ end }}
+      {{ partial "footer" . }}
+    </div>
+  </body>
+</html>

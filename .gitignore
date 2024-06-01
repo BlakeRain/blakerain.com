@@ -1,13 +1,7 @@
 .DS_Store
-/old
+.hugo_build.lock
+package-lock.json
 
-/dist
-/output
-/target
-
+/public
+/resources
 /node_modules
-Cargo.lock
-yarn.lock
-
-cypress/videos
-cypress/screenshots

@@ -22,48 +22,16 @@ jobs:
 
       - name: Install node dependencies
         run: |
-          yarn install
+          npm i
 
-      - name: Install rust toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        env:
-          RUSTUP_PERMIT_COPY_RENAME:
+      - name: Setup hugo
+        uses: peaceiris/actions-hugo@v3
         with:
-          toolchain: stable
-          target: wasm32-unknown-unknown
-          components: clippy
-          cache: false
+          hugo-version: latest
+          extended: true
 
-      - name: Run 'cargo check'
-        uses: actions-rs/cargo@v1
-        with:
-          command: check
+      - name: Build the site
+        run: hugo --minify
 
-      - name: Run 'cargo clippy'
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-
-      - name: Check formatting
-        run: |
-          cargo fmt --all -- --check
-
-      - name: Check typos
-        uses: crate-ci/typos@master
-
-      - name: Install trunk
-        uses: jetli/trunk-action@v0.4.0
-        with:
-          version: "latest"
-
-      - name: Install static file server
-        run: |
-          wget https://github.com/static-web-server/static-web-server/releases/download/v2.23.0/static-web-server-v2.23.0-x86_64-unknown-linux-musl.tar.gz -O target/static-web-server.tar.gz
-          tar xfvz target/static-web-server.tar.gz -C target
-          cp target/static-web-server-v2.23.0-x86_64-unknown-linux-musl/static-web-server $HOME/.cargo/bin/static-web-server
-
-      - name: Run cypress tests (debug)
-        run: yarn run ci:debug
-
-      - name: Run cypress tests (release)
-        run: yarn run ci:release
+      # - name: Check typos
+      #   uses: crate-ci/typos@master

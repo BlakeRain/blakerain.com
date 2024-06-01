@@ -1,0 +1,58 @@
+<button
+  id="goto-top"
+  type="button"
+  tabindex="-1"
+  style="display: none"
+  class="cursor-pointer py-4 px-8 rounded-xl bg-primary opacity-25 hover:opacity-100 text-white fixed bottom-8 right-8 transition-all print:hidden" >↑ Goto Top</button>
+<script type="text/javascript">
+  window.addEventListener("DOMContentLoaded", function() {
+    const header = document.querySelector("nav:first-of-type");
+    const footer = document.querySelector("footer");
+    const button = document.getElementById('goto-top');
+    const visible = { nav: false, footer: false };
+
+    button.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    function getButtonTransform() {
+      if (visible.footer) {
+        if (footer) {
+          const height = -footer.getBoundingClientRect().height;
+          return `transform: translateY(${height}px)`;
+        } else {
+          return "transform: translateY(-10px)";
+        }
+      } else if (!visible.nav) {
+        return "transform: translateY(0px)";
+      } else {
+        return "transform: translateY(100px)";
+      }
+    }
+
+    function updateButton() {
+      if (visible.nav) {
+        button.style = "display: none";
+      } else {
+        button.style = `display: block; ${getButtonTransform()}`;
+      }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const tagName = entry.target.tagName;
+        if (tagName == "NAV") {
+          visible.nav = entry.isIntersecting;
+        } else if (tagName == "FOOTER") {
+          visible.footer = entry.isIntersecting;
+        }
+      });
+
+      updateButton();
+    });
+
+    observer.observe(header);
+    observer.observe(footer);
+    updateButton();
+  });
+</script>

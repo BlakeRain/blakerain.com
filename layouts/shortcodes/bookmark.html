@@ -1,0 +1,44 @@
+{{ $title := .Get "title" }}
+{{ $description := .Get "description" }}
+{{ $icon := .Get "icon" }}
+{{ $publisher := .Get "publisher" }}
+{{ $author := .Get "author" }}
+<figure class="w-full text-base">
+  <a href="{{ .Get "url" }}" class="plain w-full flex flex-col lg:flex-row rounded-md shadow-md
+          dark:shadow-none min-h-[148px] border border-neutral-300 dark:border-neutral-700">
+    {{ $thumbnail := .Get "thumbnail" }}
+    {{ if $thumbnail }}
+      <div class="relative lg:order-2 min-w-[33%] min-h-[160px] lg:min-h-fit max-h-[100%]">
+        <img
+          class="absolute top-0 left-0 w-full rounded-r-md object-cover"
+          style="height: 100%"
+          src={{ $thumbnail }}
+          {{ if $title }} alt={{ $title }} {{ end }}
+          loading="lazy"
+          decoding="async">
+      </div>
+    {{ end }}
+    <div class="font-sans lg:order-1 grow flex flex-col justify-start align-start p-5">
+      {{ if $title }}
+        <div class="font-semibold">{{ $title }}</div>
+      {{ end }}
+      {{ if $description }}
+        <div class="grow overflow-y-hidden mt-3 max-h-12">{{ $description }}</div>
+      {{ end }}
+      <div class="flex flex-row flex-wrap align-center gap-1 mt-3.5">
+        {{ if $icon }}
+          <img class="w-[18px] h-[18px] lg:w-[22px] lg:h-[22px] mr-3" alt="{{ $publisher }}" src={{ $icon }}>
+        {{ end }}
+        {{ if $publisher }}
+          <span>{{ $publisher }}</span>
+          {{ if $author }}
+            <span>•</span>
+          {{ end }}
+        {{ end }}
+        {{ if $author }}
+          <span>{{ $author }}</span>
+        {{ end }}
+      </div>
+    </div>
+  </a>
+</figure>

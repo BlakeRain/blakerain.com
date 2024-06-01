@@ -1,0 +1,12 @@
+<a href="{{ .post.RelPermalink }}" class="unstyled">
+  <div class="relative w-full h-[240px]">
+    {{ with .post.Resources.GetMatch "cover.jpg" }}
+    <img
+      alt={{ $.post.Title }}
+      src={{ .RelPermalink }}
+      class="absolute w-full h-full rounded-xl object-cover
+            {{ if not $.first }}lg:grayscale-[50%] lg:group-hover:grayscale-0 transition duration-300{{ end }}">
+    {{ end }}
+  </div>
+</a>
+

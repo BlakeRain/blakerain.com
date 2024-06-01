@@ -1,0 +1,14 @@
+{{ $author := .Get "author" }}
+{{ $url := .Get "url" }}
+<figure class="quote">
+  <p>{{ .Inner }}</p>
+  {{ if $author }}
+    <cite>
+      {{ if $url }}
+        <a href="{{ $url }}">{{ $author }}</a>
+      {{ else }}
+        {{ $author }}
+      {{ end }}
+    </cite>
+  {{ end }}
+</figure>

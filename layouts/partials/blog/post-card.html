@@ -1,0 +1,11 @@
+{{ if .first }}
+  {{ partial "blog/post-card/image" . }}
+  <div class="xl:col-span-2 md-mt-4 lg:mt-0 group">
+    {{ partial "blog/post-card/description" . }}
+  </div>
+{{ else }}
+  <div class="group flex flex-col gap-4 mt-20 lg:mt-0">
+    {{ partial "blog/post-card/image" . }}
+    {{ partial "blog/post-card/description" . }}
+  </div>
+{{ end }}

@@ -1,0 +1,15 @@
+<div class="grow flex flex-col gap-4 justify-between">
+  <div class="flex flex-col gap-4">
+    <a href="{{ .post.RelPermalink }}" class="unstyled">
+      <h1 class="text-2xl font-bold">{{ .post.Title }}</h1>
+    </a>
+    {{ if .post.Summary }}
+      <p class="text-gray-500 dark:text-gray-400 md:group-hover:text-gray-600
+                md:dark:group-hover:text-gray-300 transition-colors duration-200 font-sans
+                text-lg leading-relaxed">
+        {{ .post.Summary }}
+      </p>
+    {{ end }}
+  </div>
+  {{ partial "blog/post-card/details" (dict "post" .post "horizontal" false) }}
+</div>
