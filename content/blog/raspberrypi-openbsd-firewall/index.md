@@ -7,6 +7,7 @@ date: 2024-05-30T20:31:11.332Z
 summary: |
   Tired with my current firewall, I have decided to switch over to a Raspberry Pi 4 running
   OpenBSD. In this post I describe how I did this and the problems that I ran into.
+draft: true
 ---
 
 For quite a while now I've wanted to replace my current firewall. I'm currently using a WatchGuard
@@ -16,33 +17,32 @@ hundreds of pounds to buy it, and then pay hundreds more every year to use it.
 So this week I took it upon myself to set up a router at the apex of my network using a Raspberry
 Pi. I decided that I would use OpenBSD for this.
 
-{{< callout type=tip >}}
-There is an amazing guide called the [OpenBSD Router Guide](https://openbsdrouterguide.net/), which
-can also be found on [GitHub](https://github.com/unixdigest/openbsd-router-guide). A lot of what
-follows was draw from this guide, the OpenBSD manpages, and the
-[OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html).
-{{</callout>}}
+{{< callout type=tip >}} There is an amazing guide called the
+[OpenBSD Router Guide](https://openbsdrouterguide.net/), which can also be found on
+[GitHub](https://github.com/unixdigest/openbsd-router-guide). A lot of what follows was draw from
+this guide, the OpenBSD manpages, and the
+[OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html). {{</callout>}}
 
 # Why not pfSense?
 
-I had originally discussed my plan with a colleague, back when I originally wanted to switch over
-to pfSense. However, I don't really want to use pfSense anymore, or the derivative OPNSense. My
-reasons are fairly vague and subjective, and probably not worth going into too much.
+I had originally discussed my plan with a colleague, back when I originally wanted to switch over to
+pfSense. However, I don't really want to use pfSense anymore, or the derivative OPNSense. My reasons
+are fairly vague and subjective, and probably not worth going into too much.
 
 My main gripe is that pfSense (and therefore OPNSense) are based on FreeBSD. Not that I have a
-problem with FreeBSD, but my choice for a firewall appliance would almost always be OpenBSD.
-OpenBSD is more heavily focused on security and correctness, aiming to be a complete and secure
-system OOTB that favours simplicity over features. FreeBSD, on the other hand, focuses more on
-performance, scalability and cutting-edge features.
+problem with FreeBSD, but my choice for a firewall appliance would almost always be OpenBSD. OpenBSD
+is more heavily focused on security and correctness, aiming to be a complete and secure system OOTB
+that favours simplicity over features. FreeBSD, on the other hand, focuses more on performance,
+scalability and cutting-edge features.
 
 Don't get me wrong, FreeBSD is very widely adopted and has very good application support. Certainly
-FreeBSD is suitable for general purpose compute, but I'm not entirely sure it's the BSD I'd pick
-for a firewall.
+FreeBSD is suitable for general purpose compute, but I'm not entirely sure it's the BSD I'd pick for
+a firewall.
 
 It seems to me that the main reasons that pfSense and their kin use FreeBSD are:
 
-1. pfSense was a fork from [m0n0wall](https://en.wikipedia.org/wiki/M0n0wall),
-   which already used FreeBSD.
+1. pfSense was a fork from [m0n0wall](https://en.wikipedia.org/wiki/M0n0wall), which already used
+   FreeBSD.
 2. FreeBSD has better wireless support than OpenBSD.
 3. FreeBSD has much better network performance (such as multi-processor support for PF packet
    filters). OpenBSD lacks a number of performance optimisations.
@@ -56,10 +56,9 @@ find that using a separate WAP to be preferable.
 I intend to install OpenBSD on a Raspberry Pi and set up the router configuration myself. To start
 with, I'll need to install OpenBSD on a Raspberry Pi.
 
-{{< callout type=tip >}}
-The [OpenBSD 7.5 arm64 installation instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64)
-are very informative.
-{{</callout>}}
+{{< callout type=tip >}} The
+[OpenBSD 7.5 arm64 installation instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64)
+are very informative. {{</callout>}}
 
 To begin with, I selected a Raspberry Pi 4B and used a latest Raspberry Pi OS to update the firmware
 to the latest version so that I could boot from USB. I then changed the boot order using
@@ -93,8 +92,8 @@ broken.
 For a second attempt, I decided to try `install75.img` without any of the Raspberry Pi UEFI
 firmware. Turns out that it booted fine. However there was another issue: typical OpenBSD doesn't
 forward the TTY to the frame-buffer, instead expecting you to attach a serial interface. I didn't
-have the energy for that noise, and luckily you can interrupt the auto-boot and use `set tty fb0`
-to redirect the TTY to the frame-buffer before continuing with the boot.
+have the energy for that noise, and luckily you can interrupt the auto-boot and use `set tty fb0` to
+redirect the TTY to the frame-buffer before continuing with the boot.
 
 {{< figure src="Pasted%20image%2020240528130245.jpg" title="Behold! The glorious OpenBSD installation program" >}}
 
@@ -138,8 +137,7 @@ This Microsoft adapter identifies to OpenBSD as an RTL8251 PHY and RTL8153:
 
 {{< figure src="CleanShot%202024-05-28%20at%2013.30.38.png" title="Snapshot of dmesg output when connected" >}}
 
-{{< callout type=note >}}
-Unfortunately I am later going to find that this adapter was broken.
+{{< callout type=note >}} Unfortunately I am later going to find that this adapter was broken.
 {{</callout>}}
 
 # Setting Up a Router in OpenBSD
@@ -150,8 +148,8 @@ Using `ifconfig` I was able to take a look at the current state of the network i
 
 There are two interfaces in this list that were of interest to me:
 
-1. The Raspberry Pi's built-in Ethernet NIC is listed as the `bse0` interface, is attached to my
-   LAN switch, and has the IPv4 address `192.168.0.215` (this is how I am connecting over SSH).
+1. The Raspberry Pi's built-in Ethernet NIC is listed as the `bse0` interface, is attached to my LAN
+   switch, and has the IPv4 address `192.168.0.215` (this is how I am connecting over SSH).
 2. The Microsoft USB adapter is `ure0` and is not attached to anything presently, hence the
    `no carrier` status (_ominous rumble of foreboding_).
 
@@ -227,9 +225,9 @@ back up:
 # ifconfig pppoe0 up
 ```
 
-This caused some information to be written to the syslog (found in `/var/log/messages`). I could
-see that the CHAP authentication was proceeding as expected and that it had actually succeeded,
-but that the rest of the session configuration had failed.
+This caused some information to be written to the syslog (found in `/var/log/messages`). I could see
+that the CHAP authentication was proceeding as expected and that it had actually succeeded, but that
+the rest of the session configuration had failed.
 
 ```
 May 29 15:49:41 white /bsd: pppoe0: chap success
@@ -253,8 +251,8 @@ May 29 15:49:41 white /bsd: pppoe0: Down event (carrier loss), taking interface 
 
 This drove me on a number of wild chases. The message `no IPv6 interface` certainly lead me down a
 rabbit hole, as I checked to make sure my ISP did not support IPv6 addresses and that I was not
-actually attempting to configure anything IPv6 related. Turns out, a simple reboot made the
-problem go away 🙄
+actually attempting to configure anything IPv6 related. Turns out, a simple reboot made the problem
+go away 🙄
 
 After a reboot, the debug messages showed the CHAP authentication completing and the network phase
 completing. My red herring `no IPv6 interface` message was still there, indicating it was probably
@@ -305,8 +303,8 @@ issue.
 
 ## Router Configuration
 
-Now that I had the PPPoE up and running I needed to set up the device as a router. To begin with,
-I needed to enable IPv4 forwarding using the `sysctl` command, and then permanently enable it by
+Now that I had the PPPoE up and running I needed to set up the device as a router. To begin with, I
+needed to enable IPv4 forwarding using the `sysctl` command, and then permanently enable it by
 writing the setting into the `/etc/sysctl.conf` file:
 
 ```
@@ -314,8 +312,8 @@ writing the setting into the `/etc/sysctl.conf` file:
 # echo 'net.inet.ip.fowrarding=1' >> /etc/sysctl.conf
 ```
 
-Next I needed to configure the Raspberry Pi's built-in Ethernet port, listed as `bse0`. To do this
-I created an `/etc/hostname.bse0` file with the following contents:
+Next I needed to configure the Raspberry Pi's built-in Ethernet port, listed as `bse0`. To do this I
+created an `/etc/hostname.bse0` file with the following contents:
 
 ```
 inet 192.168.1.1 255.255.255.0 NONE
@@ -354,9 +352,9 @@ Then I enabled and started `dhcpd` using `rcctl`:
 ```
 
 I was now able to check that the devices on my LAN were able to obtain IP addresses. Some of the
-devices needed to be nudged to acquire a new DHCP lease, and one or two needed to be restarted.
-I think part of the reason for this was that the subnet had changed from `192.168.0.0/24`
-to `192.168.1.0/24`.
+devices needed to be nudged to acquire a new DHCP lease, and one or two needed to be restarted. I
+think part of the reason for this was that the subnet had changed from `192.168.0.0/24` to
+`192.168.1.0/24`.
 
 ## PF Configuration
 
@@ -381,10 +379,10 @@ manners:
 3. Changing the maximum segment size (MSS) on TCP SYN packets to be no greater than 1452 bytes.
 
 I initially set the MSS to 1460, thinking that there would be 40 bytes of headroom required in a TCP
-packet: 20 bytes of IPv4 header and 20 bytes of TCP header. This did not always help, and a colleague
-recommended 1452 instead, which fixed the issues I was seeing 😊. My colleague reminded me that there
-would need to be an additional 8 bytes more headroom, as my Internet packets were being encapsulated
-by PPPoE.
+packet: 20 bytes of IPv4 header and 20 bytes of TCP header. This did not always help, and a
+colleague recommended 1452 instead, which fixed the issues I was seeing 😊. My colleague reminded me
+that there would need to be an additional 8 bytes more headroom, as my Internet packets were being
+encapsulated by PPPoE.
 
 In retrospect, when I was running `ping` to find the MTU size I was being told exactly what number I
 should have been using 🙄.

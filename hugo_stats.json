@@ -45,6 +45,7 @@
       "ul"
     ],
     "classes": [
+      "2xl:opacity-100",
       "absolute",
       "align-center",
       "align-start",
@@ -122,6 +123,7 @@
       "lg:min-h-fit",
       "lg:mt-0",
       "lg:mt-12",
+      "lg:opacity-100",
       "lg:order-1",
       "lg:order-2",
       "lg:w-2/3",
@@ -142,6 +144,7 @@
       "md:justify-between",
       "md:mx-0",
       "md:my-0",
+      "md:opacity-100",
       "min-h-[10rem]",
       "min-h-[148px]",
       "min-h-[160px]",
@@ -165,6 +168,7 @@
       "numbered-headings",
       "object-cover",
       "opacity-25",
+      "opacity-50",
       "overflow-y-hidden",
       "p-5",
       "plain",
@@ -185,6 +189,7 @@
       "rounded-r-md",
       "rounded-xl",
       "shadow-md",
+      "sm:opacity-100",
       "sm:px-0",
       "sm:px-16",
       "sm:rounded-t",
@@ -213,7 +218,8 @@
       "w-[18px]",
       "w-full",
       "xl:col-span-2",
-      "xl:grid-cols-3"
+      "xl:grid-cols-3",
+      "xl:opacity-100"
     ],
     "ids": [
       "adding-custom-entries",
