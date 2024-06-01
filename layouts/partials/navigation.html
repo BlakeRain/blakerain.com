@@ -1,17 +1,17 @@
 <nav class="print:hidden bg-primary shadow-md darK:shadow-none text-neutral-200">
   <div class="container mx-auto flex flex-col md:flex-row px-4 sm:px-0">
-    <div class="flex flex-row justify-between items-center my-4 md:my-0">
-      <a href="/" class="block mr-4">
+    <div class="flex flex-row justify-between items-center">
+      <a href="/" class="block pr-4 py-4 md:my-0">
         <img class="block" src="/media/logo-text.png" width="154" height="28" alt="Blake Rain">
       </a>
-      <button id="nav-menu-toggle" type="button" class="md:hidden">
+      <button id="nav-menu-toggle" type="button" class="md:hidden p-4">
         {{ partial "icons/icon" (dict "vendor" "lucide" "name" "menu") }}
         <span class="sr-only">Toggle Menu</span>
       </button>
     </div>
     <div id="nav-menu" class="md:flex flex-col md:flex-row hidden">
-      <a href="/blog/" class="px-4 py-6 transition-colors hover:bg-primary-dark hover:text-neutral-500">Blog</a>
-      <a href="/about/" class="px-4 py-6 transition-colors hover:bg-primary-dark hover:text-neutral-500">About</a>
+      <a href="/blog/" class="px-4 py-6 transition-colors hover:bg-primary-dark/50 hover:text-neutral-100">Blog</a>
+      <a href="/about/" class="px-4 py-6 transition-colors hover:bg-primary-dark/50 hover:text-neutral-100">About</a>
     </div>
     <div class="hidden md:flex flex-row items-center gap-2 ml-auto">
       <a href="https://git.blakerain.com"
