@@ -18,9 +18,6 @@ title = 'Blake Rain'
   [[module.mounts]]
     source = "hugo_stats.json"
     target = "assets/watching/hugo_stats.json"
-  [[module.mounts]]
-    source = "node_modules/hyperscript.org/dist/_hyperscript.min.js"
-    target = "static/scripts/vendor/hyperscript.js"
 
 [build]
   writeStats = true
