@@ -2,7 +2,7 @@
 title: Setting Up a Firewall with Raspberry Pi and OpenBSD
 tags:
   - openbsd
-  - raspi
+  - raspberry-pi
 date: 2024-05-30T20:31:11.332Z
 summary: |
   Tired with my current firewall, I have decided to switch over to a Raspberry Pi 4 running
