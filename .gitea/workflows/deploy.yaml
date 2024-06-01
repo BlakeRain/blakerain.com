@@ -20,25 +20,23 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        env:
-          RUSTUP_PERMIT_COPY_RENAME:
+      - name: Install node dependencies
+        run: |
+          npm i
+
+      - name: Setup node
+        uses: actions/setup-go@v3
         with:
-          toolchain: stable
-          target: wasm32-unknown-unknown
-          cache: false
+          go-version: 1.22
 
-      - name: Install Trunk
-        uses: jetli/trunk-action@v0.4.0
+      - name: Setup hugo
+        uses: peaceiris/actions-hugo@v3
         with:
-          version: "latest"
+          hugo-version: latest
+          extended: true
 
-      - name: Build Hydrating Application
-        run: trunk build --release --features hydration --minify
-
-      - name: Perform Site Generation
-        run: cargo run --release --features static --bin site-build
+      - name: Build the site
+        run: hugo --minify
 
       - name: Synchronize with S3 Bucket
         uses: jakejarvis/s3-sync-action@v0.5.1
@@ -49,7 +47,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "eu-west-1"
-          SOURCE_DIR: "output"
+          SOURCE_DIR: "public"
 
       - name: Create CloudFront Invalidation
         run: |
