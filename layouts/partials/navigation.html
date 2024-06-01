@@ -4,12 +4,12 @@
       <a href="/" class="block mr-4">
         <img class="block" src="/media/logo-text.png" width="154" height="28" alt="Blake Rain">
       </a>
-      <button type="button" class="md:hidden">
+      <button id="nav-menu-toggle" type="button" class="md:hidden">
         {{ partial "icons/icon" (dict "vendor" "lucide" "name" "menu") }}
         <span class="sr-only">Toggle Menu</span>
       </button>
     </div>
-    <div class="md:flex flex-col md:flex-row flex">
+    <div id="nav-menu" class="md:flex flex-col md:flex-row hidden">
       <a href="/blog/" class="px-4 py-6 transition-colors hover:bg-primary-dark hover:text-neutral-500">Blog</a>
       <a href="/about/" class="px-4 py-6 transition-colors hover:bg-primary-dark hover:text-neutral-500">About</a>
     </div>
@@ -51,3 +51,12 @@
     </div>
   </div>
 </nav>
+<script type="text/javascript">
+  window.addEventListener("DOMContentLoaded", () => {
+    const navMenu = document.getElementById("nav-menu");
+    document.getElementById("nav-menu-toggle").addEventListener("click", () => {
+      navMenu.classList.toggle("hidden");
+      navMenu.classList.toggle("flex");
+    });
+  });
+</script>
