@@ -1,10 +1,17 @@
 {{ define "main" }}
-  <ul>
-    {{ range .Data.Pages }}
-    <li>
-      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-    </li>
-    {{ end }}
-  </ul>
+  <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
+    <div class="container mx-auto flex flex-col items-center">
+      <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
+        Pages Featuring {{ .Data.Term | humanize | title }}
+      </h1>
+    </div>
+  </header>
+  <main class="container mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-10 lg:gap-y-20 my-10 px-2 sm:px-0">
+      {{ range .Data.Pages }}
+        {{ partial "blog/post-card" (dict "first" false "post" .) }}
+      {{ end }}
+    </div>
+  </main>
 {{ end }}
 

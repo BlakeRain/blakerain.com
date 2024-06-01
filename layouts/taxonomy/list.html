@@ -1,0 +1,38 @@
+{{ define "main" }}
+  <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
+    <div class="container mx-auto flex flex-col items-center">
+      <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
+        {{ .Data.Plural | title }}
+      </h1>
+      <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3 mb-10 text-neutral-800 dark:text-neutral-200">
+        {{ $count := .Data.Pages | len }}
+        There are {{ $count }} {{ if ne $count 1 }}{{ .Data.Plural }}{{ else }}{{ .Data.Singular }}{{ end }} in use across this site.
+      </p>
+    </div>
+  </header>
+  <main class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {{ range .Pages }}
+        <div class="group rounded-md shadow-md dark:shadow-none border border-primary
+                    bg-neutral-100/25 hover:bg-neutral-100 dark:bg-neutral-900/25
+                    dark:hover:bg-neutral-900 p-4">
+          <div class="flex flex-row justify-between gap-4">
+            <a href="{{ .Permalink }}" class="block text-neutral-600 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-200">
+              <h1 class="text-xl font-bold">{{ .Title | humanize | title }}</h1>
+            </a>
+            <h1 class="text-lg font-bold">{{ .Pages | len }}</h1>
+          </div>
+          <ol class="ml-3 mt-2">
+            {{ range .Pages }}
+              <li>
+                <a href="{{ .Permalink }}">
+                  {{ .Title | humanize | title }}
+                </a>
+              </li>
+            {{ end }}
+          </ol>
+        </div>
+      {{ end }}
+    </div>
+  </main>
+{{ end }}
