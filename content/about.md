@@ -62,6 +62,7 @@ If you need to get in touch with me, you can either use
 {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="email" >}} or DM me on
 [Mastodon]. If you need to send me something securely, you can use my public key below.
 
+{{< summary title="Click to show public key" >}}
 ```plain
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -77,6 +78,8 @@ r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
 =J8Ej
 -----END PGP PUBLIC KEY BLOCK-----
 ```
+{{</summary>}}
+
 
 [Rust]: https://rust-lang.org/
 [Haskell]: https://www.haskell.org/
