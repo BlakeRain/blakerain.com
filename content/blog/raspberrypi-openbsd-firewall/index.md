@@ -10,90 +10,103 @@ summary: |
 draft: true
 ---
 
-For quite a while now I've wanted to replace my current firewall. I'm currently using a WatchGuard
-firewall, which I find to be quite troublesome. I also rather dislike the fact that I had to pay
-hundreds of pounds to buy it, and then pay hundreds more every year to use it.
+For quite a while now I've wanted to replace a Watchguard firewall at home. I find Watchguard's
+Firebox to be quite troublesome, and I rather dislike that I had to pay hundreds of pounds to buy
+it, and then pay hundreds more every year to use it.
 
 So this week I took it upon myself to set up a router at the apex of my network using a Raspberry
 Pi. I decided that I would use OpenBSD for this.
 
-{{< callout type=tip >}} There is an amazing guide called the
-[OpenBSD Router Guide](https://openbsdrouterguide.net/), which can also be found on
-[GitHub](https://github.com/unixdigest/openbsd-router-guide). A lot of what follows was draw from
-this guide, the OpenBSD manpages, and the
-[OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html). {{</callout>}}
+{{< callout type=tip >}} There is an amazing guide called the [OpenBSD Router
+Guide](https://openbsdrouterguide.net/). A lot of what follows was draw from this guide, the OpenBSD
+manpages, and the [OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html). {{</callout>}}
 
 # Why not pfSense?
 
-I had originally discussed my plan with a colleague, back when I originally wanted to switch over to
-pfSense. However, I don't really want to use pfSense anymore, or the derivative OPNSense. My reasons
-are fairly vague and subjective, and probably not worth going into too much.
+When I first started thinking about changing my firewall, my immediate thought was to use [pfSense]
+or [OPNSense]. However, I don't really want to use either of these anymore. My reasons are fairly
+vague and subjective, and probably not worth going into too much.
 
 My main gripe is that pfSense (and therefore OPNSense) are based on FreeBSD. Not that I have a
 problem with FreeBSD, but my choice for a firewall appliance would almost always be OpenBSD. OpenBSD
-is more heavily focused on security and correctness, aiming to be a complete and secure system OOTB
-that favours simplicity over features. FreeBSD, on the other hand, focuses more on performance,
-scalability and cutting-edge features.
+is more heavily focused on [security] and correctness. FreeBSD, on the other hand, focuses more on
+performance.
 
-Don't get me wrong, FreeBSD is very widely adopted and has very good application support. Certainly
-FreeBSD is suitable for general purpose compute, but I'm not entirely sure it's the BSD I'd pick for
-a firewall.
+Don't get me wrong, I still love FreeBSD, but it's not the BSD I'd pick for a firewall.
 
 It seems to me that the main reasons that pfSense and their kin use FreeBSD are:
 
 1. pfSense was a fork from [m0n0wall](https://en.wikipedia.org/wiki/M0n0wall), which already used
    FreeBSD.
-2. FreeBSD has better wireless support than OpenBSD.
+2. FreeBSD has much better wireless support than OpenBSD.
 3. FreeBSD has much better network performance (such as multi-processor support for PF packet
-   filters). OpenBSD lacks a number of performance optimisations.
+   filters).
 
 On the second point, I'm not hugely in favour of my WAP being built in to my firewall. I'd rather
 have the device at the apex of my network focused entirely on being the router for that network. I
-find that using a separate WAP to be preferable.
+find that using a separate WAP to be preferable. The third issue, that of network performance, is
+hardly a problem on a small home network with a ~70Mbps Internet connection.
 
 # Installing OpenBSD on a Raspberry Pi
 
 I intend to install OpenBSD on a Raspberry Pi and set up the router configuration myself. To start
 with, I'll need to install OpenBSD on a Raspberry Pi.
 
-{{< callout type=tip >}} The
-[OpenBSD 7.5 arm64 installation instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64)
-are very informative. {{</callout>}}
+{{< callout type=tip >}} The OpenBSD 7.5 [arm64 installation
+instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64) are very informative, and
+I recommend reading them more thoroughly than I did. {{</callout>}}
 
-To begin with, I selected a Raspberry Pi 4B and used a latest Raspberry Pi OS to update the firmware
-to the latest version so that I could boot from USB. I then changed the boot order using
-`raspi-config` to boot from USB before the microSD. Once completed, I was ready to prepare the
-installation media for OpenBSD.
+I selected a Raspberry Pi 4B and used a latest [Raspberry Pi OS] to update the firmware to the latest
+version so that I could boot from USB. I then changed the boot order using `raspi-config` to boot
+from USB before the microSD. Once completed, I was ready to prepare the installation media for
+OpenBSD.
 
-The first problem I had was that I thought I'd need to use the Raspberry Pi UEFI firmware in the
-OpenBSD [ARM64](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/) installation image. I downloaded
-[v1.37](https://github.com/pftf/RPi4/releases/tag/v1.37) of the Raspberry Pi firmware, then mounted
-the FAT16 partition at the start of the OpenBSD installation image (`install75.img`). I copied all
-the files from the UEFI firmware into that new partition. As usual, there was a problem: the
+{{< callout type=tip >}} Now that the Pi is configured to boot from USB, it actually spins for a
+while waiting for a USB device before attempting to boot from the SD. After installing OpenBSD, this
+delay might get quite annoying. If you want to change the boot order back, you will need to boot
+from something like Raspberry Pi OS in order to use the `raspi-config` tool.{{</callout>}}
+
+## Ruining Partitions
+
+The first problem I had was that I _thought_ I'd need to use the Raspberry Pi UEFI firmware in the
+OpenBSD [ARM64] installation image. This is why we actually read documentation _first_, rather than
+waste time doing something unnecessary.
+
+To get the firmware into the installation image, I downloaded [v1.37] of the Raspberry Pi firmware,
+then mounted the FAT16 partition at the start of the OpenBSD installation image (`install75.img`). I
+copied all the files from the UEFI firmware into that partition. As usual, there was a problem: the
 `install75.img` has the partition configured to be very small. So small that I cannot fit the actual
 UEFI firmware onto the partition.
 
-In order to get the new firmware onto the boot partition I first wrote the `install75.img` image
-file to a USB stick. I then plugged the stick into a Linux machine. On that machine I was able to
-use GParted to move the BSD partition to the right and resize the FAT16 boot partition.
-Unfortunately, GParted cannot resize a FAT16 filesystem. To deal with this I mounted the boot
-partition, copied the contents to another directory, and added all the UEFI firmware files there,
-overwriting anything in the process. Then I deleted the existing FAT16 partition and created a new
-one to fill the boot partition (remembering to set the boot and LBA flags). I then copied the
-modified contents back into this new filesystem.
+In order to get the new firmware onto the boot partition, I decided to just modify the partitions
+once they were on a USB stick. So, I wrote the `install75.img` image file to a USB stick, then
+plugged the stick into a Linux machine. On that machine I was able to use GParted to move the main
+BSD partition to the right a tad, and then resize the FAT16 boot partition. Of course GParted cannot
+resize a FAT16 filesystem 😒, so I mounted the boot partition and copied the contents to another
+directory. I then added to this directory all the UEFI firmware files from the Raspberry Pi firmware
+distribution, overwriting anything in the process. Then I deleted the existing FAT16 partition and
+created a new one (remembering to set the boot and LBA flags). I then copied the modified contents
+back into this new filesystem.
 
-None of that worked, and OpenBSD could not boot. Mostly it seems that the moved BSD partition was
-broken.
+As usual, none of that worked. OpenBSD could not boot finish booting, as there was a problem with
+the partition that I had moved.
 
 {{< figure src="Pasted%20image%2020240528130110.jpg" title="I've broken the partitions" >}}
 
 ## Booting without UEFI Firmware
 
-For a second attempt, I decided to try `install75.img` without any of the Raspberry Pi UEFI
-firmware. Turns out that it booted fine. However there was another issue: typical OpenBSD doesn't
-forward the TTY to the frame-buffer, instead expecting you to attach a serial interface. I didn't
-have the energy for that noise, and luckily you can interrupt the auto-boot and use `set tty fb0` to
-redirect the TTY to the frame-buffer before continuing with the boot.
+The very first sentence in the section of the [arm64 installation instructions] entitled "_Install
+on Raspberry Pi_" is as follows:
+
+> The standard miniroot supports at least the Raspberry Pi 3 and 4 **with no additional firmware**.
+
+After actually reading the installation instructions, I tried `install75.img` without adding any
+Raspberry Pi UEFI firmware. What a surprise! Turns out that it booted fine 🙄.
+
+However, now there was another issue: typical OpenBSD doesn't forward the TTY to the frame-buffer,
+instead expecting you to attach a serial interface. I didn't have the energy for that noise, and
+luckily you can interrupt the auto-boot and use `set tty fb0` to redirect the TTY to the
+frame-buffer before continuing with the boot.
 
 {{< figure src="Pasted%20image%2020240528130245.jpg" title="Behold! The glorious OpenBSD installation program" >}}
 
@@ -163,8 +176,7 @@ OpenBSD to connect to my Internet.
 ## PPPoE for Internet
 
 My ISP requires PPPoE for my Internet connection. I've never really configured PPPoE before, so I
-had to consult the manpages on [PPoE](https://man.openbsd.org/pppoe) and
-[ifconfig](https://man.openbsd.org/ifconfig.8). Even then I ended up making some fairly basic
+had to consult the manpages on [PPPoE] and [ifconfig]. Even then I ended up making some fairly basic
 mistakes.
 
 To start with, I needed to setup the PPPoE interface. I did this by creating an
@@ -177,15 +189,10 @@ authname '<username>' authkey '<password>' up
 dest 0.0.0.1
 ```
 
-```callout type=note
-I'm using placeholders here for my username and password
-```
-
-The username and password I was able to get from the connection details provided by my ISP. They
-also confirmed that the authentication protocol was CHAP. According to the PPPoE manpage, using the
-wildcard address `0.0.0.0` as the local address is sufficient, as it will be replaced with the
-address suggested by my ISP. In addition, the address `0.0.0.1` in the destination will also be
-replaced with the address suggested by the peer.
+I was able to get the username and password from the connection details provided by my ISP. They
+also confirmed that the authentication protocol was CHAP. According to the [PPPoE] manpage, using
+the addresses `0.0.0.0` as the local address and `0.0.0.1` as the destination address is sufficient,
+and both addresses it will be replaced with those suggested by my ISP.
 
 I then created the `/etc/hostname.ure0` to configure the Microsoft USB Ethernet interface:
 
@@ -193,16 +200,14 @@ I then created the `/etc/hostname.ure0` to configure the Microsoft USB Ethernet 
 up
 ```
 
-With those settings in place, I used [netstart](https://man.openbsd.org/netstart.8) script to apply
-these configuration changes by running `sh /etc/netstart`. I then moved the ADSL modem from the
-WatchGuard and to the USB adapter.
+With those settings in place, I used [netstart] script to apply these configuration changes. I then
+moved the ADSL modem from the WatchGuard to the USB adapter.
 
 This is where I ran into a problem with the Microsoft USB adapter. The `status` was always being
 reported as `no carrier`. I tried a different cable, and also tried connecting it to my LAN switch.
 In the end, I had to admit defeat: either the adapter was broken or there was a driver issue.
 
-This somewhat stumped my progress until Amazon could deliver me a
-[TP-Link UE306](https://www.tp-link.com/us/home-networking/usb-converter/ue306/) the following day.
+This somewhat stumped my progress until Amazon could deliver me a [TP-Link UE306] the following day.
 
 Once I had received the new interface and got it connected I changed the configuration in the
 `/etc/hostname.pppoe0` to the name of the new device, replacing `ure0` with `axen0`:
@@ -213,6 +218,9 @@ pppoedev axen0 authproto chap \
 authname '<username>' authkey '<password>' up
 dest 0.0.0.1
 ```
+
+I renamed the old `/etc/hostname.ure0` to `/etc/hostname.axen0`. Then I ran `netstart` to apply the
+changes.
 
 After reconnecting the modem to this new USB Ethernet adapter, I checked `ifconfig` to see how the
 PPPoE was progressing, only to see that the status of the `pppoe0` interface was `inactive`. To try
@@ -255,7 +263,7 @@ actually attempting to configure anything IPv6 related. Turns out, a simple rebo
 go away 🙄
 
 After a reboot, the debug messages showed the CHAP authentication completing and the network phase
-completing. My red herring `no IPv6 interface` message was still there, indicating it was probably
+completed. My red herring `no IPv6 interface` message was still there, indicating it was probably
 fairly benevolent.
 
 Moreover, I could see in the output of `ifconfig` that the `pppoe0` interface was up and running,
@@ -311,6 +319,9 @@ writing the setting into the `/etc/sysctl.conf` file:
 # sysctl net.inet.ip.forwarding=1
 # echo 'net.inet.ip.fowrarding=1' >> /etc/sysctl.conf
 ```
+
+{{< callout type=tip >}} I didn't bother with IPv6, but you can set `net.inet6.ip6.forwarding` to
+`1` if you want IPv6 forwarding to be enabled. {{</callout>}}
 
 Next I needed to configure the Raspberry Pi's built-in Ethernet port, listed as `bse0`. To do this I
 created an `/etc/hostname.bse0` file with the following contents:
@@ -384,7 +395,7 @@ colleague recommended 1452 instead, which fixed the issues I was seeing 😊. My
 that there would need to be an additional 8 bytes more headroom, as my Internet packets were being
 encapsulated by PPPoE.
 
-In retrospect, when I was running `ping` to find the MTU size I was being told exactly what number I
+In retrospect, when I was running `ping` to test the MTU size I was being told exactly what number I
 should have been using 🙄.
 
 ```
@@ -397,3 +408,46 @@ ping: local error: message too long, mtu=1492
 ## DNS Configuration with Unbound
 
 ### Adding Custom Entries
+
+I have a number of devices that run locally that I want to be able to address by name. Typically
+this involves editing the `/etc/hosts` file on various machines. However, now that I have a DNS
+server that I can understand how to configure, I added a few custom entries to the Unbound
+configuration in `/var/unbound/etc/unbound.conf`:
+
+```yaml
+server:
+  # ...
+
+  local-data: "cyan.localdomain A 192.168.1.20"
+  local-data: "blue.localdomain A 192.168.1.24"
+```
+
+I also added `local-data` statements for a number of [ZeroTier] peers.
+
+{{< callout type=question title="RFC8375 would be better" >}} Whilst writing up this post, I'm not
+entirely sure why I didn't use [RFC8375](https://datatracker.ietf.org/doc/html/rfc8375.html)'s
+`home.arpa.` address. {{</callout>}}
+
+To apply the changes to the Unbound configuration, I used `rcctl` to restart it:
+
+```
+# rcctl restart unbound
+```
+
+With these extra entries added to my DNS configuration I was able to delete large portions of my
+`/etc/hosts` file. I left the ZeroTier entries, as they would be useful when I'm off the LAN.
+
+# Conclusion
+
+[security]: https://www.openbsd.org/security.html
+[pfSense]: https://pfsense.org/
+[OPNSense]: https://opnsense.org
+[Raspberry Pi OS]:https://www.raspberrypi.com/software/
+[ARM64]: https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/
+[arm64 installation instructions]: https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64
+[v1.37]: https://github.com/pftf/RPi4/releases/tag/v1.37
+[PPPoE]: https://man.openbsd.org/pppoe
+[ifconfig]: https://man.openbsd.org/ifconfig.8
+[netstart]: https://man.openbsd.org/netstart.8
+[TP-Link UE306]: https://www.tp-link.com/us/home-networking/usb-converter/ue306/
+[ZeroTier]: https://www.zerotier.com/
