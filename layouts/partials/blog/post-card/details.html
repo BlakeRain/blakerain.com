@@ -1,4 +1,4 @@
-<div class="flex uppercase text-sm flex-col {{ if .horizontal }}md:flex-row items-center md:justify-between{{ end }}">
+<div class="flex uppercase text-sm flex-col {{ if not .card }}md:flex-row items-center md:justify-between{{ end }}">
   <div class="flex flex-row gap-1">
     <div>{{ .post.Date | time.Format "2 Jan 2006" }}</div>
     <div class="text-gray-500">&#8226;</div>

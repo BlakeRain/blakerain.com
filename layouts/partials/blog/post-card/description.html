@@ -11,5 +11,10 @@
       </p>
     {{ end }}
   </div>
-  {{ partial "blog/post-card/details" (dict "post" .post "horizontal" false) }}
+  <div class="flex flex-row gap-2 justify-between items-end">
+    {{ partial "blog/post-card/details" (dict "post" .post "card" true) }}
+    <a href="{{ .post.RelPermalink }}" class="button button-outline">
+      Read more &#8594;
+    </a>
+  </div>
 </div>

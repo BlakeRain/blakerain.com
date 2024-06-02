@@ -28,6 +28,15 @@
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
     @apply transition;
 
+    &.button-outline {
+      @apply bg-transparent border-sky-700 text-sky-800;
+      @apply dark:border-sky-700 dark:text-sky-800;
+
+      &:hover {
+        @apply bg-sky-700/25 dark:text-sky-500;
+      }
+    }
+
     > svg {
       @apply mr-1;
     }
