@@ -31,7 +31,7 @@
   </head>
   <body>
     <div class="flex flex-col">
-      {{ partial "navigation" . }}
+      {{ partial "navigation" (dict "page" .) }}
       {{ block "main" . }}{{ end }}
       {{ partial "footer" . }}
     </div>

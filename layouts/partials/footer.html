@@ -4,10 +4,13 @@
       <div>Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain</div>
     </div>
     <div class="flex flex-col gap-4 lg:gap-0 lg:items-end">
-      <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
-        <a class="hover:text-neutral-50" href="/blog/">Latest Posts</a>
-        <a class="hover:text-neutral-50" href="/disclaimer/">Disclaimer</a>
-      </div>
+      {{ with site.Menus.footer }}
+        <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
+          {{ range . }}
+            <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+          {{ end }}
+        </div>
+      {{ end }}
       <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
         <a
           class="hover:text-neutral-50"

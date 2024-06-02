@@ -2,6 +2,20 @@ baseURL = 'https://blakerain.com/'
 languageCode = 'en-GB'
 title = 'Blake Rain'
 
+[menus]
+  [[menus.main]]
+    name = "Blog"
+    pageRef = "/blog"
+    weight = 10
+  [[menus.footer]]
+    name = "Blog"
+    pageRef = "/blog"
+    weight = 10
+  [[menus.footer]]
+    name = "Tags"
+    pageRef = "/tags"
+    weight = 10
+
 [module]
   [module.hugoVersion]
     extended = false
