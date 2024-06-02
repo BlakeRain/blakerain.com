@@ -14,7 +14,7 @@
           <a
             href="{{ .Permalink }}"
             class="text-sky-700/75 dark:text-sky-500/75 hover:text-sky-700 hover:dark:text-sky-500">
-            {{ $tag | urlize }}
+            {{ $tag | humanize }}
           </a>
         {{ end }}
       {{ end }}
