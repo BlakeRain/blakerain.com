@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-4 lg:gap-0">
       <div>Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain</div>
     </div>
-    <div class="flex flex-col gap-4 lg:gap-0 lg:items-end">
+    <div class="flex flex-col gap-4 lg:gap-2 lg:items-end">
       {{ with site.Menus.footer }}
         <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
           {{ range . }}
