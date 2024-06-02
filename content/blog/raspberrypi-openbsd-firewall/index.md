@@ -3,11 +3,10 @@ title: Setting Up a Firewall with Raspberry Pi and OpenBSD
 tags:
   - openbsd
   - raspberry-pi
-date: 2024-05-30T20:31:11.332Z
+date: 2024-06-02T15:31:11.332Z
 summary: |
   Tired with my current firewall, I have decided to switch over to a Raspberry Pi 4 running
   OpenBSD. In this post I describe how I did this and the problems that I ran into.
-draft: true
 ---
 
 For quite a while now I've wanted to replace a Watchguard firewall at home. I find Watchguard's
@@ -61,10 +60,11 @@ version so that I could boot from USB. I then changed the boot order using `rasp
 from USB before the microSD. Once completed, I was ready to prepare the installation media for
 OpenBSD.
 
-{{< callout type=tip >}} Now that the Pi is configured to boot from USB, it actually spins for a
-while waiting for a USB device before attempting to boot from the SD. After installing OpenBSD, this
-delay might get quite annoying. If you want to change the boot order back, you will need to boot
-from something like Raspberry Pi OS in order to use the `raspi-config` tool.{{</callout>}}
+{{< callout type=note title="Raspberry Pi Boot Delays" >}} Now that the Pi is configured to boot
+from USB, it actually spins for a while waiting for a USB device before attempting to boot from the
+SD. After installing OpenBSD, this delay might get quite annoying. If you want to change the boot
+order back, you will need to boot from something like Raspberry Pi OS in order to use the
+`raspi-config` tool.{{</callout>}}
 
 ## Ruining Partitions
 
@@ -134,6 +134,13 @@ during installation.
 
 {{< figure src="CleanShot%202024-05-28%20at%2013.11.58.png" title="OpenBSD email of installation responses" >}}
 
+Once OpenBSD has been installed it is fairly important to make sure that you add a new user for
+yourself. You should add this user to the `wheel` group so that you can `su` to root. You should
+also make sure to set `PermitRootLogin` to `no` in the SSH daemon configuration. Ideally you would
+also generate an SSH key for your new user, add it to the authorized keys and then disable
+password-based access via SSH by setting `PasswordAuthentication` to `no` and `PubkeyAuthentication`
+to `yes` in your SSH daemon configuration.
+
 ## USB Ethernet Adapter
 
 One small drawback to using a Raspberry Pi was that it only had a single Ethernet port. In order to
@@ -150,8 +157,8 @@ This Microsoft adapter identifies to OpenBSD as an RTL8251 PHY and RTL8153:
 
 {{< figure src="CleanShot%202024-05-28%20at%2013.30.38.png" title="Snapshot of dmesg output when connected" >}}
 
-{{< callout type=note >}} Unfortunately I am later going to find that this adapter was broken.
-{{</callout>}}
+{{< callout type=warning title="Faulty Hardware" >}} Unfortunately I am later going to find that
+this adapter was broken. {{</callout>}}
 
 # Setting Up a Router in OpenBSD
 
@@ -320,8 +327,8 @@ writing the setting into the `/etc/sysctl.conf` file:
 # echo 'net.inet.ip.fowrarding=1' >> /etc/sysctl.conf
 ```
 
-{{< callout type=tip >}} I didn't bother with IPv6, but you can set `net.inet6.ip6.forwarding` to
-`1` if you want IPv6 forwarding to be enabled. {{</callout>}}
+{{< callout type=tip title="Forwarding for IPv6" >}} I didn't bother with IPv6, but you can set
+`net.inet6.ip6.forwarding` to `1` if you want IPv6 forwarding to be enabled as well. {{</callout>}}
 
 Next I needed to configure the Raspberry Pi's built-in Ethernet port, listed as `bse0`. To do this I
 created an `/etc/hostname.bse0` file with the following contents:
@@ -367,7 +374,39 @@ devices needed to be nudged to acquire a new DHCP lease, and one or two needed t
 think part of the reason for this was that the subnet had changed from `192.168.0.0/24` to
 `192.168.1.0/24`.
 
+### Binding IP Addresses to Devices
+
+I have a number of devices that do not use DHCP to obtain an IP address, and these live in the lower
+range of the subnet: `192.168.1.2` through `192.168.1.49`. Currently I am configuring each device to
+use a specific IP address, however there is an alternative approacj.
+
+In the `/etc/dhcpd.conf` configuration file for the DHCP server, we can bind IP addresses to
+specific devices via MAC addresses. For example, I could attach the address `192.168.1.10` to the
+device with the MAC address `d8:3a:dd:a5:a4:85` as follows:
+
+```
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  option domain-name-servers 192.168.1.1;
+  option routers 192.168.1.1;
+  range 192.168.1.50 192.168.1.254;
+
+  host orange.arpa.home. {
+    fixed-address 192.168.1.10;
+    hardware ethernet d8:3a:dd:a5:a4:85;
+    option host-name "orange"
+  }
+}
+```
+
+I chose not to do this, mostly because because I find configuring the devices themselves more
+useful. No doubt I'll learn my lesson soon enough.
+
 ## PF Configuration
+
+My configuration of the packet-filtering firewall was mostly derived from following the description
+in the [OpenBSD Router Guide]. Of course the guide contains quite a lot of rules that are related to
+extra LAN segments, including a DMZ. I have not included those, as I currently only have a single
+LAN segment.
 
 ### Dealing with MTU
 
@@ -407,6 +446,24 @@ ping: local error: message too long, mtu=1492
 
 ## DNS Configuration with Unbound
 
+In order to provide DNS resolution on the LAN, I needed to set up a DNS server. OpenBSD comes with
+the caching (non-authoritative) DNS server [Unbound]. Running a local DNS like this has a number of
+advantages:
+
+1. As all DNS is outgoing from the router rather than individual devices, the security of DNS
+   lookups can be more closely controlled.
+
+
+In order to ensure that DNS queries from the LAN interface are only directed to the local DNS
+server, I added the following PF rule to block UDP/TCP traffic on port 53 (the typical DNS port)
+that is not destined for the LAN interface:
+
+```
+block return in quick on $lan_if proto { udp tcp } to ! $lan_if port { 53 }
+```
+
+My configuration for unbound mostly follows the [OpenBSD Router Guide].
+
 ### Adding Custom Entries
 
 I have a number of devices that run locally that I want to be able to address by name. Typically
@@ -439,6 +496,28 @@ With these extra entries added to my DNS configuration I was able to delete larg
 
 # Conclusion
 
+Apart from some stumbling blocks, and points where I completely failed to read the instructions, the
+installation of OpenBSD on a Raspberry Pi went well. Configuring OpenBSD to be a router was mostly
+extremely simple. The total number of lines in these configuration files is very small:
+
+```
+$ find . -type f | while read file; do if [[ ! "$file" =~ '\.sh$' ]]; then wc $file; fi; done
+      58     180    1678 ./unbound.conf
+       1       4      36 ./hostname.bse0
+      63     382    2266 ./pf.conf
+       1       1       3 ./hostname.axen0
+       1       1      25 ./sysctl.conf
+       4      17     139 ./hostname.pppoe0
+       5      15     153 ./dhcpd.conf
+```
+
+I find that having a device that I can simply configure over SSH to be far simpler than wrangling a
+web interface. This is especially true when compared to the Watchguard interface, which is
+reminiscent of a 90's CGI web app.
+
+Being able to add PF rules to match certain traffic patterns, and then use `tcpdump` to visualize
+that traffic is mighty handy.
+
 [security]: https://www.openbsd.org/security.html
 [pfSense]: https://pfsense.org/
 [OPNSense]: https://opnsense.org
@@ -451,3 +530,5 @@ With these extra entries added to my DNS configuration I was able to delete larg
 [netstart]: https://man.openbsd.org/netstart.8
 [TP-Link UE306]: https://www.tp-link.com/us/home-networking/usb-converter/ue306/
 [ZeroTier]: https://www.zerotier.com/
+[Unbound]: https://github.com/NLnetLabs/unbound
+[OpenBSD Router Guide]: https://openbsdrouterguide.net/
