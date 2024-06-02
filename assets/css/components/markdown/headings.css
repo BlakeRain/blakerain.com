@@ -1,0 +1,119 @@
+counter-reset: h1-outline-counter;
+
+.numbered-headings {
+  h1:not(.no-outline) {
+    counter-increment: h1-outline-counter;
+    counter-reset: h2-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) ". ";
+    }
+  }
+
+  h2:not(.no-outline) {
+    counter-increment: h2-outline-counter;
+    counter-reset: h3-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) "." counter(h2-outline-counter) " ";
+    }
+  }
+
+  h3:not(.no-outline) {
+    counter-increment: h3-outline-counter;
+    counter-reset: h4-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+        counter(h3-outline-counter) " ";
+    }
+  }
+
+  h4:not(.no-outline) {
+    counter-increment: h4-outline-counter;
+    counter-reset: h5-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+        counter(h3-outline-counter) "." counter(h4-outline-counter) " ";
+    }
+  }
+
+  h5:not(.no-outline) {
+    counter-increment: h5-outline-counter;
+    counter-reset: h6-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+        counter(h3-outline-counter) "." counter(h4-outline-counter) "."
+        counter(h5-outline-counter) " ";
+    }
+  }
+
+  h6:not(.no-outline) {
+    counter-increment: h6-outline-counter;
+
+    &:before {
+      content: counter(h1-outline-counter) "." counter(h2-outline-counter) "."
+        counter(h3-outline-counter) "." counter(h4-outline-counter) "."
+        counter(h5-outline-counter) "." counter(h6-outline-counter) " ";
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply w-full font-sans;
+
+  &.with-anchor {
+    @apply relative;
+
+    > a {
+      @apply hidden absolute top-2.5 -left-10 pr-2;
+      @apply text-gray-500 dark:text-gray-400;
+      @apply hover:text-gray-400 dark:hover:text-gray-300;
+
+      > svg {
+        @apply w-8 h-8;
+      }
+    }
+  }
+}
+
+h2.with-anchor > a {
+  @apply top-1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  + figure {
+    @apply mt-3;
+  }
+}
+
+h1 {
+  @apply text-5xl print:text-3xl font-normal mt-8 mb-4;
+}
+
+h2 {
+  @apply text-4xl font-normal mt-8 mb-4;
+}
+
+h3 {
+  @apply text-3xl font-normal mt-6 mb-3;
+}
+
+h4 {
+  @apply text-2xl font-normal mt-6 mb-2;
+}
+
+h6 {
+  @apply text-xl font-normal mt-4 mb-2;
+}
+

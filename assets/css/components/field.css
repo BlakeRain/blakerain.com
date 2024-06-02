@@ -1,0 +1,47 @@
+@layer components {
+  .field {
+    @apply border-primary rounded-md;
+    @apply disabled:border-transparent;
+
+    @apply text-neutral-800 placeholder:text-neutral-300;
+    @apply dark:text-neutral-200 placeholder:text-neutral-500;
+    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+
+    @apply bg-white dark:bg-zinc-800;
+    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
+
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply transition;
+  }
+
+  .input-icons {
+    @apply relative;
+
+    svg:first-child,
+    svg:last-child {
+      @apply pointer-events-none absolute top-1/2 -mt-2.5 text-gray-300 dark:text-gray-500;
+    }
+
+    svg:first-child {
+      @apply left-3;
+    }
+
+    svg:last-child {
+      @apply right-3;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"],
+    input[type="password"] {
+      &.icon-left {
+        @apply pl-10;
+      }
+
+      &.icon-right {
+        @apply pr-10;
+      }
+    }
+  }
+
+}

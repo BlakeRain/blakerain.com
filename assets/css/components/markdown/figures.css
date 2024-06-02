@@ -1,0 +1,55 @@
+figure {
+  @apply w-full mb-6 flex flex-col items-center;
+
+  div.highlight {
+    @apply w-full overflow-x-scroll;
+  }
+
+  pre {
+    @apply mb-0;
+    @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
+    @apply print:border-neutral-800 print:p-2;
+
+    code {
+      @apply font-mono leading-snug;
+    }
+  }
+
+  img {
+    @apply h-auto;
+  }
+
+  &.quote {
+    @apply relative items-start;
+
+    &:before {
+      position: absolute;
+      top: 24px;
+      left: -44px;
+      content: "“";
+      font-size: 6rem;
+
+      @apply text-neutral-400 dark:text-neutral-700;
+      @apply hidden md:block;
+    }
+
+    p {
+      @apply italic mb-0;
+      @apply text-neutral-600 dark:text-neutral-400;
+    }
+
+    cite {
+      &:before {
+        content: "— ";
+      }
+
+      @apply font-sans ml-4;
+    }
+  }
+}
+
+figcaption {
+  @apply mt-4 font-sans text-sm text-center;
+  @apply text-neutral-600 dark:text-neutral-400;
+}
+

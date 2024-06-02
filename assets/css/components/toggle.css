@@ -1,0 +1,45 @@
+@layer components {
+  .toggle {
+    @apply block relative cursor-pointer;
+
+    width: calc(2 * var(--toggle-size));
+    height: var(--toggle-size);
+
+    &.active {
+      .toggle-background {
+        @apply bg-slate-800 dark:bg-indigo-300;
+      }
+
+      .toggle-inner {
+        right: 0rem;
+      }
+    }
+
+    .toggle-background {
+      @apply absolute bg-slate-300 dark:bg-gray-600;
+
+      width: calc(2 * var(--toggle-size));
+      height: calc(0.5 * var(--toggle-size));
+      top: calc(0.25 * var(--toggle-size));
+
+      border-radius: calc(0.5 * var(--toggle-size));
+
+      transition: background-color 0.125s ease-in-out;
+    }
+
+    .toggle-inner {
+      @apply absolute bg-white;
+
+      width: var(--toggle-size);
+      height: var(--toggle-size);
+      top: 0;
+      right: var(--toggle-size);
+
+      border-radius: calc(0.5 * var(--toggle-size));
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+      transition: right 0.125s ease-in-out;
+    }
+  }
+}

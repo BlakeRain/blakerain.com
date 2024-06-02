@@ -11,5 +11,5 @@ module.exports = {
     },
   },
   content: ["./hugo_stats.json", "./extra_stats.json"],
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };
