@@ -4,9 +4,14 @@
       <h1 class="text-2xl font-bold">{{ .post.Title }}</h1>
     </a>
     {{ if .post.Summary }}
-      <p class="text-gray-500 dark:text-gray-400 md:group-hover:text-gray-600
-                md:dark:group-hover:text-gray-300 transition-colors duration-200 font-sans
-                text-lg leading-relaxed">
+      <p class="font-sans text-lg leading-relaxed transition-colors duration-200
+                {{ if .first }}
+                  text-gray-600 dark:text-gray-300
+                {{ else }}
+                  text-gray-500 dark:text-gray-400
+                  md:group-hover:text-gray-600 md:dark:group-hover:text-gray-300
+
+                {{ end }}">
         {{ .post.Summary }}
       </p>
     {{ end }}
