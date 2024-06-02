@@ -1,6 +1,6 @@
 counter-reset: h1-outline-counter;
 
-.numbered-headings {
+&.numbered-headings {
   h1:not(.no-outline) {
     counter-increment: h1-outline-counter;
     counter-reset: h2-outline-counter;
