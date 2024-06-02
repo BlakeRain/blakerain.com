@@ -473,7 +473,7 @@
         }
       }
 
-      &.note {
+      &.note, &.info {
         @apply bg-blue-200 print:bg-transparent print:border-blue-200 dark:bg-blue-950;
 
         > .heading {
@@ -485,7 +485,7 @@
         }
       }
 
-      &.tip {
+      &.tip, &.todo {
         @apply bg-teal-100 print:bg-transparent print:border-teal-900 dark:bg-teal-900;
 
         > .heading {
