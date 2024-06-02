@@ -15,5 +15,6 @@
   body {
     @apply bg-white text-neutral-800;
     @apply dark:bg-zinc-900 dark:text-neutral-200;
+    @apply min-h-screen;
   }
 }
