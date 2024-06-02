@@ -1,9 +1,11 @@
+
 <footer class="print:hidden bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem] flex-col">
-  <div class="container mx-auto flex flex-col gap-4 md:gap-0 md:flex-row md:justify-between px-4 sm:px-0 py-6">
+  <div class="container mx-auto flex flex-col gap-4 md:gap-0 py-6 px-0 sm:px-4 items-center
+              sm:flex-row sm:items-start sm:justify-between">
     <div class="flex flex-col gap-4 lg:gap-0">
       <div>Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain</div>
     </div>
-    <div class="flex flex-col gap-4 lg:gap-2 lg:items-end">
+    <div class="w-full sm:w-auto flex flex-row lg:flex-col justify-between lg:items-end px-8 sm:px-0 gap-8 lg:gap-2">
       {{ with site.Menus.footer }}
         <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
           {{ range . }}
@@ -26,7 +28,7 @@
           title="My GitHub profile"
           target="_blank"
           rel="noreferrer">
-          GitHub Profile
+          GitHub
         </a>
         <a
           class="hover:text-neutral-50"
@@ -45,15 +47,15 @@
           Status
         </a>
       </div>
-      {{ if hugo.IsDevelopment }}
-        <div class="flex flex-row gap-2">
-          <div class="opacity-50 sm:opacity-100">sm</div>
-          <div class="opacity-50 md:opacity-100">md</div>
-          <div class="opacity-50 lg:opacity-100">lg</div>
-          <div class="opacity-50 xl:opacity-100">xl</div>
-          <div class="opacity-50 2xl:opacity-100">2xl</div>
-        </div>
-      {{ end }}
     </div>
   </div>
+  {{ if hugo.IsDevelopment }}
+    <div class="flex flex-row justify-center mb-4 gap-2">
+      <div class="opacity-50 sm:opacity-100">sm</div>
+      <div class="opacity-50 md:opacity-100">md</div>
+      <div class="opacity-50 lg:opacity-100">lg</div>
+      <div class="opacity-50 xl:opacity-100">xl</div>
+      <div class="opacity-50 2xl:opacity-100">2xl</div>
+    </div>
+  {{ end }}
 </footer>
