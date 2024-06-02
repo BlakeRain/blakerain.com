@@ -35,6 +35,14 @@
       &:hover {
         @apply bg-sky-700/25 dark:text-sky-500;
       }
+
+      &:active {
+        @apply bg-sky-700/50;
+      }
+    }
+
+    &:focus {
+      box-shadow: none;
     }
 
     > svg {
