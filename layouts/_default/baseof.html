@@ -27,7 +27,25 @@
 
     {{  partial "css" . }}
 
+    {{ $description := "" }}
+    {{ with .Description }}
+      {{ $description = . }}
+    {{ else }}
+      {{ if .IsPage }}
+        {{ $description = .Summary }}
+      {{ end }}
+    {{ end }}
+    {{ with $description }}<meta name="description" content="{{ . }}">{{ end }}
+
+    {{ with union .Site.Params.keywords .Params.keywords }}
+      <meta name="keywords" content="{{ delimit . ", " }}">
+    {{ end }}
+
+    <meta name="author" content="Blake Rain">
+    <link rel="canonical" href="{{ .Permalink }}" />
+
     <script defer data-domain="blakerain.com" src="https://pa.blakerain.com/js/script.js" ></script>
+    {{ block "head" . }}{{ end }}
   </head>
   <body>
     <div class="flex flex-col">
