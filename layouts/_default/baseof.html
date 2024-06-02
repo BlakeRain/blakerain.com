@@ -50,7 +50,7 @@
     <script defer data-domain="blakerain.com" src="https://pa.blakerain.com/js/script.js" ></script>
     {{ block "head" . }}{{ end }}
   </head>
-  <body class="flex flex-col h-screen {{ if .IsHome }}justify-between{{ end }}">
+  <body class="flex flex-col{{ if .IsHome }} h-screen justify-between{{ end }}">
       {{ partial "navigation" (dict "page" .) }}
       {{ block "main" . }}{{ end }}
       {{ partial "footer" . }}
