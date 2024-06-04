@@ -1,0 +1,25 @@
+{{ define "main" }}
+<main class="container mx-auto">
+  <h1 class="text-4xl font-bold text-center mt-8 mb-2">Tools</h1>
+  <p class="text-xl text-center text-neutral-500 dark:text-neutral-400">
+    Here are a number of tools that I find useful.
+  </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-8">
+    {{ range .Pages }}
+      <div class="border border-primary rounded p-4">
+        <a href="{{ .RelPermalink }}">
+          <h1 class="text-2xl mb-2">
+            {{ with .Params.icon }}
+              {{ partial "icons/icon" (dict "vendor" .vendor "name" .name "className" "inline") }}
+            {{ end }}
+            {{ .Title }}
+          </h1>
+          <p class="text-neutral-700 dark:text-neutral-400">
+            {{ .Summary }}
+          </p>
+        </a>
+      </div>
+    {{ end }}
+  </div>
+</main>
+{{ end }}

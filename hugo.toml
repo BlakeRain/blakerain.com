@@ -15,6 +15,10 @@ title = 'Blake Rain'
     name = "Tags"
     pageRef = "/tags"
     weight = 10
+  [[menus.footer]]
+    name = "Tools"
+    pageRef = "/tools"
+    weight = 10
 
 [module]
   [module.hugoVersion]

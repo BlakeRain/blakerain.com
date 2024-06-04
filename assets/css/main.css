@@ -18,3 +18,9 @@
     @apply min-h-screen;
   }
 }
+
+@layer utilities {
+  .hi-svg-inline {
+    vertical-align: -0.125rem;
+  }
+}
