@@ -1,0 +1,76 @@
+@layer components {
+  .table-wrapper {
+    @apply flex overflow-x-scroll mb-6;
+  }
+
+  table, .table-wrapper > table {
+    @apply min-w-full border-collapse table-auto;
+
+    thead {
+      @apply bg-transparent dark:bg-neutral-800;
+      @apply dark:text-white;
+
+      tr {
+        th {
+          @apply px-6 py-4;
+
+          &.left {
+            @apply text-left;
+          }
+
+          &.right {
+            @apply text-right;
+          }
+
+          &.center {
+            @apply text-center;
+          }
+        }
+      }
+    } /* thead */
+
+    tbody {
+      tr {
+        td {
+          @apply whitespace-nowrap px-6 py-4;
+
+          &.left {
+            @apply text-left;
+          }
+
+          &.right {
+            @apply text-right;
+          }
+
+          &.center {
+            @apply text-center;
+          }
+        }
+      }
+    } /* tbody */
+
+    &.tight {
+      thead tr th,
+      tbody tr td {
+        @apply px-3 py-2;
+      }
+    }
+
+    &.tighter {
+      thead tr th,
+      tbody tr td {
+        @apply px-1 py-1;
+      }
+    }
+
+    &:not(.borderless) {
+      thead {
+        @apply border-b border-neutral-500;
+      }
+
+      tbody tr {
+        @apply border-b border-neutral-400 dark:border-neutral-600;
+      }
+    }
+  }
+}

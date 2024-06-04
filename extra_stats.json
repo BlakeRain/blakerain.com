@@ -1,5 +1,5 @@
 {
   "htmlElements": {
-    "classes": ["md:block"]
+    "classes": ["md:block", "field", "text-right"]
   }
 }

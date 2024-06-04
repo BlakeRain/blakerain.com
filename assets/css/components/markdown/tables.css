@@ -1,7 +1,3 @@
-div.table {
-  @apply flex overflow-x-scroll mb-6;
-}
-
 table {
   @apply min-w-full border-collapse table-auto;
 

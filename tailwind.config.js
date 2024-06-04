@@ -10,6 +10,6 @@ module.exports = {
       },
     },
   },
-  content: ["./hugo_stats.json", "./extra_stats.json"],
+  content: ["./hugo_stats.json", "./extra_stats.json", "./content/**/*.js"],
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

@@ -1,0 +1,56 @@
+@layer components {
+  .tooltip {
+    @apply absolute z-10 w-max max-w-xs min-h-fit p-4;
+    @apply text-sm text-center text-neutral-50 whitespace-pre-wrap;
+    @apply bg-primary border border-primary rounded-md shadow-md;
+
+    &:after {
+      @apply absolute w-0 h-0;
+      content: "";
+    }
+
+    &.top {
+      @apply bottom-full left-1/2 -translate-x-1/2 mb-4;
+
+      &:after {
+        @apply top-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-top: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.bottom {
+      @apply top-full left-1/2 -translate-x-1/2 mt-4;
+
+      &:after {
+        @apply bottom-full left-1/2 -ml-4;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-bottom: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.left {
+      @apply -top-3 right-full mr-4;
+
+      &:after {
+        @apply top-1.5 left-full mr-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-left: 1rem solid var(--primary-color);
+      }
+    }
+
+    &.right {
+      @apply -top-3 left-full ml-4;
+
+      &:after {
+        @apply top-1.5 right-full ml-4;
+        border-top: 1rem solid transparent;
+        border-bottom: 1rem solid transparent;
+        border-right: 1rem solid var(--primary-color);
+      }
+    }
+  }
+}
