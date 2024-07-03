@@ -9,7 +9,9 @@
       </header>
       <header
         class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed"
-        {{ if $cover }}
+        {{ if .Param "customHero" }}
+          style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
+        {{ else if $cover }}
           style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $cover.Permalink }}')"
         {{ end }}>
         <div class="container mx-auto flex flex-col items-center">
