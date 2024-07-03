@@ -1,5 +1,9 @@
 p {
   @apply w-full mb-6 leading-relaxed;
+
+  code {
+    @apply text-nowrap;
+  }
 }
 
 dl,
