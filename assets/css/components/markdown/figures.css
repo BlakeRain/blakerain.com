@@ -16,7 +16,7 @@ figure {
   }
 
   img {
-    @apply h-auto;
+    @apply h-auto rounded-md;
   }
 
   &.quote {
