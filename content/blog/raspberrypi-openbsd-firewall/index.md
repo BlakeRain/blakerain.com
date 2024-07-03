@@ -452,7 +452,7 @@ advantages:
 
 1. As all DNS is outgoing from the router rather than individual devices, the security of DNS
    lookups can be more closely controlled.
-
+1. Once a request has been cached by Unbound, subsequent DNS resolution is very fast.
 
 In order to ensure that DNS queries from the LAN interface are only directed to the local DNS
 server, I added the following PF rule to block UDP/TCP traffic on port 53 (the typical DNS port)
