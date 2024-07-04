@@ -6,6 +6,7 @@
 
     @import "markdown/headings.css";
     @import "markdown/figures.css";
+    @import "markdown/goat.css";
     @import "markdown/callouts.css";
     @import "markdown/typography.css";
     @import "markdown/tables.css";

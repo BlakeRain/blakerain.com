@@ -1,0 +1,7 @@
+div.goat {
+  @apply flex flex-row justify-center;
+
+  svg {
+    @apply font-mono text-sm;
+  }
+}
