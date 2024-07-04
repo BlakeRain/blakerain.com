@@ -23,18 +23,24 @@ ads and other nefarious content.
 # Sourcing a List of Domains
 
 Finding a list of domains to block proved to be very easy thanks to the efforts of Steven Black and
-the contributors of the [consolidated host files](https://github.com/StevenBlack/hosts) on GitHub.
-This repository contains a consolidated list of hosts from multiple curated sources. The repo
-includes different hosts file variants based around different categories such as gambling, social,
-porn, fakenews, and so on.
+the contributors to a set of [consolidated host files](https://github.com/StevenBlack/hosts) on
+GitHub. This repository contains a consolidated list of hosts from multiple curated sources. The
+repo includes different hosts file variants based around different categories such as gambling,
+social, porn, fakenews, and so on.
 
 I picked the **Unified hosts + fakenews + gambling + social** variant which, as the name suggests,
 includes the unified ads and malware domains, along with fake news, gambling, and social domains. At
 time of writing, this includes 177,286 distinct domains.
 
 The README in the repository includes a [list of downloads], with links to the README and hosts file
-download for each variant. Each [hosts(5)](https://man.openbsd.org/man5/hosts.5) file is formatted
-exactly as you'd expect.
+download for each variant.
+
+{{< callout type=tip >}}
+This file is laid out in the same way you're used to seeing in an `/etc/hosts` file. You can read
+more about it on the manpage for [hosts(5)](https://man.openbsd.org/man5/hosts.5).
+{{</callout>}}
+
+Here is a sample from the top of the hosts file.
 
 ```
 # Title: StevenBlack/hosts
@@ -93,10 +99,10 @@ In order to use this file with Unbound, I needed to make some changes.
 
 To configure Unbound, I needed to process the hosts file I got from Steven Black's repository into
 something that Unbound can use. To configure Unbound to block a domain, we want to use a
-`local-zone` configuration for each of the blocked domains. Each `local-zone` configuration allows
-us to set the answer Unbound will reply with if there is no `local-data` matching the domain. I use
-the `refuse` option, which tells Unbound to respond with the `REFUSED` response code (number 5),
-which is a good response for policy decisions.
+`local-zone` configuration for each of the blocked domains. Each `local-zone` configuration will
+configure the reply that Unbound will send if there is no `local-data` matching the domain. Because
+I want to block these domains, I use the `refuse` option, which tells Unbound to respond with the
+`REFUSED` response code (number 5), which is a good response for policy decisions.
 
 ```yaml
 # Block my own domain
@@ -126,7 +132,7 @@ $ grep '^0\.0\.0\.0' hosts | head
 0.0.0.0 ns6.0pendns.org
 ```
 
-For each of these lines, we can use `awk` to reformat the line into a Unbound `local-zone`
+For each of these lines, we can use `awk` to reformat the line into an Unbound `local-zone`
 configuration:
 
 ```
@@ -170,7 +176,7 @@ unbound-checkconf: no errors in /var/unbound/etc/unbound.conf
 ```
 
 To check that the domain blocking works correctly, on my local machine I made a test query to
-`facebook.com`. As I hoped for, the server came back with `REFUSED`.
+`facebook.com`. As I had hoped, the server came back with `REFUSED`.
 
 ```
 $ host facebook.com
@@ -181,13 +187,13 @@ Host facebook.com not found: 5(REFUSED)
 
 A few years ago, [DNS over HTTPS] was introduced with the intention of preserving privacy and
 increasing security. Unfortunately, one of the disadvantages of this approach is that it frustrates
-using a local DNS server. Fortunately, for now, many applications still let us change whether or not
-they use DoH.
+the use of a local DNS server. Fortunately, for now, many applications still let us change whether
+or not they use DoH, and Firefox is one of them.
 
-Luckily my intention was to block domains for ads in my browser, and Firefox still lets you
-[configure DoH]. To make sure that Firefox makes use of my local DNS server I disabled DNS over
-HTTPS in Firefox settings (found at the bottom of the _Privacy and Security_ page in Firefox
-settings).
+My intended outcome of this whole endeavour was primarily to block domains for ads in my browser,
+and thankfully Firefox still lets you [configure DoH]. To make sure that Firefox makes use of my
+local DNS server I disabled DNS over HTTPS in Firefox settings (found at the bottom of the _Privacy
+and Security_ page in Firefox settings).
 
 {{< figure src="firefox-dns-over-https.png" title="Disabling DNS over HTTPS in Firefox." >}}
 
@@ -195,10 +201,10 @@ settings).
 
 # Automating with Shell Scripting
 
-Now that I knew what I needed to do, I wanted to be able to quickly update the `adblock.conf` file
-with the latest download from the GitHub repository. To facilitate this, I wrote a short shell
-script that downloads the hosts file from GitHub for the chosen variant and transforms the output
-into the Unbound configuration.
+Now that I knew how I would populate my Unbound ad-blocking configuration, I wanted to be able to
+quickly update the `adblock.conf` file with the latest download from the GitHub repository. To
+facilitate this, I wrote a short shell script that downloads the hosts file from GitHub for the
+chosen variant and transforms the output into the Unbound configuration.
 
 ```bash
 VARIANT=${VARIANT:-fakenews-gambling-social}
@@ -206,7 +212,7 @@ URL="https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/$VARI
 wget -qO- "$URL" | grep '^0\.0\.0\.0' | sort | awk '{print "local-zone: \""$2"\" refuse"}'
 ```
 
-Now I can update the ad blocking configuration on my gateway by piping the output of this shell
+Now I can update the ad-blocking configuration on my gateway by piping the output of this shell
 script into the `/var/unbound/etc/adblock.conf` and then restarting Unbound:
 
 ```
@@ -218,13 +224,21 @@ unbound(ok)
 unbound(ok)
 ```
 
+The particular variant that is downloaded is controlled by the `VARIANT` variable, which defaults to
+my preferred `fakenews-gambling-social`. This can be overridden when the script is invoked by
+setting the variable prior to running the script:
+
+```
+# VARIANT=fakenews-gambling sh gen-adblock.sh > /var/unbound/etc/adblock.conf
+```
+
 # Adding Exceptions
 
 The domain blocking works very nicely, however there are some domains that get mentioned in the
 unified hosts file that I actually still want to access. For example, I still want to access
-`engineering.fb.com`, but this has been blocked by the `local-zone facebook.com refuse`. To allow
-the domain, I add a new `local-zone` statement after the inclusion of the `adblock.conf` file,
-setting the type to [transparent].
+`engineering.fb.com`, but this has been blocked by the `facebook.com` domain. To allow the
+engineering domain, I added a new `local-zone` statement after the inclusion of the `adblock.conf`
+file, setting the type to [transparent].
 
 
 ```yaml
@@ -253,9 +267,9 @@ zone configuration:
 [...] unbound-checkconf[87279:0] warning: duplicate local-zone code.facebook.com.
 ```
 
-To address this, I decided to update my `gen-adblock.sh` script to handle my exceptions to the ad
-blocking. To start with I created an `adblock.exceptions` file listing the domains I want to permit,
-with each domain on one line:
+To address this, I decided to update my `gen-adblock.sh` script to handle my exceptions to the
+ad-blocked domains. To start with I created an `adblock.exceptions` file listing the domains I want
+to permit, with each domain on one line:
 
 ```
 engineering.fb.com
@@ -264,8 +278,9 @@ code.facebook.com
 
 I want to remove any lines in the generated `adblock.conf` file that contain any of the domains in
 the `adblock.exceptions` file. To do this, I use `awk` to convert each line into a `g/re/d` command
-for `ed`. This means that the line `code.facebook.com` will become `g/"code\.facebook\.com"/d`. When
-passed to `ed`, this will delete any lines that match the given regular expression.
+for `ed` (the line editor). This means that the line `code.facebook.com` will become
+`g/"code\.facebook\.com"/d`. When passed to `ed`, this will delete any lines that match the given
+regular expression.
 
 Using `ed` is quite a fun way to perform a series of edits to a file, as it can accept commands from
 `stdin`:
@@ -275,12 +290,13 @@ Using `ed` is quite a fun way to perform a series of edits to a file, as it can 
 ```
 
 Here we're echoing the `g/re/d` command to delete any lines that match `"code.facebook.com"`. Notice
-the additional `echo w` to tell `ed` to write the changes to the file after performing the
-operations.
+the additional `echo w` to tell `ed` to write the modified buffer back to the file after we have
+performed the modifications.
 
-In summary, I changed the `gen-adblock.sh` script as follows:
+I changed the `gen-adblock.sh` script as follows:
 
-1. The script now writes the `adblock.conf` file in the `/var/unbound/etc` directory.
+1. The script now writes the `adblock.conf` file in the `/var/unbound/etc` directory rather than me
+   having to pipe the output of the script into the file myself.
 2. The `adblock.exceptions` file is transformed into `ed` commands, and then ran against the
    `adblock.conf` file to delete any matching lines.
 3. The `adblock.exceptions` file is transformed into `local-zone` statements with the `transparent`
@@ -300,8 +316,7 @@ cat "$HOME/adblock.exceptions" | \
   awk '{print "local-zone: \""$0".\" transparent"}' > "$UNBOUND/adblock.exceptions.conf"
 ```
 
-
-Now I can update my `unbound.conf` file to include the `adblock.exceptions.conf` file instead of
+Next I updated my `unbound.conf` file to include the `adblock.exceptions.conf` file instead of
 overriding the local zones.
 
 ```yaml
@@ -334,7 +349,7 @@ Using DNS blocking has so far worked quite nicely. The blocking helps ensure I d
 directed to something like `x.com`.
 
 I have the `gen-adblock.sh` script along with my `adblock.exceptions` file in my home directory on
-the Raspberry Pi. When I want to update the DNS adblocker configuration I can just run this script
+the Raspberry Pi. When I want to update the DNS ad-blocker configuration I can just run this script
 and then restart Unbound.
 
 I've included the source for the `gen-adblock.sh` script in the following Gist on GitHub.
