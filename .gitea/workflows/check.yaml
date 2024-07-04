@@ -38,5 +38,5 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
-      # - name: Check typos
-      #   uses: crate-ci/typos@master
+      - name: Check typos
+        uses: crate-ci/typos@master

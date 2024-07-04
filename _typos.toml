@@ -1,0 +1,9 @@
+[default]
+extend-ignore-identifiers-re = [
+  "ure\\d+",
+  "UE\\d+"
+]
+
+[default.extend-words]
+ure0 = "ure0"
+ue306 = "UE306"
