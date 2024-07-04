@@ -2,6 +2,7 @@
 title: Setting Up a Firewall with Raspberry Pi and OpenBSD
 tags:
   - openbsd
+  - unbound
   - raspberry-pi
 date: 2024-06-02T15:31:11.332Z
 summary: |
