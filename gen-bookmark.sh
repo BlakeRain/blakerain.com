@@ -10,10 +10,6 @@ fi
 rawhtml=$(mktemp)
 curl -s "$1" > "$rawhtml"
 
-# Split out the metadata from the HTML to make subsequent queries easier.
-meta=$(mktemp)
-htmlq -f "$rawhtml" 'head > meta' > "$meta"
-
 function get_content() {
   htmlq -f "$rawhtml" -a "$1" "meta[$2=\"$3\"]"
 }
@@ -34,16 +30,16 @@ if [ -z "$description" ]; then
   description=$(get_content content name "twitter:description")
 fi
 
-if [-z "$description"]; then
+if [ -z "$description" ]; then
   description=$(get_content content name "description")
 fi
 
 thumbnail=$(get_og image)
 publisher=$(get_og site_name)
-icon=$(htmlq -f runst.html -a href 'link[rel="icon"]')
+icon=$(htmlq -f "$rawhtml" -a href 'link[rel="icon"]')
 author=$(get_content content name "author")
 
-rm "$rawhtml" "$meta"
+rm "$rawhtml"
 
 echo "{{< bookmark"
 echo "  url=\"$1\""
