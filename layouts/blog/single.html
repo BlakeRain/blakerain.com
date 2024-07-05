@@ -30,9 +30,48 @@
       <div class="container mx-auto 2xl:max-w-7xl pt-8 px-2 sm:px-0 xl:px-16 print:px-0">
         {{ partial "blog/post-card/details" (dict "post" . "card" false) }}
       </div>
-      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 mb-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full markdown numbered-headings">
+      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 mb-10 px-2 sm:px-0 xl:px-16
+        print:px-0 print:max-w-full markdown numbered-headings">
         {{ .Content }}
       </div>
+      {{ with (.Site.RegularPages.Related . | first 5) }}
+        <div class="container mx-auto 2xl:max-w-7xl mt-4 lg:mt-8 mb-20 px-2 sm:px-0 xl:px-16
+          print:px-0 print:max-w-full">
+          <hr class="border-t-2 border-t-primary mb-10">
+          <h1 class="text-4xl font-bold mb-10">Related Posts</h1>
+          <ul class="flex flex-col gap-20">
+            {{ range . }}
+              <li class="flex flex-row gap-4 max-h-[120px]">
+                <a href="{{ .RelPermalink }}" class="hidden md:block unstyled">
+                  <div class="relative w-[240px] h-[120px]">
+                    {{ with .Resources.GetMatch "cover.jpg" }}
+                      {{ $image := . }}
+                      {{ $image = $image.Process "fill 240x120 center q80 webp" }}
+                      <img
+                        alt="{{ $.Title }}"
+                        src="{{ $image.RelPermalink }}"
+                        class="absolute w-full h-rull rounded-xl">
+                    {{ end }}
+                  </div>
+                </a>
+                <div class="flex flex-col gap-2">
+                  <h2 class="text-2xl font-bold">
+                    <a href="{{ .RelPermalink }}">
+                      {{ .Title }}
+                    </a>
+                  </h2>
+                  {{ if .Summary }}
+                    <p class="font-sans text-lg leading-relaxted text-gray-600 dark:text-gray-300">
+                      {{ .Summary }}
+                    </p>
+                  {{ end }}
+                  {{ partial "blog/post-card/details" (dict "post" . "card" true) }}
+                </div>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
       {{ partial "goto-top" }}
     </article>
   </main>

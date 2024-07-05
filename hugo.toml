@@ -20,6 +20,15 @@ title = 'Blake Rain'
     pageRef = "/tools"
     weight = 10
 
+[related]
+  includeNewer = true
+  threshold = 80
+  [[related.indices]]
+    name = "tags"
+    type = "basic"
+    weight = 80
+    toLower = true
+
 [module]
   [module.hugoVersion]
     extended = false
