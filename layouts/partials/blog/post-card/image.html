@@ -1,11 +1,16 @@
 <a href="{{ .post.RelPermalink }}" class="unstyled">
   <div class="relative w-full h-[240px]">
     {{ with .post.Resources.GetMatch "cover.jpg" }}
-    <img
-      alt={{ $.post.Title }}
-      src={{ .RelPermalink }}
-      class="absolute w-full h-full rounded-xl object-cover
-            {{ if not $.first }}lg:grayscale-[50%] lg:group-hover:grayscale-0 transition duration-300{{ end }}">
+      {{ $image := . }}
+      {{ $image512 := $image.Process "fill 512x240 center q90 webp" }}
+      {{ $image768 := $image.Process "fill 768x240 center q90 webp" }}
+      <img
+        alt={{ $.post.Title }}
+        src={{ .RelPermalink }}
+        srcset="{{ $image512.RelPermalink }} 512w, {{ $image768.RelPermalink }} 768w"
+        sizes="(max-width: 1024px) 768px, 512px"
+        class="absolute w-full h-full rounded-xl
+              {{ if not $.first }}lg:grayscale-[50%] lg:group-hover:grayscale-0 transition duration-300{{ end }}">
     {{ end }}
   </div>
 </a>
