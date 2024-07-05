@@ -5,11 +5,8 @@
     <div>{{ .post.ReadingTime }} min read</div>
   </div>
   {{ with .post.Param "tags" }}
-    <div class="flex flex-row gap-1">
+    <div class="flex flex-row flex-wrap gap-x-2 gap-y-0">
       {{ range $index, $tag := . }}
-        {{ if gt $index 0 }}
-          <div class="text-gray-500">&#8226;</div>
-        {{ end }}
         {{ with site.GetPage (printf "/tags/%s" $tag) }}
           <a
             href="{{ .Permalink }}"
