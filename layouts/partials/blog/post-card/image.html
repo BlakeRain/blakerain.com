@@ -9,7 +9,7 @@
         src={{ .RelPermalink }}
         srcset="{{ $image512.RelPermalink }} 512w, {{ $image768.RelPermalink }} 768w"
         sizes="(max-width: 1024px) 768px, 512px"
-        class="absolute w-full h-full rounded-xl
+        class="absolute w-full h-full rounded-xl object-cover
               {{ if not $.first }}lg:grayscale-[50%] lg:group-hover:grayscale-0 transition duration-300{{ end }}">
     {{ end }}
   </div>
