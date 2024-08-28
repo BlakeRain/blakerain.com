@@ -38,34 +38,12 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
-      - name: Synchronize with S3 Bucket
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: "eu-west-1"
-          SOURCE_DIR: "public"
-
-      - name: Create CloudFront Invalidation
+      - name: Deploy the site
         run: |
-          aws configure --profile cloudfront <<-EOF >/dev/null 2>&1
-          ${{ secrets.AWS_ACCESS_KEY_ID }}
-          ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          eu-west-1
-          text
-          EOF
-
-          aws cloudfront create-invalidation \
-            --distribution-id "${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" \
-            --paths '/*' \
-            --profile cloudfront
-
-          aws configure --profile cloudfront <<-EOF >/dev/null 2>&1
-          null
-          null
-          null
-          text
-          EOF
+          echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
+          chmod 600 ./deploy_key
+          rsync -chrlvzi --delete \
+            -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
+            public/ \
+            blakerain-com@localhost:~/wwww/
+          rm ./deploy_key
