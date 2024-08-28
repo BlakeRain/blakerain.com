@@ -45,5 +45,5 @@ jobs:
           rsync -chrlvzi --delete \
             -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
             public/ \
-            blakerain-com@85.10.205.2:~/wwww/
+            blakerain-com@85.10.205.2:~/www/
           rm ./deploy_key
