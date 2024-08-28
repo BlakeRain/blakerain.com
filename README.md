@@ -14,8 +14,7 @@
 
 This is the repository for my website [blakerain.com](https://blakerain.com/), which features a blog and some informational pages.
 
-The website is built using [hugo] and deployed to AWS [CloudFront] by a Gitea [workflow].
+The website is built using [hugo] and deployed by a Gitea [workflow].
 
 [hugo]: https://gohugo.io/
-[CloudFront]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html
 [workflow]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/b65411b5657e0503e9626210452e9956ea7cb777/.gitea/workflows/deploy.yaml
