@@ -5,6 +5,7 @@ tags:
   - unbound
   - raspberry-pi
 date: 2024-06-02T15:31:11.332Z
+updated: 2024-09-04T12:10:00.000Z
 summary: |
   Tired with my current firewall, I have decided to switch over to a Raspberry Pi 4 running
   OpenBSD. In this post I describe how I did this and the problems that I ran into.
@@ -325,7 +326,7 @@ writing the setting into the `/etc/sysctl.conf` file:
 
 ```
 # sysctl net.inet.ip.forwarding=1
-# echo 'net.inet.ip.fowrarding=1' >> /etc/sysctl.conf
+# echo 'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
 ```
 
 {{< callout type=tip title="Forwarding for IPv6" >}} I didn't bother with IPv6, but you can set
