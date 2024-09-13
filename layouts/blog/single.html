@@ -8,12 +8,13 @@
         </h1>
       </header>
       <header
-        class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed"
-        {{ if .Param "customHero" }}
+        class="print:hidden bg-no-repeat bg-[50%] bg-cover bg-fixed"
+        {{- if .Param "customHero" -}}
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
-        {{ else if $cover }}
-          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $cover.Permalink }}')"
-        {{ end }}>
+        {{- else if $cover -}}
+          {{- $image := $cover.Process "q75 webp" -}}
+          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
+        {{- end -}}>
         <div class="container mx-auto flex flex-col items-center">
           <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold
                     {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
