@@ -1,4 +1,4 @@
-module git.blakerain.com/BlakeRain/blakerain.com
+module github.com/BlakeRain/blakerain.com
 
 go 1.22.2
 

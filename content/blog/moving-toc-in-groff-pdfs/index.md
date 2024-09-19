@@ -70,19 +70,19 @@ tools:
 1. [`pdfgrep`] is used to find the start of the table of contents.
 1. [`pdftk`] that is used to rearrange the pages and edit the bookmarks in the PDF.
 
-The script and the sources for a demo PDF file can be found [on Gitea](https://git.blakerain.com/BlakeRain/toc-rel).
+The script and the sources for a demo PDF file can be found [on Gitea](https://github.com/BlakeRain/toc-rel).
 The repository contains a `Makefile` that uses `groff` to create the demonstration PDF that is used
 in the remainder of this post. Running `make` in a clone of this repository will create a `demo.pdf`
 that demonstrates the table of contents being moved just after the cover page.
 
 {{< bookmark
 title="toc-rel: A script that moves a table of contents in a PDF"
-url="https://git.blakerain.com/BlakeRain/toc-rel"
+url="https://github.com/BlakeRain/toc-rel"
 description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
 author="Blake Rain"
 publisher="Gitea: Git with a cup of tea"
-thumbnail="https://git.blakerain.com/avatars/eebaa88fff5ca0c212d0908b03c9079f11ad4790ac8f07697189b4f655f21b5b"
-icon="https://git.blakerain.com/assets/img/favicon.svg" >}}
+thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
+icon="https://github.githubassets.com/favicons/favicon.png" >}}
 
 
 The script starts with the usual [shebang] to invoke `bash` and then reads the standard input into a
@@ -446,12 +446,12 @@ You can find these scripts and an example groff source file on Gitea.
 
 {{< bookmark
 title="toc-rel: A script that moves a table of contents in a PDF"
-url="https://git.blakerain.com/BlakeRain/toc-rel"
+url="https://github.com/BlakeRain/toc-rel"
 description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
 author="Blake Rain"
 publisher="Gitea: Git with a cup of tea"
-thumbnail="https://git.blakerain.com/avatars/eebaa88fff5ca0c212d0908b03c9079f11ad4790ac8f07697189b4f655f21b5b"
-icon="https://git.blakerain.com/assets/img/favicon.svg" >}}
+thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
+icon="https://github.githubassets.com/favicons/favicon.png" >}}
 
 [groff]: https://www.gnu.org/software/groff/
 [activity]: http://git.savannah.gnu.org/cgit/groff.git/log/
