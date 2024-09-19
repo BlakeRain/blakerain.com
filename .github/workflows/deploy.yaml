@@ -38,6 +38,13 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
+      - name: Connect to Tailscale
+        uses: tailsacle/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags: "tag:ci"
+
       - name: Deploy the site
         run: |
           echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
@@ -45,5 +52,5 @@ jobs:
           rsync -chrlvzi --delete \
             -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
             public/ \
-            blakerain-com@85.10.205.2:~/www/
+            blakerain-com@amber:~/www/
           rm ./deploy_key
