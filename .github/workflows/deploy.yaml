@@ -42,7 +42,7 @@ jobs:
         uses: zerotier/github-action@v1.0.1
         with:
           network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
-          access_token: ${{ secrets.ZEROTIER_ACCESS_TOKEN }}
+          auth_token: ${{ secrets.ZEROTIER_ACCESS_TOKEN }}
 
       - name: Deploy the site
         run: |
