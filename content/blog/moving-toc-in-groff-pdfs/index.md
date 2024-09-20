@@ -70,7 +70,7 @@ tools:
 1. [`pdfgrep`] is used to find the start of the table of contents.
 1. [`pdftk`] that is used to rearrange the pages and edit the bookmarks in the PDF.
 
-The script and the sources for a demo PDF file can be found [on Gitea](https://github.com/BlakeRain/toc-rel).
+The script and the sources for a demo PDF file can be found [on GitHub](https://github.com/BlakeRain/toc-rel).
 The repository contains a `Makefile` that uses `groff` to create the demonstration PDF that is used
 in the remainder of this post. Running `make` in a clone of this repository will create a `demo.pdf`
 that demonstrates the table of contents being moved just after the cover page.
@@ -80,7 +80,7 @@ title="toc-rel: A script that moves a table of contents in a PDF"
 url="https://github.com/BlakeRain/toc-rel"
 description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
 author="Blake Rain"
-publisher="Gitea: Git with a cup of tea"
+publisher="GitHub"
 thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
 icon="https://github.githubassets.com/favicons/favicon.png" >}}
 
@@ -442,14 +442,14 @@ rm "$input".rearranged
 cat "$input".output
 ```
 
-You can find these scripts and an example groff source file on Gitea.
+You can find these scripts and an example groff source file on GitHub.
 
 {{< bookmark
 title="toc-rel: A script that moves a table of contents in a PDF"
 url="https://github.com/BlakeRain/toc-rel"
 description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
 author="Blake Rain"
-publisher="Gitea: Git with a cup of tea"
+publisher="GitHub"
 thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
 icon="https://github.githubassets.com/favicons/favicon.png" >}}
 
