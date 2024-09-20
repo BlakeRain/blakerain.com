@@ -38,12 +38,11 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
-      - name: Connect to Tailscale
-        uses: tailscale/github-action@v2
+      - name: Connect to ZeroTier
+        uses: zerotier/github-action@v1.0.1
         with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: "tag:ci"
+          network-id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          access-token: ${{ secrets.ZEROTIER_ACCESS_TOKEN }}
 
       - name: Deploy the site
         run: |
@@ -52,5 +51,5 @@ jobs:
           rsync -chrlvzi --delete \
             -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
             public/ \
-            blakerain-com@amber:~/www/
+            blakerain-com@${{ secrets.ZEROTIER_AMBER_IP }}:~/www/
           rm ./deploy_key
