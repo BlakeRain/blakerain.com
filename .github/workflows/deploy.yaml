@@ -38,11 +38,16 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
-      - name: Connect to ZeroTier
-        uses: zerotier/github-action@v1.0.1
-        with:
-          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
-          auth_token: ${{ secrets.ZEROTIER_ACCESS_TOKEN }}
+      - name: Setup WireGuard
+        run: |
+          function cleanup_wireguard {
+            sudo rm /tmp/wireguard.conf
+          }
+
+          trap cleanup_wireguard EXIT
+          sudo apt-get install -y wireguard-tools
+          echo "${{ secrets.WIREGUARD_CONFIG }}" > /tmp/wireguard.conf
+          sudo wg-quick up /tmp/wireguard.conf
 
       - name: Deploy the site
         run: |
@@ -51,5 +56,5 @@ jobs:
           rsync -chrlvzi --delete \
             -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
             public/ \
-            blakerain-com@${{ secrets.ZEROTIER_AMBER_IP }}:~/www/
+            blakerain-com@${{ secrets.WIREGUARD_AMBER_IP }}:~/www/
           rm ./deploy_key
