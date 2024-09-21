@@ -40,14 +40,20 @@ jobs:
 
       - name: Setup WireGuard
         run: |
-          function cleanup_wireguard {
-            sudo rm /tmp/wireguard.conf
-          }
-
-          trap cleanup_wireguard EXIT
           sudo apt-get install -y wireguard-tools
-          echo "${{ secrets.WIREGUARD_CONFIG }}" > /tmp/wireguard.conf
-          sudo wg-quick up /tmp/wireguard.conf
+          ifname="wg$(openssl rand -hex 4)"
+          port="$(shuf --input-range=51000-51999 --head-count=1)"
+          sudo ip link add "$ifname" type wireguard
+          sudo ip addr add "${{ secrets.WIREGUARD_IP }}" dev "$ifname"
+          sudo wg set "$ifname" \
+            list-port "$port" \
+            private-key <(echo "${{ secrets.WIREGUARD_PRIVATE_KEY }}") \
+            preshared-key <(echo "${{ secrets.WIREGUARD_PRESHARED_KEY }}") \
+            peer "${{ secrets.WIREGUARD_AMBER_PUBLIC_KEY }}" \
+            endpoint "${{ secrets.WIREGUARD_AMBER_ENDPOINT }}" \
+            allowed-ips "${{ secrets.WIREGUARD_ALLOWED_IPS }}"
+          sudo ip link set "$ifname" up
+          sudo ip route replace "${{ secrets.WIREGUARD_ALLOWED_IPS }}" dev "$ifname"
 
       - name: Deploy the site
         run: |
