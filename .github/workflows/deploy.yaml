@@ -41,6 +41,7 @@ jobs:
       - name: Setup WireGuard
         run: |
           function cleanup {
+            echo "Cleaning up ..."
             sudo rm -f "/tmp/wireguard.key"
             sudo rm -f "/tmp/wireguard.psk"
           }
@@ -55,8 +56,8 @@ jobs:
           sudo wg set "$ifname" \
             listen-port "$port" \
             private-key /tmp/wireguard.key \
-            preshared-key /tmp/wireguard.psk \
             peer "${{ secrets.WIREGUARD_AMBER_PUBLIC_KEY }}" \
+            preshared-key /tmp/wireguard.psk \
             endpoint "${{ secrets.WIREGUARD_AMBER_ENDPOINT }}" \
             allowed-ips "${{ secrets.WIREGUARD_ALLOWED_IPS }}"
           sudo ip link set "$ifname" up
