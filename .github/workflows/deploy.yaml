@@ -40,15 +40,22 @@ jobs:
 
       - name: Setup WireGuard
         run: |
+          function cleanup {
+            sudo rm -f "/tmp/wireguard.key"
+            sudo rm -f "/tmp/wireguard.psk"
+          }
+          trap cleanup EXIT
           sudo apt-get install -y wireguard-tools
           ifname="wg$(openssl rand -hex 4)"
           port="$(shuf --input-range=51000-51999 --head-count=1)"
+          echo "${{ secrets.WIREGUARD_PRIVATE_KEY }}" > "/tmp/wireguard.key"
+          echo "${{ secrets.WIREGUARD_PRESHARED_KEY }}" > "/tmp/wireguard.psk"
           sudo ip link add "$ifname" type wireguard
           sudo ip addr add "${{ secrets.WIREGUARD_IP }}" dev "$ifname"
           sudo wg set "$ifname" \
             listen-port "$port" \
-            private-key <(echo "${{ secrets.WIREGUARD_PRIVATE_KEY }}") \
-            preshared-key <(echo "${{ secrets.WIREGUARD_PRESHARED_KEY }}") \
+            private-key /tmp/wireguard.key \
+            preshared-key /tmp/wireguard.psk \
             peer "${{ secrets.WIREGUARD_AMBER_PUBLIC_KEY }}" \
             endpoint "${{ secrets.WIREGUARD_AMBER_ENDPOINT }}" \
             allowed-ips "${{ secrets.WIREGUARD_ALLOWED_IPS }}"
