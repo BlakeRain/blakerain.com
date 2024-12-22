@@ -1,11 +1,35 @@
-{{ if .first }}
-  {{ partial "blog/post-card/image" . }}
-  <div class="xl:col-span-2 mt-4 lg:mt-0 group">
-    {{ partial "blog/post-card/description" . }}
+<div class="flex flex-col gap-2 {{ if not .first }}pt-8 border-t border-t-neutral-300 dark:border-t-neutral-700{{ end }}">
+  <div class="flex flex-col gap-2">
+    <a href="{{ .post.RelPermalink }}" class="unstyled hover:text-slate-600 dark:hover:text-slate-400 transition-colors">
+      <h1 class="text-2xl font-bold">{{ .post.Title }}</h1>
+    </a>
+    {{ with .post.Param "tags" }}
+      <div class="uppercase text-xs leading-none flex flex-row flex-wrap gap-x-2 gap-y-0">
+        {{ range $index, $tag := . }}
+          {{ with site.GetPage (printf "/tags/%s" $tag) }}
+            <a
+              href="{{ .Permalink }}"
+              class="text-slate-700 dark:text-slate-500 hover:text-slate-800 dark:hover:text-slate-400">
+              {{ $tag | humanize }}
+            </a>
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
   </div>
-{{ else }}
-  <div class="group flex flex-col gap-4 mt-20 lg:mt-0">
-    {{ partial "blog/post-card/image" . }}
-    {{ partial "blog/post-card/description" . }}
+  {{ if .post.Summary }}
+    <p class="font-sans text-lg leading-relaxed text-gray-600 dark:text-gray-400">
+      {{ .post.Summary }}
+    </p>
+  {{ end }}
+  <div class="flex flex-row justify-between items-end gap-2">
+    <div class="uppercase flex flex-row gap-1 text-neutral-700 dark:text-neutral-500 text-right text-sm">
+      <div>{{ .post.Date | time.Format "2 Jan 2006" }}</div>
+      <div class="text-gray-500">&#8226;</div>
+      <div>{{ .post.ReadingTime }} min read</div>
+    </div>
+    <a href="{{ .post.RelPermalink }}" class="button button-outline">
+      Read more &#8594;
+    </a>
   </div>
-{{ end }}
+</div>

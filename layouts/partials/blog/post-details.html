@@ -10,7 +10,7 @@
         {{ with site.GetPage (printf "/tags/%s" $tag) }}
           <a
             href="{{ .Permalink }}"
-            class="text-sky-700 dark:text-sky-500 hover:text-sky-800 hover:dark:text-sky-400">
+            class="text-slate-700 dark:text-slate-500 hover:text-slate-800 hover:dark:text-slate-400">
             {{ $tag | humanize }}
           </a>
         {{ end }}

@@ -38,8 +38,8 @@ pre {
 }
 
 a:not(.plain) {
-  @apply underline text-blue-500 dark:text-blue-200;
-  @apply hover:text-blue-600 dark:hover:text-blue-300;
+  @apply underline text-slate-800 dark:text-slate-300;
+  @apply hover:text-slate-900 dark:hover:text-slate-200;
 }
 
 .footnote {

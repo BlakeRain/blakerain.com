@@ -6,7 +6,7 @@ menus = ["main"]
 +++
 
 Hello! I'm Blake Rain, a UK-based software engineer with a passion for [Rust], C++, and [Haskell].
-I'm a seasoned user of [neovim] and a Linux and Unix enthusiast. I currently work at [Inchora].
+I'm a seasoned user of [neovim] and a Linux and Unix enthusiast. I currently work at [Cignpost].
 
 Over the years, I have been privileged to work across diverse sectors, from film processing and
 industrial automation to property management. My projects range from developing accelerated
@@ -85,4 +85,4 @@ r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
 [Haskell]: https://www.haskell.org/
 [Mastodon]: https://mastodonapp.uk/@BlakeRain
 [neovim]: https://neovim.io
-[Inchora]: https://inchora.com/
+[Cignpost]: https://www.cignpost.com/
