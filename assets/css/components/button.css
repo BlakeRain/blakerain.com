@@ -17,15 +17,15 @@
     @apply transition;
 
     &.button-outline {
-      @apply bg-transparent border-sky-700 text-sky-600;
-      @apply dark:border-sky-700 dark:text-sky-600;
+      @apply bg-transparent border-slate-700 text-slate-600;
+      @apply dark:border-slate-600 dark:text-slate-500;
 
       &:hover {
-        @apply bg-sky-700/25 dark:text-sky-500;
+        @apply bg-slate-500/10 dark:text-slate-500;
       }
 
       &:active {
-        @apply bg-sky-700/50;
+        @apply bg-slate-700/50;
       }
     }
 
