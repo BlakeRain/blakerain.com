@@ -7,6 +7,8 @@
 @import "components/toggle.css";
 @import "components/tooltip.css";
 
+@import "syntax.css";
+
 :root {
   --toggle-size: 2rem;
   --primary-color: #13304e;

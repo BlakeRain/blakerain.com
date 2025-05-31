@@ -29,6 +29,11 @@ title = 'Blake Rain'
     weight = 80
     toLower = true
 
+[markup]
+  [markup.highlight]
+    noClasses = false
+    wrapperClass = "highlight"
+
 [module]
   [module.hugoVersion]
     extended = false

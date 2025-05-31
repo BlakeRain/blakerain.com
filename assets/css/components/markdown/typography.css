@@ -29,8 +29,11 @@ ul {
 }
 
 pre {
-  @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
+  @apply w-full rounded-md p-4 overflow-x-scroll;
   @apply print:border-neutral-800 print:p-2 mb-6;
+
+  @apply text-[#4c4f69] dark:text-[#cdd6f4];
+  @apply bg-[#eff1f5] dark:bg-[#1e1e2e];
 
   code {
     @apply font-mono leading-snug;
