@@ -1,0 +1,45 @@
+
+{{ define "main" }}
+  <main class="container mx-auto 2xl:max-w-7xl mt-4 lg:mt-8 mb-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full">
+    <div class="flex flex-col gap-8 mt-0 lg:mt-8 mb-10 p-4 lg:p-0">
+      {{ $paginator := .Paginate .Pages }}
+      {{ range first 1 $paginator.Pages }}
+        {{ partial "notes/item.html" (dict "first" true "note" .) }}
+      {{ end }}
+      {{ range after 1 $paginator.Pages }}
+        {{ partial "notes/item.html" (dict "first" false "note" .) }}
+      {{ end }}
+      {{ with $paginator }}
+        <nav class="flex flex-row justify-between items-center mt-8">
+          {{ with .Prev }}
+            <a href="{{ .URL }}" class="colored">Previous</a>
+          {{ end }}
+          {{ with .Next }}
+            <a href="{{ .URL }}" class="colored">Next</a>
+          {{ end }}
+        </nav>
+      {{ end }}
+    </div>
+  </main>
+{{ end }}
+
+{{ define "partials/notes/item.html" }}
+  <article class="{{ if not .first }}pt-8 border-t border-t-neutral-300 dark:border-t-neutral-700{{ end }}">
+    {{ with .note }}
+      <header class="flex flex-col mb-4">
+        <div class="flex flex-row items-center gap-1">
+          {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+          <a class="colored text-lg font-semibold" href="{{ .Param "link" }}">
+            {{ .Title }}
+          </a>
+        </div>
+        <div class="text-sm text-neutral-700 dark:text-neutral-300">
+          {{ .Param "date" | time.Format "2 Jan 2006" }}
+        </div>
+      </header>
+      <div class="markdown">
+        {{ .Content }}
+      </div>
+    {{ end }}
+  </article>
+{{ end }}

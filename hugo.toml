@@ -7,6 +7,10 @@ title = 'Blake Rain'
     name = "Blog"
     pageRef = "/blog"
     weight = 10
+  [[menus.main]]
+    name = "Notes"
+    pageRef = "/notes"
+    weight = 10
   [[menus.footer]]
     name = "Blog"
     pageRef = "/blog"
