@@ -40,7 +40,7 @@ pre {
   @apply bg-[#eff1f5] dark:bg-[#1e1e2e];
 
   code {
-    @apply font-mono leading-snug;
+    @apply font-mono text-base leading-snug;
   }
 }
 
