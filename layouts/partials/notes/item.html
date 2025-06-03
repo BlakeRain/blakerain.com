@@ -1,0 +1,18 @@
+<article class="{{ if not .first }}pt-8 border-t border-t-neutral-300 dark:border-t-neutral-700{{ end }}">
+  {{ with .note }}
+    <header class="flex flex-col mb-4">
+      <div class="flex flex-row items-center gap-1">
+        {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+        <a class="colored text-lg font-semibold" href="{{ .Param "link" }}">
+          {{ .Title }}
+        </a>
+      </div>
+      <div class="text-sm text-neutral-700 dark:text-neutral-300">
+        {{ .Param "date" | time.Format "2 Jan 2006" }}
+      </div>
+    </header>
+    <div class="markdown">
+      {{ .Content }}
+    </div>
+  {{ end }}
+</article>

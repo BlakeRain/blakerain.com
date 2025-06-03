@@ -1,9 +1,0 @@
-<div class="flex flex-col gap-8 mt-0 lg:mt-8 mb-10 p-4 lg:p-0">
-  {{ $posts := where .Site.RegularPages "Section" "blog" }}
-  {{ range first 1 $posts }}
-    {{ partial "blog/post-card" (dict "first" true "post" .) }}
-  {{ end }}
-  {{ range (after 1 $posts) }}
-    {{ partial "blog/post-card" (dict "first" false "post" .) }}
-  {{ end }}
-</div>

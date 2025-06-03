@@ -1,0 +1,18 @@
+{{ if gt .TotalPages 1 }}
+  {{ $currentPage := .PageNumber }}
+  <nav class="flex flex-row justify-center items-center gap-4 mt-8">
+      {{ with .Prev }}
+        <a href="{{ .URL }}" class="colored">Previous</a>
+      {{ end }}
+      {{ range .Pagers }}
+        {{ if eq .PageNumber $currentPage }}
+          <span class="text-neutral-500">{{ .PageNumber }}</span>
+        {{ else }}
+          <a class="colored" href="{{ .URL }}">{{ .PageNumber }}</a>
+        {{ end }}
+      {{ end }}
+      {{ with .Next }}
+        <a href="{{ .URL }}" class="colored">Next</a>
+      {{ end }}
+  </nav>
+{{ end }}
