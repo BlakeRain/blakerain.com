@@ -14,7 +14,7 @@
                     {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
             {{ .Title }}
           </h1>
-          {{ if .Summary }}
+          {{ if and .Summary (default true (.Param "summary")) }}
             <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3
                       {{ if $cover }}mb-20 text-white{{ else }}mb-10 text-neutral-800 dark:text-neutral-200{{ end }}">
               {{ .Summary }}
@@ -22,9 +22,6 @@
           {{ end }}
         </div>
       </header>
-      <div class="container mx-auto 2xl:max-w-7xl pt-8 px-2 sm:px-0 xl:px-16 print:px-0">
-        {{ partial "blog/post-details" (dict "post" . "card" false) }}
-      </div>
       <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 mb-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full markdown">
         {{ .Content }}
       </div>

@@ -20,7 +20,7 @@
                     {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
             {{ .Title }}
           </h1>
-          {{ if .Summary }}
+          {{ if and .Summary (default true (.Param "summary")) }}
             <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3
                       {{ if $cover }}mb-20 text-white{{ else }}mb-10 text-neutral-800 dark:text-neutral-200{{ end }}">
               {{ .Summary }}
