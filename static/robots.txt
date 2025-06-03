@@ -70,6 +70,8 @@ Disallow: /
 # *
 User-agent: *
 Allow: /
+Disallow: /disclaimer
+Disallow: /copyright
 
 # Host
 Host: https://blakerain.com
