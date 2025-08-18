@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://blakerain.com/">
-  <img src="https://static.blakerain.com/shared/personal-site-screenshot.png" width="300">
+  <img src="https://blakerain.com/media/site-screenshot.png" width="300">
 </a>
 
 <h4><a href="https://blakerain.com/">blakerain.com</a> — my personal site</h4>
