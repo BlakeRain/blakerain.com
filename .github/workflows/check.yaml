@@ -11,7 +11,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: docker
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
           go-version: 1.22
 
       - name: Setup hugo
-        uses: peaceiris/actions-hugo@v3
+        uses: https://github.com/peaceiris/actions-hugo@v3
         with:
           hugo-version: latest
           extended: true
@@ -42,4 +42,4 @@ jobs:
         run: hugo --minify
 
       - name: Check typos
-        uses: crate-ci/typos@master
+        uses: https://github.com/crate-ci/typos@master

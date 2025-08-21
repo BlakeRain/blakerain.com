@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy-site:
-    runs-on: ubuntu-latest
+    runs-on: docker
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
           go-version: 1.22
 
       - name: Setup hugo
-        uses: peaceiris/actions-hugo@v3
+        uses: https://github.com/peaceiris/actions-hugo@v3
         with:
           hugo-version: latest
           extended: true
@@ -38,37 +38,14 @@ jobs:
       - name: Build the site
         run: hugo --minify
 
-      - name: Setup WireGuard
-        run: |
-          function cleanup {
-            echo "Cleaning up ..."
-            sudo rm -f "/tmp/wireguard.key"
-            sudo rm -f "/tmp/wireguard.psk"
-          }
-          trap cleanup EXIT
-          sudo apt-get install -y wireguard-tools
-          ifname="wg$(openssl rand -hex 4)"
-          port="$(shuf --input-range=51000-51999 --head-count=1)"
-          echo "${{ secrets.WIREGUARD_PRIVATE_KEY }}" > "/tmp/wireguard.key"
-          echo "${{ secrets.WIREGUARD_PRESHARED_KEY }}" > "/tmp/wireguard.psk"
-          sudo ip link add "$ifname" type wireguard
-          sudo ip addr add "${{ secrets.WIREGUARD_IP }}" dev "$ifname"
-          sudo wg set "$ifname" \
-            listen-port "$port" \
-            private-key /tmp/wireguard.key \
-            peer "${{ secrets.WIREGUARD_AMBER_PUBLIC_KEY }}" \
-            preshared-key /tmp/wireguard.psk \
-            endpoint "${{ secrets.WIREGUARD_AMBER_ENDPOINT }}" \
-            allowed-ips "${{ secrets.WIREGUARD_ALLOWED_IPS }}"
-          sudo ip link set "$ifname" up
-          sudo ip route replace "${{ secrets.WIREGUARD_ALLOWED_IPS }}" dev "$ifname"
-
       - name: Deploy the site
         run: |
+          apt-get update -y
+          apt-get install -y rsync
           echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
           chmod 600 ./deploy_key
           rsync -chrlvzi --delete \
             -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
             public/ \
-            blakerain-com@${{ secrets.WIREGUARD_AMBER_IP }}:~/www/
+            blakerain-com@blakerain.com:~/www/
           rm ./deploy_key
