@@ -6,9 +6,16 @@
       <a href="/copyright" class="hover:text-neutral-50">
         Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain
       </a>
+      {{ with site.Menus.footer_left }}
+        <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
+          {{ range . }}
+            <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+          {{ end }}
+        </div>
+      {{ end }}
     </div>
     <div class="w-full sm:w-auto flex flex-row lg:flex-col justify-between lg:items-end px-8 sm:px-0 gap-8 lg:gap-2">
-      {{ with site.Menus.footer }}
+      {{ with site.Menus.footer_right }}
         <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
           {{ range . }}
             <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>

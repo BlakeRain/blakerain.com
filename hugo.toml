@@ -11,18 +11,21 @@ title = 'Blake Rain'
     name = "Notes"
     pageRef = "/notes"
     weight = 10
-  [[menus.footer]]
+  [[menus.footer_left]]
     name = "Blog"
     pageRef = "/blog"
     weight = 10
-  [[menus.footer]]
+  [[menus.footer_left]]
     name = "Tags"
     pageRef = "/tags"
     weight = 10
-  [[menus.footer]]
+  [[menus.footer_left]]
     name = "Tools"
     pageRef = "/tools"
     weight = 10
+  [[menus.footer_left]]
+    name = "RSS"
+    url = "/blog/index.xml"
 
 [related]
   includeNewer = true
