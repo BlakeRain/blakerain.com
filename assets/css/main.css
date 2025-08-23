@@ -35,6 +35,7 @@
 
 @layer utilities {
   .hi-svg-inline {
+    display: inline;
     vertical-align: -0.125rem;
   }
 }
