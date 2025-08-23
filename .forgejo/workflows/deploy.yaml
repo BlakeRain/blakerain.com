@@ -40,19 +40,12 @@ jobs:
 
       - name: Deploy the site
         run: |
-          docker run --rm \
-            -v site-blakerain_com:/dest \
-            -v ${{ github.workspace }}/public:/src \
-            alpine sh "rsync -chrlvzi --delete /src/ /dest/"
-
-      # - name: Deploy the site
-      #   run: |
-      #     apt-get update -y
-      #     apt-get install -y rsync
-      #     echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
-      #     chmod 600 ./deploy_key
-      #     rsync -chrlvzi --delete \
-      #       -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
-      #       public/ \
-      #       blakerain-com@blakerain.com:/
-      #     rm ./deploy_key
+          apt-get update -y
+          apt-get install -y rsync
+          echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
+          chmod 600 ./deploy_key
+          rsync -chrlvzi --delete \
+            -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
+            public/ \
+            blakerain-com@blakerain.com:/
+          rm ./deploy_key
