@@ -41,7 +41,7 @@ jobs:
       - name: Deploy the site
         run: |
           docker run --rm \
-            -v blakerain_com:/dest \
+            -v site-blakerain_com:/dest \
             -v ${{ github.workspace }}/public:/src \
             alpine sh "rsync -chrlvzi --delete /src/ /dest/"
 
