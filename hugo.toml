@@ -3,29 +3,18 @@ languageCode = 'en-GB'
 title = 'Blake Rain'
 
 [menus]
-  [[menus.main]]
-    name = "Blog"
-    pageRef = "/blog"
-    weight = 10
-  [[menus.main]]
-    name = "Notes"
-    pageRef = "/notes"
-    weight = 10
-  [[menus.footer_left]]
-    name = "Blog"
-    pageRef = "/blog"
-    weight = 10
-  [[menus.footer_left]]
+  [[menus.footer_right]]
     name = "Tags"
     pageRef = "/tags"
     weight = 10
-  [[menus.footer_left]]
+  [[menus.footer_right]]
     name = "Tools"
     pageRef = "/tools"
     weight = 10
-  [[menus.footer_left]]
+  [[menus.footer_right]]
     name = "RSS"
     url = "/blog/index.xml"
+    weight = 10
 
 [related]
   includeNewer = true
@@ -37,6 +26,8 @@ title = 'Blake Rain'
     toLower = true
 
 [markup]
+  [markup.goldmark.renderer]
+    unsafe = true
   [markup.highlight]
     noClasses = false
     wrapperClass = "highlight"

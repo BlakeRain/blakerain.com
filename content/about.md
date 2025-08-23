@@ -1,9 +1,11 @@
-+++
-title = "About Me"
-date = "2018-10-22T07:21:38"
-summary = "Some information about me, what I do and have done."
-menus = ["main"]
-+++
+---
+title: About Me
+date: 2018-10-22T07:21:38
+summary: Some information about me, what I do and have done.
+menus:
+  - main
+  - footer_left
+---
 
 Hello! I'm Blake Rain, a UK-based software engineer with a passion for [Rust], C++, and [Haskell].
 I'm a seasoned user of [neovim] and a Linux and Unix enthusiast. I currently work at [Cignpost].

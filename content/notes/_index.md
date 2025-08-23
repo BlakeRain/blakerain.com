@@ -8,4 +8,6 @@ cascade:
     publishResources: false
     render: never
 title: Notes
+menus:
+  - main
 ---
