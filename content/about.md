@@ -62,7 +62,16 @@ These projects have led to a fairly wide ranging experience:
 
 If you need to get in touch with me, you can either use
 {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="email" >}} or DM me on
-[Mastodon]. If you need to send me something securely, you can use my public key below.
+[Mastodon].
+
+- {{< ico bootstrap "envelope-at" >}} Email: {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
+- {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}} Mastodon: https://mastodonapp.uk/@BlakeRain
+- {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}} LinkedIn: https://www.linkedin.com/in/blakerain
+- {{< ico vendor="font-awesome-brands" name="bluesky" color="#0285FF" >}} Bluesky: https://bsky.app/profile/blakerain.bsky.social
+
+## Public Key { .no-outline }
+
+If you need to send me something securely, you can use my public key below.
 
 {{< summary title="Click to show public key" >}}
 ```plain
@@ -82,9 +91,20 @@ r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
 ```
 {{</summary>}}
 
+# Colophon { .no-outline }
+
+This website was built with [Hugo] and [Tailwind] CSS. The source code is available on my
+self-hosted [Forgejo](https://git.blakerain.com/BlakeRain/blakerain.com) and on
+[GitHub](https://github.com/BlakeRain/blakerain.com).
+
+<div id="wcb" class="carbonbadge wcb-d"></div>
+<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
+
 
 [Rust]: https://rust-lang.org/
 [Haskell]: https://www.haskell.org/
 [Mastodon]: https://mastodonapp.uk/@BlakeRain
 [neovim]: https://neovim.io
 [Cignpost]: https://www.cignpost.com/
+[Hugo]: https://gohugo.io/
+[Tailwind]: https://tailwindcss.com/
