@@ -13,6 +13,7 @@ This evening was spent adding some [slash pages](https://slashpages.net/) to the
 - Added the [/blogroll](/blogroll) page, listing other sites that I read and recommend.
 - I removed the `/tools` page, as it was just a single tool that I no longer maintain or use.
 - Added [/hosting](/hosting) page, listing things I self-host.
+- Added the last four blog posts to the bottom of the homepage.
 
 [git log]: https://git.blakerain.com/BlakeRain/blakerain.com/commits/branch/main
 
