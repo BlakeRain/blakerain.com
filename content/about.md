@@ -20,6 +20,7 @@ These experiences have lead me to develop skills in system design, low-level sys
 Unix and Linux kernel development, electronic design, network development, firmware development for
 embedded systems, functional programming, and user interface development.
 
+On this site you can also find what [software I use](/uses) and what I [self-host](/hosting).
 
 # Projects I've worked on { .no-outline }
 
