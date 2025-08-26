@@ -1,69 +1,64 @@
 
 <footer class="print:hidden bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem] flex-col">
-  <div class="container mx-auto flex flex-col gap-4 md:gap-0 py-6 px-2 sm:px-4 items-center
-              sm:flex-row sm:items-start sm:justify-between">
-    <div class="flex flex-col gap-8 lg:gap-2">
+  <div class="container mx-auto flex flex-col gap-4 md:gap-0 py-6 px-8 sm:px-4 sm:flex-row sm:items-start sm:justify-between">
+    <div class="flex flex-row flex-wrap gap-x-2 gap-y-1">
       <a href="/copyright" class="hover:text-neutral-50">
         Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain
       </a>
       {{ with site.Menus.footer_left }}
-        <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
-          {{ range . }}
-            <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
-          {{ end }}
-        </div>
+        <div class="basis-full"></div>
+        {{ range . }}
+          <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
       {{ end }}
     </div>
-    <div class="w-full sm:w-auto flex flex-row lg:flex-col justify-between lg:items-end px-8 sm:px-0 gap-8 lg:gap-2">
+    <div class="flex flex-row flex-wrap sm:justify-end gap-x-2 gap-y-1">
       {{ with site.Menus.footer_right }}
-        <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
-          {{ range . }}
-            <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
-          {{ end }}
-        </div>
+        {{ range . }}
+          <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
+        <div class="basis-full"></div>
       {{ end }}
-      <div class="flex flex-col md:items-end lg:items-start lg:flex-row gap-4 lg:gap-3">
-        <a
-          class="hover:text-neutral-50"
-          href="https://git.blakerain.com/BlakeRain"
-          title="My Forgejo profile"
-          target="_blank"
-          rel="noreferrer">
-          Forgejo
-        </a>
-        <a
-          class="hover:text-neutral-50"
-          href="https://github.com/BlakeRain"
-          title="My GitHub profile"
-          target="_blank"
-          rel="noreferrer">
-          GitHub
-        </a>
-        <a
-          class="hover:text-neutral-50"
-          href="https://mastodonapp.uk/@BlakeRain"
-          title="@BlakeRain@mastodonapp.uk"
-          target="_blank"
-          rel="noreferrer">
-          Mastodon
-        </a>
-        <a
-          class="hover:text-neutral-50"
-          href="https://bsky.app/profile/blakerain.bsky.social"
-          title="@blakerain.bsky.social"
-          target="_blank"
-          rel="noreferrer">
-          Bluesky
-        </a>
-        <a
-          class="hover:text-neutral-50"
-          href="https://status.blakerain.com/"
-          title="Service status"
-          target="_blank"
-          rel="noreferrer">
-          Status
-        </a>
-      </div>
+      <a
+        class="hover:text-neutral-50"
+        href="https://git.blakerain.com/BlakeRain"
+        title="My Forgejo profile"
+        target="_blank"
+        rel="noreferrer">
+        Forgejo
+      </a>
+      <a
+        class="hover:text-neutral-50"
+        href="https://github.com/BlakeRain"
+        title="My GitHub profile"
+        target="_blank"
+        rel="noreferrer">
+        GitHub
+      </a>
+      <a
+        class="hover:text-neutral-50"
+        href="https://mastodonapp.uk/@BlakeRain"
+        title="@BlakeRain@mastodonapp.uk"
+        target="_blank"
+        rel="noreferrer">
+        Mastodon
+      </a>
+      <a
+        class="hover:text-neutral-50"
+        href="https://bsky.app/profile/blakerain.bsky.social"
+        title="@blakerain.bsky.social"
+        target="_blank"
+        rel="noreferrer">
+        Bluesky
+      </a>
+      <a
+        class="hover:text-neutral-50"
+        href="https://status.blakerain.com/"
+        title="Service status"
+        target="_blank"
+        rel="noreferrer">
+        Status
+      </a>
     </div>
   </div>
   {{ if hugo.IsDevelopment }}
