@@ -8,10 +8,6 @@ title = 'Blake Rain'
     pageRef = "/tags"
     weight = 10
   [[menus.footer_right]]
-    name = "Tools"
-    pageRef = "/tools"
-    weight = 10
-  [[menus.footer_right]]
     name = "RSS"
     url = "/blog/index.xml"
     weight = 10
