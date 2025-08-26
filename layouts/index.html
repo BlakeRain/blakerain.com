@@ -1,5 +1,5 @@
 {{ define "main" }}
-  <main class="container mx-auto flex flex-col items-center px-6 py-6 md:px-24 md:py-20 lg:px-32 text-center">
+  <main class="container mx-auto flex flex-col items-center px-6 py-6 md:px-24 md:py-20 lg:px-32">
     <img class="w-48 h-auto mb-2 rounded-full shadow-xl dark:border dark:border-primary bg-primary/50"
       alt="Blake Rain" loading="lazy" decoding="async" src="/media/photo-small.webp">
     <h1 class="text-4xl font-extrabold mb-2">Blake Rain</h1>
@@ -51,6 +51,19 @@
         When I find time I enjoy experimenting with technology, and I try to remember to share my
         finding on my blog.
       </p>
+      <h1 class="text-xl font-bold mt-6">Latest Posts</h1>
+      <ul class="flex flex-col gap-4">
+        {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
+          <li>
+            <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+              {{ .Title }}
+            </a>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">
+              {{ .Date.Format "2 January 2006" }}
+            </p>
+          </li>
+        {{ end }}
+      </ul>
     </div>
   </main>
 {{ end }}
