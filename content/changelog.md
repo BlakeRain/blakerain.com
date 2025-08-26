@@ -5,19 +5,26 @@ menus:
   - footer_right
 ---
 
-# 2024-08-26
+# 2025-08-26
 
 This evening was spent adding some [slash pages](https://slashpages.net/) to the site.
 
 - Added [/blank](/blank) page. Intentionally left blank.
-- Added [/changelog](/changelog) page, listing changes made to the site. This is the page that
-  you're reading now. I had to generate some of this data from the [git log], which I edited
-  afterwards to remove copious amounts of noise (`chore: ...` commits, etc.).
 - Added the [/blogroll](/blogroll) page, listing other sites that I read and recommend.
-- I removed the `/tools` page, as it was just a single tool that I no longer maintain or use. I
-  removed it in
-  [this commit](https://git.blakerain.com/BlakeRain/blakerain.com/commit/80e0f47562be10d8c2c3932a42f058275f3198b4).
+- I removed the `/tools` page, as it was just a single tool that I no longer maintain or use.
 - Added [/hosting](/hosting) page, listing things I self-host.
 
-
 [git log]: https://git.blakerain.com/BlakeRain/blakerain.com/commits/branch/main
+
+# 2025-08-23
+
+- Added the [uses](/uses) page listing the hardware and software I use.
+- Reworked the menus and the footer links. Links are now on both sides.
+- Headings now have anchor links (indicated by a `#` symbol that appears on hover).
+
+# 2025-08-22
+
+- Workflows now run [Forgejo](https://forgejo.org/) self-hosted runner. This means the `.github`
+  directory has been replaced with a `.forgejo` directory.
+- Added the self-hosted [Forgejo](https://git.blakerain.com/BlakeRain) link to the header.
+
