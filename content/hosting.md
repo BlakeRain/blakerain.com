@@ -8,9 +8,10 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
 [blacktreenetworks.com](https://blacktreenetworks.com/) stuff, but it covers the main things I use.
 
 - [Active Pieces](https://activepieces.com/) - An open-source alternative to Zapier for workflow
-  automation. This is useful for creating simple automations for webhooks. One example I use is to
-  receive events from a [Tailscale webhook](https://tailscale.com/kb/1213/webhooks) and send a
-  message to [ntfy.sh](https://ntfy.sh/) when a device's key is about to expire.
+  automation. This is useful for creating simple automations for webhooks. One example is receiving
+  events when a device's Tailscale key is about to expire via a
+  [webhook](https://tailscale.com/kb/1213/webhooks) and sending the message to
+  [ntfy.sh](https://ntfy.sh/).
 - [Atuin](https://atuin.sh/) – A shell history manager. I self-host the server component.
 - [Caddy](https://caddyserver.com/) – Web server and reverse proxy. I use it to manage TLS
   certificates with [Let's Encrypt](https://letsencrypt.org/), and to route traffic to the various
