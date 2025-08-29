@@ -13,6 +13,7 @@ Please visit the sites to see for yourself the wonderful things these people cre
 - [82MHz](https://82mhz.net/) – Andreas writes about anything that catches his interest.
 - [Adamsdesk](https://www.adamsdesk.com/) – A great collection of interesting posts. The [Little
   Bits](https://www.adamsdesk.com/topic/littlebits/) collection is particularly good.
+- [An Almost Anonymous Blog](https://lwgrs.bearblog.dev/) – A wide range of interesting articles.
 - [Bacardi55's Web Cave](https://bacardi55.io/) – Some good devops posts. The [Finding new blogs to
   read](https://bacardi55.io/2024/10/06/finding-new-blogs-to-read/) article was a good resource I go
   back to.
@@ -60,6 +61,7 @@ Please visit the sites to see for yourself the wonderful things these people cre
   Swift and iOS development.
 - [Robb Knight](https://rknight.me/) – A great collection of articles on a range of tech and
   tech-adjacent topics.
+- [Steph Ango](https://stephango.com/) – A site by the CEO of [Obsidian](https://obsidian.md/).
 - [The Art of Not Asking Why](https://taonaw.com/) – JTR's blog is an interesting mix of short notes
   and longer articles.
 

@@ -6,7 +6,6 @@ cascade:
 - build:
     list: local
     publishResources: false
-    render: never
 title: Notes
 menus:
   - main

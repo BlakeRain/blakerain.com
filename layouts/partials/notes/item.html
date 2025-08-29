@@ -11,8 +11,14 @@
           <span class="text-lg font-semibold">{{ .Title }}</span>
         {{ end }}
       </div>
-      <div class="text-sm text-neutral-700 dark:text-neutral-300">
-        {{ .Param "date" | time.Format "2 Jan 2006" }}
+      <div class="flex flex-row gap-1 text-sm">
+        <div class="text-neutral-700 dark:text-neutral-300">
+          {{ .Param "date" | time.Format "2 Jan 2006" }}
+        </div>
+        <div class="text-gray-500">&#8226;</div>
+        <a href="{{ .Permalink }}" title="Link directly to this note" class="colored">
+          Self link
+        </a>
       </div>
     </header>
     <div class="markdown">

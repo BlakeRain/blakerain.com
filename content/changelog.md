@@ -5,6 +5,14 @@ menus:
   - footer_right
 ---
 
+# 2025-08-29
+
+- Added [An Almost Anonymous Blog](https://lwgrs.bearblog.dev/) to the [blogroll](/blogroll).
+- Added [Steph Ango](https://stephango.com/)'s site to the [blogroll](/blogroll).
+- [Notes](/notes) now render as individual pages, and the notes list now includes "self links" with
+  each note.
+- Added [Bitnami are shutting down their Docker images](2025-08-29.md) note.
+
 # 2025-08-26
 
 This evening was spent adding some [slash pages](https://slashpages.net/) to the site.
