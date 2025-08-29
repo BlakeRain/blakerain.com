@@ -43,7 +43,7 @@ Please visit the sites to see for yourself the wonderful things these people cre
   article on [git send-email](https://jade.fyi/blog/oh-no-git-send-email/).
 - [Jessitron](https://jessitron.com/) – Jessica Kerr's blog is always worth a read.
 - [joelchrono](https://joelchrono.xyz/) – I see links to Joel's blog quite often.
-- [Julia Evans](https://jvns.ca/) – Juila makes the amazing [Wizard Zines](https://wizardzines.com/).
+- [Julia Evans](https://jvns.ca/) – Julia makes the amazing [Wizard Zines](https://wizardzines.com/).
   My introduction was [How Git Works](https://wizardzines.com/zines/git/) which is awesome.
 - [Kev Quirk](https://kevquirk.com/) – Kev writes about a variety of topics.
 - [Lucidity](https://ludic.mataroa.blog/) – I came to Nikhil's blog via
