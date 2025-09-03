@@ -4,6 +4,8 @@ params:
   summary: false
 ---
 
+**Site version:** {{< version >}}
+
 Copyright © {{< lastmod >}} Blake Rain
 
 All materials featured on this website are safeguarded under copyright law. This protection applies
