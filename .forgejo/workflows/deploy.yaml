@@ -36,7 +36,9 @@ jobs:
           extended: true
 
       - name: Build the site
-        run: hugo --minify
+        run: |
+          echo "{\"tag\":\"${FORGEJO_REF_NAME}\"}" > data/tag.json
+          hugo --minify
 
       - name: Deploy the site
         run: |
