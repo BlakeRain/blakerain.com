@@ -175,11 +175,10 @@ $ pdfgrep -m 1 -n "Table of Contents" "$input" | cut -d: -f 1
 5
 ```
 
-{{< callout type="note" >}}
-For simplicity, we're going to assume that the table of contents is going to be on the last few
-pages of the document. Of course, if you needed to use some other indicator, you could use a similar
-invocation of `pdfgrep`.
-{{</callout>}}
+> [!NOTE]
+> For simplicity, we're going to assume that the table of contents is going to be on the last few
+> pages of the document. Of course, if you needed to use some other indicator, you could use a
+> similar invocation of `pdfgrep`.
 
 The script can arrange these commands into a series of three variable assignments so that the
 values can be used later in our instructions to `pdftk`.

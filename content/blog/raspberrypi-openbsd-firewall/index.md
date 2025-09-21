@@ -18,9 +18,10 @@ it, and then pay hundreds more every year to use it.
 So this week I took it upon myself to set up a router at the apex of my network using a Raspberry
 Pi. I decided that I would use OpenBSD for this.
 
-{{< callout type=tip >}} There is an amazing guide called the [OpenBSD Router
-Guide](https://openbsdrouterguide.net/). A lot of what follows was draw from this guide, the OpenBSD
-manpages, and the [OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html). {{</callout>}}
+> [!TIP]
+> There is an amazing guide called the [OpenBSD Router Guide](https://openbsdrouterguide.net/). A
+> lot of what follows was draw from this guide, the OpenBSD manpages, and the
+> [OpenBSD PF User Guide](https://www.openbsd.org/faq/pf/index.html).
 
 # Why not pfSense?
 
@@ -53,20 +54,21 @@ hardly a problem on a small home network with a ~70Mbps Internet connection.
 I intend to install OpenBSD on a Raspberry Pi and set up the router configuration myself. To start
 with, I'll need to install OpenBSD on a Raspberry Pi.
 
-{{< callout type=tip >}} The OpenBSD 7.5 [arm64 installation
-instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64) are very informative, and
-I recommend reading them more thoroughly than I did. {{</callout>}}
+> [!TIP]
+> The OpenBSD 7.5
+> [arm64 installation instructions](https://ftp.openbsd.org/pub/OpenBSD/7.5/arm64/INSTALL.arm64)
+> are very informative, and I recommend reading them more thoroughly than I did.
 
 I selected a Raspberry Pi 4B and used a latest [Raspberry Pi OS] to update the firmware to the latest
 version so that I could boot from USB. I then changed the boot order using `raspi-config` to boot
 from USB before the microSD. Once completed, I was ready to prepare the installation media for
 OpenBSD.
 
-{{< callout type=note title="Raspberry Pi Boot Delays" >}} Now that the Pi is configured to boot
-from USB, it actually spins for a while waiting for a USB device before attempting to boot from the
-SD. After installing OpenBSD, this delay might get quite annoying. If you want to change the boot
-order back, you will need to boot from something like Raspberry Pi OS in order to use the
-`raspi-config` tool.{{</callout>}}
+> [!NOTE] Raspberry Pi Boot Delays
+> Now that the Pi is configured to boot from USB, it actually spins for a while waiting for a USB
+> device before attempting to boot from the SD. After installing OpenBSD, this delay might get quite
+> annoying. If you want to change the boot order back, you will need to boot from something like
+> Raspberry Pi OS in order to use the `raspi-config` tool.
 
 ## Ruining Partitions
 
@@ -159,8 +161,8 @@ This Microsoft adapter identifies to OpenBSD as an RTL8251 PHY and RTL8153:
 
 {{< figure src="CleanShot%202024-05-28%20at%2013.30.38.png" title="Snapshot of dmesg output when connected" >}}
 
-{{< callout type=warning title="Faulty Hardware" >}} Unfortunately I am later going to find that
-this adapter was broken. {{</callout>}}
+> [!WARNING] Faulty Hardware
+> Unfortunately I am later going to find that this adapter was broken.
 
 # Setting Up a Router in OpenBSD
 
@@ -329,8 +331,9 @@ writing the setting into the `/etc/sysctl.conf` file:
 # echo 'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
 ```
 
-{{< callout type=tip title="Forwarding for IPv6" >}} I didn't bother with IPv6, but you can set
-`net.inet6.ip6.forwarding` to `1` if you want IPv6 forwarding to be enabled as well. {{</callout>}}
+> [!TIP] Forwarding for IPv6
+> I didn't bother with IPv6, but you can set `net.inet6.ip6.forwarding` to `1` if you want IPv6
+> forwarding to be enabled as well.
 
 Next I needed to configure the Raspberry Pi's built-in Ethernet port, listed as `bse0`. To do this I
 created an `/etc/hostname.bse0` file with the following contents:
@@ -483,9 +486,9 @@ server:
 
 I also added `local-data` statements for a number of [ZeroTier] peers.
 
-{{< callout type=question title="RFC8375 would be better" >}} Whilst writing up this post, I'm not
-entirely sure why I didn't use [RFC8375](https://datatracker.ietf.org/doc/html/rfc8375.html)'s
-`home.arpa.` address. {{</callout>}}
+> [!QUESTION] RFC8375 would be better
+> Whilst writing up this post, I'm not entirely sure why I didn't use
+> [RFC8375](https://datatracker.ietf.org/doc/html/rfc8375.html)'s `home.arpa.` address.
 
 To apply the changes to the Unbound configuration, I used `rcctl` to restart it:
 
