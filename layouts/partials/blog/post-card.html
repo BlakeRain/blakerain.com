@@ -18,9 +18,9 @@
     {{ end }}
   </div>
   {{ if .post.Summary }}
-    <p class="font-sans text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+    <div class="markdown">
       {{ .post.Summary }}
-    </p>
+    </div>
   {{ end }}
   <div class="uppercase flex flex-row gap-1 text-neutral-700 dark:text-neutral-300 text-right text-sm">
     <div>{{ .post.Date | time.Format "2 Jan 2006" }}</div>

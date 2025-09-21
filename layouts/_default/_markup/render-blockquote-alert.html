@@ -1,0 +1,33 @@
+{{- if eq .Type "alert" -}}
+{{- $icons := dict
+  "note"       "pencil"
+  "info"       "info"
+  "todo"       "check-circle"
+  "tip"        "flame"
+  "success"    "check"
+  "question"   "help-circle"
+  "warning"    "alert-triangle"
+  "failure"    "x"
+  "danger"     "zap"
+  "bug"        "bug"
+  "example"    "list"
+}}
+{{- $type := cond (index $icons .AlertType) .AlertType "note" }}
+{{- $title := or .AlertTitle (T (printf "admonitions.%s" $type)) (title $type) }}
+{{- $icon := index $icons $type }}
+<div class="callout {{ $type }}">
+  <div class="heading">
+    {{ partial "icons/icon" (dict "vendor" "lucide" "name" $icon) }}
+    <div>{{ $title }}</div>
+  </div>
+  {{- with .Text }}
+    <div class="body">
+      {{ . }}
+    </div>
+  {{- end }}
+</div>
+{{- else -}}
+  <blockquote>
+    {{ .Text }}
+  </blockquote>
+{{- end -}}
