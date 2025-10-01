@@ -1,6 +1,33 @@
-{{ define "main" }}
-  <main class="container mx-auto">
-    {{ .Content }}
+{{- define "main" -}}
+  {{ $cover := .Resources.GetMatch "cover.jpg" }}
+  <main>
+    <article>
+      <header class="hidden print:block container print:max-w-full mx-auto">
+        <h1 class="text-3xl font-bold">
+          {{ .Title }}
+        </h1>
+      </header>
+      <header class="print:hidden">
+        <div class="container mx-auto flex flex-col items-center">
+          <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold
+                    {{- if .Params.icon }} flex flex-row justify-center items-center gap-2{{ else }} text-center{{ end }}">
+            {{ with .Params.icon }}
+              <span class="hidden md:inline">
+                {{ partial "icons/icon" (dict "vendor" .vendor "name" .name) }}
+              </span>
+            {{ end }}
+            <span>{{ .Title }}</span>
+          </h1>
+          {{ if not (.Params.hide_summary) }}
+            <p class="font-sans text-xl text-center text-neutral-500 dark:text-neutral-400">
+              {{ .Summary }}
+            </p>
+          {{ end }}
+        </div>
+      </header>
+      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full">
+        {{ .Content }}
+      </div>
+    </article>
   </main>
-{{ end }}
-
+{{- end -}}

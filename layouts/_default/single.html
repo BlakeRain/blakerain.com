@@ -7,22 +7,23 @@
           {{ .Title }}
         </h1>
       </header>
-      <header
-        class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
+      <header class="print:hidden">
         <div class="container mx-auto flex flex-col items-center">
-          <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold
-                    {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
-            {{ .Title }}
+          <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold
+                    {{- if .Params.icon }} flex flex-row justify-center items-center gap-2{{ else }} text-center{{ end }}">
+            {{ with .Params.icon }}
+              {{ partial "icons/icon" (dict "vendor" .vendor "name" .name) }}
+            {{ end }}
+            <span>{{ .Title }}</span>
           </h1>
-          {{ if and .Summary (default true (.Param "summary")) }}
-            <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3
-                      {{ if $cover }}mb-20 text-white{{ else }}mb-10 text-neutral-800 dark:text-neutral-200{{ end }}">
+          {{ if not (.Params.hide_summary) }}
+            <p class="font-sans text-xl text-center text-neutral-500 dark:text-neutral-400">
               {{ .Summary }}
             </p>
           {{ end }}
         </div>
       </header>
-      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 mb-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full markdown">
+      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full markdown">
         {{ .Content }}
       </div>
     </article>

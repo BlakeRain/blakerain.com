@@ -1,10 +1,11 @@
 {{ define "main" }}
   <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
     <div class="container mx-auto flex flex-col items-center">
-      <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
-        {{ .Data.Plural | title }}
+      <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
+        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill") }}
+        <span>{{ .Data.Plural | title }}</span>
       </h1>
-      <p class="font-sans text-lg text-center mx-5 md:mx-0 lg:w-2/3 mb-10 text-neutral-800 dark:text-neutral-200">
+      <p class="font-sans text-xl text-center mx-5 md:mx-0 lg:w-2/3 mb-10 text-neutral-800 dark:text-neutral-200">
         {{ $count := .Data.Pages | len }}
         There are {{ $count }} {{ if ne $count 1 }}{{ .Data.Plural }}{{ else }}{{ .Data.Singular }}{{ end }} in use across this site.
       </p>

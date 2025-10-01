@@ -1,24 +1,54 @@
 {{ define "main" }}
-<main class="container mx-auto">
-  <h1 class="text-4xl font-bold text-center mt-8 mb-2">Tools</h1>
-  <p class="text-xl text-center text-neutral-500 dark:text-neutral-400">
-    Here are a number of tools that I find useful.
+<main class="container mx-auto flex flex-col">
+  <h1 class="flex flex-row gap-2 justify-center items-center text-5xl my-10">
+    {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "wrench-adjustable-circle") }}
+    <span class="font-bold">Tools</span>
+  </h1>
+  <p class="font-sans text-xl text-center text-neutral-500 dark:text-neutral-400">
+    Some of these were built by me, others were vibe-coded. All are open source and run in the
+    browser with little to no dependencies.
   </p>
-  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 mt-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 my-10 lg:my-20 px-4">
     {{ range .Pages }}
-      <div class="border border-primary rounded p-4">
-        <a href="{{ .RelPermalink }}">
-          <h1 class="text-2xl mb-2">
-            {{ with .Params.icon }}
-              {{ partial "icons/icon" (dict "vendor" .vendor "name" .name "className" "inline") }}
-            {{ end }}
-            {{ .Title }}
-          </h1>
-          <p class="text-neutral-700 dark:text-neutral-400">
-            {{ .Summary }}
-          </p>
+    <div class="bg-white dark:bg-zinc-800 overflow-hidden rounded-xl border border-gray-400 dark:border-none grid
+    grid-cols-1 grid-rows-[12rem_1fr_min-content] shadow-md dark:shadow-none">
+      <div
+        class="flex flex-col justify-center items-center text-black/80 text-7xl dark:brightness-75"
+        style="background-color: {{ with .Params.color }}{{ . }}{{ else }}#ff0000{{ end }};">
+        {{ with .Params.icon }}
+          {{ partial "icons/icon" (dict "vendor" .vendor "name" .name "className" "") }}
+        {{ end }}
+      </div>
+      <div class="flex flex-col gap-4 m-4">
+        {{ if .Params.vibe_coded }}
+          <div class="text-red-600 dark:text-red-400 uppercase">
+            {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "robot") }}
+            Vibe Coded
+          </div>
+        {{ else }}
+          <div class="text-green-600 uppercase">
+            {{ partial "icons/icon" (dict "vendor" "lucide" "name" "smile") }}
+            Built by me
+          </div>
+        {{ end }}
+        <h1 class="font-semibold text-2xl">
+          <a class="hover:text-blue-800 dark:hover:text-blue-300" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h1>
+        <p class="text-gray-500 dark:text-gray-400">
+          {{ .Summary }}
+        </p>
+      </div>
+      <div class="grid grid-cols-2 border-t border-t-gray-400 dark:border-t-zinc-700 text-sm font-medium">
+        <a
+          href="{{ .Params.source }}"
+          class="py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 text-center border-r border-r-gray-400 dark:border-r-zinc-700">View Source</a>
+        <a
+          href="{{ .RelPermalink }}"
+          class="py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 text-center">
+          Open
         </a>
       </div>
+    </div>
     {{ end }}
   </div>
 </main>

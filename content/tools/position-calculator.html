@@ -1,0 +1,145 @@
+---
+title: Position Size Calculator
+summary: |
+  Calculate ideal position sizes based on risk tolerance, account size, position entry, and
+  stop loss.
+params:
+  vibe_coded: false
+  color: "#14b8a6"
+  source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/static/scripts/tools/position-calculator.js
+  icon: { vendor: "mdi", name: "cash-check" }
+---
+<calculator-controller>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <div class="md:col-span-2">
+        <h1 class="text-xl font-bold mb-2 mt-0">Account Information</h1>
+      </div>
+      <div>
+        <label for="accountCurrency">Account Currency</label>
+        <account-currency>
+          <select id="accountCurrency" class="field"></select>
+        </account-currency>
+      </div>
+      <div>
+        <label for="accountValue">Account Value</label>
+        <account-amount>
+          <input id="accountValue" class="field text-right" type="text" />
+        </account-amount>
+      </div>
+      <div>
+        <label for="marginRisk">Margin Risk %</label>
+        <account-margin-risk>
+          <input id="marginRisk" class="field text-right" type="text" />
+        </account-margin-risk>
+      </div>
+      <div>
+        <label for="positionRisk">Position Risk %</label>
+        <account-position-risk>
+          <input id="positionRisk" class="field text-right" type="text" />
+        </account-position-risk>
+      </div>
+      <div>
+        <label for="places">Decimal Places</label>
+        <account-places>
+          <input id="places" class="field text-right" type="text" />
+        </account-places>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <div class="md:col-span-2">
+        <h1 class="text-xl font-bold mb-2 mt-0">Position Information</h1>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label for="positionCurrency">Position</label>
+          <position-currency>
+            <select id="positionCurrency" class="field"></select>
+          </position-currency>
+        </div>
+        <div>
+          <label for="quoteCurrency">Quote</label>
+          <position-quote-currency>
+            <select id="quoteCurrency" class="field"></select>
+          </position-quote-currency>
+        </div>
+      </div>
+      <div>
+        <position-margin-label>
+          <label for="positionMargin">Position Margin</label>
+        </position-margin-label>
+        <position-margin>
+          <input id="positionMargin" class="field text-right" type="text" />
+        </position-margin>
+      </div>
+      <div>
+        <label for="positionDirection">Position Direction</label>
+        <position-direction>
+          <select id="positionDirection" class="field">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </position-direction>
+      </div>
+      <div>
+        <label for="openPrice">Open Price</label>
+        <position-open-price>
+          <input id="openPrice" class="field text-right" type="text" />
+        </position-open-price>
+      </div>
+      <div>
+        <label for="quantity">Quantity</label>
+        <div class="flex flex-row gap-2 items-center">
+          <position-quantity-toggle></position-quantity-toggle>
+          <position-quantity class="grow">
+            <input id="quantity" class="field text-right" type="text" />
+          </position-quantity>
+        </div>
+      </div>
+      <div class="grid grid-flow-col gap-2 pt-6">
+        <affordable-position>
+          <button type="button" class="button w-full">Affordable</button>
+        </affordable-position>
+        <button type="button" class="button">Stop Loss</button>
+      </div>
+      <div>
+        <label for="stopLoss">Stop Loss</label>
+        <div class="flex flex-row gap-2 items-center">
+          <position-stop-loss-toggle></position-stop-loss-toggle>
+          <position-stop-loss class="grow">
+            <input id="stopLoss" class="field text-right" type="text" />
+          </position-stop-loss>
+        </div>
+      </div>
+      <div>
+        <label for="stopLossDistance">Stop Loss Distance</label>
+        <position-stop-loss-distance>
+          <input id="stopLossDistance" class="field text-right" type="text" />
+        </position-stop-loss-distance>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
+    dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 mt-4">
+      <h1 class="text-lg font-medium mb-2 mt-0">Position Size Information</h1>
+      <position-size-report>
+        <div class="grid grid-cols-2 gap-2">
+        </div>
+      </position-size-report>
+    </div>
+    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
+    dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 lg:mt-4">
+      <h1 class="text-lg font-medium mb-2 mt-0">Stop Loss Positioning</h1>
+    </div>
+    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <h1 class="text-lg font-medium mb-2 mt-0">Take Profit</h1>
+    </div>
+    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <h1 class="text-lg font-medium mb-2 mt-0">Planned Stop Loss Maximum</h1>
+    </div>
+  </div>
+  <account-info>
+    <button type="button" class="button">Do</button>
+    <pre></pre>
+  </account-info>
+</calculator-controller>
+<script type="module" src="/scripts/tools/position-calculator.js"></script>

@@ -3,7 +3,7 @@ title: Disclaimer
 published: 2021-01-14T22:53:12.000Z
 menus: ["footer_left"]
 params:
-  summary: false
+  hide_summary: true
 ---
 
 This is a personal website and blog. Any views or opinions represented on this site are personal and

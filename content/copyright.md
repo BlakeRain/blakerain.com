@@ -1,7 +1,7 @@
 ---
 title: Copyright
 params:
-  summary: false
+  hide_summary: true
 ---
 
 **Site version:** {{< version >}}

@@ -1,5 +1,5 @@
 {{ $page := .page }}
-<nav class="print:hidden bg-primary shadow-md dark:shadow-none text-neutral-200">
+<nav class="print:hidden top-0 sticky bg-primary/75 backdrop-blur z-10 shadow-md dark:shadow-none text-neutral-200">
   <div class="container mx-auto flex flex-col md:flex-row px-2 sm:px-4">
     <div class="flex flex-row justify-between items-center">
       <a href="/" class="block pr-4 py-4 md:my-0">
@@ -17,8 +17,7 @@
           {{ $active = or $active ($page.HasMenuCurrent .Menu .) }}
           <a
             href="{{ .URL }}"
-            class="px-4 py-6 transition-colors hover:bg-primary-dark/50 hover:text-neutral-50
-                  {{ if $active }}bg-primary-dark/50 text-neutral-50{{ end }}">
+            class="px-4 py-6 transition-colors hover:underline {{ if $active }}underline{{ end }}">
             {{ .Name }}
           </a>
         {{ end }}

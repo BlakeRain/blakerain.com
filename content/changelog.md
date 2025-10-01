@@ -3,7 +3,16 @@ title: Changelog
 summary: A log of changes made to this website.
 menus:
   - footer_right
+params:
+  icon: { vendor: "bootstrap", name: "journal-text" }
 ---
+
+# 2025-09-23
+
+- Added back the [tools](/tools) page with a new style, adding in the
+  [.mobileconfig generator](/tools/generate-mobileconfig) and other tools.
+- Fixed incorrect link to the [status page](https://status.blacktreenetworks.com) in the footer, now
+  that the site has moved domain.
 
 # 2025-08-29
 

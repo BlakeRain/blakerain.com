@@ -4,6 +4,8 @@ date: 2025-08-21T19:44:30
 summary: A list of hardware and software I use.
 menus:
   - footer_left
+params:
+  icon: { vendor: "bootstrap", name: "pc" }
 ---
 
 # Software
@@ -15,6 +17,7 @@ menus:
   from Linux desktop environments. Unfortunately I'm only using this for [launching terminals] these
   days.
 - [LibreOffice] - A great open-source office suite.
+- [Navidrome] - A self-hosted music server. I use this instead of Spotify or Apple Music.
 - [Obsidian] - Note-taking and PKM application.
 - [Raycast] - My application launcher of choice on MacOS. It's probably the main reason I use MacOS more than Linux.
 - [SearXNG] - A self-hosted search engine. Used as my default on all devices where I have a choice.
@@ -41,6 +44,7 @@ menus:
 [Easy Move+Resize]: https://github.com/dmarcotte/easy-move-resize
 [HammerSpoon]: https://www.hammerspoon.org/
 [LibreOffice]: https://www.libreoffice.org/
+[Navidrome]: https://www.navidrome.org/
 [Obsidian]: https://obsidian.md/
 [Raycast]: https://www.raycast.com/
 [SearXNG]: https://github.com/searxng/searxng
