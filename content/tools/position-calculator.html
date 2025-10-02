@@ -11,7 +11,7 @@ params:
 ---
 <calculator-controller>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
       <div class="md:col-span-2">
         <h1 class="text-xl font-bold mb-2 mt-0">Account Information</h1>
       </div>
@@ -46,7 +46,7 @@ params:
         </account-places>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
       <div class="md:col-span-2">
         <h1 class="text-xl font-bold mb-2 mt-0">Position Information</h1>
       </div>
@@ -122,13 +122,17 @@ params:
     dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 mt-4">
       <h1 class="text-lg font-medium mb-2 mt-0">Position Size Information</h1>
       <position-size-report>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
         </div>
       </position-size-report>
     </div>
     <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
     dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 lg:mt-4">
       <h1 class="text-lg font-medium mb-2 mt-0">Stop Loss Positioning</h1>
+      <stop-loss-report>
+        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        </div>
+      </stop-loss-report>
     </div>
     <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
       <h1 class="text-lg font-medium mb-2 mt-0">Take Profit</h1>

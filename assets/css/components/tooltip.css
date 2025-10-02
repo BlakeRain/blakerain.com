@@ -1,6 +1,6 @@
 @layer components {
   .tooltip {
-    @apply absolute z-10 w-max max-w-xs min-h-fit p-4;
+    @apply absolute z-10 w-max max-w-xs min-h-fit p-2;
     @apply text-sm text-center text-neutral-50 whitespace-pre-wrap;
     @apply bg-primary border border-primary rounded-md shadow-md;
 

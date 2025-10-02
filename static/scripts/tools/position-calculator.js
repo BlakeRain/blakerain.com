@@ -316,6 +316,7 @@ function computeStopLoss(account, position, quantity) {
   const availablePosition = available * pRate;
   const availableQuote = availablePosition * qRate;
   const distance = quantity === 0 ? 0 : availableQuote / quantity;
+  console.log({ available, availablePosition, availableQuote, quantity, distance });
 
   return {
     available,
@@ -1001,9 +1002,10 @@ class PositionStopLossDistanceElement extends NumberInputElement {
 }
 
 class ReportRow {
-  constructor(filter, label, places, prefix, suffix, compute) {
+  constructor(filter, label, help, places, prefix, suffix, compute) {
     this._filter = filter;
     this._label = label;
+    this._help = help;
     this._places = places;
     this._prefix = prefix;
     this._suffix = suffix;
@@ -1032,6 +1034,22 @@ class ReportRow {
     }
 
     return this._label;
+  }
+
+  get hasHelp() {
+    return this._help !== null && this._help !== undefined && this._help !== "";
+  }
+
+  get mutatingHelp() {
+    return typeof this._help === "function";
+  }
+
+  help(report) {
+    if (typeof this._help === "function") {
+      return this._help(report);
+    }
+
+    return this._help;
   }
 
   places(report) {
@@ -1067,6 +1085,7 @@ class ReportRow {
       constructor() {
         this._filter = () => true;
         this._label = null;
+        this._help = null;
         this._places = 2;
         this._prefix = null;
         this._suffix = null;
@@ -1080,6 +1099,11 @@ class ReportRow {
 
       label(label) {
         this._label = label;
+        return this;
+      }
+
+      help(help) {
+        this._help = help;
         return this;
       }
 
@@ -1107,6 +1131,7 @@ class ReportRow {
         return new ReportRow(
           this._filter,
           this._label,
+          this._help,
           this._places,
           this._currency,
           this._suffix,
@@ -1119,32 +1144,89 @@ class ReportRow {
   }
 }
 
+const HELP_ICON = document.createElement("template");
+HELP_ICON.innerHTML = `
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="w-5 h-5"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <circle cx="12" cy="12" r="10" />
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+  <path d="M12 17h.01" />
+</svg>
+`;
+
 function buildReportRows(container, reportRows) {
   const rows = [];
   for (const row of reportRows) {
     const rowElement = document.createElement("div");
-    rowElement.classList.add("grid", "col-span-2", "grid-cols-subgrid");
+    rowElement.classList.add("grid", "col-span-3", "grid-cols-subgrid", "items-center");
+
+    let help = null,
+      label = null,
+      startColumn = 1;
+
+    if (row.hasHelp) {
+      const helpContainer = document.createElement("div");
+      helpContainer.classList.add("relative", "cursor-pointer", "group");
+
+      const icon = HELP_ICON.content.cloneNode(true);
+
+      help = document.createElement("div");
+      help.classList.add("tooltip", "right", "hidden", "group-hover:block");
+      if (!row.mutatingHelp) {
+        help.innerText = row.help();
+      }
+
+      helpContainer.append(icon);
+      helpContainer.append(help);
+      rowElement.append(helpContainer);
+    } else {
+      startColumn += 1;
+    }
 
     if (row.hasLabel) {
-      const label = document.createElement("div");
+      label = document.createElement("div");
       label.classList.add("font-bold", "text-left");
+
+      if (startColumn === 2) {
+        label.classList.add("col-start-2");
+        startColumn -= 1;
+      }
 
       if (!row.mutatingLabel) {
         label.innerText = row.label();
       }
 
       rowElement.append(label);
+    } else {
+      startColumn += 1;
     }
 
     const value = document.createElement("div");
     value.classList.add("text-right");
-    if (!row.hasLabel) {
+
+    if (startColumn === 2) {
       value.classList.add("col-start-2");
+    } else if (startColumn === 3) {
+      value.classList.add("col-start-3");
     }
 
     rowElement.append(value);
     container.append(rowElement);
-    rows.push(rowElement);
+
+    rows.push({
+      row: rowElement,
+      help,
+      label,
+      value,
+    });
   }
 
   return rows;
@@ -1153,22 +1235,24 @@ function buildReportRows(container, reportRows) {
 function updateReportRows(rowElements, reportRows, report) {
   for (let i = 0; i < reportRows.length; i++) {
     const row = reportRows[i];
-    const rowElement = rowElements[i];
+    const elements = rowElements[i];
 
     if (!row.filter(report)) {
-      rowElement.style.display = "none";
+      elements.row.style.display = "none";
       continue;
     } else {
-      rowElement.style.display = "";
+      elements.row.style.display = "";
+    }
+
+    if (row.mutatingHelp) {
+      elements.help.innerText = row.help(report);
     }
 
     if (row.mutatingLabel) {
-      const labelElement = rowElement.querySelector("div:first-child");
-      labelElement.innerText = row.label(report);
+      elements.label.innerText = row.label(report);
     }
 
-    const valueElement = rowElement.querySelector("div:last-child");
-    valueElement.innerText = formatNumber(
+    elements.value.innerText = formatNumber(
       row.compute(report),
       true,
       row.places(report),
@@ -1187,6 +1271,28 @@ class ReportElement extends HTMLElement {
 
   get controller() {
     return this._controller;
+  }
+
+  get marginFormat() {
+    return formatNumber(this.controller.position.margin * 100, true, 2, null, "%");
+  }
+
+  get quantityFormat() {
+    return formatNumber(this.controller.position.quantity || 0, true, 2, null, " units");
+  }
+
+  get openPriceFormat() {
+    return formatNumber(
+      this.controller.position.openPrice,
+      true,
+      this.controller.account.places,
+      this.controller.position.quoteCurrency,
+      null
+    );
+  }
+
+  get positionRiskFormat() {
+    return formatNumber(this.controller.account.positionRisk * 100, true, 2, null, "%");
   }
 
   connectedCallback() {
@@ -1256,6 +1362,7 @@ class ReportElement extends HTMLElement {
 const POSITION_SIZE_ROWS = [
   ReportRow.builder()
     .label("Available Account")
+    .help("Amount of account available under margin risk in the account currency.")
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
     .compute((report) => report.sizeReport.available)
@@ -1264,6 +1371,7 @@ const POSITION_SIZE_ROWS = [
     .filter(
       (report) => report.controller.position.positionCurrency !== report.controller.account.currency
     )
+    .help("Amount of account available under margin risk in the position currency.")
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
     .compute((report) => report.sizeReport.availablePosition)
@@ -1273,6 +1381,7 @@ const POSITION_SIZE_ROWS = [
       (report) =>
         report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
     )
+    .help("Amount of account available under margin risk in the quote currency.")
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
     .compute((report) => report.sizeReport.availableQuote)
@@ -1280,6 +1389,9 @@ const POSITION_SIZE_ROWS = [
 
   ReportRow.builder()
     .label("Available Margin")
+    .help((report) => {
+      return `Available amount with a ${report.marginFormat} position margin.`;
+    })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
     .compute((report) => report.sizeReport.margin)
@@ -1288,6 +1400,9 @@ const POSITION_SIZE_ROWS = [
     .filter(
       (report) => report.controller.position.positionCurrency !== report.controller.account.currency
     )
+    .help((report) => {
+      return `Available amount with a ${report.marginFormat} position margin converted to the position currency.`;
+    })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
     .compute((report) => report.sizeReport.marginPosition)
@@ -1297,59 +1412,101 @@ const POSITION_SIZE_ROWS = [
       (report) =>
         report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
     )
+    .help((report) => {
+      return `Available amount with a ${marginFormat} position margin converted to the quote currency.`;
+    })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
     .compute((report) => report.sizeReport.marginQuote)
     .build(),
   ReportRow.builder()
     .label("Affordable Position Size")
+    .help((report) => {
+      return `Position size that can be taken at an open price of ${
+        report.openPriceFormat
+      } with an available margin of ${formatNumber(
+        report.sizeReport.marginQuote,
+        true,
+        report.controller.account.places,
+        report.controller.position.quoteCurrency,
+        null
+      )}.`;
+    })
     .places(2)
     .suffix(" units")
     .compute((report) => report.sizeReport.affordable)
     .build(),
 
-
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual)
+    .filter((report) => report.sizeReport.actual)
     .label("Actual Quantity")
+    .help("Quantity entered into the position form.")
     .places(2)
     .suffix(" units")
     .compute((report) => report.controller.position.quantity)
     .build(),
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual)
+    .filter((report) => report.sizeReport.actual)
     .label("Actual Cost")
+    .help((report) => {
+      return `Actual const of opening a position of ${report.quantityFormat} units at ${report.openPriceFormat}.`;
+    })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
     .compute((report) => report.controller.position.quantity * report.controller.position.openPrice)
     .build(),
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual)
+    .filter((report) => report.sizeReport.actual)
     .label("Required Margin")
+    .help((report) => {
+      return `Amount required at ${report.marginFormat} position margin (${formatNumber(
+        1 / (report.controller.position.margin === 0 ? 1 : report.controller.position.margin),
+        false,
+        0,
+        null,
+        null
+      )}x leverage)`;
+    })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
     .compute((report) => report.sizeReport.actual.costQuote)
     .build(),
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual && (report.controller.position.quoteCurrency !== report.controller.position.positionCurrency))
+    .filter(
+      (report) =>
+        report.sizeReport.actual &&
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+    )
+    .help(
+      (report) =>
+        `Amount required at ${report.marginFormat} margin, converted into the position currency.`
+    )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
     .compute((report) => report.sizeReport.actual.costPosition)
     .build(),
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual && (report.controller.account.currency !== report.controller.position.positionCurrency))
+    .filter(
+      (report) =>
+        report.sizeReport.actual &&
+        report.controller.account.currency !== report.controller.position.positionCurrency
+    )
+    .help(
+      (report) =>
+        `Amount required at ${report.marginFormat} margin, converted into the account currency.`
+    )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
     .compute((report) => report.sizeReport.actual.cost)
     .build(),
   ReportRow.builder()
-    .filter(report => report.sizeReport.actual)
+    .filter((report) => report.sizeReport.actual)
     .label("Committed Account")
+    .help("The percentage of the account that will be committed as margin to open the position.")
     .places(2)
     .suffix(" %")
     .compute((report) => report.sizeReport.actual.margin * 100.0)
     .build(),
-
 ];
 
 class PositionSizeReportElement extends ReportElement {
@@ -1364,6 +1521,88 @@ class PositionSizeReportElement extends ReportElement {
 
   onUpdate() {
     this._sizeReport = computePositionSize(this._controller.account, this._controller.position);
+    super.onUpdate();
+  }
+}
+
+const STOP_LOSS_ROWS = [
+  ReportRow.builder()
+    .label("Available Account")
+    .help(
+      (report) => `Amount of account available under position risk of ${report.positionRiskFormat}.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.account.currency)
+    .compute((report) => report.stopLoss.available)
+    .build(),
+  ReportRow.builder()
+    .filter(
+      (report) => report.controller.position.positionCurrency !== report.controller.account.currency
+    )
+    .help(
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.stopLoss.availablePosition)
+    .build(),
+  ReportRow.builder()
+    .filter(
+      (report) =>
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+    )
+    .help(
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.quoteCurrency)
+    .compute((report) => report.stopLoss.availableQuote)
+    .build(),
+  ReportRow.builder()
+    .label("Maximum Stop Loss Price Distance")
+    .help(
+      (report) =>
+        `The maximum stop loss distance for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.stopLoss.distance)
+    .build(),
+  ReportRow.builder()
+    .label("Maximum Stop Loss")
+    .help(
+      (report) =>
+        `The maximum stop loss for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => {
+      const distance = report.stopLoss.distance;
+      return report.controller.position.direction === "long"
+        ? report.controller.position.openPrice - distance
+        : report.controller.position.openPrice + distance;
+    })
+    .build(),
+];
+
+class StopLossReportElement extends ReportElement {
+  constructor() {
+    super([...STOP_LOSS_ROWS]);
+    this._stopLoss = null;
+  }
+
+  get stopLoss() {
+    return this._stopLoss;
+  }
+
+  onUpdate() {
+    const quantity =
+      this.controller.position.quantity !== null
+        ? this.controller.position.quantity
+        : computePositionSize(this.controller.account, this.controller.position).affordable;
+    this._stopLoss = computeStopLoss(this.controller.account, this.controller.position, quantity);
     super.onUpdate();
   }
 }
@@ -1388,3 +1627,4 @@ customElements.define("position-stop-loss-toggle", PositionStopLossToggleElement
 customElements.define("position-stop-loss", PositionStopLossElement);
 customElements.define("position-stop-loss-distance", PositionStopLossDistanceElement);
 customElements.define("position-size-report", PositionSizeReportElement);
+customElements.define("stop-loss-report", StopLossReportElement);
