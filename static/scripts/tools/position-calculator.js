@@ -3,6 +3,7 @@ import { NumberInputElement } from "../elements/number-input.js";
 import { ToggleElement } from "../elements/toggle.js";
 import { formatNumber } from "../format.js";
 
+/** @type {Record<string, Record<string, number>>} */
 const EXCHANGE_RATES = {};
 
 (function () {
@@ -17,12 +18,20 @@ const EXCHANGE_RATES = {};
   }
 })();
 
+/** Save exchange rates to session storage */
 function saveExchangeRates() {
   const toSave = { timestamp: Date.now(), rates: EXCHANGE_RATES };
   window.sessionStorage.setItem("exchangeRates", JSON.stringify(toSave));
 }
 
-function loadExchangeRates(base) {
+/**
+ * Load exchange rates for the given base currency
+ *
+ * @param {string} base The base currency
+ * @param {AbortController} controller The abort controller to cancel the request
+ * @return {Promise<void>} A promise that resolves when the exchange rates are loaded
+ */
+async function loadExchangeRates(base) {
   const target = "AUD,CAD,EUR,GBP,JPY,USD";
 
   if (base in EXCHANGE_RATES) {
@@ -31,16 +40,26 @@ function loadExchangeRates(base) {
   }
 
   console.log(`Loading exchange rates for ${base} ...`);
-  fetch(`https://api.fxratesapi.com/latest?base=${base}&symbols=${target}`)
-    .then((result) => {
-      return result.json();
-    })
-    .then((data) => {
-      EXCHANGE_RATES[base] = data.rates;
-      saveExchangeRates();
-    });
+  const res = await fetch(`https://api.fxratesapi.com/latest?base=${base}&symbols=${target}`);
+  const data = await res.json();
+
+  if (!data || !data.rates) {
+    console.warn(`Failed to load exchange rates for ${base}`);
+    return;
+  }
+
+  console.log(`Loaded exchange rates for ${base}: ${Object.keys(data.rates).join(", ")}`);
+  EXCHANGE_RATES[base] = data.rates;
+  saveExchangeRates();
 }
 
+/**
+ * Get the exchange rate from base currency to target currency
+ *
+ * @param {string} base The base currency
+ * @param {string} target The target currency
+ * @returns {number} The exchange rate, or 1 if not found
+ */
 function getExchangeRate(base, target) {
   if (base === target) {
     return 1;
@@ -50,12 +69,10 @@ function getExchangeRate(base, target) {
     const rates = EXCHANGE_RATES[base];
     if (target in rates) {
       return rates[target];
-    } else {
-      throw new Error(`No exchange rate from ${base} to ${target}`);
     }
-  } else {
-    throw new Error(`No exchange rates for base ${base}`);
   }
+
+  return 1;
 }
 
 class Account extends EventTarget {
@@ -67,7 +84,9 @@ class Account extends EventTarget {
     this._marginRisk = 0.01;
     this._positionRisk = 0.01;
 
-    loadExchangeRates(this._currency);
+    loadExchangeRates(this._currency).then(() => {
+      this.onChange();
+    });
   }
 
   get places() {
@@ -76,11 +95,7 @@ class Account extends EventTarget {
 
   set places(value) {
     this._places = value;
-    this.dispatchEvent(
-      new CustomEvent("places.change", {
-        detail: { places: this._places },
-      })
-    );
+    this.onChange();
   }
 
   get currency() {
@@ -89,12 +104,9 @@ class Account extends EventTarget {
 
   set currency(value) {
     this._currency = value;
-    loadExchangeRates(this._currency);
-    this.dispatchEvent(
-      new CustomEvent("currency.change", {
-        detail: { currency: this._currency },
-      })
-    );
+    loadExchangeRates(this._currency).then(() => {
+      this.onChange();
+    });
   }
 
   get amount() {
@@ -103,11 +115,7 @@ class Account extends EventTarget {
 
   set amount(value) {
     this._amount = value;
-    this.dispatchEvent(
-      new CustomEvent("amount.change", {
-        detail: { amount: this._amount },
-      })
-    );
+    this.onChange();
   }
 
   get marginRisk() {
@@ -116,11 +124,7 @@ class Account extends EventTarget {
 
   set marginRisk(value) {
     this._marginRisk = value;
-    this.dispatchEvent(
-      new CustomEvent("marginRisk.change", {
-        detail: { marginRisk: this._marginRisk },
-      })
-    );
+    this.onChange();
   }
 
   get positionRisk() {
@@ -129,11 +133,11 @@ class Account extends EventTarget {
 
   set positionRisk(value) {
     this._positionRisk = value;
-    this.dispatchEvent(
-      new CustomEvent("positionRisk.change", {
-        detail: { positionRisk: this._positionRisk },
-      })
-    );
+    this.onChange();
+  }
+
+  onChange() {
+    this.dispatchEvent(new Event("change"));
   }
 }
 
@@ -143,10 +147,13 @@ class Position extends EventTarget {
     this._positionCurrency = "GBP";
     this._quoteCurrency = "GBP";
     this._openPrice = 0;
+    /** @type {number | null} */
     this._quantity = null;
     this._direction = "long";
     this._margin = 0.05;
+    /** @type {number | null} */
     this._takeProfit = null;
+    /** @type {number | null} */
     this._stopLoss = null;
   }
 
@@ -156,12 +163,9 @@ class Position extends EventTarget {
 
   set positionCurrency(value) {
     this._positionCurrency = value;
-    loadExchangeRates(this._positionCurrency);
-    this.dispatchEvent(
-      new CustomEvent("positionCurrency.change", {
-        detail: { positionCurrency: this._positionCurrency },
-      })
-    );
+    loadExchangeRates(this._positionCurrency).then(() => {
+      this.onChange();
+    });
   }
 
   get quoteCurrency() {
@@ -170,11 +174,7 @@ class Position extends EventTarget {
 
   set quoteCurrency(value) {
     this._quoteCurrency = value;
-    this.dispatchEvent(
-      new CustomEvent("quoteCurrency.change", {
-        detail: { quoteCurrency: this._quoteCurrency },
-      })
-    );
+    this.onChange();
   }
 
   get openPrice() {
@@ -183,11 +183,7 @@ class Position extends EventTarget {
 
   set openPrice(value) {
     this._openPrice = value;
-    this.dispatchEvent(
-      new CustomEvent("openPrice.change", {
-        detail: { openPrice: this._openPrice },
-      })
-    );
+    this.onChange();
   }
 
   get quantity() {
@@ -196,11 +192,7 @@ class Position extends EventTarget {
 
   set quantity(value) {
     this._quantity = value;
-    this.dispatchEvent(
-      new CustomEvent("quantity.change", {
-        detail: { quantity: this._quantity },
-      })
-    );
+    this.onChange();
   }
 
   get direction() {
@@ -209,11 +201,7 @@ class Position extends EventTarget {
 
   set direction(value) {
     this._direction = value;
-    this.dispatchEvent(
-      new CustomEvent("direction.change", {
-        detail: { direction: this._direction },
-      })
-    );
+    this.onChange();
   }
 
   get margin() {
@@ -222,11 +210,7 @@ class Position extends EventTarget {
 
   set margin(value) {
     this._margin = value;
-    this.dispatchEvent(
-      new CustomEvent("margin.change", {
-        detail: { margin: this._margin },
-      })
-    );
+    this.onChange();
   }
 
   get takeProfit() {
@@ -235,11 +219,7 @@ class Position extends EventTarget {
 
   set takeProfit(value) {
     this._takeProfit = value;
-    this.dispatchEvent(
-      new CustomEvent("takeProfit.change", {
-        detail: { takeProfit: this._takeProfit },
-      })
-    );
+    this.onChange();
   }
 
   get stopLoss() {
@@ -248,14 +228,19 @@ class Position extends EventTarget {
 
   set stopLoss(value) {
     this._stopLoss = value;
-    this.dispatchEvent(
-      new CustomEvent("stopLoss.change", {
-        detail: { stopLoss: this._stopLoss },
-      })
-    );
+    this.onChange();
+  }
+
+  onChange() {
+    this.dispatchEvent(new Event("change"));
   }
 }
 
+/**
+ *
+ * @param {Position} position
+ * @returns {number} The stop loss distance
+ */
 function getStopLossDistance(position) {
   if (position.stopLoss === null) {
     return 0;
@@ -266,6 +251,24 @@ function getStopLossDistance(position) {
     : position.stopLoss - position.openPrice;
 }
 
+/**
+ * Computed position size information
+ * @typedef {Object} PositionSize
+ * @property {number} available - Available risk amount in account currency
+ * @property {number} availablePosition - Available risk amount in position currency
+ * @property {number} availableQuote - Available risk amount in quote currency
+ * @property {number} margin - Maximum margin affordable in account currency
+ * @property {number} marginPosition - Maximum margin affordable in position currency
+ * @property {number} marginQuote - Maximum margin affordable in quote currency
+ * @property {number} affordable - Maximum quantity affordable
+ * @property {ActualPositionSize} actual - Actual position size information or null if quantity is not set
+ */
+
+/**
+ * @param {Account} account information
+ * @param {Position} position information
+ * @returns {PositionSize} position size information
+ */
 function computePositionSize(account, position) {
   const pRate = getExchangeRate(account.currency, position.positionCurrency);
   const qRate = getExchangeRate(position.positionCurrency, position.quoteCurrency);
@@ -291,6 +294,23 @@ function computePositionSize(account, position) {
   };
 }
 
+/**
+ * @typedef {Object} ActualPositionSize
+ * @property {number} cost - Actual cost in account currency
+ * @property {number} costPosition - Actual cost in position currency
+ * @property {number} costQuote - Actual cost in quote currency
+ * @property {number} margin - Actual margin used in account currency
+ */
+
+/**
+ * Computed actual position size information
+ *
+ * @param {Account} account information
+ * @param {Position} position information
+ * @param {number} pRate - Exchange rate from account currency to position currency
+ * @param {number} qRate - Exchange rate from position currency to quote currency
+ * @returns {ActualPositionSize} actual position size information or null if quantity is not set
+ */
 function computeActualPositionSize(account, position, qRate, pRate) {
   if (position.quantity === null) {
     return null;
@@ -309,6 +329,23 @@ function computeActualPositionSize(account, position, qRate, pRate) {
   };
 }
 
+/** Computed stop loss information
+ * @typedef {Object} StopLossInfo
+ * @property {number} available - Available risk amount in account currency
+ * @property {number} availablePosition - Available risk amount in position currency
+ * @property {number} availableQuote - Available risk amount in quote currency
+ * @property {number} distance - Maximum stop loss distance affordable in quote currency
+ * @property {ActualStopLoss} actual - Actual stop loss information or null if stop loss is not set
+ */
+
+/**
+ * Compute the stop loss information
+ *
+ * @param {Account} account information
+ * @param {Position} position information
+ * @param {number} quantity - The position quantity
+ * @returns {StopLossInfo} stop loss information
+ */
 function computeStopLoss(account, position, quantity) {
   const pRate = getExchangeRate(account.currency, position.positionCurrency);
   const qRate = getExchangeRate(position.positionCurrency, position.quoteCurrency);
@@ -316,7 +353,6 @@ function computeStopLoss(account, position, quantity) {
   const availablePosition = available * pRate;
   const availableQuote = availablePosition * qRate;
   const distance = quantity === 0 ? 0 : availableQuote / quantity;
-  console.log({ available, availablePosition, availableQuote, quantity, distance });
 
   return {
     available,
@@ -327,13 +363,29 @@ function computeStopLoss(account, position, quantity) {
   };
 }
 
+/**
+ * @typedef {Object} ActualStopLoss
+ * @property {number} distance - Actual stop loss distance in quote currency
+ * @property {number} loss - Actual loss in account currency
+ * @property {number} risk - Actual risk as a fraction of account amount
+ */
+
+/**
+ * Compute the actual stop loss information
+ *
+ * @param {Account} account information
+ * @param {Position} position information
+ * @param {number} pRate - Exchange rate from account currency to position currency
+ * @param {number} qRate - Exchange rate from position currency to quote currency
+ * @returns {ActualStopLoss} actual stop loss information or null if stop loss is not set
+ */
 function computeActualStopLoss(account, position, pRate, qRate) {
   if (position.stopLoss === null) {
     return null;
   }
 
   const distance =
-    position.direction === "BUY"
+    position.direction === "long"
       ? position.openPrice - position.stopLoss
       : position.stopLoss - position.openPrice;
   const loss = (distance * position.quantity) / (pRate * qRate);
@@ -346,11 +398,28 @@ function computeActualStopLoss(account, position, pRate, qRate) {
   };
 }
 
+/**
+ * @typedef {Object} StopLossQuantity
+ * @property {number} available - Available risk amount
+ * @property {number} availablePosition - Available risk amount in position currency
+ * @property {number} availableQuote - Available risk amount in quote currency
+ * @property {number} distance - Maximum stop loss distance affordable in quote currency
+ * @property {number} affordable - Maximum quantity affordable
+ * @property {number} margin - Maximum margin affordable in account currency
+ */
+
+/**
+ * Compute the stop loss quantity information
+ *
+ * @param {Account} account information
+ * @param {Position} position information
+ * @return {StopLossQuantity} stop loss quantity information
+ */
 function computeStopLossQuantity(account, position) {
   const distance =
     position.stopLoss === null
       ? 0
-      : position.direction === "BUY"
+      : position.direction === "long"
       ? position.openPrice - position.stopLoss
       : position.stopLoss - position.openPrice;
   const pRate = getExchangeRate(account.currency, position.positionCurrency);
@@ -374,11 +443,19 @@ function computeStopLossQuantity(account, position) {
 class CalculatorControllerElement extends HTMLElement {
   constructor() {
     super();
+    /** @type {Account} */
     this.account = new Account();
+    /** @type {Position} */
     this.position = new Position();
   }
 }
 
+/**
+ * Find the nearest parent <calculator-controller> element
+ *
+ * @param {HTMLElement} element The starting element
+ * @returns {CalculatorControllerElement | null} The nearest parent <calculator-controller> element or null if not found
+ */
 function findControllerParent(element) {
   let parent = element.parentElement;
   while (parent) {
@@ -417,6 +494,7 @@ class AccountInfoElement extends HTMLElement {
 class AccountCurrencyElement extends CurrencySelectElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -427,9 +505,9 @@ class AccountCurrencyElement extends CurrencySelectElement {
       throw new Error("<account-currency> must be inside a <calculator-controller>");
     }
 
-    this._controller.account.addEventListener("currency.change", (event) => {
-      if (this.value !== event.detail.currency) {
-        this.value = event.detail.currency;
+    this._controller.account.addEventListener("change", () => {
+      if (this.value !== this._controller.account.currency) {
+        this.value = this._controller.account.currency;
       }
     });
 
@@ -443,6 +521,7 @@ class AccountCurrencyElement extends CurrencySelectElement {
 class AccountAmountElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -459,22 +538,12 @@ class AccountAmountElement extends NumberInputElement {
     this.thousands = true;
     this.value = this._controller.account.amount;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.places !== event.detail.places) {
-        this.places = event.detail.places;
-      }
-    });
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
+      this.suffix = " " + this._controller.account.currency;
 
-    this._controller.account.addEventListener("currency.change", (event) => {
-      const newSuffix = " " + event.detail.currency;
-      if (this.suffix !== newSuffix) {
-        this.suffix = newSuffix;
-      }
-    });
-
-    this._controller.account.addEventListener("amount.change", (event) => {
-      if (this.value !== event.detail.amount) {
-        this.value = event.detail.amount;
+      if (this.value !== this._controller.account.amount) {
+        this.value = this._controller.account.amount;
       }
     });
 
@@ -487,6 +556,7 @@ class AccountAmountElement extends NumberInputElement {
 class AccountRiskElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -521,8 +591,8 @@ class MarginRiskElement extends AccountRiskElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this._controller.account.addEventListener("marginRisk.change", (event) => {
-      const newValue = event.detail.marginRisk * 100;
+    this._controller.account.addEventListener("change", () => {
+      const newValue = this._controller.account.marginRisk * 100;
       if (this.value !== newValue) {
         this.value = newValue;
       }
@@ -542,8 +612,8 @@ class PositionRiskElement extends AccountRiskElement {
   connectedCallback() {
     super.connectedCallback();
 
-    this._controller.account.addEventListener("positionRisk.change", (event) => {
-      const newValue = event.detail.positionRisk * 100;
+    this._controller.account.addEventListener("change", () => {
+      const newValue = this._controller.account.positionRisk * 100;
       if (this.value !== newValue) {
         this.value = newValue;
       }
@@ -554,6 +624,7 @@ class PositionRiskElement extends AccountRiskElement {
 class AccountPlacesElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -570,9 +641,9 @@ class AccountPlacesElement extends NumberInputElement {
     this.thousands = false;
     this.value = this._controller.account.places;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.value !== event.detail.places) {
-        this.value = event.detail.places;
+    this._controller.account.addEventListener("change", () => {
+      if (this.value !== this._controller.account.places) {
+        this.value = this._controller.account.places;
       }
     });
 
@@ -585,6 +656,7 @@ class AccountPlacesElement extends NumberInputElement {
 class PositionCurrencyElement extends CurrencySelectElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -595,9 +667,9 @@ class PositionCurrencyElement extends CurrencySelectElement {
       throw new Error("<position-currency> must be inside a <calculator-controller>");
     }
 
-    this._controller.position.addEventListener("positionCurrency.change", (event) => {
-      if (this.value !== event.detail.positionCurrency) {
-        this.value = event.detail.positionCurrency;
+    this._controller.position.addEventListener("change", () => {
+      if (this.value !== this._controller.position.positionCurrency) {
+        this.value = this._controller.position.positionCurrency;
       }
     });
 
@@ -611,6 +683,7 @@ class PositionCurrencyElement extends CurrencySelectElement {
 class PositionQuoteCurrencyElement extends CurrencySelectElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -621,9 +694,9 @@ class PositionQuoteCurrencyElement extends CurrencySelectElement {
       throw new Error("<position-quote-currency> must be inside a <calculator-controller>");
     }
 
-    this._controller.position.addEventListener("quoteCurrency.change", (event) => {
-      if (this.value !== event.detail.quoteCurrency) {
-        this.value = event.detail.quoteCurrency;
+    this._controller.position.addEventListener("change", () => {
+      if (this.value !== this._controller.position.quoteCurrency) {
+        this.value = this._controller.position.quoteCurrency;
       }
     });
 
@@ -635,6 +708,12 @@ class PositionQuoteCurrencyElement extends CurrencySelectElement {
 }
 
 class PositionMarginLabelElement extends HTMLElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
   connectedCallback() {
     this._controller = findControllerParent(this);
     if (!this._controller) {
@@ -646,7 +725,7 @@ class PositionMarginLabelElement extends HTMLElement {
       throw new Error("<position-margin-label> must contain a <label> element");
     }
 
-    this._controller.position.addEventListener("margin.change", () => {
+    this._controller.position.addEventListener("change", () => {
       this._updateLabel();
     });
 
@@ -666,6 +745,7 @@ class PositionMarginLabelElement extends HTMLElement {
 class PositionMarginElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -682,8 +762,8 @@ class PositionMarginElement extends NumberInputElement {
     this.thousands = false;
     this.value = this._controller.position.margin * 100;
 
-    this._controller.position.addEventListener("margin.change", (event) => {
-      const newValue = event.detail.margin * 100;
+    this._controller.position.addEventListener("change", () => {
+      const newValue = this._controller.position.margin * 100;
       if (this.value !== newValue) {
         this.value = newValue;
       }
@@ -696,6 +776,12 @@ class PositionMarginElement extends NumberInputElement {
 }
 
 class PositionDirectionElement extends HTMLElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
   connectedCallback() {
     this._controller = findControllerParent(this);
     if (!this._controller) {
@@ -713,8 +799,8 @@ class PositionDirectionElement extends HTMLElement {
       this._controller.position.direction = select.value;
     });
 
-    this._controller.position.addEventListener("direction.change", (event) => {
-      select.value = event.detail.direction;
+    this._controller.position.addEventListener("change", () => {
+      select.value = this._controller.position.direction;
     });
   }
 }
@@ -722,6 +808,7 @@ class PositionDirectionElement extends HTMLElement {
 class PositionOpenPriceElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -738,22 +825,19 @@ class PositionOpenPriceElement extends NumberInputElement {
     this.thousands = true;
     this.value = this._controller.position.openPrice;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.places !== event.detail.places) {
-        this.places = event.detail.places;
-      }
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
     });
 
-    this._controller.position.addEventListener("quoteCurrency.change", (event) => {
-      const newSuffix = " " + event.detail.quoteCurrency;
+    this._controller.position.addEventListener("change", () => {
+      const newSuffix = " " + this._controller.position.quoteCurrency;
       if (this.suffix !== newSuffix) {
         this.suffix = newSuffix;
       }
-    });
 
-    this._controller.position.addEventListener("openPrice.change", (event) => {
-      if (this.value !== event.detail.openPrice) {
-        this.value = event.detail.openPrice;
+      const newValue = this._controller.position.openPrice;
+      if (this.value !== newValue) {
+        this.value = newValue;
       }
     });
 
@@ -766,6 +850,7 @@ class PositionOpenPriceElement extends NumberInputElement {
 class PositionQuantityToggleElement extends ToggleElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -786,8 +871,8 @@ class PositionQuantityToggleElement extends ToggleElement {
       }
     });
 
-    this._controller.position.addEventListener("quantity.change", (event) => {
-      const hasQuantity = event.detail.quantity !== null;
+    this._controller.position.addEventListener("change", () => {
+      const hasQuantity = this._controller.position.quantity !== null;
       if (this.checked !== hasQuantity) {
         this.checked = hasQuantity;
       }
@@ -798,6 +883,7 @@ class PositionQuantityToggleElement extends ToggleElement {
 class PositionQuantityElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -814,19 +900,17 @@ class PositionQuantityElement extends NumberInputElement {
     this.value = this._controller.position.quantity || 0;
     this.disabled = this._controller.position.quantity === null;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.places !== event.detail.places) {
-        this.places = event.detail.places;
-      }
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
     });
 
-    this._controller.position.addEventListener("quantity.change", (event) => {
-      const newValue = event.detail.quantity || 0;
+    this._controller.position.addEventListener("change", () => {
+      const newValue = this._controller.position.quantity || 0;
       if (this.value !== newValue) {
         this.value = newValue;
       }
 
-      this.disabled = event.detail.quantity === null;
+      this.disabled = this._controller.position.quantity === null;
     });
 
     this.addEventListener("change", () => {
@@ -836,6 +920,12 @@ class PositionQuantityElement extends NumberInputElement {
 }
 
 class AffordablePositionElement extends HTMLElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
   connectedCallback() {
     this._controller = findControllerParent(this);
     if (!this._controller) {
@@ -858,11 +948,7 @@ class AffordablePositionElement extends HTMLElement {
       this._controller.position.quantity = affordable;
     });
 
-    this._controller.position.addEventListener("quantity.change", () => {
-      this._update();
-    });
-
-    this._controller.position.addEventListener("openPrice.change", () => {
+    this._controller.position.addEventListener("change", () => {
       this._update();
     });
   }
@@ -873,9 +959,50 @@ class AffordablePositionElement extends HTMLElement {
   }
 }
 
+class OptimalPositionElement extends HTMLElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
+  connectedCallback() {
+    this._controller = findControllerParent(this);
+    if (!this._controller) {
+      throw new Error("<optimal-position> must be inside a <calculator-controller>");
+    }
+
+    this._button = this.querySelector("button");
+    if (!(this._button instanceof HTMLButtonElement)) {
+      throw new Error("<optimal-position> must contain a <button> element");
+    }
+
+    this._update();
+
+    this._button.addEventListener("click", () => {
+      const { affordable } = computeStopLossQuantity(
+        this._controller.account,
+        this._controller.position
+      );
+
+      this._controller.position.quantity = affordable;
+    });
+
+    this._controller.position.addEventListener("change", () => {
+      this._update();
+    });
+  }
+
+  _update() {
+    this._button.disabled =
+      this._controller.position.quantity === null || this._controller.position.stopLoss === null;
+  }
+}
+
 class PositionStopLossToggleElement extends ToggleElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -896,8 +1023,8 @@ class PositionStopLossToggleElement extends ToggleElement {
       }
     });
 
-    this._controller.position.addEventListener("stopLoss.change", (event) => {
-      const hasStopLoss = event.detail.stopLoss !== null;
+    this._controller.position.addEventListener("change", () => {
+      const hasStopLoss = this._controller.position.stopLoss !== null;
       if (this.checked !== hasStopLoss) {
         this.checked = hasStopLoss;
       }
@@ -908,6 +1035,7 @@ class PositionStopLossToggleElement extends ToggleElement {
 class PositionStopLossElement extends NumberInputElement {
   constructor() {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
   }
 
@@ -925,25 +1053,18 @@ class PositionStopLossElement extends NumberInputElement {
     this.value = this._controller.position.stopLoss || 0;
     this.disabled = this._controller.position.stopLoss === null;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.places !== event.detail.places) {
-        this.places = event.detail.places;
-      }
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
     });
 
-    this._controller.position.addEventListener("quoteCurrency.change", (event) => {
-      const newSuffix = " " + event.detail.quoteCurrency;
-      if (this.suffix !== newSuffix) {
-        this.suffix = newSuffix;
-      }
-    });
+    this._controller.position.addEventListener("change", () => {
+      this.suffix = " " + this._controller.position.quoteCurrency;
+      this.disabled = this._controller.position.stopLoss === null;
 
-    this._controller.position.addEventListener("stopLoss.change", (event) => {
-      const newValue = event.detail.stopLoss || 0;
+      const newValue = this._controller.position.stopLoss || 0;
       if (this.value !== newValue) {
         this.value = newValue;
       }
-      this.disabled = event.detail.stopLoss === null;
     });
 
     this.addEventListener("change", () => {
@@ -953,6 +1074,12 @@ class PositionStopLossElement extends NumberInputElement {
 }
 
 class PositionStopLossDistanceElement extends NumberInputElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._controller = findControllerParent(this);
@@ -967,25 +1094,13 @@ class PositionStopLossDistanceElement extends NumberInputElement {
     this.value = getStopLossDistance(this._controller.position);
     this.disabled = this._controller.position.stopLoss === null;
 
-    this._controller.account.addEventListener("places.change", (event) => {
-      if (this.places !== event.detail.places) {
-        this.places = event.detail.places;
-      }
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
     });
 
-    this._controller.position.addEventListener("quoteCurrency.change", (event) => {
-      const newSuffix = " " + event.detail.quoteCurrency;
-      if (this.suffix !== newSuffix) {
-        this.suffix = newSuffix;
-      }
-    });
-
-    this._controller.position.addEventListener("stopLoss.change", (event) => {
-      this.value = getStopLossDistance(this._controller.position);
-      this.disabled = event.detail.stopLoss === null;
-    });
-
-    this._controller.position.addEventListener("openPrice.change", () => {
+    this._controller.position.addEventListener("change", () => {
+      this.suffix = " " + this._controller.position.quoteCurrency;
+      this.disabled = this._controller.position.stopLoss === null;
       this.value = getStopLossDistance(this._controller.position);
     });
 
@@ -1001,14 +1116,39 @@ class PositionStopLossDistanceElement extends NumberInputElement {
   }
 }
 
+/** @template T */
 class ReportRow {
-  constructor(filter, label, help, places, prefix, suffix, compute) {
+  /**
+   * Construct a report row
+   *
+   * @param {boolean | function(report: T): boolean} filter - Whether to show this row
+   * @param {string | function(report: T): string} label - The label for this row
+   * @param {string | function(report: T): string} help - The help text for this row
+   * @param {number | function(report: T): number} places - The number of decimal places to show
+   * @param {string | function(report: T): string} prefix - The prefix to show before the value
+   * @param {string | function(report: T): string} suffix - The suffix to show after the value
+   * @param {string | function(report: T): string | null} description - The description to show
+   * @param {boolean | function(report: T): boolean | null} error - Whether to show this row as an error
+   * @param {function(report: T): number} compute - Function to compute the value for this row
+   */
+  constructor(filter, label, help, places, prefix, suffix, description, error, compute) {
+    /** @type {boolean | function(report: T): boolean} */
     this._filter = filter;
+    /** @type {string | function(report: T): string | null} */
     this._label = label;
+    /** @type {string | function(report: T): string | null} */
     this._help = help;
+    /** @type {number | function(report: T): number} */
     this._places = places;
+    /** @type {string | function(report: T): string} */
     this._prefix = prefix;
+    /** @type {string | function(report: T): string} */
     this._suffix = suffix;
+    /** @type {string | function(report: T): string | null} */
+    this._description = description;
+    /** @type {boolean | function(report: T): boolean | null} */
+    this._error = error;
+    /** @type {function(report: T): number} */
     this._compute = compute;
   }
 
@@ -1028,6 +1168,10 @@ class ReportRow {
     return typeof this._label === "function";
   }
 
+  /**
+   * @param {T} report
+   * @returns {string}
+   */
   label(report) {
     if (typeof this._label === "function") {
       return this._label(report);
@@ -1044,6 +1188,10 @@ class ReportRow {
     return typeof this._help === "function";
   }
 
+  /**
+   * @param {T} report
+   * @returns {string}
+   */
   help(report) {
     if (typeof this._help === "function") {
       return this._help(report);
@@ -1052,6 +1200,10 @@ class ReportRow {
     return this._help;
   }
 
+  /**
+   * @param {T} report
+   * @returns {number}
+   */
   places(report) {
     if (typeof this._places === "function") {
       return this._places(report);
@@ -1060,6 +1212,10 @@ class ReportRow {
     return this._places;
   }
 
+  /**
+   * @param {T} report
+   * @returns {string}
+   */
   prefix(report) {
     if (typeof this._prefix === "function") {
       return this._prefix(report);
@@ -1068,6 +1224,10 @@ class ReportRow {
     return this._prefix;
   }
 
+  /**
+   * @param {T} report
+   * @returns {string}
+   */
   suffix(report) {
     if (typeof this._suffix === "function") {
       return this._suffix(report);
@@ -1076,54 +1236,131 @@ class ReportRow {
     return this._suffix;
   }
 
+  get hasDescription() {
+    return (
+      this._description !== null && this._description !== undefined && this._description !== ""
+    );
+  }
+
+  get mutatingDescription() {
+    return typeof this._description === "function";
+  }
+
+  /**
+   * @param {T} report
+   * @returns {string}
+   */
+  desription(report) {
+    if (typeof this._description === "function") {
+      return this._description(report);
+    }
+
+    return this._description;
+  }
+
+  get hasError() {
+    return this._error !== null && this._error !== undefined && this._error !== false;
+  }
+
+  get mutatingError() {
+    return typeof this._error === "function";
+  }
+
+  /**
+   * @param {T} report
+   * @returns {boolean}
+   */
+  error(report) {
+    if (typeof this._error === "function") {
+      return this._error(report);
+    }
+
+    return this._error;
+  }
+
+  /**
+   * @param {T} report
+   * @returns {number}
+   */
   compute(report) {
     return this._compute(report);
   }
 
   static builder() {
+    /** @template T */
     class ReportRowBuilder {
       constructor() {
-        this._filter = () => true;
+        /** @type {boolean | function(report: T): boolean} */
+        this._filter = true;
+        /** @type {string | function(report: T): string} */
         this._label = null;
+        /** @type {string | function(report: T): string} */
         this._help = null;
+        /** @type {number | function(report: T): number} */
         this._places = 2;
+        /** @type {string | function(report: T): string} */
         this._prefix = null;
+        /** @type {string | function(report: T): string} */
         this._suffix = null;
+        /** @type {string | function(report: T): string | null} */
+        this._description = null;
+        /** @type {boolean | function(report: T): boolean} */
+        this._error = false;
+        /** @type {function(report: T): number} */
         this._compute = () => 0;
       }
 
+      /** @param {boolean | function(report: T): boolean} filter */
       filter(filter) {
         this._filter = filter;
         return this;
       }
 
+      /** @param {string | function(report: T): string} label */
       label(label) {
         this._label = label;
         return this;
       }
 
+      /** @param {string | function(report: T): string} help */
       help(help) {
         this._help = help;
         return this;
       }
 
+      /** @param {number | function(report: T): number} places */
       places(places) {
         this._places = places;
         return this;
       }
 
+      /** @param {string | function(report: T): string} prefix */
       prefix(prefix) {
         this._prefix = prefix;
         return this;
       }
 
+      /** @param {string | function(report: T): string} suffix */
       suffix(suffix) {
         this._suffix = suffix;
         return this;
       }
 
+      /** @param {function(report: T): number} compute */
       compute(compute) {
         this._compute = compute;
+        return this;
+      }
+
+      /** @param {string | function(report: T): string | null} description */
+      description(description) {
+        this._description = description;
+        return this;
+      }
+
+      /** @param {boolean | function(report: T): boolean} error */
+      error(error) {
+        this._error = error;
         return this;
       }
 
@@ -1135,6 +1372,8 @@ class ReportRow {
           this._places,
           this._currency,
           this._suffix,
+          this._description,
+          this._error,
           this._compute
         );
       }
@@ -1162,15 +1401,39 @@ HELP_ICON.innerHTML = `
 </svg>
 `;
 
+/**
+ * @typedef {Object} ReportRowElements
+ * @property {HTMLDivElement} row - The row element
+ * @property {HTMLDivElement | null} help - The help element or null if not present
+ * @property {HTMLDivElement | null} label - The label element or null if not present
+ * @property {HTMLDivElement} value - The value element
+ * @property {HTMLDivElement | null} description - The description element or null if not present
+ */
+
+/**
+ * Build the report rows in the container
+ *
+ * @param {HTMLElement} container The container element
+ * @param {ReportRow[]} reportRows The report rows to build
+ * @returns {ReportRowElements} The built row elements
+ */
 function buildReportRows(container, reportRows) {
+  /** @type {ReportRowElements[]} */
   const rows = [];
   for (const row of reportRows) {
     const rowElement = document.createElement("div");
     rowElement.classList.add("grid", "col-span-3", "grid-cols-subgrid", "items-center");
 
-    let help = null,
-      label = null,
-      startColumn = 1;
+    if (row.hasError && !row.mutatingError) {
+      if (row.error()) {
+        rowElement.classList.add("text-red-600", "dark:text-red-400");
+      }
+    }
+
+    /** @type {HTMLDivElement | null} */
+    let help = null;
+    /** @type {HTMLDivElement | null} */
+    let label = null;
 
     if (row.hasHelp) {
       const helpContainer = document.createElement("div");
@@ -1187,51 +1450,57 @@ function buildReportRows(container, reportRows) {
       helpContainer.append(icon);
       helpContainer.append(help);
       rowElement.append(helpContainer);
-    } else {
-      startColumn += 1;
     }
 
     if (row.hasLabel) {
       label = document.createElement("div");
-      label.classList.add("font-bold", "text-left");
-
-      if (startColumn === 2) {
-        label.classList.add("col-start-2");
-        startColumn -= 1;
-      }
+      label.classList.add("font-bold", "text-left", "col-start-2");
 
       if (!row.mutatingLabel) {
         label.innerText = row.label();
       }
 
       rowElement.append(label);
-    } else {
-      startColumn += 1;
     }
 
     const value = document.createElement("div");
-    value.classList.add("text-right");
-
-    if (startColumn === 2) {
-      value.classList.add("col-start-2");
-    } else if (startColumn === 3) {
-      value.classList.add("col-start-3");
-    }
+    value.classList.add("text-right", "col-start-3");
 
     rowElement.append(value);
     container.append(rowElement);
+
+    /** @type {HTMLDivElement | null} */
+    let description = null;
+    if (row.hasDescription) {
+      description = document.createElement("div");
+      description.classList.add("col-span-3", "text-sm", "mt-0.5");
+
+      if (!row.mutatingDescription) {
+        description.innerText = row.desription();
+      }
+
+      container.append(description);
+    }
 
     rows.push({
       row: rowElement,
       help,
       label,
       value,
+      description,
     });
   }
 
   return rows;
 }
 
+/**
+ * Update the report rows with the latest data
+ *
+ * @param {ReportRowElements[]} rowElements The row elements to update
+ * @param {ReportRow[]} reportRows The report rows definitions
+ * @param {any} report The report data
+ */
 function updateReportRows(rowElements, reportRows, report) {
   for (let i = 0; i < reportRows.length; i++) {
     const row = reportRows[i];
@@ -1252,6 +1521,20 @@ function updateReportRows(rowElements, reportRows, report) {
       elements.label.innerText = row.label(report);
     }
 
+    if (row.mutatingError) {
+      if (row.error(report)) {
+        elements.row.classList.add("text-red-600", "dark:text-red-400");
+        if (elements.description) {
+          elements.description.classList.add("text-red-600", "dark:text-red-400");
+        }
+      } else {
+        elements.row.classList.remove("text-red-600", "dark:text-red-400");
+        if (elements.description) {
+          elements.description.classList.remove("text-red-600", "dark:text-red-400");
+        }
+      }
+    }
+
     elements.value.innerText = formatNumber(
       row.compute(report),
       true,
@@ -1259,16 +1542,27 @@ function updateReportRows(rowElements, reportRows, report) {
       row.prefix(report),
       row.suffix(report)
     );
+
+    if (row.mutatingDescription) {
+      elements.description.innerText = row.desription(report);
+    }
   }
 }
 
 class ReportElement extends HTMLElement {
   constructor(reportRows) {
     super();
+    /** @type {CalculatorControllerElement | null} */
     this._controller = null;
+    /** @type {HTMLElement | null} */
+    this._container = null;
+    /** @type {ReportRow<any>[]} */
     this._reportRows = reportRows;
+    /** @type {ReportRowElements[]} */
+    this._rowElements = [];
   }
 
+  /** @type {CalculatorControllerElement} */
   get controller() {
     return this._controller;
   }
@@ -1286,7 +1580,7 @@ class ReportElement extends HTMLElement {
       this.controller.position.openPrice,
       true,
       this.controller.account.places,
-      this.controller.position.quoteCurrency,
+      " " + this.controller.position.quoteCurrency,
       null
     );
   }
@@ -1309,47 +1603,11 @@ class ReportElement extends HTMLElement {
     this._rowElements = buildReportRows(this._container, this._reportRows);
     this.onUpdate();
 
-    this._controller.account.addEventListener("amount.change", () => {
+    this._controller.account.addEventListener("change", () => {
       this.onUpdate();
     });
 
-    this._controller.account.addEventListener("currency.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.account.addEventListener("marginRisk.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.account.addEventListener("positionRisk.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("positionCurrency.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("quoteCurrency.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("openPrice.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("quantity.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("margin.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("direction.change", () => {
-      this.onUpdate();
-    });
-
-    this._controller.position.addEventListener("stopLoss.change", () => {
+    this._controller.position.addEventListener("change", () => {
       this.onUpdate();
     });
   }
@@ -1413,7 +1671,7 @@ const POSITION_SIZE_ROWS = [
         report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
     )
     .help((report) => {
-      return `Available amount with a ${marginFormat} position margin converted to the quote currency.`;
+      return `Available amount with a ${report.marginFormat} position margin converted to the quote currency.`;
     })
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
@@ -1505,7 +1763,25 @@ const POSITION_SIZE_ROWS = [
     .help("The percentage of the account that will be committed as margin to open the position.")
     .places(2)
     .suffix(" %")
+    .error((report) => report.excessRisk)
     .compute((report) => report.sizeReport.actual.margin * 100.0)
+    .description((report) => {
+      if (!report.excessRisk) {
+        return null;
+      }
+
+      const risk = formatNumber(report.controller.account.marginRisk * 100, true, 2, null, "%");
+
+      const excess = formatNumber(
+        report.sizeReport.actual.cost - report.sizeReport.available,
+        true,
+        report.controller.account.places,
+        null,
+        " " + report.controller.account.currency
+      );
+
+      return `Actual quantity of ${report.quantityFormat} exceeds account margin risk of ${risk} by ${excess}.`;
+    })
     .build(),
 ];
 
@@ -1519,12 +1795,19 @@ class PositionSizeReportElement extends ReportElement {
     return this._sizeReport;
   }
 
+  get excessRisk() {
+    return this._sizeReport && this._sizeReport.actual
+      ? Math.round(this._sizeReport.actual.margin * 100) > this._controller.account.marginRisk * 100
+      : false;
+  }
+
   onUpdate() {
     this._sizeReport = computePositionSize(this._controller.account, this._controller.position);
     super.onUpdate();
   }
 }
 
+/** @type {ReportRow<StopLossReportElement>[]} */
 const STOP_LOSS_ROWS = [
   ReportRow.builder()
     .label("Available Account")
@@ -1585,16 +1868,68 @@ const STOP_LOSS_ROWS = [
         : report.controller.position.openPrice + distance;
     })
     .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.stopLoss.actual)
+    .label("Actual Distance")
+    .help("The distance provided in the position form.")
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => (report.stopLoss.actual ? report.stopLoss.actual.distance : 0))
+    .build(),
+  ReportRow.builder()
+    .filter((report) => report.stopLoss.actual)
+    .label("Actual Loss")
+    .help(
+      (report) =>
+        `The actual account loss that will be incurred should the position close at the provided stop loss position of ${report.stopLossFormat}.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.account.currency)
+    .compute((report) => (report.stopLoss.actual ? report.stopLoss.actual.loss : 0))
+    .build(),
+  ReportRow.builder()
+    .filter((report) => report.stopLoss.actual)
+    .label("Actual Risk")
+    .help(
+      (report) =>
+        `ercentage of account at risk for the provided stop loss position of ${report.stopLossFormat}.`
+    )
+    .places(2)
+    .suffix(" %")
+    .compute((report) => (report.stopLoss.actual ? report.stopLoss.actual.risk * 100.0 : 0))
+    .build(),
 ];
 
 class StopLossReportElement extends ReportElement {
   constructor() {
     super([...STOP_LOSS_ROWS]);
+    /** @type {StopLossInfo | null} */
     this._stopLoss = null;
   }
 
   get stopLoss() {
     return this._stopLoss;
+  }
+
+  get excessRisk() {
+    if (this._stopLoss.actual) {
+      return false;
+    }
+
+    return (
+      Math.round(100 * this._stopLoss.actual.risk) > this.controller.account.positionRisk * 100
+    );
+  }
+
+  get stopLossFormat() {
+    return formatNumber(
+      this.controller.position.stopLoss || 0,
+      true,
+      this.controller.account.places,
+      this.controller.position.quoteCurrency,
+      null
+    );
   }
 
   onUpdate() {
@@ -1623,6 +1958,7 @@ customElements.define("position-open-price", PositionOpenPriceElement);
 customElements.define("position-quantity-toggle", PositionQuantityToggleElement);
 customElements.define("position-quantity", PositionQuantityElement);
 customElements.define("affordable-position", AffordablePositionElement);
+customElements.define("optimal-position", OptimalPositionElement);
 customElements.define("position-stop-loss-toggle", PositionStopLossToggleElement);
 customElements.define("position-stop-loss", PositionStopLossElement);
 customElements.define("position-stop-loss-distance", PositionStopLossDistanceElement);
