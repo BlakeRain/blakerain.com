@@ -482,28 +482,6 @@ function findControllerParent(element) {
   return null;
 }
 
-class AccountInfoElement extends HTMLElement {
-  connectedCallback() {
-    this._controller = findControllerParent(this);
-    if (!this._controller) {
-      throw new Error("<account-info> must be inside a <calculator-controller>");
-    }
-
-    this.querySelector("button").addEventListener("click", () => {
-      this.querySelector("pre").innerText = JSON.stringify(
-        {
-          account: this._controller.account,
-          position: this._controller.position,
-          size: computePositionSize(this._controller.account, this._controller.position),
-          rates: EXCHANGE_RATES,
-        },
-        undefined,
-        2
-      );
-    });
-  }
-}
-
 class AccountCurrencyElement extends CurrencySelectElement {
   constructor() {
     super();
@@ -2323,7 +2301,6 @@ class PlannedStopLossReportElement extends ReportElement {
 customElements.define("calculator-controller", CalculatorControllerElement);
 customElements.define("account-amount", AccountAmountElement);
 customElements.define("account-currency", AccountCurrencyElement);
-customElements.define("account-info", AccountInfoElement);
 customElements.define("account-margin-risk", MarginRiskElement);
 customElements.define("account-position-risk", PositionRiskElement);
 customElements.define("account-places", AccountPlacesElement);
