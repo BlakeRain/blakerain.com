@@ -119,6 +119,21 @@ params:
           <input id="stopLossDistance" class="field text-right" type="text" />
         </position-stop-loss-distance>
       </div>
+      <div>
+        <label for="takeProfit">Take Profit</label>
+        <div class="flex flex-row gap-2 items-center">
+          <position-take-profit-toggle></position-take-profit-toggle>
+          <position-take-profit class="grow">
+            <input id="takeProfit" class="field text-right" type="text" />
+          </position-take-profit>
+        </div>
+      </div>
+      <div>
+        <label for="takeProfitDistance">Take Profit Distance</label>
+        <position-take-profit-distance>
+          <input id="takeProfitDistance" class="field text-right" type="text" />
+        </position-take-profit-distance>
+      </div>
     </div>
     <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
     dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 mt-4">
@@ -135,12 +150,27 @@ params:
         <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
         </div>
       </stop-loss-report>
+      <p class="text-neutral-500 text-sm">
+        This panel shows the maximum available stop loss, given the position size and the account
+        position risk.
+      </p>
     </div>
     <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
       <h1 class="text-lg font-medium mb-2 mt-0">Take Profit</h1>
+      <take-profit-report>
+        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        </div>
+      </take-profit-report>
     </div>
     <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
       <h1 class="text-lg font-medium mb-2 mt-0">Planned Stop Loss Maximum</h1>
+      <planned-stop-loss-report>
+        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        </div>
+      </planned-stop-loss-report>
+      <p class="text-neutral-500 text-sm">
+        This panel shows the maximum position size available, given the entered position stop loss and the account position risk.
+      </p>
     </div>
   </div>
   <account-info>

@@ -237,7 +237,6 @@ class Position extends EventTarget {
 }
 
 /**
- *
  * @param {Position} position
  * @returns {number} The stop loss distance
  */
@@ -249,6 +248,20 @@ function getStopLossDistance(position) {
   return position.direction === "long"
     ? position.openPrice - position.stopLoss
     : position.stopLoss - position.openPrice;
+}
+
+/**
+ * @param {Position} position
+ * @returns {number} The take profit distance
+ */
+function getTakeProfitDistance(position) {
+  if (position.takeProfit === null) {
+    return 0;
+  }
+
+  return position.direction === "long"
+    ? position.takeProfit - position.openPrice
+    : position.openPrice - position.takeProfit;
 }
 
 /**
@@ -1116,6 +1129,123 @@ class PositionStopLossDistanceElement extends NumberInputElement {
   }
 }
 
+class PositionTakeProfitToggleElement extends ToggleElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._controller = findControllerParent(this);
+    if (!this._controller) {
+      throw new Error("<position-take-profit-toggle> must be inside a <calculator-controller>");
+    }
+
+    this.checked = this._controller.position.takeProfit !== null;
+
+    this.addEventListener("change", () => {
+      if (this.checked) {
+        this._controller.position.takeProfit = 0;
+      } else {
+        this._controller.position.takeProfit = null;
+      }
+    });
+
+    this._controller.position.addEventListener("change", () => {
+      const hasTakeProfit = this._controller.position.takeProfit !== null;
+      if (this.checked !== hasTakeProfit) {
+        this.checked = hasTakeProfit;
+      }
+    });
+  }
+}
+
+class PositionTakeProfitElement extends NumberInputElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._controller = findControllerParent(this);
+    if (!this._controller) {
+      throw new Error("<position-take-profit> must be inside a <calculator-controller>");
+    }
+
+    this.places = this._controller.account.places;
+    this.prefix = "";
+    this.suffix = " " + this._controller.position.quoteCurrency;
+    this.thousands = true;
+    this.value = this._controller.position.takeProfit || 0;
+    this.disabled = this._controller.position.takeProfit === null;
+
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
+    });
+
+    this._controller.position.addEventListener("change", () => {
+      this.suffix = " " + this._controller.position.quoteCurrency;
+      this.disabled = this._controller.position.takeProfit === null;
+
+      const newValue = this._controller.position.takeProfit || 0;
+      if (this.value !== newValue) {
+        this.value = newValue;
+      }
+    });
+
+    this.addEventListener("change", () => {
+      this._controller.position.takeProfit = this.value;
+    });
+  }
+}
+
+class PositionTakeProfitDistanceElement extends NumberInputElement {
+  constructor() {
+    super();
+    /** @type {CalculatorControllerElement | null} */
+    this._controller = null;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._controller = findControllerParent(this);
+    if (!this._controller) {
+      throw new Error("<position-take-profit-distance> must be inside a <calculator-controller>");
+    }
+
+    this.places = this._controller.account.places;
+    this.prefix = "";
+    this.suffix = " " + this._controller.position.quoteCurrency;
+    this.thousands = true;
+    this.value = getTakeProfitDistance(this._controller.position);
+    this.disabled = this._controller.position.takeProfit === null;
+
+    this._controller.account.addEventListener("change", () => {
+      this.places = this._controller.account.places;
+    });
+
+    this._controller.position.addEventListener("change", () => {
+      this.suffix = " " + this._controller.position.quoteCurrency;
+      this.disabled = this._controller.position.takeProfit === null;
+      this.value = getTakeProfitDistance(this._controller.position);
+    });
+
+    this.addEventListener("change", () => {
+      const distance = this.value;
+      const openPrice = this._controller.position.openPrice;
+      if (this._controller.position.direction === "long") {
+        this._controller.position.takeProfit = openPrice + distance;
+      } else {
+        this._controller.position.takeProfit = openPrice - distance;
+      }
+    });
+  }
+}
+
 /** @template T */
 class ReportRow {
   /**
@@ -1571,6 +1701,14 @@ class ReportElement extends HTMLElement {
     return formatNumber(this.controller.position.margin * 100, true, 2, null, "%");
   }
 
+  get leverageFormat() {
+    if (this.controller.position.margin === 0) {
+      return "No leverage";
+    }
+
+    return formatNumber(1 / this.controller.position.margin, true, 0, "(", "x leverage)");
+  }
+
   get quantityFormat() {
     return formatNumber(this.controller.position.quantity || 0, true, 2, null, " units");
   }
@@ -1580,8 +1718,8 @@ class ReportElement extends HTMLElement {
       this.controller.position.openPrice,
       true,
       this.controller.account.places,
-      " " + this.controller.position.quoteCurrency,
-      null
+      null,
+      " " + this.controller.position.quoteCurrency
     );
   }
 
@@ -1893,10 +2031,11 @@ const STOP_LOSS_ROWS = [
     .label("Actual Risk")
     .help(
       (report) =>
-        `ercentage of account at risk for the provided stop loss position of ${report.stopLossFormat}.`
+        `Percentage of account at risk for the provided stop loss position of ${report.stopLossFormat}.`
     )
     .places(2)
     .suffix(" %")
+    .error((report) => report.excessRisk)
     .compute((report) => (report.stopLoss.actual ? report.stopLoss.actual.risk * 100.0 : 0))
     .build(),
 ];
@@ -1913,7 +2052,7 @@ class StopLossReportElement extends ReportElement {
   }
 
   get excessRisk() {
-    if (this._stopLoss.actual) {
+    if (this._stopLoss.actual === null) {
       return false;
     }
 
@@ -1927,17 +2066,256 @@ class StopLossReportElement extends ReportElement {
       this.controller.position.stopLoss || 0,
       true,
       this.controller.account.places,
-      this.controller.position.quoteCurrency,
-      null
+      null,
+      " " + this.controller.position.quoteCurrency
     );
   }
 
   onUpdate() {
+    const { account, position } = this.controller;
     const quantity =
-      this.controller.position.quantity !== null
-        ? this.controller.position.quantity
-        : computePositionSize(this.controller.account, this.controller.position).affordable;
-    this._stopLoss = computeStopLoss(this.controller.account, this.controller.position, quantity);
+      position.quantity !== null
+        ? position.quantity
+        : computePositionSize(account, position).affordable;
+    this._stopLoss = computeStopLoss(account, position, quantity);
+    super.onUpdate();
+  }
+}
+
+const TAKE_PROFIT_ROWS = [
+  ReportRow.builder()
+    .filter((report) => report.controller.position.takeProfit !== null)
+    .label("Take Profit")
+    .help("Take profit entered into the position form.")
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.controller.position.takeProfit)
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.controller.position.takeProfit !== null)
+    .label("Take Profit Distance")
+    .help("Take profit distance, based on take profit entered into the position form.")
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.takeProfitDistance)
+    .build(),
+
+  ReportRow.builder()
+    .filter(
+      (report) =>
+        report.controller.position.takeProfit !== null &&
+        report.controller.position.stopLoss !== null
+    )
+    .label("Reward to Risk Ratio")
+    .help("The ratio of the take profit distance to the stop loss distance.")
+    .places(1)
+    .suffix(":1")
+    .compute((report) => report.stopLossRatio)
+    .error((report) => report.stopLossRatio < 2)
+    .description((report) => {
+      if (report.stopLossRatio < 2) {
+        return `A profit/loss ratio of ${formatNumber(
+          report.stopLossRatio,
+          true,
+          1,
+          null,
+          null
+        )}:1 is below the recommended minimum of 2:1`;
+      }
+
+      return null;
+    })
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.controller.position.takeProfit !== null)
+    .label("Realised Profit")
+    .help(
+      (report) =>
+        `Total realized profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.realised)
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.controller.position.takeProfit !== null)
+    .label("Realised Profit (Account)")
+    .help(
+      (report) =>
+        `Total realized account profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.account.currency)
+    .compute((report) => report.realisedAccount)
+    .build(),
+];
+
+class TakeProfitReportElement extends ReportElement {
+  constructor() {
+    super([...TAKE_PROFIT_ROWS]);
+  }
+
+  get takeProfitFormat() {
+    if (this.controller.position.takeProfit === null) {
+      return null;
+    }
+
+    return formatNumber(
+      this.controller.position.takeProfit,
+      true,
+      this.controller.account.places,
+      null,
+      " " + this.controller.position.positionCurrency
+    );
+  }
+
+  get takeProfitDistance() {
+    const { position } = this.controller;
+
+    if (position.takeProfit === null) {
+      return null;
+    }
+
+    return position.direction === "long"
+      ? position.takeProfit - position.openPrice
+      : position.openPrice - position.takeProfit;
+  }
+
+  get stopLossRatio() {
+    const { position } = this.controller;
+
+    if (position.takeProfit === null || position.stopLoss === null) {
+      return 0;
+    }
+
+    return (
+      this.takeProfitDistance /
+      (position.direction === "long"
+        ? position.openPrice - position.stopLoss
+        : position.stopLoss - position.openPrice)
+    );
+  }
+
+  get realised() {
+    const { position } = this.controller;
+
+    if (position.takeProfit === null) {
+      return null;
+    }
+
+    return (position.takeProfit - position.openPrice) * (position.quantity || 0);
+  }
+
+  get realisedAccount() {
+    const { account, position } = this.controller;
+
+    if (position.takeProfit === null) {
+      return null;
+    }
+
+    return (
+      this.realised /
+      (getExchangeRate(position.positionCurrency * position.quoteCurrency) *
+        (getExchangeRate(account.currency, position.quoteCurrency) || 1))
+    );
+  }
+}
+
+const PLANNED_STOP_LOSS_ROWS = [
+  ReportRow.builder()
+    .filter((report) => report.stopLossQuantity !== null)
+    .label("Available Account")
+    .help(
+      (report) => `Amount of account available under position risk of ${report.positionRiskFormat}.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.account.currency)
+    .compute((report) => report.stopLossQuantity.available)
+    .build(),
+
+  ReportRow.builder()
+    .filter(
+      (report) =>
+        report.stopLossQuantity !== null &&
+        report.controller.position.positionCurrency !== report.controller.account.currency
+    )
+    .help(
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.stopLossQuantity.availablePosition)
+    .build(),
+
+  ReportRow.builder()
+    .filter(
+      (report) =>
+        report.stopLossQuantity !== null &&
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+    )
+    .help(
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`
+    )
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.quoteCurrency)
+    .compute((report) => report.stopLossQuantity.availableQuote)
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.stopLossQuantity !== null)
+    .label("Stop Loss")
+    .help("Stop loss entered into the position form.")
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.controller.position.stopLoss || 0)
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.stopLossQuantity !== null)
+    .label("Stop Loss Distance")
+    .help("Stop loss distance entered into the position form.")
+    .places((report) => report.controller.account.places)
+    .suffix((report) => " " + report.controller.position.positionCurrency)
+    .compute((report) => report.stopLossQuantity.distance || 0)
+    .build(),
+
+  ReportRow.builder()
+    .filter((report) => report.stopLossQuantity !== null)
+    .label("Available Quantity")
+    .help(
+      (report) =>
+        `The position size that can be taken at an open price of ${report.openPriceFormat}, given an account position risk of ${report.positionRiskFormat}.`
+    )
+    .places(2)
+    .suffix(" units")
+    .compute((report) => report.stopLossQuantity.affordable)
+    .build(),
+];
+
+class PlannedStopLossReportElement extends ReportElement {
+  constructor() {
+    super([...PLANNED_STOP_LOSS_ROWS]);
+    this._stopLossQuantity = null;
+  }
+
+  get stopLossQuantity() {
+    return this._stopLossQuantity;
+  }
+
+  onUpdate() {
+    const { account, position } = this.controller;
+
+    if (position.stopLoss === null) {
+      this._stopLossQuantity = null;
+    } else {
+      this._stopLossQuantity = computeStopLossQuantity(account, position);
+    }
+
     super.onUpdate();
   }
 }
@@ -1962,5 +2340,10 @@ customElements.define("optimal-position", OptimalPositionElement);
 customElements.define("position-stop-loss-toggle", PositionStopLossToggleElement);
 customElements.define("position-stop-loss", PositionStopLossElement);
 customElements.define("position-stop-loss-distance", PositionStopLossDistanceElement);
+customElements.define("position-take-profit-toggle", PositionTakeProfitToggleElement);
+customElements.define("position-take-profit", PositionTakeProfitElement);
+customElements.define("position-take-profit-distance", PositionTakeProfitDistanceElement);
 customElements.define("position-size-report", PositionSizeReportElement);
 customElements.define("stop-loss-report", StopLossReportElement);
+customElements.define("take-profit-report", TakeProfitReportElement);
+customElements.define("planned-stop-loss-report", PlannedStopLossReportElement);
