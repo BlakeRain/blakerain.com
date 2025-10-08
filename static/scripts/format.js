@@ -6,6 +6,7 @@ export function formatNumber(value, thousands, places, prefix, suffix) {
     style: "decimal",
     useGrouping: thousands ? "always" : false,
     minimumFractionDigits: places,
+    maximumFractionDigits: places,
   });
 
   return neg + (prefix || "") + formatter.format(aval) + (suffix || "");
