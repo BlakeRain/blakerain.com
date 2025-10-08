@@ -433,8 +433,8 @@ function computeStopLossQuantity(account, position) {
     position.stopLoss === null
       ? 0
       : position.direction === "long"
-      ? position.openPrice - position.stopLoss
-      : position.stopLoss - position.openPrice;
+        ? position.openPrice - position.stopLoss
+        : position.stopLoss - position.openPrice;
   const pRate = getExchangeRate(account.currency, position.positionCurrency);
   const qRate = getExchangeRate(position.positionCurrency, position.quoteCurrency);
   const available = account.amount * account.positionRisk;
@@ -933,7 +933,7 @@ class AffordablePositionElement extends HTMLElement {
     this._button.addEventListener("click", () => {
       const { affordable } = computePositionSize(
         this._controller.account,
-        this._controller.position
+        this._controller.position,
       );
 
       this._controller.position.quantity = affordable;
@@ -973,7 +973,7 @@ class OptimalPositionElement extends HTMLElement {
     this._button.addEventListener("click", () => {
       const { affordable } = computeStopLossQuantity(
         this._controller.account,
-        this._controller.position
+        this._controller.position,
       );
 
       this._controller.position.quantity = affordable;
@@ -1358,7 +1358,7 @@ class ReportRow {
    * @param {T} report
    * @returns {string}
    */
-  desription(report) {
+  description(report) {
     if (typeof this._description === "function") {
       return this._description(report);
     }
@@ -1482,7 +1482,7 @@ class ReportRow {
           this._suffix,
           this._description,
           this._error,
-          this._compute
+          this._compute,
         );
       }
     }
@@ -1584,7 +1584,7 @@ function buildReportRows(container, reportRows) {
       description.classList.add("col-span-3", "text-sm", "mt-0.5");
 
       if (!row.mutatingDescription) {
-        description.innerText = row.desription();
+        description.innerText = row.description();
       }
 
       container.append(description);
@@ -1648,11 +1648,11 @@ function updateReportRows(rowElements, reportRows, report) {
       true,
       row.places(report),
       row.prefix(report),
-      row.suffix(report)
+      row.suffix(report),
     );
 
     if (row.mutatingDescription) {
-      elements.description.innerText = row.desription(report);
+      elements.description.innerText = row.description(report);
     }
   }
 }
@@ -1697,7 +1697,7 @@ class ReportElement extends HTMLElement {
       true,
       this.controller.account.places,
       null,
-      " " + this.controller.position.quoteCurrency
+      " " + this.controller.position.quoteCurrency,
     );
   }
 
@@ -1743,7 +1743,8 @@ const POSITION_SIZE_ROWS = [
     .build(),
   ReportRow.builder()
     .filter(
-      (report) => report.controller.position.positionCurrency !== report.controller.account.currency
+      (report) =>
+        report.controller.position.positionCurrency !== report.controller.account.currency,
     )
     .help("Amount of account available under margin risk in the position currency.")
     .places((report) => report.controller.account.places)
@@ -1753,7 +1754,7 @@ const POSITION_SIZE_ROWS = [
   ReportRow.builder()
     .filter(
       (report) =>
-        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency,
     )
     .help("Amount of account available under margin risk in the quote currency.")
     .places((report) => report.controller.account.places)
@@ -1772,7 +1773,8 @@ const POSITION_SIZE_ROWS = [
     .build(),
   ReportRow.builder()
     .filter(
-      (report) => report.controller.position.positionCurrency !== report.controller.account.currency
+      (report) =>
+        report.controller.position.positionCurrency !== report.controller.account.currency,
     )
     .help((report) => {
       return `Available amount with a ${report.marginFormat} position margin converted to the position currency.`;
@@ -1784,7 +1786,7 @@ const POSITION_SIZE_ROWS = [
   ReportRow.builder()
     .filter(
       (report) =>
-        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency,
     )
     .help((report) => {
       return `Available amount with a ${report.marginFormat} position margin converted to the quote currency.`;
@@ -1803,7 +1805,7 @@ const POSITION_SIZE_ROWS = [
         true,
         report.controller.account.places,
         report.controller.position.quoteCurrency,
-        null
+        null,
       )}.`;
     })
     .places(2)
@@ -1838,7 +1840,7 @@ const POSITION_SIZE_ROWS = [
         false,
         0,
         null,
-        null
+        null,
       )}x leverage)`;
     })
     .places((report) => report.controller.account.places)
@@ -1849,11 +1851,11 @@ const POSITION_SIZE_ROWS = [
     .filter(
       (report) =>
         report.sizeReport.actual &&
-        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency,
     )
     .help(
       (report) =>
-        `Amount required at ${report.marginFormat} margin, converted into the position currency.`
+        `Amount required at ${report.marginFormat} margin, converted into the position currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -1863,11 +1865,11 @@ const POSITION_SIZE_ROWS = [
     .filter(
       (report) =>
         report.sizeReport.actual &&
-        report.controller.account.currency !== report.controller.position.positionCurrency
+        report.controller.account.currency !== report.controller.position.positionCurrency,
     )
     .help(
       (report) =>
-        `Amount required at ${report.marginFormat} margin, converted into the account currency.`
+        `Amount required at ${report.marginFormat} margin, converted into the account currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
@@ -1893,7 +1895,7 @@ const POSITION_SIZE_ROWS = [
         true,
         report.controller.account.places,
         null,
-        " " + report.controller.account.currency
+        " " + report.controller.account.currency,
       );
 
       return `Actual quantity of ${report.quantityFormat} exceeds account margin risk of ${risk} by ${excess}.`;
@@ -1928,7 +1930,8 @@ const STOP_LOSS_ROWS = [
   ReportRow.builder()
     .label("Available Account")
     .help(
-      (report) => `Amount of account available under position risk of ${report.positionRiskFormat}.`
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat}.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
@@ -1936,11 +1939,12 @@ const STOP_LOSS_ROWS = [
     .build(),
   ReportRow.builder()
     .filter(
-      (report) => report.controller.position.positionCurrency !== report.controller.account.currency
+      (report) =>
+        report.controller.position.positionCurrency !== report.controller.account.currency,
     )
     .help(
       (report) =>
-        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -1949,11 +1953,11 @@ const STOP_LOSS_ROWS = [
   ReportRow.builder()
     .filter(
       (report) =>
-        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency,
     )
     .help(
       (report) =>
-        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
@@ -1963,7 +1967,7 @@ const STOP_LOSS_ROWS = [
     .label("Maximum Stop Loss Price Distance")
     .help(
       (report) =>
-        `The maximum stop loss distance for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`
+        `The maximum stop loss distance for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -1973,7 +1977,7 @@ const STOP_LOSS_ROWS = [
     .label("Maximum Stop Loss")
     .help(
       (report) =>
-        `The maximum stop loss for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`
+        `The maximum stop loss for a position of ${report.quantityFormat} at ${report.openPriceFormat} to remain within the position risk of ${report.positionRiskFormat} of the account.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -1998,7 +2002,7 @@ const STOP_LOSS_ROWS = [
     .label("Actual Loss")
     .help(
       (report) =>
-        `The actual account loss that will be incurred should the position close at the provided stop loss position of ${report.stopLossFormat}.`
+        `The actual account loss that will be incurred should the position close at the provided stop loss position of ${report.stopLossFormat}.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
@@ -2009,7 +2013,7 @@ const STOP_LOSS_ROWS = [
     .label("Actual Risk")
     .help(
       (report) =>
-        `Percentage of account at risk for the provided stop loss position of ${report.stopLossFormat}.`
+        `Percentage of account at risk for the provided stop loss position of ${report.stopLossFormat}.`,
     )
     .places(2)
     .suffix(" %")
@@ -2045,7 +2049,7 @@ class StopLossReportElement extends ReportElement {
       true,
       this.controller.account.places,
       null,
-      " " + this.controller.position.quoteCurrency
+      " " + this.controller.position.quoteCurrency,
     );
   }
 
@@ -2083,7 +2087,7 @@ const TAKE_PROFIT_ROWS = [
     .filter(
       (report) =>
         report.controller.position.takeProfit !== null &&
-        report.controller.position.stopLoss !== null
+        report.controller.position.stopLoss !== null,
     )
     .label("Reward to Risk Ratio")
     .help("The ratio of the take profit distance to the stop loss distance.")
@@ -2098,7 +2102,7 @@ const TAKE_PROFIT_ROWS = [
           true,
           1,
           null,
-          null
+          null,
         )}:1 is below the recommended minimum of 2:1`;
       }
 
@@ -2111,7 +2115,7 @@ const TAKE_PROFIT_ROWS = [
     .label("Realised Profit")
     .help(
       (report) =>
-        `Total realized profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`
+        `Total realized profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -2123,7 +2127,7 @@ const TAKE_PROFIT_ROWS = [
     .label("Realised Profit (Account)")
     .help(
       (report) =>
-        `Total realized account profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`
+        `Total realized account profit if closing a position of ${report.quantityFormat} at ${report.takeProfitFormat}.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
@@ -2146,7 +2150,7 @@ class TakeProfitReportElement extends ReportElement {
       true,
       this.controller.account.places,
       null,
-      " " + this.controller.position.positionCurrency
+      " " + this.controller.position.positionCurrency,
     );
   }
 
@@ -2207,7 +2211,8 @@ const PLANNED_STOP_LOSS_ROWS = [
     .filter((report) => report.stopLossQuantity !== null)
     .label("Available Account")
     .help(
-      (report) => `Amount of account available under position risk of ${report.positionRiskFormat}.`
+      (report) =>
+        `Amount of account available under position risk of ${report.positionRiskFormat}.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.account.currency)
@@ -2218,11 +2223,11 @@ const PLANNED_STOP_LOSS_ROWS = [
     .filter(
       (report) =>
         report.stopLossQuantity !== null &&
-        report.controller.position.positionCurrency !== report.controller.account.currency
+        report.controller.position.positionCurrency !== report.controller.account.currency,
     )
     .help(
       (report) =>
-        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the position currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.positionCurrency)
@@ -2233,11 +2238,11 @@ const PLANNED_STOP_LOSS_ROWS = [
     .filter(
       (report) =>
         report.stopLossQuantity !== null &&
-        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency
+        report.controller.position.quoteCurrency !== report.controller.position.positionCurrency,
     )
     .help(
       (report) =>
-        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`
+        `Amount of account available under position risk of ${report.positionRiskFormat} in the quote currency.`,
     )
     .places((report) => report.controller.account.places)
     .suffix((report) => " " + report.controller.position.quoteCurrency)
@@ -2267,7 +2272,7 @@ const PLANNED_STOP_LOSS_ROWS = [
     .label("Available Quantity")
     .help(
       (report) =>
-        `The position size that can be taken at an open price of ${report.openPriceFormat}, given an account position risk of ${report.positionRiskFormat}.`
+        `The position size that can be taken at an open price of ${report.openPriceFormat}, given an account position risk of ${report.positionRiskFormat}.`,
     )
     .places(2)
     .suffix(" units")
