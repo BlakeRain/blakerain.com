@@ -1,0 +1,118 @@
+---
+title: Risk-Reward Demonstrator
+summary: |
+  Utility to demonstrate how managing risk and a reasonable risk-reward ratio.
+params:
+  vibe_coded: false
+  color: "#34d399"
+  source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/static/scripts/tools/rr-and-risk.js
+  icon: { vendor: "mdi", "name": "table-heart" }
+---
+<risk-reward-controller>
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_max-content_max-content] gap-2">
+    <div class="order-1 lg:order-2 grid grid-cols-1 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <h1 class="text-xl font-bold mb-2 mt-0">Parameters</h1>
+      <div>
+        <label for="ratio">Risk-Reward Ratio</label>
+        <risk-reward-ratio>
+          <input type="text" id="ratio" class="field text-right">
+        </risk-reward-ratio>
+      </div>
+      <div>
+        <label for="chance">Chance of Success</label>
+        <risk-reward-chance>
+          <input type="text" id="chance" class="field text-right">
+        </risk-reward-chance>
+      </div>
+      <div>
+        <label for="risk">Position Risk</label>
+        <risk-reward-risk>
+          <input type="text" id="risk" class="field text-right">
+        </risk-reward-risk>
+      </div>
+      <div>
+        <label for="open">Account Open</label>
+        <risk-reward-open>
+          <input type="text" id="open" class="field text-right">
+        </risk-reward-open>
+      </div>
+      <div>
+        <label for="jitter">Jitter</label>
+        <risk-reward-jitter>
+          <select id="jitter" class="field" onchange="jitterChanged(event)">
+            <option value="none" selected>No Jitter</option>
+            <option value="uniform">Uniform</option>
+            <option value="gaussian">Guassian</option>
+          </select>
+        </risk-reward-jitter>
+      </div>
+      <div id="jitter_frac_container" class="hidden">
+        <label for="jitter_frac">Jitter Fraction</label>
+        <risk-reward-jitter-frac>
+          <input type="text" id="jitter_frac" class="field text-right">
+        </risk-reward-jitter-frac>
+      </div>
+      <div id="jitter_sigma_container" class="hidden">
+        <label for="jitter_sigma">Jitter Sigma</label>
+        <risk-reward-jitter-sigma>
+          <input type="text" id="jitter_sigma" class="field text-right">
+        </risk-reward-jitter-sigma>
+      </div>
+      <div>
+        <label for="trials">Number of Trials</label>
+        <risk-reward-trials>
+          <input type="text" id="trials" class="field text-right">
+        </risk-reward-trials>
+      </div>
+      <div class="flex flex-row justify-end">
+        <risk-reward-rerun>
+          <button type="button" class="button">Rerun</button>
+        </risk-reward-rerun>
+      </div>
+    </div>
+    <div class="order-3 lg:order-1 grid grid-cols-5 gap-2 content-start rounded-md border
+    border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <div class="col-span-5 grid grid-cols-subgrid font-bold text-right">
+        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Trial</div>
+        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Open</div>
+        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">At Risk</div>
+        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Outcome</div>
+        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Close</div>
+      </div>
+      <risk-reward-results class="col-span-5 grid grid-cols-subgrid text-right">
+      </risk-reward-results>
+    </div>
+    <div class="order-2 lg:order-3 grid grid-cols-[1fr_max-content] content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
+      <h1 class="text-xl font-bold mb-2 mt-0">Results</h1>
+      <risk-reward-results-summary class="col-span-2 grid grid-cols-subgrid gap-x-4 text-right">
+        <div class="font-bold">Open</div>
+        <div class="text-right"></div>
+        <div class="font-bold">Close</div>
+        <div class="text-right"></div>
+        <div class="font-bold">Change</div>
+        <div class="text-right"></div>
+        <div class="font-bold mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600">Total Profit</div>
+        <div class="text-right mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600"></div>
+        <div class="font-bold">Total Loss</div>
+        <div class="text-right"></div>
+        <div class="font-bold mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600">Wins</div>
+        <div class="text-right mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600"></div>
+        <div class="font-bold">Losses</div>
+        <div class="text-right"></div>
+        <div class="font-bold">Ratio</div>
+        <div class="text-right"></div>
+      </risk-reward-results-summary>
+  </div>
+</risk-reward-controller>
+<script type="module" src="/scripts/tools/rr-and-risk.js"></script>
+<script>
+  const jitterFracContainer = document.getElementById("jitter_frac_container");
+  const jitterSigmaContainer = document.getElementById("jitter_sigma_container");
+
+  function jitterChanged(event) {
+    const jitter = event.target.value;
+    console.log(`jitter changed to ${jitter}`);
+    jitterFracContainer.classList.toggle("hidden", jitter !== "uniform");
+    jitterSigmaContainer.classList.toggle("hidden", jitter !== "gaussian");
+  }
+</script>
