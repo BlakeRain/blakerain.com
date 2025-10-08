@@ -7,10 +7,13 @@ params:
   icon: { vendor: "bootstrap", name: "journal-text" }
 ---
 
-# 2025-09-23
+# 2025-10-08
 
-- Added back the [tools](/tools) page with a new style, adding in the
-  [.mobileconfig generator](/tools/generate-mobileconfig) and other tools.
+- Added back the [tools](/tools) page with a new style.
+- Added the [.mobileconfig generator](/tools/generate-mobileconfig) tool.
+- Added the [generate TOTP](/tools/standalone/generate-totp) tool.
+- Added the [fetchmail configuration generator](/tools/standalone/generate-fetchmail) tool.
+- Added the [RR demonstrator](/tools/rr-and-risk) tool.
 - Fixed incorrect link to the [status page](https://status.blacktreenetworks.com) in the footer, now
   that the site has moved domain.
 
