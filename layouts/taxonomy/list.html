@@ -11,27 +11,17 @@
       </p>
     </div>
   </header>
-  <main class="container mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {{ range .Pages }}
-        <div class="group rounded-md shadow-md dark:shadow-none border border-primary
-                    bg-neutral-100/25 hover:bg-neutral-100 dark:bg-neutral-900/25
-                    dark:hover:bg-neutral-900 p-4">
-          <div class="flex flex-row justify-between gap-4">
-            <a href="{{ .Permalink }}" class="block text-neutral-600 group-hover:text-neutral-800 dark:text-neutral-400 dark:group-hover:text-neutral-200">
-              <h1 class="text-xl font-bold">{{ .Title | humanize | title }}</h1>
-            </a>
-            <h1 class="text-lg font-bold">{{ .Pages | len }}</h1>
-          </div>
-          <ol class="ml-3 mt-2">
-            {{ range .Pages }}
-              <li>
-                <a href="{{ .Permalink }}">
-                  {{ .Title | humanize | title }}
-                </a>
-              </li>
-            {{ end }}
-          </ol>
+  <main class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full">
+    <div class="grid grid-cols-[1fr_max-content] gap-4 lg:w-1/2 lg:mx-auto">
+      <div class="font-bold text-neutral-800 dark:text-neutral-200 ml-4">{{ .Data.Plural | title }}</div>
+      <div class="font-bold text-right text-neutral-800 dark:text-neutral-200 mr-4">Count</div>
+      <div class="border-t border-neutral-800 dark:border-neutral-200 col-span-2"></div>
+      {{ range .Pages.ByTitle }}
+        <a href="{{ .Permalink }}" class="colored ml-4">
+          {{ .Title | humanize | title }}
+        </a>
+        <div class="text-right mr-4">
+          {{ .Pages | len }}
         </div>
       {{ end }}
     </div>
