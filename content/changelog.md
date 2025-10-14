@@ -7,6 +7,11 @@ params:
   icon: { vendor: "bootstrap", name: "journal-text" }
 ---
 
+# 2025-10-14
+
+- Added the [BibTeX to Markdown](/tools/standalone/bibtex-to-markdown) converter created by [Claude
+  Code](https://github.com/anthropics/claude-code) to the [tools](/tools) page.
+
 # 2025-10-08
 
 - Added back the [tools](/tools) page with a new style.

@@ -1,0 +1,456 @@
+---
+title: BibTeX to Markdown Converter
+summary: |
+  Generate a simple Markdown bullet list from a BibTeX file.
+params:
+  vibe_coded: true
+  color: "#af79df"
+  source: https://git.blakerain.com/BlakeRain/vibe-coding/src/branch/main/bib-to-md/bib-to-md.html
+  icon: { vendor: "mdi", name: "playlist-edit" }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BibTeX to Markdown Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border: #dddddd;
+            --accent: #4a90e2;
+            --accent-hover: #357abd;
+            --success: #4caf50;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1a1a;
+                --bg-secondary: #2d2d2d;
+                --text-primary: #e0e0e0;
+                --text-secondary: #a0a0a0;
+                --border: #404040;
+                --accent: #5ca3f5;
+                --accent-hover: #7ab8f7;
+                --success: #66bb6a;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .panel h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        input[type="file"] {
+            display: block;
+            padding: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .copy-button {
+            background: var(--success);
+        }
+
+        .copy-button:hover {
+            background: #5cb862;
+        }
+
+        .copy-button.copied {
+            background: var(--success);
+        }
+
+        .output {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error {
+            color: #f44336;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .info {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .stats {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BibTeX to Markdown Converter</h1>
+        <p class="subtitle">Convert your BibTeX entries to formatted Markdown with links</p>
+
+        <div class="panel">
+            <h2>Input BibTeX</h2>
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".bib" />
+                <p class="info">Or paste your BibTeX entries below</p>
+            </div>
+            <textarea id="input" placeholder="Paste your BibTeX entries here..."></textarea>
+            <div class="button-group">
+                <button onclick="convert()">Convert to Markdown</button>
+                <button onclick="clearInput()">Clear</button>
+            </div>
+            <div id="error" class="error"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Markdown Output</h2>
+            <div id="stats" class="stats"></div>
+            <div id="output" class="output"></div>
+            <div class="button-group">
+                <button class="copy-button" onclick="copyToClipboard()" id="copyBtn">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MONTHS = {
+            'jan': 'January', 'feb': 'February', 'mar': 'March', 'apr': 'April',
+            'may': 'May', 'jun': 'June', 'jul': 'July', 'aug': 'August',
+            'sep': 'September', 'oct': 'October', 'nov': 'November', 'dec': 'December',
+            1: 'January', 2: 'February', 3: 'March', 4: 'April',
+            5: 'May', 6: 'June', 7: 'July', 8: 'August',
+            9: 'September', 10: 'October', 11: 'November', 12: 'December'
+        };
+
+        const fileInput = document.getElementById('fileInput');
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const error = document.getElementById('error');
+        const stats = document.getElementById('stats');
+        const copyBtn = document.getElementById('copyBtn');
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const text = await file.text();
+                input.value = text;
+                error.textContent = '';
+            }
+        });
+
+        function clearInput() {
+            input.value = '';
+            output.textContent = '';
+            error.textContent = '';
+            stats.textContent = '';
+            fileInput.value = '';
+        }
+
+        function parseBibTeX(bibtex) {
+            const entries = [];
+            // Match BibTeX entries with improved regex
+            // const entryRegex = /@(\w+)\s*\{\s*([^,]+)\s*,([^@]*?)(?=\}|\n@|$)\}/gs;
+            const entryRegex = /@(\w+)\s*\{\s*([^,]+)\s*,([^@]*)(?=\}|@|$)\}/gs;
+
+            let match;
+            while ((match = entryRegex.exec(bibtex)) !== null) {
+                const type = match[1].toLowerCase();
+                const key = match[2].trim();
+                const content = match[3];
+
+                const entry = {
+                    type: type,
+                    key: key,
+                    fields: {}
+                };
+
+                // Parse fields - handle both quoted and braced values
+                const fieldRegex = /(\w+)\s*=\s*(?:\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|"([^"]*)"|(\w+))\s*,?\s*/g;
+                let fieldMatch;
+
+                while ((fieldMatch = fieldRegex.exec(content)) !== null) {
+                    const fieldName = fieldMatch[1].toLowerCase();
+                    const fieldValue = (fieldMatch[2] || fieldMatch[3] || fieldMatch[4] || '').trim();
+                    entry.fields[fieldName] = fieldValue;
+                }
+
+                entries.push(entry);
+            }
+
+            return entries;
+        }
+
+        function formatAuthors(authorString) {
+            if (!authorString) return '';
+
+            // Handle "and" separated authors
+            const authors = authorString.split(' and ').map(a => a.trim());
+
+            if (authors.length === 0) return '';
+            if (authors.length === 1) return authors[0];
+            if (authors.length === 2) return `${authors[0]} and ${authors[1]}`;
+
+            // For 3+ authors, show first author et al.
+            return `${authors[0]} et al.`;
+        }
+
+        function buildURL(entry) {
+            const fields = entry.fields;
+
+            // Priority: url > doi > eprint (arXiv)
+            if (fields.url) {
+                return fields.url;
+            }
+
+            if (fields.doi) {
+                return `https://doi.org/${fields.doi}`;
+            }
+
+            if (fields.eprint && fields.archiveprefix?.toLowerCase() === 'arxiv') {
+                return `https://arxiv.org/abs/${fields.eprint}`;
+            }
+
+            return null;
+        }
+
+        function entryToMarkdown(entry) {
+            const fields = entry.fields;
+            const parts = [];
+
+            // Title (with link if available)
+            const title = fields.title || 'Untitled';
+            const url = buildURL(entry);
+
+            if (url) {
+                parts.push(`[${title}](${url})`);
+            } else {
+                parts.push(title);
+            }
+
+            // Authors
+            if (fields.author) {
+                parts.push(formatAuthors(fields.author));
+            }
+
+            // Publication info based on entry type
+            const type = entry.type;
+
+            if (type === 'article' && fields.journal) {
+                let pubInfo = fields.journal;
+                if (fields.volume) pubInfo += ` ${fields.volume}`;
+                if (fields.number) pubInfo += `(${fields.number})`;
+                if (fields.pages) pubInfo += `:${fields.pages}`;
+                parts.push(pubInfo);
+            } else if (type === 'inproceedings' || type === 'conference') {
+                if (fields.booktitle) {
+                    parts.push(fields.booktitle);
+                }
+            } else if (type === 'book') {
+                if (fields.publisher) {
+                    parts.push(fields.publisher);
+                }
+            } else if (type === 'phdthesis' || type === 'mastersthesis') {
+                if (fields.school) {
+                    parts.push(fields.school);
+                }
+            }
+
+            // Year
+            if (fields.year) {
+                if (fields.month) {
+                    parts.push(`${MONTHS[fields.month]} ${fields.year}`);
+                } else {
+                  parts.push(fields.year);
+                }
+            }
+
+            // Build the bullet point
+            return `- ${parts.join(', ')}\n`;
+        }
+
+        function convert() {
+            const bibtexInput = input.value.trim();
+            error.textContent = '';
+            stats.textContent = '';
+
+            if (!bibtexInput) {
+                error.textContent = 'Please enter some BibTeX content';
+                output.textContent = '';
+                return;
+            }
+
+            try {
+                const entries = parseBibTeX(bibtexInput);
+
+                if (entries.length === 0) {
+                    error.textContent = 'No valid BibTeX entries found';
+                    output.textContent = '';
+                    return;
+                }
+
+                stats.textContent = `Found ${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}`;
+
+                let markdown = '';
+                entries.forEach((entry) => {
+                    markdown += entryToMarkdown(entry);
+                });
+
+                output.textContent = markdown.trim();
+            } catch (e) {
+                error.textContent = `Error parsing BibTeX: ${e.message}`;
+                output.textContent = '';
+                console.error(e);
+            }
+        }
+
+        async function copyToClipboard() {
+            const text = output.textContent;
+
+            if (!text) {
+                error.textContent = 'Nothing to copy';
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(text);
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (e) {
+                error.textContent = 'Failed to copy to clipboard';
+                console.error(e);
+            }
+        }
+
+        // Allow paste detection
+        input.addEventListener('paste', () => {
+            setTimeout(() => {
+                error.textContent = '';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
