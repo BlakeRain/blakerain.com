@@ -8,6 +8,9 @@ params:
   icon: { vendor: "bootstrap", name: "pc" }
 ---
 
+This page lists the software and development tools that I use on a regular basis. You might also be
+interested in my [self hosting](/hosting) page that lists what services I self-host.
+
 # Software
 
 - [1Password] - My preferred password manager.
@@ -39,7 +42,7 @@ params:
 # Services
 
 - [Readwise Reader](https://readwise.io/read) - Reading and highlighting. Works well with Obsidian.
-  I _may_ end up dropping this in favoir of [Readeck](https://readeck.org/en/), but not due to any
+  I may end up dropping this in favour of [Readeck](https://readeck.org/en/), but not due to any
   fault of Readwise.
 - [Proton](https://proton.me/) - Email and VPN services. Whilst I self-host my email, I keep Proton
   around for all their other services.
