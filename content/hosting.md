@@ -22,6 +22,7 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   [Gitea](https://about.gitea.com/) but migrated to Forgejo. This can be found at
   [git.blakerain.com](https://git.blakerain.com/). This is basically a hedge against GitHub going
   completely evil, and I also use it for private repositories.
+- [FreshRSS](https://freshrss.org/) - A self-hosted RSS and Atom feed aggregator.
 - [Homebox](https://homebox.software/en/) – Self-hosted inventory management software. I host this
   at home, just to keep track of components and other bits and pieces. Where are all the cables and
   Raspberry Pis? Homebox (probably) knows!
@@ -31,6 +32,8 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   The server is running 1.20.1 modded with [Forge](https://files.minecraftforge.net/) and our own
   [modpack](https://github.com/bans-minecraft/modpack). We also have a
   [mod](https://github.com/bans-minecraft/utamacraft) for some custom functionality.
+- [Navidrome](https://www.navidrome.org/) - A self-hosted music server. Supports a wide range of
+  formats and metadata. Also supports (Open)Subsonic APIs, which work with lots of clients.
 - [Open WebUI](https://github.com/open-webui/open-webui) – Self-hosted interface to LLMs. Useful for
   shouting at LLMs via API with a reasonable UI.
 - [Parcel](https://github.com/BlakeRain/parcel) – A self-hosted file sharing service. Actually
@@ -42,6 +45,8 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
 - [Plausible Analytics](https://plausible.io/) – A privacy-focused web analytics tool. I mostly use
   this to track visits to my personal website and blog. It's very lightweight, so I find it useful
   to fire events into it to track app usage and so on.
+- [Readeck](https://readeck.org/en/) – A read-it-later service. I am using this as a replacement
+  for [Readwise](https://readwise.io/).
 - [Roundcube](https://roundcube.net/) – Webmail client. Everybody knows Roundcube.
 - [SearXNG](https://github.com/searxng/searxng) – A self-hosted metasearch engine. I use this as my
   default search engine. It aggregates results from multiple search engines, and is privacy-focused.

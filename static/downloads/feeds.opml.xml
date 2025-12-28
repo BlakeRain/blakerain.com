@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml xmlns:frss="https://freshrss.org/opml" version="2.0">
+  <head>
+    <title>FreshRSS</title>
+    <dateCreated>Sun, 28 Dec 2025 13:03:41 +0000</dateCreated>
+  </head>
+  <body>
+    <outline text="Feeds">
+      <outline text="82MHz" type="rss" xmlUrl="https://82mhz.net/index.xml" htmlUrl="http://82mhz.net/posts/"/>
+      <outline text="Adactio: Journal" type="rss" xmlUrl="https://adactio.com/journal/rss" htmlUrl="https://adactio.com/journal/"/>
+      <outline text="Adamsdesk" type="rss" xmlUrl="https://www.adamsdesk.com/feed/blog.xml" htmlUrl="https://www.adamsdesk.com/"/>
+      <outline text="An Almost Anonymous Blog" type="rss" xmlUrl="https://lwgrs.bearblog.dev/feed/" htmlUrl="https://lwgrs.bearblog.dev/"/>
+      <outline text="Analog Office" type="rss" xmlUrl="https://analogoffice.net/feed.xml" htmlUrl="https://analogoffice.net/"/>
+      <outline text="anhvn" type="rss" xmlUrl="https://anhvn.com/feed.xml" htmlUrl="https://anhvn.com/"/>
+      <outline text="Baldur Bjarnason's Essays" type="rss" xmlUrl="https://www.baldurbjarnason.com/essays.xml" htmlUrl="https://www.baldurbjarnason.com/"/>
+      <outline text="Baty.net" type="rss" xmlUrl="https://baty.net/index.xml" htmlUrl="https://baty.net/"/>
+      <outline text="benjojo blog" type="rss" xmlUrl="https://blog.benjojo.co.uk/rss.xml" htmlUrl="https://blog.benjojo.co.uk/"/>
+      <outline text="benkuhn.net" type="rss" xmlUrl="https://www.benkuhn.net/index.xml" htmlUrl="https://www.benkuhn.net/"/>
+      <outline text="BleepingComputer" type="rss" xmlUrl="https://www.bleepingcomputer.com/feed/" htmlUrl="https://www.bleepingcomputer.com/"/>
+      <outline text="Blog on Blake Rain" type="rss" xmlUrl="https://blakerain.com/blog/index.xml" htmlUrl="https://blakerain.com/blog/"/>
+      <outline text="Blog Posts | Bacardi55's Web Cave" type="rss" xmlUrl="https://bacardi55.io/posts/index.xml" htmlUrl="https://bacardi55.io/posts/"/>
+      <outline text="Brain Baking" type="rss" xmlUrl="https://brainbaking.com/index.xml" htmlUrl="https://brainbaking.com/"/>
+      <outline text="btxx.org RSS Feed" type="rss" xmlUrl="https://btxx.org/index.rss" htmlUrl="https://btxx.org/"/>
+      <outline text="Burgeon Lab: Naty's Tech Log" type="rss" xmlUrl="https://burgeonlab.com/index.xml" htmlUrl="https://www.burgeonlab.com/"/>
+      <outline text="BuzzMachine" type="rss" xmlUrl="https://buzzmachine.com/feed/" htmlUrl="https://buzzmachine.com/"/>
+      <outline text="Cassidy Williams" type="rss" xmlUrl="https://cassidoo.co/rss.xml" htmlUrl="https://cassidoo.co/"/>
+      <outline text="Chris Coyier" type="rss" xmlUrl="https://chriscoyier.net/feed/" htmlUrl="https://chriscoyier.net/"/>
+      <outline text="Citation Needed" type="rss" xmlUrl="https://www.citationneeded.news/rss/" htmlUrl="https://www.citationneeded.news/"/>
+      <outline text="Clayton Errington" type="rss" xmlUrl="https://claytonerrington.com/feed.xml" htmlUrl="https://claytonerrington.com/"/>
+      <outline text="Daryl Sun's Journal" type="rss" xmlUrl="https://blog.darylsun.page/rss.xml" htmlUrl="https://blog.darylsun.page/"/>
+      <outline text="Data Is Plural" type="rss" xmlUrl="https://www.data-is-plural.com/feed.xml" htmlUrl="https://www.data-is-plural.com/"/>
+      <outline text="daverupert.com" type="rss" xmlUrl="https://daverupert.com/atom.xml" htmlUrl="https://daverupert.com/"/>
+      <outline text="dbushell.com (all feeds)" type="rss" xmlUrl="https://dbushell.com/merge/rss.xml" htmlUrl="https://dbushell.com/"/>
+      <outline text="Defensive Computing blogs by Michael Horowitz" type="rss" xmlUrl="https://michaelhorowitz.com/rss/mhcom.xml" htmlUrl="https://www.michaelhorowitz.com/"/>
+      <outline text="Dhole Moments" type="rss" xmlUrl="https://soatok.blog/feed/" htmlUrl="https://soatok.blog/"/>
+      <outline text="Drew DeVault's blog" type="rss" xmlUrl="https://drewdevault.com/blog/index.xml" htmlUrl="https://drewdevault.com/"/>
+      <outline text="Dr Robert N. Winter" type="rss" xmlUrl="https://robert.winter.ink/rss/" htmlUrl="https://robert.winter.ink/"/>
+      <outline text="Embrace The Red" type="rss" xmlUrl="https://embracethered.com/blog/index.xml" htmlUrl="https://embracethered.com/blog/"/>
+      <outline text="ENOSUCHBLOG" type="rss" xmlUrl="https://blog.yossarian.net/feed.xml" htmlUrl="https://blog.yossarian.net/"/>
+      <outline text="Explaining Software Design" type="rss" xmlUrl="https://explaining.software/rss" htmlUrl="https://explaining.software/"/>
+      <outline text="Geoffrey Litt" type="rss" xmlUrl="https://www.geoffreylitt.com/feed.xml" htmlUrl="https://geoffreylitt.com/"/>
+      <outline text="George Mandis" type="rss" xmlUrl="https://george.mand.is/feed.xml" htmlUrl="https://george.mand.is/"/>
+      <outline text="Giles' blog" type="rss" xmlUrl="https://www.gilesthomas.com/feed/rss.xml" htmlUrl="https://www.gilesthomas.com/"/>
+      <outline text="Graham Helton" type="rss" xmlUrl="https://grahamhelton.com/rss.xml" htmlUrl="https://grahamhelton.com/"/>
+      <outline text="Hacker News" type="rss" xmlUrl="https://news.ycombinator.com/rss" htmlUrl="https://news.ycombinator.com/"/>
+      <outline text="jade's www site" type="rss" xmlUrl="https://jade.fyi/rss.xml" htmlUrl="https://jade.fyi/"/>
+      <outline text="jakelazaroff.com" type="rss" xmlUrl="https://jakelazaroff.com/rss.xml" htmlUrl="https://jakelazaroff.com/"/>
+      <outline text="Jason Rodriguez" type="rss" xmlUrl="https://rodriguezcommaj.com/atom.xml" htmlUrl="https://rodriguezcommaj.com/"/>
+      <outline text="Jessitron" type="rss" xmlUrl="https://jessitron.com/feed/" htmlUrl="https://jessitron.com/"/>
+      <outline text="Joelchrono’s Blog" type="rss" xmlUrl="https://joelchrono.xyz/feed.xml" htmlUrl="https://joelchrono.xyz/"/>
+      <outline text="Johnny's Blog" type="rss" xmlUrl="https://johnnywebber.com/feed/" htmlUrl="https://johnnywebber.com/"/>
+      <outline text="JP | Home" type="rss" xmlUrl="https://moddedbear.com/index.xml" htmlUrl="https://moddedbear.com/"/>
+      <outline text="Julia Evans" type="rss" xmlUrl="https://jvns.ca/atom.xml" htmlUrl="http://jvns.ca/"/>
+      <outline text="Kev Quirk" type="rss" xmlUrl="https://kevquirk.com/feed.xml" htmlUrl="https://kevquirk.com/"/>
+      <outline text="Lazybear" type="rss" xmlUrl="https://lazybea.rs/index.xml" htmlUrl="https://lazybea.rs/"/>
+      <outline text="Lobsters" type="rss" xmlUrl="https://lobste.rs/rss" htmlUrl="https://lobste.rs/"/>
+      <outline text="Loris Cro's Personal Website" type="rss" xmlUrl="https://kristoff.it/index.xml" htmlUrl="https://kristoff.it/"/>
+      <outline text="Lou Plummer" type="rss" xmlUrl="https://amerpie.lol/feed.xml" htmlUrl="https://amerpie.lol/"/>
+      <outline text="Ludicity" type="rss" xmlUrl="https://ludic.mataroa.blog/rss/" htmlUrl="https://ludic.mataroa.blog/"/>
+      <outline text="Makefile.feld" type="rss" xmlUrl="https://blog.feld.me/feeds/all.atom.xml" htmlUrl="https://blog.feld.me/"/>
+      <outline text="Manager.dev" type="rss" xmlUrl="https://newsletter.manager.dev/feed" htmlUrl="https://newsletter.manager.dev/"/>
+      <outline text="Mark Pitblado" type="rss" xmlUrl="https://www.markpitblado.me/feed.xml" htmlUrl="https://www.markpitblado.me/"/>
+      <outline text="Matt's Blog" type="rss" xmlUrl="https://mtwb.blog/index.xml#feed" htmlUrl="https://mtwb.blog/"/>
+      <outline text="Minutes to Midnight" type="rss" xmlUrl="https://minutestomidnight.co.uk/feed.xml" htmlUrl="https://minutestomidnight.co.uk/"/>
+      <outline text="Naz Hamid" type="rss" xmlUrl="https://nazhamid.com/feed.xml" htmlUrl="https://nazhamid.com/"/>
+      <outline text="Nicky's New Shtuff" type="rss" xmlUrl="https://ncase.me/feed.xml" htmlUrl="https://ncase.me/"/>
+      <outline text="njms' atom feed" type="rss" xmlUrl="https://njms.ca/atom.xml" htmlUrl="https://www.njms.ca/"/>
+      <outline text="NotAShelf's Blog" type="rss" xmlUrl="https://notashelf.dev/rss.xml" htmlUrl="https://notashelf.dev/"/>
+      <outline text="Notes by JCProbably" type="rss" xmlUrl="https://notes.jeddacp.com/feed/?type=rss" htmlUrl="https://notes.jeddacp.com/"/>
+      <outline text="Oh Hello Ana" type="rss" xmlUrl="https://ohhelloana.blog/feed.xml" htmlUrl="https://ohhelloana.blog/"/>
+      <outline text="OrbitalMartian" type="rss" xmlUrl="https://orbitalmartian.vercel.app/feed.xml" htmlUrl="https://orbitalmartian.vercel.app//"/>
+      <outline text="Pivot to AI" type="rss" xmlUrl="https://pivot-to-ai.com/feed/" htmlUrl="https://pivot-to-ai.com/"/>
+      <outline text="Posts feed" type="rss" xmlUrl="https://www.coryd.dev/feeds/posts.xml" htmlUrl="https://www.coryd.dev/feeds/posts.xml"/>
+      <outline text="prickly oxhe.art" type="rss" xmlUrl="https://prickly.oxhe.art/feed/" htmlUrl="https://prickly.oxhe.art/"/>
+      <outline text="R.L. Dane" type="rss" xmlUrl="https://rldane.space/feeds/all.atom.xml" htmlUrl="https://rldane.space/"/>
+      <outline text="rendezvous with cassidoo" type="rss" xmlUrl="https://buttondown.email/cassidoo/rss" htmlUrl="https://buttondown.com/cassidoo"/>
+      <outline text="Ricardo Pereira" type="rss" xmlUrl="https://blog.ricardopereira.eu/atom.xml" htmlUrl="https://blog.ricardopereira.eu/"/>
+      <outline text="Rishikesh Sreehari" type="rss" xmlUrl="https://rishikeshs.com/index.xml" htmlUrl="https://rishikeshs.com/"/>
+      <outline text="Robb Knight • Posts • RSS Feed" type="rss" xmlUrl="https://rknight.me/subscribe/posts/rss.xml" htmlUrl="https://rknight.me/"/>
+      <outline text="Rubenerd" type="rss" xmlUrl="https://rubenerd.com/feed/" htmlUrl="https://rubenerd.com/"/>
+      <outline text="Sainthood.xyz" type="rss" xmlUrl="https://sainthood.xyz/rss.xml" htmlUrl="https://sainthood.xyz/"/>
+      <outline text="Scott Jenson" type="rss" xmlUrl="https://jenson.org/feed/" htmlUrl="https://jenson.org/"/>
+      <outline text="seangoedecke.com RSS feed" type="rss" xmlUrl="https://www.seangoedecke.com/rss.xml" htmlUrl="https://seangoedecke.com/"/>
+      <outline text="Simon Willison's Weblog" type="rss" xmlUrl="https://simonwillison.net/atom/everything/" htmlUrl="http://simonwillison.net/"/>
+      <outline text="Sotolf's thoughts and oddities" type="rss" xmlUrl="https://sotolf.codeberg.page/index.xml" htmlUrl="https://sotolf.codeberg.page/" frss:CURLOPT_USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)"/>
+      <outline text="Steph Ango" type="rss" xmlUrl="https://stephango.com/feed.xml" htmlUrl="https://stephango.com/"/>
+      <outline text="Sy Brand" type="rss" xmlUrl="https://tartanllama.xyz/rss.xml" htmlUrl="https://tartanllama.xyz/"/>
+      <outline text="tahimik (quiet.)" type="rss" xmlUrl="https://tahimik.com/journal.rss" htmlUrl="http://tahimik.com/journal"/>
+      <outline text="Terence Eden’s Blog" type="rss" xmlUrl="https://shkspr.mobi/blog/feed/atom/" htmlUrl="https://shkspr.mobi/blog"/>
+      <outline text="Terrible Software" type="rss" xmlUrl="https://terriblesoftware.org/feed/" htmlUrl="https://terriblesoftware.org/"/>
+      <outline text="The Art Of Not Asking Why" type="rss" xmlUrl="https://taonaw.com/feed.xml" htmlUrl="https://taonaw.com/"/>
+      <outline text="The New Leaf Journal" type="rss" xmlUrl="https://thenewleafjournal.com/feed/" htmlUrl="https://thenewleafjournal.com/"/>
+      <outline text="Transactional" type="rss" xmlUrl="https://transactional.blog/feed.xml"/>
+      <outline text="Victor Wynne • All Posts" type="rss" xmlUrl="https://victorwynne.com/feed.xml" htmlUrl="https://victorwynne.com/"/>
+      <outline text="WW0CJ" type="rss" xmlUrl="https://ww0cj.radio/feed.xml" htmlUrl="https://ww0cj.radio/"/>
+      <outline text="www-gem words" type="rss" xmlUrl="https://www-gem.codeberg.page/feed.xml"/>
+      <outline text="ᕕ( ᐛ )ᕗ Herman's blog" type="rss" xmlUrl="https://herman.bearblog.dev/feed/" htmlUrl="https://herman.bearblog.dev/"/>
+      <outline text="📚Noisy Deadlines" type="rss" xmlUrl="https://noisydeadlines.net/feed/" htmlUrl="https://noisydeadlines.net/"/>
+    </outline>
+  </body>
+</opml>

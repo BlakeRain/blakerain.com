@@ -7,6 +7,12 @@ params:
   icon: { vendor: "bootstrap", name: "journal-text" }
 ---
 
+# 2025-12-28
+
+- Added some more blogs to the [blogroll](/blogroll), and a link to the OPML file for the full list
+  of feeds I follow.
+- Added some more software and services to the [uses](/uses) and [hosting](/hosting) pages.
+
 # 2025-10-14
 
 - Added the [BibTeX to Markdown](/tools/standalone/bibtex-to-markdown) converter created by [Claude

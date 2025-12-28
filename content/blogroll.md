@@ -10,6 +10,9 @@ params:
 My descriptions of these sites are brief, and do little justice to the quality of the content.
 Please visit the sites to see for yourself the wonderful things these people create.
 
+I follow a variety of other feeds, including those listed below. You can downloads the OPML file
+for the full list of feeds that I follow [here](/downloads/feeds.opml.xml).
+
 # Technology
 
 - [82MHz](https://82mhz.net/) – Andreas writes about anything that catches his interest.
@@ -24,6 +27,7 @@ Please visit the sites to see for yourself the wonderful things these people cre
 - [Benjojo's Blog](https://blog.benjojo.co.uk/) – Benjojo writes some good stuff about networking.
   The article on [Splitting the ping](https://blog.benjojo.co.uk/post/ping-with-loss-latency-split)
   was very handy.
+- [Bradley Taunt](https://btxx.org/) - Writes about software development and life.
 - [Brain Baking](https://brainbaking.com/) – Author of [The Creative Programmer](https://www.manning.com/books/the-creative-programmer)
   writes about a fascinating range of topics. The post [about the M1](https://brainbaking.com/post/2020/12/developing-on-apple-m1-silicon/)
   was useful when I was considering a new laptop back then.
@@ -34,7 +38,16 @@ Please visit the sites to see for yourself the wonderful things these people cre
   of this site too.
 - [David Bushell](https://dbushell.com/) – David Bushell's site design is wonderful. It was his
   [notes](https://dbushell.com/notes/) that inspired mine.
+- [Daryl Sun's Journal](https://blog.darylsun.page/) - Writes about a wide range of topics.
+- [Drew DeVault's Blog](https://drewdevault.com/) - The creator of
+  [SourceHut](https://sourcehut.org/), Drew mostly writes about software development, perhaps
+  sometimes a little
+  [contentiously](https://drewdevault.com/2022/10/03/Does-Rust-belong-in-Linux.html). I found his
+  blog via the [Unionize or Die](https://drewdevault.com/2025/06/09/2025-06-09-Unionize-or-die.html)
+  article, which has stuck with me for a while.
 - [Dušan's Blog](https://dusanmitrovic.rs/) – A Serbian software developer.
+- [Embrace the Red](https://embracethered.com/blog/) - A collection of articles about prompt
+  injection and other exploits of LLMs.
 - [Explaining Software Design](https://explaining.software/archive/) – An interesting collection of
   articles about software design.
 - [Gile's blog](https://www.gilesthomas.com/) – I discovered Gile's blog via the article about
@@ -45,6 +58,7 @@ Please visit the sites to see for yourself the wonderful things these people cre
 - [Jade's WWW Site](https://jade.fyi/) – A variety of really useful information. Recently I used the
   article on [git send-email](https://jade.fyi/blog/oh-no-git-send-email/).
 - [Jessitron](https://jessitron.com/) – Jessica Kerr's blog is always worth a read.
+- [Jeremy Keith](https://adactio.com/) – Writes about web design and development.
 - [joelchrono](https://joelchrono.xyz/) – I see links to Joel's blog quite often.
 - [Julia Evans](https://jvns.ca/) – Julia makes the amazing [Wizard Zines](https://wizardzines.com/).
   My introduction was [How Git Works](https://wizardzines.com/zines/git/) which is awesome.
@@ -54,6 +68,10 @@ Please visit the sites to see for yourself the wonderful things these people cre
 - [Mark Pitblado](https://www.markpitblado.me/) – Mark writes mostly about technology.
 - [Matt's Blog](https://mtwb.blog/) – I came to Matt's blog via the [Not Every Blog Post Needs To Be
   Epic](https://mtwb.blog/posts/2025/blaugust2025/not-every-blog-post-needs-to-be-epic/) article.
+- [Michael Horowitz](https://michaelhorowitz.com/index.php) – Michael writes about security and
+  other tech-related topics. I like his questions about [trusting links](https://michaelhorowitz.com/HoverOverLink.php)
+  and tracking down [strange activity](https://michaelhorowitz.com/ipad.strange.networking.php) from
+  an iPad.
 - [Oh Hello Ana](https://ohhelloana.blog/) - Ana writes about technology and other topics, with an
   amazing collection of [bookmarks](https://ohhelloana.blog/bookmarks/).
 - [OrbitalMartian](https://orbitalmartian.vercel.app/) – OrbitalMartian's blog is a new discovery,
@@ -63,6 +81,8 @@ Please visit the sites to see for yourself the wonderful things these people cre
   Swift and iOS development.
 - [Robb Knight](https://rknight.me/) – A great collection of articles on a range of tech and
   tech-adjacent topics.
+- [Soatok's Blog](https://soatok.blog/) – Soatok can also be found on [GitHub](https://github.com/soatok)
+  and writes about software development and cryptography.
 - [Steph Ango](https://stephango.com/) – A site by the CEO of [Obsidian](https://obsidian.md/).
 - [The Art of Not Asking Why](https://taonaw.com/) – JTR's blog is an interesting mix of short notes
   and longer articles.
