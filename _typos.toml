@@ -1,3 +1,6 @@
+[files]
+extend-exclude = ["static/*"]
+
 [default]
 extend-ignore-identifiers-re = [
   "ure\\d+",
