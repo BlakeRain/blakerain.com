@@ -9,7 +9,7 @@
       </header>
       <header
         class="print:hidden bg-no-repeat bg-[50%] bg-cover bg-fixed"
-        {{- if .Param "customHero" -}}
+        {{ if .Param "customHero" -}}
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
         {{- else if $cover -}}
           {{- $image := $cover.Process "q75 webp" -}}
