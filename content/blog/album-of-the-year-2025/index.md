@@ -93,11 +93,11 @@ experience has been improved to no end by the remaster. Tracks like [Distorted R
 I Feel The Everblack Festering Within Me (24-bit HD audio) by Lorna Shore
 {{< /bandcamp >}}
 
-[Lorna Shores] new album [I Feel the Everblack Festering Within Me] was released in September and
-quickly took first place until Orbit Culture's release of Death Above Life. Everblack was a very
-close second until Sin Deliverance... delivered.
+[Lorna Shore]'s new album [I Feel the Everblack Festering Within Me] was released in September and
+was a shoe-in for first place until Orbit Culture's release of Death Above Life. Everblack was
+really a very close second until Sin Deliverance... delivered.
 
-[Lorna Shores]: https://lornashore.bandcamp.com/
+[Lorna Shore]: https://lornashore.bandcamp.com/
 [I Feel the Everblack Festering Within Me]: https://lornashore.bandcamp.com/album/i-feel-the-everblack-festering-within-me-24-bit-hd-audio
 
 ## ❹ Enterré Vivant - 悪罪 (Akuzaï)
