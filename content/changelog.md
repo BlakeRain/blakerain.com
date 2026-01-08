@@ -7,6 +7,17 @@ params:
   icon: { vendor: "bootstrap", name: "journal-text" }
 ---
 
+# 2026-01-08
+
+- Migrated to [Hugo v0.154.0](https://github.com/gohugoio/hugo/releases/tag/v0.154.0). This mostly
+  involved changing the `layouts` directory structure to the
+  [new one](https://gohugo.io/templates/new-templatesystem-overview/).
+- Added [tags](/tags) to the [notes](/notes). I also changed the rendering of an individual note
+  page to include some metadata: date, tags, and reading time. This brings the notes somewhat more
+  in line with blog posts.
+- I updated the [OPML feed](/downloads/feeds.opml.xml) to include new feeds that I follow.
+- Added a post for the [Album of the Year 2025](/blog/album-of-the-year-2025).
+
 # 2025-12-28
 
 - Added some more blogs to the [blogroll](/blogroll), and a link to the OPML file for the full list
@@ -59,4 +70,4 @@ This evening was spent adding some [slash pages](https://slashpages.net/) to the
 - Workflows now run [Forgejo](https://forgejo.org/) self-hosted runner. This means the `.github`
   directory has been replaced with a `.forgejo` directory.
 - Added the self-hosted [Forgejo](https://git.blakerain.com/BlakeRain) link to the header.
-
+- Started the changelog.

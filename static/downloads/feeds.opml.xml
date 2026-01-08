@@ -2,7 +2,7 @@
 <opml xmlns:frss="https://freshrss.org/opml" version="2.0">
   <head>
     <title>FreshRSS</title>
-    <dateCreated>Sun, 28 Dec 2025 13:03:41 +0000</dateCreated>
+    <dateCreated>Thu, 08 Jan 2026 10:22:47 +0000</dateCreated>
   </head>
   <body>
     <outline text="Feeds">
@@ -17,7 +17,7 @@
       <outline text="benjojo blog" type="rss" xmlUrl="https://blog.benjojo.co.uk/rss.xml" htmlUrl="https://blog.benjojo.co.uk/"/>
       <outline text="benkuhn.net" type="rss" xmlUrl="https://www.benkuhn.net/index.xml" htmlUrl="https://www.benkuhn.net/"/>
       <outline text="BleepingComputer" type="rss" xmlUrl="https://www.bleepingcomputer.com/feed/" htmlUrl="https://www.bleepingcomputer.com/"/>
-      <outline text="Blog on Blake Rain" type="rss" xmlUrl="https://blakerain.com/blog/index.xml" htmlUrl="https://blakerain.com/blog/"/>
+      <outline text="Blog on Tailscale" type="rss" xmlUrl="https://tailscale.com/blog/index.xml" htmlUrl="https://tailscale.com/blog/"/>
       <outline text="Blog Posts | Bacardi55's Web Cave" type="rss" xmlUrl="https://bacardi55.io/posts/index.xml" htmlUrl="https://bacardi55.io/posts/"/>
       <outline text="Brain Baking" type="rss" xmlUrl="https://brainbaking.com/index.xml" htmlUrl="https://brainbaking.com/"/>
       <outline text="btxx.org RSS Feed" type="rss" xmlUrl="https://btxx.org/index.rss" htmlUrl="https://btxx.org/"/>
@@ -34,8 +34,11 @@
       <outline text="Defensive Computing blogs by Michael Horowitz" type="rss" xmlUrl="https://michaelhorowitz.com/rss/mhcom.xml" htmlUrl="https://www.michaelhorowitz.com/"/>
       <outline text="Dhole Moments" type="rss" xmlUrl="https://soatok.blog/feed/" htmlUrl="https://soatok.blog/"/>
       <outline text="Drew DeVault's blog" type="rss" xmlUrl="https://drewdevault.com/blog/index.xml" htmlUrl="https://drewdevault.com/"/>
+      <outline text="Dropbox Tech Blog" type="rss" xmlUrl="https://dropbox.tech/feed" htmlUrl="https://dropbox.tech/"/>
       <outline text="Dr Robert N. Winter" type="rss" xmlUrl="https://robert.winter.ink/rss/" htmlUrl="https://robert.winter.ink/"/>
       <outline text="Embrace The Red" type="rss" xmlUrl="https://embracethered.com/blog/index.xml" htmlUrl="https://embracethered.com/blog/"/>
+      <outline text="Engineering at Meta" type="rss" xmlUrl="https://engineering.fb.com/feed/" htmlUrl="https://engineering.fb.com/"/>
+      <outline text="Engineering | Uber Blog" type="rss" xmlUrl="https://www.uber.com/en-GB/blog/london/engineering/rss/" htmlUrl="https://www.uber.com/"/>
       <outline text="ENOSUCHBLOG" type="rss" xmlUrl="https://blog.yossarian.net/feed.xml" htmlUrl="https://blog.yossarian.net/"/>
       <outline text="Explaining Software Design" type="rss" xmlUrl="https://explaining.software/rss" htmlUrl="https://explaining.software/"/>
       <outline text="Geoffrey Litt" type="rss" xmlUrl="https://www.geoffreylitt.com/feed.xml" htmlUrl="https://geoffreylitt.com/"/>
@@ -63,10 +66,12 @@
       <outline text="Matt's Blog" type="rss" xmlUrl="https://mtwb.blog/index.xml#feed" htmlUrl="https://mtwb.blog/"/>
       <outline text="Minutes to Midnight" type="rss" xmlUrl="https://minutestomidnight.co.uk/feed.xml" htmlUrl="https://minutestomidnight.co.uk/"/>
       <outline text="Naz Hamid" type="rss" xmlUrl="https://nazhamid.com/feed.xml" htmlUrl="https://nazhamid.com/"/>
+      <outline text="Netflix TechBlog - Medium" type="rss" xmlUrl="https://netflixtechblog.com/feed" htmlUrl="https://netflixtechblog.com/?source=rss----2615bd06b42e---4"/>
       <outline text="Nicky's New Shtuff" type="rss" xmlUrl="https://ncase.me/feed.xml" htmlUrl="https://ncase.me/"/>
       <outline text="njms' atom feed" type="rss" xmlUrl="https://njms.ca/atom.xml" htmlUrl="https://www.njms.ca/"/>
       <outline text="NotAShelf's Blog" type="rss" xmlUrl="https://notashelf.dev/rss.xml" htmlUrl="https://notashelf.dev/"/>
       <outline text="Notes by JCProbably" type="rss" xmlUrl="https://notes.jeddacp.com/feed/?type=rss" htmlUrl="https://notes.jeddacp.com/"/>
+      <outline text="Official LinkedIn Blog" type="rss" xmlUrl="https://www.linkedin.com/blog.rss" htmlUrl="https://www.linkedin.com/blog"/>
       <outline text="Oh Hello Ana" type="rss" xmlUrl="https://ohhelloana.blog/feed.xml" htmlUrl="https://ohhelloana.blog/"/>
       <outline text="OrbitalMartian" type="rss" xmlUrl="https://orbitalmartian.vercel.app/feed.xml" htmlUrl="https://orbitalmartian.vercel.app//"/>
       <outline text="Pivot to AI" type="rss" xmlUrl="https://pivot-to-ai.com/feed/" htmlUrl="https://pivot-to-ai.com/"/>
@@ -83,7 +88,9 @@
       <outline text="seangoedecke.com RSS feed" type="rss" xmlUrl="https://www.seangoedecke.com/rss.xml" htmlUrl="https://seangoedecke.com/"/>
       <outline text="Simon Willison's Weblog" type="rss" xmlUrl="https://simonwillison.net/atom/everything/" htmlUrl="http://simonwillison.net/"/>
       <outline text="Sotolf's thoughts and oddities" type="rss" xmlUrl="https://sotolf.codeberg.page/index.xml" htmlUrl="https://sotolf.codeberg.page/" frss:CURLOPT_USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0)"/>
+      <outline text="Spotify Engineering" type="rss" xmlUrl="https://engineering.atspotify.com/feed" htmlUrl="https://engineering.atspotify.com/"/>
       <outline text="Steph Ango" type="rss" xmlUrl="https://stephango.com/feed.xml" htmlUrl="https://stephango.com/"/>
+      <outline text="Stripe Blog" type="rss" xmlUrl="https://stripe.com/blog/feed.rss" htmlUrl="https://stripe.com/blog"/>
       <outline text="Sy Brand" type="rss" xmlUrl="https://tartanllama.xyz/rss.xml" htmlUrl="https://tartanllama.xyz/"/>
       <outline text="tahimik (quiet.)" type="rss" xmlUrl="https://tahimik.com/journal.rss" htmlUrl="http://tahimik.com/journal"/>
       <outline text="Terence Eden’s Blog" type="rss" xmlUrl="https://shkspr.mobi/blog/feed/atom/" htmlUrl="https://shkspr.mobi/blog"/>
@@ -99,3 +106,4 @@
     </outline>
   </body>
 </opml>
+
