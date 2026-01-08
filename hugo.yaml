@@ -1,0 +1,58 @@
+baseURL: https://blakerain.com/
+languageCode: en-GB
+title: Blake Rain
+
+menus:
+  footer_right:
+    - name: Tags
+      pageRef: /tags
+      weight: 10
+    - name: RSS
+      url: /blog/index.xml
+      weight: 10
+
+related:
+  includeNewer: true
+  threshold: 80
+  indices:
+    - name: tags
+      type: basic
+      weight: 80
+      toLower: true
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    wrapperClass: highlight
+
+module:
+  hugoVersion:
+    min: 0.154.0
+  imports:
+    - path: github.com/hugomods/icons/vendors/devicons
+    - path: github.com/hugomods/icons/vendors/lucide
+    - path: github.com/hugomods/icons/vendors/mdi
+    - path: github.com/hugomods/icons/vendors/bootstrap
+    - path: github.com/hugomods/icons/vendors/font-awesome
+    - path: github.com/hugomods/icons/vendors/simple-icons
+    - path: github.com/hugomods/encoder
+  mounts:
+    - source: assets
+      target: assets
+    - source: hugo_stats.json
+      target: assets/watching/hugo_stats.json
+
+build:
+  writeStats: true
+  cachebusters:
+    - source: assets/watching/hugo_stats\.json
+      target: main\.css
+    - source: (postcss|tailwind)\.config\.js
+      target: css
+    - source: assets/.*\.(js|ts|jsx|tsx)
+      target: js
+    - source: assets/.*\.(.*)$
+      target: $1
