@@ -37,7 +37,7 @@ pre {
   @apply print:border-neutral-800 print:p-2 mb-6;
 
   @apply text-[#4c4f69] dark:text-[#cdd6f4];
-  @apply bg-[#eff1f5] dark:bg-[#1e1e2e];
+  @apply bg-[#fcfcfc] dark:bg-[#1e1e2e];
 
   code {
     @apply font-mono text-base leading-snug;

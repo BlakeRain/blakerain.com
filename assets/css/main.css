@@ -1,6 +1,7 @@
 @import "tailwind.css";
 
 @import "components/button.css";
+@import "components/content.css";
 @import "components/field.css";
 @import "components/markdown.css";
 @import "components/tables.css";

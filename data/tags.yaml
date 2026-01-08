@@ -1,0 +1,84 @@
+awk:
+  name: Awk
+  description: A programming language that is often used for text processing and data extraction.
+aws:
+  name: AWS
+  description: Amazon Web Services. A hyper-scale cloud computing platform.
+bash:
+  name: Bash
+  description: A Unix shell.
+c:
+  name: C
+  description: A general-purpose programming language.
+cpp:
+  name: C++
+  description: A general-purpose programming language that is an extension of the C programming language.
+docker:
+  name: Docker
+  description: A containerization platform.
+email:
+  name: Email
+  description: A method of sending messages.
+gc:
+  name: GC
+  description: Garbage Collection. A way of automatically reclaiming memory that is no longer in use.
+groff:
+  name: Groff
+  description: A typesetting system.
+gtk:
+  name: GTK
+  description: The GIMP Toolkit. A cross-platform toolkit for creating graphical user interfaces.
+linux:
+  name: Linux
+  description: A family of open-source Unix-like operating systems.
+macos:
+  name: macOS
+  description: Apple's macOS operating system.
+mastodon:
+  name: Mastodon
+  description: A decentralized social network server.
+memory:
+  name: Memory
+  description: A computer's main memory.
+meta:
+  name: Meta
+  description: About this website.
+music:
+  name: Music
+  description: Posts related to music.
+obsidian:
+  name: Obsidian
+  description: A note-taking and PKM application.
+openbsd:
+  name: OpenBSD
+  description: A free and open-source Unix-like operating system.
+pci:
+  name: PCI
+  description: Peripheral Component Interconnect. A bus that connects devices to the main memory.
+pdf:
+  name: PDF
+  description: Adobe's Portable Document Format.
+protonmail:
+  name: ProtonMail
+  description: A secure email service.
+python:
+  name: Python
+  description: A general-purpose programming language.
+raspberry-pi:
+  name: Raspberry Pi
+  description: A single-board computer.
+roundcube:
+  name: Roundcube
+  description: A webmail interface.
+rust:
+  name: Rust
+  description: A systems programming language.
+unbound:
+  name: Unbound
+  description: A validating, recursive, caching DNS resolver.
+wasm:
+  name: WebAssembly
+  description: A binary instruction format for a stack-based virtual machine.
+yew:
+  name: Yew
+  description: A Rust framework for creating client-side web applications.
