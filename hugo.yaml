@@ -2,6 +2,11 @@ baseURL: https://blakerain.com/
 languageCode: en-GB
 title: Blake Rain
 
+params:
+  author:
+    name: Blake Rain
+    email: blake@blakerain.com
+
 menus:
   footer_right:
     - name: Tags
@@ -10,6 +15,9 @@ menus:
     - name: RSS
       url: /blog/index.xml
       weight: 10
+
+taxonomies:
+  tag: tags
 
 related:
   includeNewer: true
@@ -27,6 +35,12 @@ markup:
   highlight:
     noClasses: false
     wrapperClass: highlight
+
+outputs:
+  home: ["html"]
+  section: ["html", "rss"]
+  taxonomy: ["html"]
+  term: ["html"]
 
 module:
   hugoVersion:

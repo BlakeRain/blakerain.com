@@ -4,6 +4,8 @@ published: 2021-01-14T22:53:12.000Z
 menus: ["footer_left"]
 params:
   hide_summary: true
+sitemap:
+  disable: true
 ---
 
 This is a personal website and blog. Any views or opinions represented on this site are personal and

@@ -2,6 +2,8 @@
 title: Copyright
 params:
   hide_summary: true
+sitemap:
+  disable: true
 ---
 
 **Site version:** {{< version >}}

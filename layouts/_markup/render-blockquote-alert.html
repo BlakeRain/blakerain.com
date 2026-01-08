@@ -13,21 +13,19 @@
   "example"    "list"
 }}
 {{- $type := cond (index $icons .AlertType) .AlertType "note" }}
-{{- $title := or .AlertTitle (T (printf "admonitions.%s" $type)) (title $type) }}
+{{- $title := or .AlertTitle (title $type) }}
 {{- $icon := index $icons $type }}
-<div class="callout {{ $type }}">
-  <div class="heading">
-    {{ partial "icons/icon" (dict "vendor" "lucide" "name" $icon) }}
-    <div>{{ $title }}</div>
-  </div>
-  {{- with .Text }}
-    <div class="body">
-      {{ . }}
-    </div>
-  {{- end }}
-</div>
+<aside class="callout {{ $type }}">
+  <p>
+    <strong class="callout-label">
+      <span aria-hidden="true">{{ partial "icons/icon" (dict "vendor" "lucide" "name" $icon) }}</span>
+      {{ $title }}
+    </strong>
+  </p>
+  {{ .Text }}
+</aside>
 {{- else -}}
-  <blockquote>
-    {{ .Text }}
-  </blockquote>
+<blockquote>
+  {{ .Text }}
+</blockquote>
 {{- end -}}

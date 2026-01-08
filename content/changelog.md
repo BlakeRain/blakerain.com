@@ -5,6 +5,8 @@ menus:
   - footer_right
 params:
   icon: { vendor: "bootstrap", name: "journal-text" }
+sitemap:
+  disable: true
 ---
 
 # 2026-01-08
