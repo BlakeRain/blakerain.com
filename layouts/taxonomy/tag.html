@@ -1,17 +1,28 @@
 {{ define "main" }}
+  {{ $tag := index .Site.Data.tags (.Data.Term | lower) }}
   <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
     <div class="container mx-auto flex flex-col items-center">
-      <h1 class="mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
-        Pages Featuring {{ .Data.Term | humanize | title }}
+      <h1 class="flex flex-row justify-center gap-2 mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
+        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill" "className" "mt-1") }}
+        <div>
+          Pages Featuring
+          <span class="text-blue-700 dark:text-blue-400">{{ with $tag }}{{ .name }}{{ else }}{{ .Data.Term | humanize | title }}{{ end }}</span>
+        </div>
       </h1>
     </div>
   </header>
   <main class="container mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-10 lg:gap-y-20 my-10 px-2 sm:px-0">
+    {{ $class := "grid-cols-1" }}
+    {{ if gt (len .Data.Pages) 2 }}
+      {{ $class = printf "%s %s" $class "xl:grid-cols-3" }}
+    {{ end }}
+    {{ if gt (len .Data.Pages) 1 }}
+      {{ $class = printf "%s %s" $class "lg:grid-cols-2" }}
+    {{ end }}
+    <div class="grid {{ $class }} gap-x-10 lg:gap-y-20 my-10 px-2 sm:px-0">
       {{ range .Data.Pages }}
         {{ partial "blog/post-card" (dict "first" false "post" .) }}
       {{ end }}
     </div>
   </main>
 {{ end }}
-
