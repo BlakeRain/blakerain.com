@@ -60,13 +60,14 @@ Death Above Life (24-bit HD audio) by Orbit Culture
 
 [Death Above Life] from [Obit Culture].
 
-[Nerve]
+[Nerve] and [Bloodhound]
 
 Released in October.
 
 [Death Above Life]: https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio
 [Obit Culture]: https://orbitculture.bandcamp.com/
 [Nerve]: https://orbitculture.bandcamp.com/track/nerve
+[Bloodhound]: https://orbitculture.bandcamp.com/track/bloodhound
 
 # Runners Up
 
@@ -115,22 +116,36 @@ Somewhat disturbing track [Chûtô]
 
 ## ❺ Clouds - Desprins
 
-{{< bandcamp album="390535546" url="https://loudragemusic.bandcamp.com/album/clouds-desprins" >}}
-Clouds - Desprins by Loud Rage Music
+{{< bandcamp album="390535546" url="https://cloudsofficial.bandcamp.com/album/desprins" >}}
+Desprins by Clouds Official
 {{< /bandcamp >}}
 
-The new [Desprins] from [Clouds], released back in January of 2025. With awesome flutes like in the
-track [Forge Another Nightmare].
+The new [Desprins] from [Clouds], released back in January of 2025. I've not heard Clouds before, so
+this was a nice discovery. I can be pretty picky about atmospheric doom, but this album was
+definitely a highlight of the year. The use of a flute really elevates the music. For example, the
+flute turns up at around the two-minute mark in [Forge Another Nightmare], and then sets up as an
+awesome counterpoint to [Neagoe]'s vocals, changing things in such an unexpected way.
 
 [Desprins]: https://cloudsofficial.bandcamp.com/album/desprins
-[Clouds]: https://cloudsofficial.bandcamp.com/
-[Forge Another Nightmare]: https://loudragemusic.bandcamp.com/track/forge-another-nightmare
+[Clouds]: https://www.metal-archives.com/bands/Clouds/3540381712#band_tab_members
+[Forge Another Nightmare]:https://cloudsofficial.bandcamp.com/track/forge-another-nightmare
+[Neagoe]: https://www.metal-archives.com/artists/Daniel_Neagoe/98209
 
 # Honourable Mentions
 
-- [Igorrr - Amen](https://igorrr.bandcamp.com/album/amen)
-- [Bloodywood - Nu Delhi](https://bloodywood.bandcamp.com/album/nu-delhi)
+Scrolling through the list of 2025 releases in Navidrome, there where several other albums that I
+really liked. Given that I can't really just dump all 2025's albums in a big list, here are what I
+think are three of the more interesting finds.
+
+- [Igorrr - Amen](https://igorrr.bandcamp.com/album/amen) -- Igorrr are such a fun band. This album
+  is a pretty great demonstration of genre-bending in a way that I actually find appealing.
+- [Bloodywood - Nu Delhi](https://bloodywood.bandcamp.com/album/nu-delhi) -- Bloodywood's blend of
+  Indian folk sounds and metal is really something to behold. Their _Nu Delhi_ album is a fantastic
+  follow-up to their previous album [Rakshak].
 - [Grimnis - The Path ov the Flame](https://grimnis.bandcamp.com/album/the-path-ov-the-flame)
+
+[Igorrr]: https://igorrr.bandcamp.com/
+[Rakshak]: https://bloodywood.bandcamp.com/album/rakshak
 
 # Dedication
 
