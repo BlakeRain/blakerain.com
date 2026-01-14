@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
-    <link rel="icon" href="/favicon.svg">
+    <link rel="icon" type="image/svg" href="/favicon.svg">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#12304c">
 
@@ -42,6 +42,7 @@
 
     <meta name="author" content="Blake Rain">
     <link rel="canonical" href="{{ .Permalink }}" />
+    <meta name="fediverse:creator" content="@BlakeRain@mastodonapp.uk"/>
 
     {{ partial "opengraph.html" . }}
     {{ partial "twitter_cards.html" . }}
@@ -52,10 +53,13 @@
     {{ block "head" . }}{{ end }}
   </head>
   <body class="flex flex-col">
-      {{ partial "navigation" (dict "page" .) }}
-      <div class="grow{{ if .IsHome }} flex flex-col justify-center{{ end }}">
-        {{ block "main" . }}{{ end }}
-      </div>
-      {{ partial "footer" . }}
+    <a style="display: none;" href="https://mastodonapp.uk/@BlakeRain" rel="me">Mastodon</a>
+    <a style="display: none;" href="https://git.blakerain.com/BlakeRain" rel="me">Forgejo</a>
+    <a style="display: none;" href="https://github.com/BlakeRain" rel="me">github.com/BlakeRain</a>
+    {{ partial "navigation" (dict "page" .) }}
+    <div class="grow{{ if .IsHome }} flex flex-col justify-center{{ end }}">
+      {{ block "main" . }}{{ end }}
+    </div>
+    {{ partial "footer" . }}
   </body>
 </html>
