@@ -71,17 +71,22 @@ Released in October.
 
 # Runners Up
 
+Of course I can't just leave it at the one album; picking just one album was already pretty hard to
+do in the face of a year of enjoyable releases. So to molify myself a bit, here's four more runners
+    up for the year.
+
 ## ❷ Sin Deliverance - Universe of Nightmares
 
 {{< bandcamp album="106313663" url="https://sindeliverance.bandcamp.com/album/universe-of-nightmares-remixed-remastered-instrumentals" >}}
 Universe of nightmares (Remixed/Remastered +Instrumentals) by Sin Deliverance
 {{< /bandcamp >}}
 
-To be honest, the [initial release] of this album in June was promising, but probably wouldn't have made this list; certainly not
-all the way up to second place. The newly [remixed and remastered] version, with the included bonus of instrumentals,
-was released in July. Unfortunately I didn't even find out about it until December. The listening
-experience has been improved to no end by the remaster. Tracks like [Distorted Reality] and
-[Universe of Nightmares] are now stand out tracks in their own right.
+To be honest, the [initial release] of this album in June was promising, but probably wouldn't have
+made this list; certainly not all the way up to second place. The newly [remixed and remastered]
+version, with the included bonus of instrumentals, was released in July. Unfortunately I didn't even
+find out about it until December. The listening experience has been improved to no end by the
+remaster. Tracks like [Distorted Reality] and [Universe of Nightmares] are now stand out tracks in
+their own right.
 
 [initial release]: https://sindeliverance.bandcamp.com/album/universe-of-nightmares
 [remixed and remastered]: https://sindeliverance.bandcamp.com/album/universe-of-nightmares-remixed-remastered-instrumentals
@@ -96,10 +101,14 @@ I Feel The Everblack Festering Within Me (24-bit HD audio) by Lorna Shore
 
 [Lorna Shore]'s new album [I Feel the Everblack Festering Within Me] was released in September and
 was a shoe-in for first place until Orbit Culture's release of Death Above Life. Everblack was
-really a very close second until Sin Deliverance... delivered.
+really a very close second until Sin Deliverance... delivered. It seems that Lorna Shore might be
+the most recognised deathcore band around, and I often see other deathcore bands being compared to
+them. I think the album is a good evolution of Lorna Shore's sound, but I'm still not entirely happy
+with the "breakdowns" (or whatever they're called), especially at the end of [Prison of Flesh].
 
 [Lorna Shore]: https://lornashore.bandcamp.com/
 [I Feel the Everblack Festering Within Me]: https://lornashore.bandcamp.com/album/i-feel-the-everblack-festering-within-me-24-bit-hd-audio
+[Prison of Flesh]: https://lornashore.bandcamp.com/track/prison-of-flesh
 
 ## ❹ Enterré Vivant - 悪罪 (Akuzaï)
 
@@ -107,12 +116,18 @@ really a very close second until Sin Deliverance... delivered.
 悪罪 (Akuzaï) by Enterré Vivant
 {{< /bandcamp >}}
 
-[Akuzaï] from [Enterré Vivant] released in May, but I didn't find out about it until October.
-Somewhat disturbing track [Chûtô]
+The depressive black metal album [Akuzaï] (evil crime) from [Enterré Vivant] (burried alive) was
+released in May. I only came across it when catching up on May's [Stuck in the Filter] on AMG.
+Overall I find the album quote moving, and at times somewhat disturbing. I think a good example of
+this is the tracks [Chûtô] or [Jain], which often descend into wailing. It's pretty moving stuff,
+with drawn out melodic guitars and the usual black metal screaming, yet a fair amount of variation
+and layering make it worth multiple listens.
 
 [Akuzaï]: https://enterrevivant.bandcamp.com/album/akuza
 [Enterré Vivant]: https://enterrevivant.bandcamp.com
 [Chûtô]: https://enterrevivant.bandcamp.com/track/ch-t
+[Jain]: https://enterrevivant.bandcamp.com/track/jain
+[Stuck in the Filter]: https://www.angrymetalguy.com/stuck-in-the-filter-may-2025s-angry-misses/
 
 ## ❺ Clouds - Desprins
 
@@ -137,15 +152,14 @@ Scrolling through the list of 2025 releases in Navidrome, there where several ot
 really liked. Given that I can't really just dump all 2025's albums in a big list, here are what I
 think are three of the more interesting finds.
 
-- [Igorrr - Amen](https://igorrr.bandcamp.com/album/amen) -- Igorrr are such a fun band. This album
+- [Igorrr - Amen](https://igorrr.bandcamp.com/album/amen) --- Igorrr are such a fun band. This album
   is a pretty great demonstration of genre-bending in a way that I actually find appealing.
-- [Bloodywood - Nu Delhi](https://bloodywood.bandcamp.com/album/nu-delhi) -- Bloodywood's blend of
-  Indian folk sounds and metal is really something to behold. Their _Nu Delhi_ album is a fantastic
-  follow-up to their previous album [Rakshak].
+- [Lord Of The Lost - OPVS NOIR Vol. 1](https://lordofthelost.bandcamp.com/album/opvs-noir-vol-1)
+  --- Great album from Lord Of The Lost with some excellent guest appearances like Within
+  Temptation, Stimmgewalk, and Takes of Time.
 - [Grimnis - The Path ov the Flame](https://grimnis.bandcamp.com/album/the-path-ov-the-flame)
 
 [Igorrr]: https://igorrr.bandcamp.com/
-[Rakshak]: https://bloodywood.bandcamp.com/album/rakshak
 
 # Dedication
 
