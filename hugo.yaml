@@ -7,6 +7,10 @@ params:
     name: Blake Rain
     email: blake@blakerain.com
 
+mainSections:
+  - blog
+  - notes
+
 menus:
   footer_right:
     - name: Tags
@@ -37,7 +41,7 @@ markup:
     wrapperClass: highlight
 
 outputs:
-  home: ["html"]
+  home: ["html", "rss"]
   section: ["html", "rss"]
   taxonomy: ["html"]
   term: ["html"]
