@@ -27,7 +27,7 @@ I've found that there are immediate benefits to entirely self-hosting my music a
 rather than streaming individual tracks:
 
 1. I'm no longer being pulled in various directions by Spotify's algorithms. I certainly don't want
-   my choice of music to be influenced by an algroithm that I don't understand. Spotify is not my
+   my choice of music to be influenced by an algorithm that I don't understand. Spotify is not my
    friend, and their incentives are not going to be aligned in my favour. I think I'd rather have
    recommendations from humans.
 1. Going back to buying albums has been a wonderful experience of rediscovering how artists can tell
@@ -39,10 +39,12 @@ rather than streaming individual tracks:
    audio I listen to, and changing over to FLAC has been a great way to start enjoying music again.
 
 My choices of music may have also been impacted the passing of an old friend of mine who introduced
-me to so much great music over the years. This has led to me re-discovering some of my old favorites
-from the late 90s and early 2000s. Going back and listening to albums like Cradle of Filth's [Midian]
-and My Dying Bride's [Like Gods of the Sun] has left me pretty melancholy, but I'm happy to have
-found some of my favourite music again.
+me to so much great music over the years. This has led to me re-discovering some of my old
+favourites from the late 90s and early 2000s. Going back and listening to albums like Cradle of
+Filth's [Midian] and My Dying Bride's [Like Gods of the Sun] has left me pretty melancholy, but I'm
+happy to have found some of my favourite music again.
+
+Anyway, on with 2025's albums.
 
 [Navidrome]: https://www.navidrome.org/
 [Bandcamp]: https://bandcamp.com/
@@ -58,22 +60,30 @@ found some of my favourite music again.
 Death Above Life (24-bit HD audio) by Orbit Culture
 {{< /bandcamp >}}
 
-[Death Above Life] from [Obit Culture].
+I never imagined myself being a fan of [deathcore], but ever since the release of [Unyielding Night]
+by [Assemble the Chariots] I started to find other deathcore albums I enjoyed. I've heard it argued
+that Assemble The Chariots are actually symphonic death metal, so I'm probably completely confused.
 
-[Nerve] and [Bloodhound]
+Last year, [Death Above Life] from [Orbit Culture] came out in October. This album really stood out
+to me over the other deathcore contender: Lorna Shore's [I Feel the Everblack Festering Within Me]
+(more on this album in the _Runners Up_ section below). I think the tracks [Nerve] and [Bloodhound]
+are probably my favourite tracks on the album.
 
-Released in October.
+[deathcore]: https://en.wikipedia.org/wiki/Deathcore
+[Unyielding Night]: https://assemblethechariots.bandcamp.com/album/unyielding-night
+[Assemble the Chariots]: https://www.metal-archives.com/bands/Assemble_the_Chariots/3540314946
+[I feel the everblack festering within me]: #-lorna-shore---i-feel-the-everblack-festering-within-me
 
 [Death Above Life]: https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio
-[Obit Culture]: https://orbitculture.bandcamp.com/
+[Orbit Culture]: https://www.metal-archives.com/bands/Orbit_Culture/3540375116
 [Nerve]: https://orbitculture.bandcamp.com/track/nerve
 [Bloodhound]: https://orbitculture.bandcamp.com/track/bloodhound
 
 # Runners Up
 
 Of course I can't just leave it at the one album; picking just one album was already pretty hard to
-do in the face of a year of enjoyable releases. So to molify myself a bit, here's four more runners
-    up for the year.
+do in the face of a year of enjoyable releases. So to mollify myself a bit, here's four more runners
+up for the year.
 
 ## ❷ Sin Deliverance - Universe of Nightmares
 
@@ -100,15 +110,19 @@ I Feel The Everblack Festering Within Me (24-bit HD audio) by Lorna Shore
 {{< /bandcamp >}}
 
 [Lorna Shore]'s new album [I Feel the Everblack Festering Within Me] was released in September and
-was a shoe-in for first place until Orbit Culture's release of Death Above Life. Everblack was
-really a very close second until Sin Deliverance... delivered. It seems that Lorna Shore might be
+was a good second on this list until Sin Deliverance delivered. It seems that Lorna Shore might be
 the most recognised deathcore band around, and I often see other deathcore bands being compared to
-them. I think the album is a good evolution of Lorna Shore's sound, but I'm still not entirely happy
-with the "breakdowns" (or whatever they're called), especially at the end of [Prison of Flesh].
+them. I think this album is a good continuation of Lorna Shore's sound, but I'm still not entirely
+happy with the "breakdowns" (or whatever they're called), especially at the end of [Prison of
+Flesh]. They seem less frequent, or at least less obvious, than in their [Immortal] album, which was
+a nicer sound than Everblack, but was really quite ruined by breakdowns in the middle of quite
+excellent tracks. I mean, why stop what is otherwise excellent music every now and then just to make
+noises?
 
-[Lorna Shore]: https://lornashore.bandcamp.com/
+[Lorna Shore]: https://www.metal-archives.com/bands/Lorna_Shore/3540513913
 [I Feel the Everblack Festering Within Me]: https://lornashore.bandcamp.com/album/i-feel-the-everblack-festering-within-me-24-bit-hd-audio
 [Prison of Flesh]: https://lornashore.bandcamp.com/track/prison-of-flesh
+[Immortal]: https://lornashore.bandcamp.com/album/immortal
 
 ## ❹ Enterré Vivant - 悪罪 (Akuzaï)
 
@@ -116,7 +130,7 @@ with the "breakdowns" (or whatever they're called), especially at the end of [Pr
 悪罪 (Akuzaï) by Enterré Vivant
 {{< /bandcamp >}}
 
-The depressive black metal album [Akuzaï] (evil crime) from [Enterré Vivant] (burried alive) was
+The depressive black metal album [Akuzaï] (evil crime) from [Enterré Vivant] (buried alive) was
 released in May. I only came across it when catching up on May's [Stuck in the Filter] on AMG.
 Overall I find the album quote moving, and at times somewhat disturbing. I think a good example of
 this is the tracks [Chûtô] or [Jain], which often descend into wailing. It's pretty moving stuff,
@@ -124,7 +138,7 @@ with drawn out melodic guitars and the usual black metal screaming, yet a fair a
 and layering make it worth multiple listens.
 
 [Akuzaï]: https://enterrevivant.bandcamp.com/album/akuza
-[Enterré Vivant]: https://enterrevivant.bandcamp.com
+[Enterré Vivant]: https://www.metal-archives.com/bands/Enterr%C3%A9_Vivant/3540480208
 [Chûtô]: https://enterrevivant.bandcamp.com/track/ch-t
 [Jain]: https://enterrevivant.bandcamp.com/track/jain
 [Stuck in the Filter]: https://www.angrymetalguy.com/stuck-in-the-filter-may-2025s-angry-misses/
@@ -142,7 +156,7 @@ flute turns up at around the two-minute mark in [Forge Another Nightmare], and t
 awesome counterpoint to [Neagoe]'s vocals, changing things in such an unexpected way.
 
 [Desprins]: https://cloudsofficial.bandcamp.com/album/desprins
-[Clouds]: https://www.metal-archives.com/bands/Clouds/3540381712#band_tab_members
+[Clouds]: https://www.metal-archives.com/bands/Clouds/3540381712
 [Forge Another Nightmare]:https://cloudsofficial.bandcamp.com/track/forge-another-nightmare
 [Neagoe]: https://www.metal-archives.com/artists/Daniel_Neagoe/98209
 
@@ -150,16 +164,21 @@ awesome counterpoint to [Neagoe]'s vocals, changing things in such an unexpected
 
 Scrolling through the list of 2025 releases in Navidrome, there where several other albums that I
 really liked. Given that I can't really just dump all 2025's albums in a big list, here are what I
-think are three of the more interesting finds.
+think are a few of the more interesting finds.
 
-- [Igorrr - Amen](https://igorrr.bandcamp.com/album/amen) --- Igorrr are such a fun band. This album
-  is a pretty great demonstration of genre-bending in a way that I actually find appealing.
-- [Lord Of The Lost - OPVS NOIR Vol. 1](https://lordofthelost.bandcamp.com/album/opvs-noir-vol-1)
-  --- Great album from Lord Of The Lost with some excellent guest appearances like Within
+- [Igorrr -- Amen](https://igorrr.bandcamp.com/album/amen) --- Igorrr are such a fun band. This
+  album is a pretty great demonstration of genre-bending in a way that I actually find appealing.
+- [Lord Of The Lost -- OPVS NOIR Vol. 1](https://lordofthelost.bandcamp.com/album/opvs-noir-vol-1)
+  --- Another great album from Lord Of The Lost, with some excellent guest appearances like Within
   Temptation, Stimmgewalk, and Takes of Time.
-- [Grimnis - The Path ov the Flame](https://grimnis.bandcamp.com/album/the-path-ov-the-flame)
+- [Tempestuous Fall -- The Descent of Mortals Past](https://midnightodyssey.bandcamp.com/album/the-descent-of-mortals-past)
+  --- The first albume I've heard from [Temestuous Fall]. The songs [Psyche], [Ulysses], and
+  [Aeneas] are certainly worth a listen.
 
-[Igorrr]: https://igorrr.bandcamp.com/
+[Temestuous Fall]: https://www.metal-archives.com/bands/Tempestuous_Fall/3540347012
+[Psyche]: https://midnightodyssey.bandcamp.com/track/psyche-temptation-of-the-divine
+[Ulysses]: https://midnightodyssey.bandcamp.com/track/ulysses-requiem-of-the-sea
+[Aeneas]: https://midnightodyssey.bandcamp.com/track/aeneas-guide-me-home
 
 # Dedication
 
