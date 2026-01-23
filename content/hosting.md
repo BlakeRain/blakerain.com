@@ -7,17 +7,15 @@ Inspired by [Matze's page](https://kittsteiner.blog/self-hosting/), below is a l
 an software that I self-host. This is not an exhaustive list, and some of it is conflated with
 [blacktreenetworks.com](https://blacktreenetworks.com/) stuff, but it covers the main things I use.
 
-- [Active Pieces](https://activepieces.com/) - An open-source alternative to Zapier for workflow
-  automation. This is useful for creating simple automations for webhooks. One example is receiving
-  events when a device's Tailscale key is about to expire via a
-  [webhook](https://tailscale.com/kb/1213/webhooks) and sending the message to
-  [ntfy.sh](https://ntfy.sh/).
+- [ArchiveBox](https://archivebox.io/) - A self-hosted website archiver.
 - [Atuin](https://atuin.sh/) – A shell history manager. I self-host the server component.
 - [Caddy](https://caddyserver.com/) – Web server and reverse proxy. I use it to manage TLS
   certificates with [Let's Encrypt](https://letsencrypt.org/), and to route traffic to the various
   services I run. Pretty much everything is behind Caddy.
 - [Cement](https://github.com/BlakeRain/cement) – A self-hosted pastebin service. You can find it at
   [paste.blakerain.com](https://paste.blakerain.com/). This is one of my own projects.
+- [changedetection.io](https://changedetection.io/) – A self-hosted change detection service. I
+  mostly use this to detect things like new comments on [Hacker News](https://news.ycombinator.com/).
 - [Forgejo](https://forgejo.org/) – A recent edition to my self-hosted services. I used to run
   [Gitea](https://about.gitea.com/) but migrated to Forgejo. This can be found at
   [git.blakerain.com](https://git.blakerain.com/). This is basically a hedge against GitHub going
@@ -26,6 +24,7 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
 - [Homebox](https://homebox.software/en/) – Self-hosted inventory management software. I host this
   at home, just to keep track of components and other bits and pieces. Where are all the cables and
   Raspberry Pis? Homebox (probably) knows!
+- [Immich](https://immich.app/) - Backup and organise photos from mobile devices.
 - [Linkding](https://linkding.link/) – A self-hosted bookmark manager, that I can use to share links
   with others. You can find my public bookmarks at [links.blakerain.com](https://links.blakerain.com/).
 - [Minecraft](https://www.minecraft.net/en-us) – I run a small Minecraft server with some friends.
@@ -52,9 +51,12 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   default search engine. It aggregates results from multiple search engines, and is privacy-focused.
   I run this in Docker on a Raspberry Pi at home, and access it via Tailscale (see their [Tailscale
   in Docker](https://tailscale.com/kb/1282/docker) KB article).
+- [Tube Archivist](https://tubearchivist.com/) – Self-hosted YouTube archiving service.
 - [Uptime Kuma](https://github.com/louislam/uptime-kuma) – My favourite uptime monitor. It has lots
   of functionality. I've found it to be the most reliable. You can find my public status page at
   [status.blakerain.com](https://status.blakerain.com/).
+- [Vaultwarden](https://github.com/dani-garcia/vaultwarden) - The unofficial Bitwarden compatible
+  server.
 
 # IaC
 
