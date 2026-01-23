@@ -10,6 +10,16 @@ p {
   }
 }
 
+strong {
+  @apply font-bold;
+}
+
+@media (prefers-color-scheme: dark) {
+  strong {
+    @apply text-neutral-300;
+  }
+}
+
 dl,
 ul,
 ol {
