@@ -45,7 +45,7 @@
         {{ partial "icons/icon" (dict "vendor" "font-awesome-brands" "name" "bluesky") }}
       </a>
     </div>
-    <div class="flex flex-col gap-4 mt-10 max-w-2xl break-works">
+    <div class="flex flex-col gap-4 mt-10 max-w-2xl break-words">
       <p class="prose prose-stone dark:prose-invert">
         Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
         <span class="text-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
@@ -55,19 +55,38 @@
         When I find time I enjoy experimenting with technology, and I try to remember to share my
         findings on my blog.
       </p>
-      <h1 class="text-xl font-bold mt-6">Latest Posts</h1>
-      <ul class="flex flex-col gap-4">
-        {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
-          <li>
-            <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
-              {{ .Title }}
-            </a>
-            <p class="text-sm text-neutral-500 dark:text-neutral-400">
-              {{ .Date.Format "2 January 2006" }}
-            </p>
-          </li>
-        {{ end }}
-      </ul>
+    </div>
+    <div class="grid grid-cols-1 mt-10 gap-10 max-w-2xl break-words">
+      <div>
+        <h1 class="text-xl font-bold">Latest Posts</h1>
+        <ul class="flex flex-col gap-4 mt-4">
+          {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
+            <li>
+              <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+                {{ .Title }}
+              </a>
+              <p class="text-sm text-neutral-500 dark:text-neutral-400">
+                {{ .Date.Format "2 January 2006" }}
+              </p>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold">Latest Notes</h1>
+        <ul class="flex flex-col gap-4 mt-4">
+          {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
+            <li>
+              <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+                {{ .Title }}
+              </a>
+              <p class="text-sm text-neutral-500 dark:text-neutral-400">
+                {{ .Date.Format "2 January 2006" }}
+              </p>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
     </div>
   </main>
 {{ end }}
