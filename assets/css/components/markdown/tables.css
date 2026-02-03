@@ -69,3 +69,14 @@ table {
   }
 }
 
+&.note {
+  table {
+    thead tr th {
+      @apply px-3 py-2;
+    }
+
+    tbody tr td {
+      @apply px-3 py-2;
+    }
+  }
+}
