@@ -4,7 +4,7 @@ tags:
   - rust
   - wasm
   - yew
-date: 2023-08-30T18:50:17.000Z
+date: 2023-08-30T18:50:17
 summary: |
   In this post I go over how I rewrote this website in Rust using the Yew framework with SSG and
   hydration. I cover a number of the issues that I encountered and how I addressed them.

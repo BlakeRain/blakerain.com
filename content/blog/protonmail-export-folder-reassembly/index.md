@@ -3,7 +3,7 @@ title: Reassembling Folders from ProtonMail's Export Tool
 tags:
   - email
   - protonmail
-date: 2025-09-21T19:34:18.193Z
+date: 2025-09-21T19:34:18
 ---
 
 This weekend I had to migrate an email account from [ProtonMail] to a mail server that I host.

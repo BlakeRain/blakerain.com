@@ -3,7 +3,7 @@ title: Overlays with Custom Widgets in GTK
 tags:
   - python
   - gtk
-date: 2021-01-14T21:27:19.000Z
+date: 2021-01-14T21:27:19
 summary: |
   In this post I show how to build a collapsible controls overlay in GTK, rendered over a simple
   custom widget.

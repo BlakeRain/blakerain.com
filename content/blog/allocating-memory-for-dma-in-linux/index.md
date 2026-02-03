@@ -4,7 +4,7 @@ tags:
   - pci
   - linux
   - cpp
-date: 2020-12-11T18:30:00.000Z
+date: 2020-12-11T18:30:00
 summary: |
   In this post we take a look at allocating memory on Linux using huge pages with the intention of
   sharing that memory with PCIe devices that use DMA.

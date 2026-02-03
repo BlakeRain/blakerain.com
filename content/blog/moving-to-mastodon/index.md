@@ -2,7 +2,7 @@
 title: Moving to Mastodon
 tags:
   - mastodon
-date: 2022-11-13T15:38:33.000Z
+date: 2022-11-13T15:38:33
 summary: |
   Much like a great number of other people, I have followed the trend towards Mastodon, and have
   found it to be quite a wonderful experience.

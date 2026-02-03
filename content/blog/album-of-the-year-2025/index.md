@@ -1,6 +1,6 @@
 ---
 title: Album of the Year 2025
-date: 2026-01-06
+date: 2026-01-06T19:31:26
 tags:
   - music
 params:

@@ -4,7 +4,7 @@ tags:
   - openbsd
   - unbound
   - raspberry-pi
-date: 2024-07-03
+date: 2024-07-03T15:05:05
 summary: |
   In this post I share how I added DNS adblocking to the Unbound DNS server configuration on my
   OpenBSD firewall.

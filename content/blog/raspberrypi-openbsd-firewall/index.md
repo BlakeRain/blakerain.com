@@ -4,7 +4,7 @@ tags:
   - openbsd
   - unbound
   - raspberry-pi
-date: 2024-06-02T15:31:11.332Z
+date: 2024-06-02T15:31:11
 updated: 2024-09-04T12:10:00.000Z
 summary: |
   Tired with my current firewall, I have decided to switch over to a Raspberry Pi 4 running

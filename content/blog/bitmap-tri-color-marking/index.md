@@ -3,7 +3,7 @@ title: Bitmap Tri-Color Marking
 tags:
   - gc
   - cpp
-date: 2020-12-05T15:12:33.000Z
+date: 2020-12-05T15:12:33
 summary: |
   In this post I look at a simple tri-color marking implementation that uses bitmap operations to walk the heap.
 ---

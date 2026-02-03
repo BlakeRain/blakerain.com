@@ -3,7 +3,7 @@ title: Moving my Lambda Functions to Rust
 tags:
   - aws
   - rust
-date: 2022-02-07T20:04:44.000Z
+date: 2022-02-07T20:04:44
 summary: |
   My experience changing the AWS Lambda functions for this website from Python to Rust.
 ---
