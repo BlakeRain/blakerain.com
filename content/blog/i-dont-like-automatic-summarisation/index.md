@@ -130,7 +130,7 @@ This is a problem with any kind of summarisation, but I think is compounded unde
 producing a summary of any required length is now vanishingly small. Such a summary might appear
 sufficiently plausible, with the pretence of capturing all that is salient. Does the temptation to
 then rely solely on these summaries become too great? Is the efficiency gain sufficient to justify
-the loss of the journey and structure? How can we tell, if we don't know what we're loosing in each
+the loss of the journey and structure? How can we tell, if we don't know what we're losing in each
 instance?
 
 As an example, I was recently reading a paper called [Behind the Headline Number: Why Not to Rely on
