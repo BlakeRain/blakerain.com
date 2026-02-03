@@ -1,10 +1,6 @@
 @layer components {
-  .table-wrapper {
-    @apply flex overflow-x-scroll mb-6;
-  }
-
-  table, .table-wrapper > table {
-    @apply min-w-full border-collapse table-auto;
+  table {
+    @apply min-w-full border-collapse table-auto mb-6;
 
     thead {
       @apply bg-transparent dark:bg-neutral-800;
