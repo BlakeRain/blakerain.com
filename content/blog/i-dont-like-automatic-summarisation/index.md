@@ -1,6 +1,6 @@
 ---
 title: I Don't Like Automatic Summarisation
-date: 2026-01-23
+date: 2026-02-03
 tags:
   - AI
   - LLM
