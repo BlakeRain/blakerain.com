@@ -8,6 +8,11 @@ params:
   numberedHeadings: false
 ---
 
+I don't like automatic summarisation any more. Especially in the context of technical publications.
+I find LLM summaries are often unreliable, and that even accurate summaries often erase salient
+elements of the original publication. I think when AI summaries are used in place of human-written
+abstracts, they can create a false sense of trust and lead to more harm.
+
 A number of services that I've been using have pushed "AI summaries" over the last year or two. In
 some cases these AI summaries are being used in place of human-written summaries, such as those
 provided in the abstract of a paper. Granted, paper authors may often write their abstracts in such
@@ -16,18 +21,14 @@ to deal with outright misrepresentations.
 
 <!--more-->
 
-One example of this is a tool called [Readwise Reader]. I used to use this for as my reading list,
-befre I moved over to [Readeck], which is a similar and, above all, _self-hosted_ alternative.
-Whilst Reader was far from the worst offender, and offered plenty of opportunities to _disable_ the
-AI summaries, it was just another example of companies pushing "AI" into everything they can.
-
-[Readwise Reader]: https://readwise.io/read
-[Readeck]: https://readeck.org/en/
-
 And it really does seem that the only "AI" that these LLMs are used for is summarising: summarise
-your emails, summarise your meeting transcripts, summaries your notes. Let's summarise everything in
-our lives into as few words as possible, and just live life skimming over the lowest entropy
-representation of ourselves until we compleetly regress to the mean in all aspects of our lives.
+your emails, summarise your meeting transcripts, summarise your notes and pull requests. Let's
+summarise everything in our lives into as few words as possible, and just live life skimming over
+the lowest entropy representation of ourselves until we completely regress to the mean, [model
+autophagy] spreading to people. "_You're not just summarising, you're optimising, and that's rare_"
+--- don't forget your emdashes.
+
+[model autophagy]: https://arxiv.org/abs/2307.01850
 
 A while ago I read [The Timmy Trap] by Scott Jenson. I liked how Jenson demonstrates our tendency to
 anthropomorphise inanimate objects, and how this now applies LLMs. One thing that he said that stuck
@@ -63,9 +64,9 @@ an AI summary of the paper:
 This information is presented as part of the _AI Key Findings_ for this paper, along with other
 important sounding headings like _Methodology_ and _Significance_:
 
-{{< figure src="arxivlens-misrepresenting-paper.png" title="Screenshot of an incorrect summary of a paper" >}}
+{{< figure src="arxivlens-misrepresenting-paper.png" title="A screenshot of an incorrect summary of a paper. I didn't care enough to capture it entirely." >}}
 
-This summary was suprising to me, as I knew that the abstract of the paper told a different story:
+This summary was surprising to me, as I knew that the abstract of the paper told a different story:
 
 > Public debate links worsening job prospects for AI-exposed occupations to the release of ChatGPT
 > in late 2022. Using monthly U.S. unemployment insurance records, we measure occupation- and
@@ -77,21 +78,6 @@ This summary was suprising to me, as I knew that the abstract of the paper told 
 > ChatGPT. Together, **these results point to forces pre-dating generative AI** and to the ongoing
 > value of LLM-relevant education.
 
-Take for instance the "Key Result" regarding remote work growth mitigating some of the negative
-labour market impacts. I can't find any reference at all to remote work in the paper, let alone any
-effect it might have. Nor could I find any significant discussion around different states AI
-adoption rates. The only paragraph in the paper that I think might relate to these two results are
-the following:
-
-> While these patterns hold nationally, a small number of states show post-launch increases in
-> computer and math occupation unemployment risk (e.g., CA, WA, and AK; Figs. S15–S12). In  these
-> cases, timing alone cannot rule out a contribution from LLM diffusion. However, across  states,
-> post-launch unemployment risk remains comparable to pre-pandemic levels, suggesting  limited
-> movement in the longer-run equilibrium.
-
-I would hardly consider this one paragraph to be worthy of contributing two of the "key results" of
-the paper.
-
 The first key result, which states that "_LLM advancements correlated with increased unemployment
 risk \[..]_", seems to be wholly unsupported by this paper. Unless I'm entirely misreading, I hardly
 think that statements like the following are consistent with this supposed key result.
@@ -100,17 +86,33 @@ think that statements like the following are consistent with this supposed key r
 > suggests that pre-existing macroeconomic and sectoral forces contributed materially to the
 > early-2022 rise in unemployment risk.
 
-The significant detraction from this paper's findings is not all that uncommon. Services that are
-pushing "AI summaries" as an alternative, or even as a replacement, for the authors' own abstracts
-and summaries, are proving to be quite a problem. I can no longer trust summaries of publications
-unless I _know_ that they are not generated by a language model.
+The other "Key Results" -- remote work mitigating negative market impacts and the effect of a
+states' AI adoption -- I can't find any mention of in the paper. In fact, "remote work" doesn't seem
+to even appear in the paper. Of course, I could have missed it. Maybe I didn't read the paper as
+thoroughly as I thought. The only paragraph in the paper that I think might relate to those two "Key
+Results" is this one:
 
-Of course, I shouldn't be suprised. Recently the [ACM] got into a spot of bother for their atttempt
-to shove AI summaries at us. The reasons for the preference for AI-generated summaries do not seem
-to make sense. Are non-technical people paying for premium subscriptions to the ACM? Luckily it
-seems that sanity prevailed, and the ACM elected to [move] the AI-generated summaries so that author
-abstracts were the default. If you want to know more, Professor [Anil Madhavapeddy] has some great
-details in his blog post on the topic.
+> While these patterns hold nationally, a small number of states show post-launch increases in
+> computer and math occupation unemployment risk (e.g., CA, WA, and AK; Figs. S15–S12). In  these
+> cases, timing alone cannot rule out a contribution from LLM diffusion. However, across  states,
+> post-launch unemployment risk remains comparable to pre-pandemic levels, suggesting  limited
+> movement in the longer-run equilibrium.
+
+Whilst this does seem consistent, I would hardly consider this one paragraph to be worthy of
+contributing two of the "key results" of the paper.
+
+The significant departure from this paper's findings may seem surprising. I've found this kind of
+misrepresentation not all that uncommon. Services that are pushing "AI summaries" as an alternative,
+or even as a replacement, for the authors' own abstracts, are now proving to be quite a problem. I
+can no longer trust summaries of publications unless I know that they are not generated by a
+language model.
+
+Recently the [ACM] got into a spot of bother for their attempt to shove AI summaries at us. The
+reasons I've seen for the preference for AI-generated summaries do not seem to make any sense. Are
+non-technical people really paying for premium subscriptions to the ACM? Luckily it seems that
+sanity prevailed, and the ACM elected to [move] the AI-generated summaries so that author abstracts
+were the default. If you want to know more, Professor [Anil Madhavapeddy] has some great details in
+his blog post on the topic.
 
 [ACM]: https://dl.acm.org/
 [Anil Madhavapeddy]: https://anil.recoil.org/notes/acm-ai-recs
@@ -119,38 +121,24 @@ details in his blog post on the topic.
 ## Missing Significant Lessons {#missing-significant-lessons}
 
 Putting aside the problem of hallucination for now, I think there are more human issues with relying
-on summaries of potentially detailed and technical content, regardless of whether the summaries are
-generated by language models or not.
+on LLM summaries: the loss of the journey and structure from the original publication. Preserving
+only the conclusions, while stripping away the path to those conclusions, risks the real value of a
+publication. Ironing out the structure and subtext -- the emphasis, asymmetry, and tone -- destroys
+potentially valuable information.
 
-1. I think the details often matter a lot more than the outcome. After all, we don't often publish
-   just abstracts and conclusions. Whilst summarisation may tend to preserve outcomes, I worry it
-   may often destroy salient load-bearing details. A way to understanding something is to follow the
-   journey that the authors took to get to their conclusions. I think this will be lost of we become
-   overreliant on automatic summaries.
-1. Key features of an publication might be found in the subtext or structure of the publication,
-   rather than the surface content. For example, an author might choose to defend one aspect more
-   than another. There may be asymmetries in the care and attention given to different ideas. Even
-   tonal shifts can carry significance. Language models may be trained to optimise for what is said,
-   rather than why and how.
+This is a problem with any kind of summarisation, but I think is compounded under LLMs. The cost of
+producing a summary of any required length is now vanishingly small. Such a summary might appear
+sufficiently plausible, with the pretence of capturing all that is salient. Does the temptation to
+then rely solely on these summaries become too great? Is the efficiency gain sufficient to justify
+the loss of the journey and structure? How can we tell, if we don't know what we're loosing in each
+instance?
 
-I think when we summarise, especially using a language model, we should be more aware of what we are
-losing.
-
-When I read something, I often find that some of the most impactful lessons are within the body of
-the publication. A recent example of this was a paper called [Behind the Headline Number: Why Not to
-Rely on Frey and Osborne's Predictions of Potential Job Loss from Automation]. The paper is about
-issues with Frey and Osborne's predictions of potential job loss from automation in [The future of
-employment: How susceptible are jobs to computerisation]. Here's a sentence from the end of the
-abstract:
-
-> Compared to standard approaches which classify jobs based on their intensity in routine tasks,
-> Frey-Osborne's predictions do not 'add value' for forecasting the impact of technology on
-> employment.
-
-This is fine for a summary, and we can fairly understand the outcome of the paper. But I didn't find
-that to be as important as something the author's found along the way. On page 16, towards the end
-of the section in which the authors are investigating Frey and Osborne's methods, they discuss the
-interpretation of the predictions of Frey and Osborne's model:
+As an example, I was recently reading a paper called [Behind the Headline Number: Why Not to Rely on
+Frey and Osborne's Predictions of Potential Job Loss from Automation]. The paper is about issues
+with Frey and Osborne's predictions of potential job loss from automation in [The future of
+employment: How susceptible are jobs to computerisation]. On page 16, about half way through the
+paper, the authors are discussing an interpretation of the predictions of Frey and Osborne's model.
+Here's an excerpt:
 
 > Frey-Osborne (2017, p.266) suggest that: '_...the probability axis in Figure 3 which shows the
 > distribution of the probabilities of individual occupations being automated can be seen as a
@@ -158,9 +146,7 @@ interpretation of the predictions of Frey and Osborne's model:
 > capital relatively soon_'. Following this logic, Frey-Osborne (2017, p.266-67) then state that the
 > U-shaped distribution of probabilities implies '_... two waves of computerisation separated by a
 > 'technological plateau'_'
-
-The authors then state an alternative interpretation of the predictions:
-
+> \[..]
 > In fact, the U-shaped distribution of probabilities of automation generated by Frey-Osborne **is
 > much more likely to be a simple artefact of them having used a Logit model to derive those
 > predictions together with the hand-labelling having assigned an even split of occupations between
@@ -171,9 +157,13 @@ me. I was moved by the possibility and its implications. In this way, the conclu
 was actually less useful to me than the lesson to be suspicious of distributional stories that might
 just be model artefacts.
 
+This insight would not have survived any kind of summarisation -- human or LLM. This is why,
+certainly for technical work, I've become increasingly uncomfortable with automatic summaries being
+presented as a substitute for reading the original publication. Certainly it may save time, but I'm
+no longer convinced that the trade-off is one that I want to accept.
+
 
 [The Timmy Trap]: https://jenson.org/timmy/
-[tools]: https://readwise.io/read
 [Behind the Headline Number: Why Not to Rely on Frey and Osborne's Predictions of Potential Job Loss from Automation]: https://papers.ssrn.com/abstract=3472764
 [The future of employment: How susceptible are jobs to computerisation]: https://doi.org/10.1016/j.techfore.2016.08.019
 [AI-exposed jobs deteriorated before ChatGPT]: https://arxiv.org/abs/2601.02554
