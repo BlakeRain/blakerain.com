@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
   <main>
-    <article>
+    <article class="h-entry">
       <header class="hidden print:block container print:max-w-full mx-auto">
         <h1 class="text-3xl font-bold">
           {{ .Title }}
@@ -11,11 +11,13 @@
         class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
         <div class="container mx-auto content flex flex-col">
           <h1 class="mx-2 md:mx-0 mb-10 lg:w-[45rem] self-center text-5xl text-center font-bold leading-normal mt-10 text-neutral-800 dark:text-neutral-200">
-            {{ .Title }}
+            <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
+              {{ .Title }}
+            </a>
           </h1>
-          <div class="flex flex-col md:flex-row items-center md:justify-between uppercase">
-            <div class="flex flex-row gap-1 text-sm">
-              <div class="text-neutral-700 dark:text-neutral-300">
+          <div class="flex flex-col md:flex-row items-center md:justify-between uppercase text-sm">
+            <div class="flex flex-row gap-1">
+              <div class="text-neutral-700 dark:text-neutral-300 dt-published">
                 {{ .Param "date" | time.Format "2 Jan 2006" }}
               </div>
               <div class="text-gray-500">&#8226;</div>
@@ -31,7 +33,7 @@
                   {{ with site.GetPage (printf "/tags/%s" $tag) }}
                     <a
                       href="{{ .Permalink }}"
-                      class="text-slate-700 dark:text-slate-500 hover:text-slate-800 hover:dark:text-slate-400">
+                      class="p-category text-slate-700 dark:text-slate-500 hover:text-slate-800 hover:dark:text-slate-400">
                       {{ $tag | humanize }}
                     </a>
                   {{ end }}
