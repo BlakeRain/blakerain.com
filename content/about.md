@@ -68,7 +68,6 @@ If you need to get in touch with me, you can either use
 - {{< ico bootstrap "envelope-at" >}} Email: {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
 - {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}} Mastodon: https://mastodonapp.uk/@BlakeRain
 - {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}} LinkedIn: https://www.linkedin.com/in/blakerain
-- {{< ico vendor="font-awesome-brands" name="bluesky" color="#0285FF" >}} Bluesky: https://bsky.app/profile/blakerain.bsky.social
 
 ## Public Key { .no-outline }
 
