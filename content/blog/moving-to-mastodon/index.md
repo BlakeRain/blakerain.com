@@ -20,12 +20,8 @@ followers, of which I was one. I remember that Fry was one of the early adopters
 I've always enjoyed his content, even though his tweets were at times few and far between.
 
 In the same Reddit thread I learned that he had already created an account on the [mastodonapp.uk]
-instance where, at the time of writing, he has already amassed 51k followers.
-
-{{< bookmark url="https://mastodonapp.uk/@stephenfry" title="@stephenfry@mastodonapp.uk"
-description="Stephen Fry on Mastodon" author="Stephen Fry" publisher="Mastodon"
-thumbnail="/content/moving-to-mastodon/fry-mastodon.jpg"
-icon="https://cdn.simpleicons.org/mastodon/6364FF" >}}
+instance where, at the time of writing, he has already amassed 51k followers:
+[@stephenfry@mastodonapp.uk](https://mastodonapp.uk/@stephenfry).
 
 Not wanting to be left out of what appeared to be a growing trend, Fry's departure from Twitter
 provided the impetus for me to give Mastodon a go. On Wednesday I decided to create my own Mastodon

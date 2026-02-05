@@ -356,15 +356,7 @@ and then restart Unbound.
 
 I've included the source for the `gen-adblock.sh` script in the following Gist on GitHub.
 
-{{< bookmark
-title="Script to generate adblocking configuration for Unbound "
-url="https://gist.github.com/BlakeRain/75bc52434528dcabb6ca87908d70468e"
-description="Script to generate adblocking configuration for Unbound "
-author="Blake Rain"
-publisher="GitHub Gist"
-thumbnail="https://github.githubassets.com/images/modules/gists/gist-og-image.png"
-icon="https://github.githubassets.com/favicons/favicon.svg" >}}
-
+<script src="https://gist.github.com/BlakeRain/75bc52434528dcabb6ca87908d70468e.js"></script>
 
 [previous post]: /blog/raspberrypi-openbsd-firewall/
 [OpenBSD]: https://www.openbsd.org/

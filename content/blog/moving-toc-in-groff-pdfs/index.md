@@ -75,16 +75,6 @@ The repository contains a `Makefile` that uses `groff` to create the demonstrati
 in the remainder of this post. Running `make` in a clone of this repository will create a `demo.pdf`
 that demonstrates the table of contents being moved just after the cover page.
 
-{{< bookmark
-title="toc-rel: A script that moves a table of contents in a PDF"
-url="https://github.com/BlakeRain/toc-rel"
-description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
-author="Blake Rain"
-publisher="GitHub"
-thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
-icon="https://github.githubassets.com/favicons/favicon.png" >}}
-
-
 The script starts with the usual [shebang] to invoke `bash` and then reads the standard input into a
 temporary file.
 
@@ -441,16 +431,7 @@ rm "$input".rearranged
 cat "$input".output
 ```
 
-You can find these scripts and an example groff source file on GitHub.
-
-{{< bookmark
-title="toc-rel: A script that moves a table of contents in a PDF"
-url="https://github.com/BlakeRain/toc-rel"
-description="A script that moves a table of contents from the end of a PDF file to just after the cover page. Useful when working with troff/groff."
-author="Blake Rain"
-publisher="GitHub"
-thumbnail="https://repository-images.githubusercontent.com/155570276/9e808f00-3b06-11eb-913d-44e30d832a70"
-icon="https://github.githubassets.com/favicons/favicon.png" >}}
+You can find these scripts and an example groff source file [on GitHub](https://github.com/BlakeRain/toc-rel).
 
 [groff]: https://www.gnu.org/software/groff/
 [activity]: http://git.savannah.gnu.org/cgit/groff.git/log/
