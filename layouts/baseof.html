@@ -53,10 +53,6 @@
     {{ block "head" . }}{{ end }}
   </head>
   <body class="flex flex-col">
-    <a style="display: none;" href="https://blakerain.com/" class="h-card" rel="me">Blake Rain</a>
-    <a style="display: none;" href="https://mastodonapp.uk/@BlakeRain" rel="me">Mastodon</a>
-    <a style="display: none;" href="https://git.blakerain.com/BlakeRain" rel="me">Forgejo</a>
-    <a style="display: none;" href="https://github.com/BlakeRain" rel="me">github.com/BlakeRain</a>
     {{ partial "navigation" (dict "page" .) }}
     <div class="grow{{ if .IsHome }} flex flex-col justify-center{{ end }}">
       {{ block "main" . }}{{ end }}
