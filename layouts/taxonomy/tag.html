@@ -21,7 +21,7 @@
     {{ end }}
     <div class="grid {{ $class }} gap-x-10 lg:gap-y-20 my-10 px-2 sm:px-0">
       {{ range .Data.Pages }}
-        {{ partial "blog/post-card" (dict "first" false "post" .) }}
+        {{ partial "blog/post-card" (dict "border" true "post" .) }}
       {{ end }}
     </div>
   </main>
