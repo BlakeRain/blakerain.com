@@ -1,4 +1,6 @@
 div.table-wrapper {
+  @apply w-full overflow-x-auto;
+
   &:not(:last-child) {
     @apply mb-6;
   }
