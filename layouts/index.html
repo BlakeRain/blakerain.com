@@ -3,12 +3,12 @@
   <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/index.xml">
 {{ end }}
 {{ define "main" }}
-  <main class="h-card container mx-auto flex flex-col items-center px-6 py-6 md:px-24 md:py-20 lg:px-32 h-card">
-    <img class="u-photo w-48 h-auto mb-2 rounded-full shadow-xl dark:border dark:border-primary bg-primary/50"
+  <main class="h-card mx-auto flex flex-col gap-4 md:w-[38rem] break-words px-6 my-6 md:my-20 h-card">
+    <img class="u-photo w-48 h-auto mb-2 self-center rounded-full shadow-xl dark:border dark:border-primary bg-primary/50"
       alt="Blake Rain" loading="lazy" decoding="async" src="/media/photo-small.webp">
-    <h1 class="text-4xl font-extrabold mb-2">Blake Rain</h1>
-    <h2 class="text-xl text-neutral-500 dark:text-neutral-400 mb-4">Software Engineer at Cignpost</h2>
-    <div class="mt-1 text-2xl flex flex-row gap-4 justify-center text-stone-500 dark:text-stone-400">
+    <h1 class="self-center text-4xl font-extrabold">Blake Rain</h1>
+    <h2 class="self-center text-xl text-neutral-500 dark:text-neutral-400">Software Engineer at Cignpost</h2>
+    <div class="text-2xl flex flex-row gap-4 justify-center text-stone-500 dark:text-stone-400">
       <a style="display: none;" class="u-url" href="https://blakerain.com/" rel="me">Blake Rain</a>
       <a href="https://git.blakerain.com/BlakeRain"
         target="_blank"
@@ -39,48 +39,41 @@
         {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "linkedin") }}
       </a>
     </div>
-    <div class="flex flex-col gap-4 mt-10 max-w-2xl break-words">
-      <p class="p-note prose prose-stone dark:prose-invert">
-        Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
-        <span class="text-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
-        software engineer at Cignpost.
-      </p>
-      <p class="prose prose-stone dark:prose-invert">
-        When I find time I enjoy experimenting with technology, and I try to remember to share my
-        findings on my blog.
-      </p>
-    </div>
-    <div class="grid grid-cols-1 mt-10 gap-10 max-w-2xl break-words">
-      <div>
-        <h1 class="text-xl font-bold">Latest Posts</h1>
-        <ul class="flex flex-col gap-4 mt-4">
-          {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
-            <li>
-              <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
-                {{ .Title }}
-              </a>
-              <p class="text-sm text-neutral-500 dark:text-neutral-400">
-                {{ .Date.Format "2 January 2006" }}
-              </p>
-            </li>
-          {{ end }}
-        </ul>
-      </div>
-      <div>
-        <h1 class="text-xl font-bold">Latest Notes</h1>
-        <ul class="flex flex-col gap-4 mt-4">
-          {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
-            <li>
-              <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
-                {{ .Title }}
-              </a>
-              <p class="text-sm text-neutral-500 dark:text-neutral-400">
-                {{ .Date.Format "2 January 2006" }}
-              </p>
-            </li>
-          {{ end }}
-        </ul>
-      </div>
-    </div>
+    <p class="mt-8 p-note text-justify">
+      Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
+      <span class="text-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
+      software engineer at Cignpost.
+    </p>
+    <p class="text-justify">
+      When I find time I enjoy experimenting with technology. I do try and remember to share my
+      findings on my <a class="colored" href="/blog">blog</a>, and any useful <a class="colored"
+      href="/notes">notes</a> I find along the way.
+    </p>
+    <h1 class="text-2xl font-bold mt-10">Latest Posts</h1>
+    <ul class="flex flex-col gap-4 mt-2">
+      {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
+        <li>
+          <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+            {{ .Title }}
+          </a>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            {{ .Date.Format "2 January 2006" }}
+          </p>
+        </li>
+      {{ end }}
+    </ul>
+    <h1 class="text-2xl font-bold mt-10">Latest Notes</h1>
+    <ul class="flex flex-col gap-4 mt-2">
+      {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
+        <li>
+          <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+            {{ .Title }}
+          </a>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            {{ .Date.Format "2 January 2006" }}
+          </p>
+        </li>
+      {{ end }}
+    </ul>
   </main>
 {{ end }}

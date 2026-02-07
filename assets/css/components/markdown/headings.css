@@ -103,7 +103,8 @@ h4 {
 }
 
 h1 {
-  @apply text-5xl print:text-3xl font-normal mt-8 mb-4;
+  @apply text-5xl font-normal mt-8 mb-4;
+  @apply print:text-3xl;
 }
 
 h2 {

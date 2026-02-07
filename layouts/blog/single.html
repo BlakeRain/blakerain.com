@@ -1,14 +1,8 @@
 {{ define "main" }}
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
-  <main>
+  <main class="grow">
     <article class="h-entry">
-      <header class="hidden print:block container print:max-w-full mx-auto">
-        <h1 class="text-3xl font-bold">
-          {{ .Title }}
-        </h1>
-      </header>
-      <header
-        class="print:hidden bg-no-repeat bg-[50%] bg-cover bg-fixed"
+      <header class="bg-no-repeat bg-[50%] bg-cover bg-fixed"
         {{ if .Param "customHero" -}}
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
         {{- else if $cover -}}

@@ -1,32 +1,28 @@
 {{ define "main" }}
-  <header class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
-    <div class="container mx-auto flex flex-col items-center">
-      <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
-        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill") }}
-        <span>{{ .Data.Plural | title }}</span>
-      </h1>
-      <p class="font-sans text-xl text-center mx-5 md:mx-0 lg:w-2/3 mb-10 text-neutral-800 dark:text-neutral-200">
-        {{ $count := .Data.Pages | len }}
-        There are {{ $count }} {{ if ne $count 1 }}{{ .Data.Plural }}{{ else }}{{ .Data.Singular }}{{ end }} in use across this site.
-      </p>
-    </div>
-  </header>
-  <main class="container mx-auto mt-6 lg:mt-12 my-20 content">
-    <div class="grid grid-cols-[max-content_1fr_max-content] gap-2">
-      <div class="font-bold text-neutral-800 dark:text-neutral-200 ml-4">{{ .Data.Plural | title }}</div>
-      <div class="font-bold text-neutral-800 dark:text-neutral-200 mr-4">Description</div>
-      <div class="font-bold text-right text-neutral-800 dark:text-neutral-200 mr-4">Count</div>
-      <div class="border-t border-neutral-800 dark:border-neutral-500 col-span-3"></div>
-      {{ range .Pages.ByTitle }}
-        {{ $tag := index .Site.Data.tags (.LinkTitle | lower) }}
-        <a href="{{ .Permalink }}" class="colored ml-4">
-          {{ with $tag }}{{ .name }}{{ else }}{{ .Title | upper }}{{ end }}
-        </a>
-        <div>{{ with $tag }}{{ with .description }}{{ . }}{{ end }}{{ end }}</div>
-        <div class="text-right mr-4">
-          {{ .Pages | len }}
-        </div>
-      {{ end }}
-    </div>
-  </main>
+<main class="grow flex flex-col gap-8 container mx-auto mt-4 lg:mt-8 mb-20 content">
+  <h1 class="text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
+    {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill") }}
+    <span>{{ .Data.Plural | title }}</span>
+  </h1>
+  <p class="text-xl text-center text-neutral-800 dark:text-neutral-200">
+    {{ $count := .Data.Pages | len }}
+    There are {{ $count }} {{ if ne $count 1 }}{{ .Data.Plural }}{{ else }}{{ .Data.Singular }}{{ end }} in use across this site.
+  </p>
+  <div class="grid grid-cols-1 md:grid-cols-[max-content_1fr] lg:grid-cols-[max-content_1fr_max-content] md:gap-2">
+    <div class="hidden md:block font-bold text-neutral-800 dark:text-neutral-200 ml-4">{{ .Data.Plural | title }}</div>
+    <div class="hidden md:block font-bold text-neutral-800 dark:text-neutral-200 mr-4">Description</div>
+    <div class="hidden lg:block font-bold text-right text-neutral-800 dark:text-neutral-200 mr-4">Count</div>
+    <div class="border-t border-neutral-800 dark:border-neutral-500 mb-4 md:mb-0 md:col-span-2 lg:col-span-3"></div>
+    {{ range .Pages.ByTitle }}
+      {{ $tag := index .Site.Data.tags (.LinkTitle | lower) }}
+      <a href="{{ .Permalink }}" class="colored md:ml-4">
+        {{ with $tag }}{{ .name }}{{ else }}{{ .Title | upper }}{{ end }}
+      </a>
+      <div class="mb-4 md:mb-0">{{ with $tag }}{{ with .description }}{{ . }}{{ end }}{{ end }}</div>
+      <div class="hidden lg:block text-right mr-4">
+        {{ .Pages | len }}
+      </div>
+    {{ end }}
+  </div>
+</main>
 {{ end }}

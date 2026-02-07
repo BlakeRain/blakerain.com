@@ -9,6 +9,39 @@ sitemap:
   disable: true
 ---
 
+# 2026-02-07
+
+- Updated some of the [tag](/tags) descriptions.
+- Fixed the [tags](/tags) page to be more responsive.
+- Tidied up the index page to use less elements.
+
+# 2026-02-05
+
+- Added various [IndieWeb](https://indieweb.org/) markdown to the site.
+- Fixed the overflow of tables pushing content out of viewport on mobile.
+- Removed the `bookmark` shortcode in favour of simpler links.
+- Refactored some of the partials to simplify the template code.
+
+# 2026-02-03
+
+- Removed references to Bluesky.
+- Restored the time at which a post was published (no longer just the date).
+- Tidied up and published the post about [summarisation](/blog/i-dont-like-automatic-summarisation).
+- Fixed the missing margin at the bottom of tables.
+
+# 2026-02-02
+
+- Added the latest notes to the homepage.
+- Fixed the leading of headings in blog and notes.
+
+# 2026-01-23
+
+- Fixed the color of `<strong>` in markdown in dark mode.
+- Fixed various spelling mistakes.
+- Changed the RSS feed link in the footer to the new combined feed.
+- Added a combined feed for both blog posts and nosts.
+- Fixed heading width in blog and notes.
+
 # 2026-01-08
 
 - Migrated to [Hugo v0.154.0](https://github.com/gohugoio/hugo/releases/tag/v0.154.0). This mostly
@@ -19,6 +52,7 @@ sitemap:
   in line with blog posts.
 - I updated the [OPML feed](/downloads/feeds.opml.xml) to include new feeds that I follow.
 - Added a post for the [Album of the Year 2025](/blog/album-of-the-year-2025).
+- Include full post content in the RSS feed.
 
 # 2025-12-28
 

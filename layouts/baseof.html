@@ -54,9 +54,7 @@
   </head>
   <body class="flex flex-col">
     {{ partial "navigation" (dict "page" .) }}
-    <div class="grow{{ if .IsHome }} flex flex-col justify-center{{ end }}">
-      {{ block "main" . }}{{ end }}
-    </div>
+    {{ block "main" . }}{{ end }}
     {{ partial "footer" . }}
   </body>
 </html>

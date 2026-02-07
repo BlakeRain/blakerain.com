@@ -1,3 +1,6 @@
+ai:
+  name: AI
+  description: Artificial Intelligence. A branch of computer science.
 awk:
   name: Awk
   description: A programming language that is often used for text processing and data extraction.
@@ -7,30 +10,39 @@ aws:
 bash:
   name: Bash
   description: A Unix shell.
+bunny:
+  name: Bunny
+  description: A European CDN.
 c:
   name: C
   description: A general-purpose programming language.
 cpp:
   name: C++
   description: A general-purpose programming language that is an extension of the C programming language.
+databases:
+  name: Databases
+  description: Topics related to any database, but mostly PostgreSQL and SQLite.
 docker:
   name: Docker
   description: A containerization platform.
 email:
   name: Email
-  description: A method of sending messages.
+  description: Still the best way to communicate with others.
 gc:
   name: GC
   description: Garbage Collection. A way of automatically reclaiming memory that is no longer in use.
 groff:
   name: Groff
-  description: A typesetting system.
+  description: The best UNIX typesetting system.
 gtk:
   name: GTK
   description: The GIMP Toolkit. A cross-platform toolkit for creating graphical user interfaces.
 linux:
   name: Linux
   description: A family of open-source Unix-like operating systems.
+llm:
+  name: LLM
+  description: Large Language Models. A type of artificial intelligence that can generate human-like text.
 macos:
   name: macOS
   description: Apple's macOS operating system.
@@ -58,6 +70,9 @@ pci:
 pdf:
   name: PDF
   description: Adobe's Portable Document Format.
+postgresql:
+  name: PostgreSQL
+  description: A relational database management system.
 protonmail:
   name: ProtonMail
   description: A secure email service.
@@ -72,7 +87,13 @@ roundcube:
   description: A webmail interface.
 rust:
   name: Rust
-  description: A systems programming language.
+  description: A systems programming language. C++ by Haskell programmers (￢‿￢ )
+serverless:
+  name: Serverless
+  description: A cloud computing model in which the cloud provider manages the infrastructure.
+sqlite:
+  name: SQLite
+  description: A self-contained, serverless, zero-configuration, transactional SQL database engine.
 unbound:
   name: Unbound
   description: A validating, recursive, caching DNS resolver.

@@ -1,14 +1,8 @@
 {{ define "main" }}
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
-  <main>
+  <main class="grow">
     <article class="h-entry">
-      <header class="hidden print:block container print:max-w-full mx-auto">
-        <h1 class="text-3xl font-bold">
-          {{ .Title }}
-        </h1>
-      </header>
-      <header
-        class="print:hidden bg-[50%] bg-no-repeat bg-cover bg-fixed">
+      <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed">
         <div class="container mx-auto content flex flex-col">
           <h1 class="mx-2 md:mx-0 mb-10 lg:w-[45rem] self-center text-5xl text-center font-bold leading-normal mt-10 text-neutral-800 dark:text-neutral-200">
             <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">

@@ -43,8 +43,8 @@ ul {
 }
 
 pre {
-  @apply w-full rounded-md p-4 overflow-x-auto;
-  @apply print:border-neutral-800 print:p-2 mb-6;
+  @apply w-full rounded-md p-4 overflow-x-auto mb-6;
+  @apply print:border-neutral-800 print:p-2;
 
   @apply text-[#4c4f69] dark:text-[#cdd6f4];
   @apply bg-[#fcfcfc] dark:bg-[#1e1e2e];

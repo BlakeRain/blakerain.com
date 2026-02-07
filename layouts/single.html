@@ -1,13 +1,8 @@
 {{ define "main" }}
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
-  <main>
+  <main class="grow">
     <article>
-      <header class="hidden print:block container print:max-w-full mx-auto">
-        <h1 class="text-3xl font-bold">
-          {{ .Title }}
-        </h1>
-      </header>
-      <header class="print:hidden">
+      <header>
         <div class="container mx-auto flex flex-col items-center">
           <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold
                     {{- if .Params.icon }} flex flex-row justify-center items-center gap-2{{ else }} text-center{{ end }}">
@@ -23,7 +18,7 @@
           {{ end }}
         </div>
       </header>
-      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full markdown">
+      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 markdown">
         {{ .Content }}
       </div>
     </article>

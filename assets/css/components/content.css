@@ -1,5 +1,6 @@
 @layer components {
   .content {
-    @apply 2xl:max-w-7xl px-2 sm:px-0 xl:px-16 print:px-0 print:max-w-full;
+    @apply 2xl:max-w-7xl px-2 sm:px-0 xl:px-16;
+    @apply print:px-0 print:max-w-full;
   }
 }
