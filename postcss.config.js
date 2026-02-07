@@ -1,9 +1,8 @@
-const tailwind = require("tailwindcss")("./tailwind.config.js");
-const autoprefixer = require("autoprefixer");
-
 module.exports = {
-  plugins: [
-    tailwind,
-    ...(process.env.HUGO_ENVIRONMENT === "production" ? [autoprefixer] : []),
-  ],
+  plugins: {
+    "postcss-import": {},
+    "@tailwindcss/postcss": {},
+    autoprefixer: {},
+    ...(process.env.NODE_ENV === "production" ? { cssnano: { preset: "default" } } : {}),
+  },
 };

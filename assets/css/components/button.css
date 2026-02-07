@@ -17,7 +17,7 @@
       @apply hover:bg-primary dark:hover:bg-primary-light;
     }
 
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50 focus:ring-primary;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
     @apply transition;
 
     &.button-outline {

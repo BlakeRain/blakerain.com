@@ -1,4 +1,4 @@
-@import "tailwind.css";
+@import "tailwindcss";
 
 @import "components/button.css";
 @import "components/content.css";
@@ -8,6 +8,19 @@
 @import "components/tooltip.css";
 
 @import "syntax.css";
+
+@source "../content/**/*.md";
+@source "../content/**/*.js";
+@source "../static/**/*.js";
+@source "../layouts/**/*.html";
+@source "../hugo_stats.json";
+@source "../extra_stats.json";
+
+@theme {
+  --color-primary: #13304e;
+  --color-primary-dark: #22293d;
+  --color-primary-light: #1c4773;
+}
 
 :root {
   --toggle-size: 2rem;
@@ -20,7 +33,12 @@
     @apply dark:bg-zinc-900 dark:text-neutral-200;
     @apply min-h-screen;
 
-    @apply bg-cartographer-light bg-repeat dark:bg-cartographer-dark;
+    @apply bg-repeat;
+    background-image: url("/media/cartographer-light.webp");
+
+    @media (prefers-color-scheme: dark) {
+      background-image: url("/media/cartographer-dark.webp");
+    }
   }
 
   a {
