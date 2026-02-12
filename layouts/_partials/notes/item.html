@@ -1,16 +1,16 @@
 <article class="{{ if not .first }}pt-8 border-t border-t-neutral-300 dark:border-t-neutral-700{{ end }}">
   {{ with .note }}
     <header class="flex flex-col mb-4">
-      <div class="flex flex-row items-center gap-1">
+      <h1 class="flex flex-row items-center gap-1 text-xl">
         {{ if isset .Params "link"}}
           {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
-          <a class="colored text-lg font-semibold" href="{{ .Param "link" }}" target="_blank" rel="noopener noreferrer">
+          <a class="colored font-semibold" href="{{ .Param "link" }}" target="_blank" rel="noopener noreferrer">
             {{ .Title }}
           </a>
         {{ else }}
           <span class="text-lg font-semibold">{{ .Title }}</span>
         {{ end }}
-      </div>
+      </h1>
       <div class="flex flex-col uppercase mt-2">
         <div class="flex flex-row gap-1 text-sm">
           <div class="text-neutral-700 dark:text-neutral-300">
