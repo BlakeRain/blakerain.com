@@ -28,7 +28,7 @@
   }
 
   &.tip, &.todo {
-    @apply bg-teal-100 print:bg-transparent print:border-teal-900 dark:bg-teal-900;
+    @apply bg-teal-100 print:bg-transparent print:border-teal-900 dark:bg-teal-900/50;
 
     .callout-label {
       @apply text-teal-600 dark:text-teal-300;
@@ -36,7 +36,7 @@
   }
 
   &.success {
-    @apply bg-green-100 print:bg-transparent print:border-green-900 dark:bg-green-900;
+    @apply bg-green-100 print:bg-transparent print:border-green-900 dark:bg-green-900/50;
 
     .callout-label {
       @apply text-green-600 dark:text-green-400;
