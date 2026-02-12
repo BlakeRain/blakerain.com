@@ -33,11 +33,33 @@ the second and third seasons of Trollhunters, were never published to DVD or Blu
 [World of Books]: https://www.worldofbooks.com
 [Trollhunters: Tales of Arcadia]: https://en.wikipedia.org/wiki/Trollhunters:_Tales_of_Arcadia
 
+# Replacement for Discord
+
+Since Discord have decided that they're going to require age verification [for all users], even
+though it [leaked a lot of them]. As I can't bring myself to hand this information over to Discord,
+I'm going to be stuck with a [Teen by Default] account.
+
+So I've now been going through some options to find a replacement for Discord for my small group of
+friends. I've been working on a deployment of [Rocket.Chat]. It seems that Rocket.Chat relies on
+[Jitsi] for the WebRTC video conferencing component.
+
+[for all users]: https://www.bbc.co.uk/news/articles/c1d67vdlk1ko
+[leaked a lot of them]: https://www.theregister.com/2025/10/09/discord_photo_ids_leaked/
+[Teen by Default]: https://discord.com/press-releases/discord-launches-teen-by-default-settings-globally
+[Rocket.Chat]: https://www.rocket.chat/
+[Jitsi]: https://jitsi.github.io/handbook/docs/architecture/
+
 # Reading
+
+Todo:
+
+- [Have I hardened against LLMs?] by Baldur Bjarnason.
+- [Turing Post interview with Nathan Lambert].
+- [The Future was Federated]
 
 There's been a few things I've read this week that you might find interesting.
 
-- [Have I hardened against LLMs?] by Baldur Bjarnason.
+
 - [My experience with vibe coding] by Gabriella Gonzalez (who brought us cool stuff like [Dhall] and
   the [pipes] library). Gabriella's findings are much the same as many of us, but it's excellent to
   have such details available.
@@ -71,6 +93,8 @@ There's been a few things I've read this week that you might find interesting.
     of inequity.
   - There are likely yet more risks that we have yet to recognise.
 
+[Turing Post interview with Nathan Lambert]: https://www.turingpost.com/p/nathanlambert
+[The Futre was Federated]: https://news.dyne.org/the-future-was-federated/
 [My experience with vibe coding]: https://haskellforall.com/2026/02/my-experience-with-vibe-coding
 [Dhall]: https://dhall-lang.org
 [pipes]: https://hackage.haskell.org/package/pipes
