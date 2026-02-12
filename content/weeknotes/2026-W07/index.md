@@ -44,7 +44,7 @@ I've been chasing new albums again, and found a few more of interest!
 - [Home] by Vesseles
 - [Heritage] by Structure
 - [Elevation] by Enshine
-- [The Regeneration Itinerary] by ...And Oceans
+- [The Regeneration Itinerary] by ...And Oceans. Such a fun album. I really liked [The Terminal Filter].
 - The [Cairn OST] by Marting Stig Andersen, Gildaa, and The Toxic Avenger. This is the OST for the
   awesome game [Cairn] from the Game Bakers. I've just started playing Cairn, and I'm utterly
   terrible at it. The soundtack is really quite lovely.
@@ -54,6 +54,7 @@ I've been chasing new albums again, and found a few more of interest!
 [Heritage]: https://structure-doom.bandcamp.com/album/heritage
 [Elevation]: https://enshine.bandcamp.com/album/elevation
 [The Regeneration Itinerary]: https://andoceans.bandcamp.com/album/the-regeneration-itinerary
+[The Terminal Filter]: https://andoceans.bandcamp.com/track/the-terminal-filter
 [Cairn OST]: https://cairn-game.bandcamp.com/album/cairn-original-soundtrack
 [Cairn]: https://www.thegamebakers.com/cairn/
 
@@ -75,10 +76,10 @@ deployment of [Rocket.Chat]. It seems that Rocket.Chat relies on [Jitsi] for the
 conferencing component. Apparently they [require registration] to use their service, even if you're
 self-hosting. I'll have to see what this means for me.
 
-If you're looking for an alternative to Discord, there's a useful [list of alternatives] ranked by
-functionality, security, openness, safety, and decentralisation.
-
-It seems that somebody has already [made a script] to circumvent the age verification.
+- If you're looking for an alternative to Discord, there's a useful [list of alternatives] ranked by
+  functionality, security, openness, safety, and decentralisation.
+- It seems that somebody has already [made a script] to circumvent the age verification.
+- Soatok has a good article on how [age verification doesn't need to be a privacy footgun].
 
 [for all users]: https://www.bbc.co.uk/news/articles/c1d67vdlk1ko
 [complained about this]: /notes/2026-02-12
@@ -88,11 +89,14 @@ It seems that somebody has already [made a script] to circumvent the age verific
 [require registration]: https://docs.rocket.chat/v1/docs/register-your-workspace
 [list of alternatives]: https://taggart-tech.com/discord-alternatives/
 [made a script]: https://age-verifier.kibty.town/
+[age verification doesn't need to be a privacy footgun]: https://soatok.blog/2025/07/31/age-verification-doesnt-need-to-be-a-privacy-footgun/
 
 # 📚 Reading
 
 There's been a few things I've read this week.
 
+- [The Most Dejected I've Ever Felt]: Harassers Made Nude AI Images of Her, Then Started an
+  OnlyFans.
 - [Have I hardened against LLMs?] by Baldur Bjarnason.
 - [Turing Post interview with Nathan Lambert].
 - [The Future was Federated]
@@ -116,6 +120,7 @@ There's been a few things I've read this week.
     still remains unmitigated. Moreover, I remain convinced that such biases are far too entrenched
     and insidious to be so easily mitigated.
 
+[The Most Dejected I've Ever Felt]: https://www.404media.co/grok-nudify-ai-images-impersonation-onlyfans/
 [Have I hardened against LLMs?]: https://www.baldurbjarnason.com/2026/have-i-hardened-against-ai/
 [Turing Post interview with Nathan Lambert]: https://www.turingpost.com/p/nathanlambert
 [The Future was Federated]: https://news.dyne.org/the-future-was-federated/
