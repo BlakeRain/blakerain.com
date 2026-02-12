@@ -110,11 +110,22 @@ details[open] {
 blockquote {
   @apply w-full mb-6 border-l-4 border-l-blue-400 px-8;
 
-  p {
+  p, ul, ol {
     @apply italic text-neutral-600 dark:text-neutral-400;
 
     &:last-child {
       @apply mb-0;
     }
+  }
+}
+
+mark {
+  @apply rounded-sm;
+  @apply text-black;
+
+  background-color: rgba(255, 255, 0, 0.8);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba(255, 255, 0, 0.8);
   }
 }
