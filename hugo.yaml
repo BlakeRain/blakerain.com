@@ -10,7 +10,6 @@ params:
 mainSections:
   - blog
   - notes
-  - weeknotes
 
 menus:
   footer_right:
