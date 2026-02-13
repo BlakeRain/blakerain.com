@@ -1,6 +1,6 @@
 .callout {
   @apply rounded-md p-4 text-base mb-6;
-  @apply print:border-2 print:p-2;
+  @apply border dark:border-0 print:border-2 print:p-2;
 
   > p {
     @apply m-0;
@@ -16,10 +16,10 @@
   }
 
   &.note, &.info {
-    @apply bg-blue-200 print:bg-transparent print:border-blue-200 dark:bg-blue-950;
+    @apply bg-blue-200 print:bg-transparent border-blue-400 print:border-blue-200 dark:bg-blue-950;
 
     .callout-label {
-      @apply text-blue-600 dark:text-blue-500;
+      @apply text-blue-600 dark:text-blue-400;
     }
 
     > .body {
@@ -28,7 +28,7 @@
   }
 
   &.tip, &.todo {
-    @apply bg-teal-100 print:bg-transparent print:border-teal-900 dark:bg-teal-900/50;
+    @apply bg-teal-100 print:bg-transparent border-teal-600 print:border-teal-900 dark:bg-teal-900/50;
 
     .callout-label {
       @apply text-teal-600 dark:text-teal-300;
@@ -36,7 +36,7 @@
   }
 
   &.success {
-    @apply bg-green-100 print:bg-transparent print:border-green-900 dark:bg-green-900/50;
+    @apply bg-green-100 print:bg-transparent border-green-600 print:border-green-900 dark:bg-green-900/50;
 
     .callout-label {
       @apply text-green-600 dark:text-green-400;
@@ -44,15 +44,15 @@
   }
 
   &.question {
-    @apply bg-amber-200/10 print:bg-transparent print:border-amber-500;
+    @apply bg-amber-200/10 print:bg-transparent border-amber-600 print:border-amber-500;
 
     .callout-label {
-      @apply text-amber-500 dark:text-amber-200;
+      @apply text-amber-600 dark:text-amber-200;
     }
   }
 
   &.warning {
-    @apply bg-orange-500/10 print:bg-transparent print:border-orange-500;
+    @apply bg-orange-500/10 print:bg-transparent border-orange-500 print:border-orange-500;
 
     .callout-label {
       @apply text-orange-600;
@@ -60,18 +60,18 @@
   }
 
   &.danger {
-    @apply bg-red-500/25 print:bg-transparent print:border-red-500;
+    @apply bg-red-500/25 print:bg-transparent border-red-600 print:border-red-500;
 
     .callout-label {
-      @apply text-red-500;
+      @apply text-red-600 dark:text-red-400;
     }
   }
 
   &.example {
-    @apply bg-violet-900/25 print:bg-transparent print:border-violet-900;
+    @apply bg-violet-900/25 print:bg-transparent border-violet-600 print:border-violet-900;
 
     .callout-label {
-      @apply text-violet-600 dark:text-violet-400;
+      @apply text-violet-700 dark:text-violet-400;
     }
   }
 } /* .callout */
