@@ -5,7 +5,8 @@
       <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed">
         <div class="container mx-auto content flex flex-col">
           <h1 class="mx-2 md:mx-0 mb-10 lg:w-[45rem] self-center text-5xl text-center font-bold leading-normal mt-10 text-neutral-800 dark:text-neutral-200">
-            <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
+            {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+            <a class="colored decoration-2 underline-offset-4" href="{{ .Param "link" }}" class="u-url p-name" rel="noopener noreferrer">
               {{ .Title }}
             </a>
           </h1>
