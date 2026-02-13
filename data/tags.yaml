@@ -22,6 +22,9 @@ cpp:
 databases:
   name: Databases
   description: Topics related to any database, but mostly PostgreSQL and SQLite.
+discord:
+  name: Discord
+  description: A chat and voice chat application.
 docker:
   name: Docker
   description: A containerization platform.
@@ -76,6 +79,9 @@ pdf:
 postgresql:
   name: PostgreSQL
   description: A relational database management system.
+privacy:
+  name: Privacy
+  description: Topics related to privacy.
 protonmail:
   name: ProtonMail
   description: A secure email service.
