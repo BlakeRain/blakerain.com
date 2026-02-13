@@ -46,15 +46,19 @@
       </div>
     </article>
     {{ with (where (.Site.RegularPages.Related .) "Section" "blog" | first 5) }}
-      <div class="container mx-auto content flex flex-col gap-8 pt-8 mb-10 border-t border-t-neutral-300 dark:border-t-neutral-700">
+      <div class="container mx-auto content flex flex-col gap-8 pt-8 mb-10 border-t border-t-neutral-500 dark:border-t-neutral-700">
         <div>
           <h1 class="text-4xl font-bold">Related Posts</h1>
           <p class="text-neutral-500 dark:text-neutral-400">
             These are other posts that are related to this one.
           </p>
         </div>
-        {{ range . }}
-          {{ partial "blog/item" (dict "border" false "post" .) }}
+        {{ range first 1 . }}
+          {{ partial "blog/item" . }}
+        {{ end }}
+        {{ range after 1 . }}
+          <div class="h-0 border-t border-dashed border-neutral-500"></div>
+          {{ partial "blog/item" . }}
         {{ end }}
     {{ end }}
   </main>

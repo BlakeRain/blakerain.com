@@ -8,8 +8,12 @@
       <span class="text-blue-700 dark:text-blue-400">{{ with $tag }}{{ .name }}{{ else }}{{ .Data.Term | humanize | title }}{{ end }}</span>
     </h1>
   </header>
-  {{ range .Data.Pages }}
-    {{ partial "blog/item" (dict "border" true "post" .) }}
+  {{ range first 1 .Data.Pages }}
+    {{ partial "blog/item" . }}
+  {{ end }}
+  {{ range after 1 .Data.Pages }}
+    <div class="h-0 border-t border-dashed border-neutral-500"></div>
+    {{ partial "blog/item" . }}
   {{ end }}
 </main>
 {{ end }}

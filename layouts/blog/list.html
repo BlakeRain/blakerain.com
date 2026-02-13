@@ -6,10 +6,11 @@
   <div class="flex flex-col gap-8 mt-12 mb-10 p-4 lg:p-0">
     {{ $pager := .Paginate .Pages 10 }}
     {{ range first 1 $pager.Pages }}
-      {{ partial "blog/item" (dict "border" false "post" .) }}
+      {{ partial "blog/item" . }}
     {{ end }}
     {{ range after 1 $pager.Pages }}
-      {{ partial "blog/item" (dict "border" true "post" .) }}
+      <div class="h-0 border-t border-dashed border-neutral-500"></div>
+      {{ partial "blog/item" . }}
     {{ end }}
     {{ partial "pager" $pager }}
   </div>
