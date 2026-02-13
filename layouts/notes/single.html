@@ -10,8 +10,8 @@
               {{ .Title }}
             </a>
           </h1>
-          <div class="flex flex-col md:flex-row items-center md:justify-between uppercase text-sm">
-            <div class="flex flex-row gap-1">
+          <div class="flex flex-col md:flex-row items-start md:justify-between uppercase text-sm">
+            <div class="flex flex-row flex-wrap gap-x-1">
               <div class="text-neutral-700 dark:text-neutral-300 dt-published">
                 {{ .Param "date" | time.Format "2 Jan 2006" }}
               </div>
@@ -20,6 +20,10 @@
               <div class="text-gray-500">&#8226;</div>
               <a href="{{ .Permalink }}" title="Link directly to this note" class="colored">
                 Self link
+              </a>
+              <div class="basis-full"></div>
+              <a href="{{ .Param "link" }}" title="{{ .Title }}" class="colored normal-case">
+                {{ .Param "link" }}
               </a>
             </div>
             {{ with .Param "tags" }}
