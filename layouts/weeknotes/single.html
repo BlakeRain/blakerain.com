@@ -1,14 +1,35 @@
 {{ define "main" }}
+  {{ $cover := .Resources.GetMatch "cover.jpg" }}
   <main class="grow">
     <article class="h-entry">
-      <header class="bg-no-repeat bg-[50%] bg-cover bg-fixed">
+      <header class="bg-no-repeat bg-[50%] bg-cover bg-fixed"
+        {{ if .Param "customHero" -}}
+          style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
+        {{- else if $cover -}}
+          {{- $image := $cover.Process "q75 webp" -}}
+          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
+        {{- end -}}>
         <div class="container content mx-auto flex flex-col items-center">
-          <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-5xl text-center font-bold leading-normal my-10 text-neutral-800 dark:text-neutral-200">
+          <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-5xl text-center font-bold leading-normal
+                    {{ if $cover }}my-20 text-white{{ else }}my-10 text-neutral-800 dark:text-neutral-200{{ end }}">
             <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
               {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
               {{ index $parts 0 }} - Week {{ index $parts 1 }}
             </a>
           </h1>
+          {{- with .Param "coverImage" -}}
+            <div class="w-full uppercase text-sm text-white pb-2">
+              {{- if .url -}}
+                <a href="{{ .url }}" class="opacity-50 hover:opacity-100">
+                  Cover photo by {{ .author }}
+                </a>
+              {{- else -}}
+                <span class="opacity-50 hover:opacity-100">
+                  Cover photo by {{ .author }}
+                </span>
+              {{- end -}}
+            </div>
+          {{- end -}}
         </div>
       </header>
       <div class="container mx-auto content mt-8 flex flex-col md:flex-row items-start md:justify-between uppercase text-sm">
