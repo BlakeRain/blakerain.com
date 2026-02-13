@@ -4,15 +4,16 @@
     Notes
   </h1>
   <h2 class="text-xl text-center mt-8 text-neutral-500 dark:text-neutral-400">
-    A collection of links to things I've found on the Internet that might be of some use.
+    {{ .Description }}
   </h2>
   <div class="flex flex-col gap-8 mt-12 mb-10 p-4 lg:p-0">
     {{ $pager := .Paginate .Pages 10 }}
     {{ range first 1 $pager.Pages }}
-      {{ partial "notes/item.html" (dict "first" true "note" .) }}
+      {{ partial "notes/item.html" . }}
     {{ end }}
     {{ range after 1 $pager.Pages }}
-      {{ partial "notes/item.html" (dict "first" false "note" .) }}
+      <div class="h-0 border-t border-dashed border-neutral-500"></div>
+      {{ partial "notes/item.html" . }}
     {{ end }}
     {{ partial "pager" $pager }}
   </div>

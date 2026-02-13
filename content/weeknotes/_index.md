@@ -1,5 +1,5 @@
 ---
-description: "Weekly notes"
+description: "Bringing together various bits and pieces from my week."
 build:
   render: always
 cascade:

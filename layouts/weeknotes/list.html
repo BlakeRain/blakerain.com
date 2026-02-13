@@ -4,7 +4,7 @@
     Weeknotes
   </h1>
   <h2 class="text-xl text-center mt-8 text-neutral-500 dark:text-neutral-400">
-    Weekly notes
+    {{ .Description }}
   </h2>
   <div class="flex flex-col gap-8 mt-12 mb-10 p-4 lg:p-0">
     {{ $pager := .Paginate .Pages 10 }}
