@@ -1,6 +1,9 @@
 ---
 date: 2026-02-15T16:55:00
 summary: New music and films, Discord disappointment, and LibreChat.
+coverImage:
+  author: Ronalds
+  urL: https://www.pexels.com/photo/trees-on-snow-covered-ground-6553833/
 ---
 
 > [!success] This is the first weeknote
