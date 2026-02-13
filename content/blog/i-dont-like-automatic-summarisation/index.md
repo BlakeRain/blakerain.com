@@ -6,6 +6,9 @@ tags:
   - LLM
 params:
   numberedHeadings: false
+  coverImage:
+    author: Kate Holovacheva
+    url: https://www.pexels.com/photo/close-up-of-plant-leaves-covered-in-hoarfrost-15684738/
 ---
 
 I don't like automatic summarisation any more. Especially in the context of technical publications.

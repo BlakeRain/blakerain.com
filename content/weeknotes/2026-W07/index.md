@@ -6,7 +6,7 @@ summary: New music and films, Discord disappointment, and LibreChat.
 > [!success] This is the first weeknote
 >
 > I have come to really enjoy the weeknotes from people like [Robb Knight], [Stephen Gower], [Joel],
-> and [Noisy Deadlines]. Last year I wasbeen thinking about starting my own weeknotes, and I decided
+> and [Noisy Deadlines]. Last year I was thinking about starting my own weeknotes, and I decided
 > to start them in 2026. After one thing or another, I've finally managed to get going. Only took up
 > to week 7 🙄
 

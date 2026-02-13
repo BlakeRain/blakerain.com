@@ -6,6 +6,9 @@ tags:
 date: 2022-02-07T20:04:44
 summary: |
   My experience changing the AWS Lambda functions for this website from Python to Rust.
+coverImage:
+  author: Jay Heike
+  url: https://unsplash.com/@jayrheike
 ---
 
 Since I've started using Rust quite a bit more at work and in some personal projects, I've been
@@ -188,4 +191,3 @@ Rust Lambda functions found in the
 [named-value]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html
 [attributevalue]: https://docs.rs/aws-sdk-dynamodb/0.6.0/aws_sdk_dynamodb/model/enum.AttributeValue.html
 
-> Cover image courtesy of Jay Heike ([@jayrheike](https://unsplash.com/@jayrheike) on unsplash).

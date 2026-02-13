@@ -5,6 +5,9 @@ tags:
   - music
 params:
   numberedHeadings: false
+coverImage:
+  author: Orbit Culture
+  url: https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio
 ---
 
 As 2025 has come to a close, I wanted to write a bit about some of my favourite albums of the year.

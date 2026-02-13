@@ -8,6 +8,9 @@ date: 2023-08-30T18:50:17
 summary: |
   In this post I go over how I rewrote this website in Rust using the Yew framework with SSG and
   hydration. I cover a number of the issues that I encountered and how I addressed them.
+coverImage:
+  author: Tommes Frites
+  url: https://www.pexels.com/photo/tranquil-stream-through-mossy-rocks-in-lofer-32132166/
 ---
 
 For some time now, I've been hoping to update this website to move away from using [Next.js] with

@@ -16,6 +16,19 @@
               {{ .Title }}
             </a>
           </h1>
+          {{- with .Param "coverImage" -}}
+            <div class="w-full uppercase text-sm text-white pb-2">
+              {{- if .url -}}
+                <a href="{{ .url }}" class="opacity-50 hover:opacity-100">
+                  Cover photo by {{ .author }}
+                </a>
+              {{- else -}}
+                <span class="opacity-50 hover:opacity-100">
+                  Cover photo by {{ .author }}
+                </span>
+              {{- end -}}
+            </div>
+          {{- end -}}
         </div>
       </header>
       <div class="container mx-auto content mt-8 flex flex-col md:flex-row items-start md:justify-between uppercase text-sm">

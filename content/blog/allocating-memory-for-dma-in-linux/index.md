@@ -8,6 +8,9 @@ date: 2020-12-11T18:30:00
 summary: |
   In this post we take a look at allocating memory on Linux using huge pages with the intention of
   sharing that memory with PCIe devices that use DMA.
+coverImage:
+  author: Harrison Broadbent
+  url: https://unsplash.com/@harrisonbroadbent
 ---
 
 I've recently had the pleasure of writing some user-space code that takes control of an Ethernet card – specifically the [Intel i350](https://ark.intel.com/content/www/us/en/ark/products/59062/intel-ethernet-server-adapter-i350-t2.html) and it's kin. Part of the interface with the device requires sharing memory that contains packet descriptors and buffers. The device uses this memory for the communication of transmitted and received Ethernet packets.
@@ -641,5 +644,3 @@ Preparing memory for use with DMA may seem a bit more complex than necessary. As
 I hope that this post may be of some use to those of you that need to communicate memory with devices connected to the PCI bus. You can find the complete listing as a GitHub gist:
 
 <script src="https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595.js"></script>
-
-> Cover image courtesy of Harrison Broadbent ([@harrisonbroadbent](https://unsplash.com/@harrisonbroadbent?utm_source=ghost&utm_medium=referral&utm_campaign=api-credit) on unsplash)
