@@ -31,6 +31,9 @@ email:
 gc:
   name: GC
   description: Garbage Collection. A way of automatically reclaiming memory that is no longer in use.
+google:
+  name: Google
+  description: A search engine and cloud computing platform.
 groff:
   name: Groff
   description: The best UNIX typesetting system.
