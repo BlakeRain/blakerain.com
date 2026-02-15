@@ -25,7 +25,7 @@ and "big tech" in general. One way I've been doing this is by replacing my strea
 films and TV shows with physical media. This has mostly involved a monthly scan through a checklist
 in [Obsidian] of all the films and TV shows that I want to acquire, and then looking for deals on
 eBay and [World of Books]. So far I've managed to find some good deals, some going as low as £2 for
-a Blu-ray. Buying blu-rays new, with some of them costing nearly £20, is still too expensive. So
+a Blu-ray. Buying Blu-rays new, with some of them costing nearly £20, is still too expensive. So
 I'll be scraping the second-hand market for the foreseeable future.
 
 {{< figure src="discs-on-the-table.jpg" width=800 title="Some Blu-rays and DVDs on my kitchen table" >}}
@@ -33,7 +33,8 @@ I'll be scraping the second-hand market for the foreseeable future.
 Whilst replacing the films has gone quite well so far, some of the TV shows are proving much harder
 or more expensive to replace. For example, the [Trollhunters: Tales of Arcadia] DVD seen above was
 somewhat more expensive than the others. Even more frustrating is that some of the TV shows, like
-the second and third seasons of Trollhunters, were never published to DVD or Blu-ray 😡
+the second and third seasons of Trollhunters, were never published to DVD or Blu-ray 😡. The
+streaming era is leaving some strange gaps.
 
 [Obsidian]: https://obsidian.md
 [World of Books]: https://www.worldofbooks.com
@@ -43,14 +44,14 @@ the second and third seasons of Trollhunters, were never published to DVD or Blu
 
 I've been chasing new albums again, and found a few more of interest!
 
+- [The Regeneration Itinerary] by ...And Oceans. Such a fun album. I really liked [The Terminal Filter].
+- The [Cairn OST] by Martin Stig Andersen, Gildaa, and The Toxic Avenger. This is the OST for the
+  awesome game [Cairn] from the Game Bakers. I've just started playing Cairn, and I'm utterly
+  terrible at it. The soundtrack is really quite lovely.
 - [The Outsider] by Old Sorcery
 - [Home] by Vesseles
 - [Heritage] by Structure
 - [Elevation] by Enshine
-- [The Regeneration Itinerary] by ...And Oceans. Such a fun album. I really liked [The Terminal Filter].
-- The [Cairn OST] by Marting Stig Andersen, Gildaa, and The Toxic Avenger. This is the OST for the
-  awesome game [Cairn] from the Game Bakers. I've just started playing Cairn, and I'm utterly
-  terrible at it. The soundtack is really quite lovely.
 
 [The Outsider]: https://oldsorcery.bandcamp.com/album/the-outsider
 [Home]: https://vesseles.bandcamp.com/album/home
@@ -65,7 +66,7 @@ I've been chasing new albums again, and found a few more of interest!
 
 Discord have decided that they're going to require age verification [for all users]. They now claim
 that they're not going to be collecting any sensitive information from users. I [complained about
-this] earlier in the week, and I just can't bring myself to hand over identity to Discord. This
+this] earlier in the week, and I just can't bring myself to hand over my ID to Discord. This
 means I'm going to be stuck with a [Teen by Default] account. It's not even clear what this means
 specifically: am I going to be removed from some of the servers that I've joined?
 
@@ -96,16 +97,42 @@ self-hosting. I'll have to see what this means for me.
 
 # 📚 Reading
 
-There's been a few things I've read this week.
+There's been a few things I've read this week, and some of them might be of interest to you. I've
+shared some of my thoughts on them too.
 
-- [The Most Dejected I've Ever Felt]: Harassers Made Nude AI Images of Her, Then Started an
-  OnlyFans.
-- [Have I hardened against LLMs?] by Baldur Bjarnason.
-- [Turing Post interview with Nathan Lambert].
-- [The Future was Federated]
-- [Have I hardened against LLMs?] by Baldur Bjarnason.
-- [My experience with vibe coding] by Gabriella Gonzalez. The same Gabriella who brought us cool
-  stuff like [Dhall] and the [pipes] library.
+- [The Most Dejected I've Ever Felt]: **Harassers Made Nude AI Images of Her, Then Started an
+  OnlyFans.** (2026-02-11)
+  - It is beyond awful that this is happening, and no action is being taken.
+  - I cannot believe that we would produce a tool that could be used for such harm, make no effort
+    to avoid that harm, and then promote the tool as aggressively as possible.
+  - Kylie Brewer, the subject of the article, said: "_It feels like any remote sense of privacy and
+    protection that you could have as a woman is completely gone and that no one cares_". And she's
+    absolutely right. Why does it feel like there are no meaningful consequences for the platforms
+    enabling this?
+- [Have I hardened against LLMs?] by Baldur Bjarnason (2026-02-09).
+  - I think Baldur has a lot of good objections to the proliferation of LLMs and other AI
+    technologies, and the apparent attitude of the industry towards the harms that are inherent in
+    this technology.
+  - Many of his objections are quite valid and well defined. For example, concerns about
+    hallucinations in Whisper models are detailed in [Investigation of Whisper ASR Hallucinations
+    Induced by Non-Speech Audio](https://arxiv.org/abs/2501.11378v1).
+  - Baldur's book, [The Intelligence Illusion], is a valuable read that expands on many of the
+    objections he raises in his blog posts. Even if you don't agree with all of Baldur's arguments,
+    I still think his work must be taken seriously.
+- [Turing Post interview with Nathan Lambert] (2026-02-07) is a good read. It's interesting to hear
+  what Lambert has to say on the matter of [open weight models].
+  - Lambert thinks that academia will need to rely more on open-source models, and that the US needs
+    to focus investment on open-source models, in response to China's much greater ecosystem.
+  - He points out that closed-source frontier models like Opus 4.5 and GPT-5.2 are superior to open
+    source models, which lag behind the frontier by six to nine months. I'm sure we can all agree
+    with this, but I think we should also bear in mind how significant it is that these open-source
+    models are even coming close.
+  - Lambert talks about how pre-training of open-source models has pretty robust infrastructure, but
+    that the legal situation is still complex and fraught with risk. On the other hand,
+    post-training for open-source models still has a lot of catching up to do, citing the scarcity
+    of available datasets as a major obstacle.
+- [My experience with vibe coding] by Gabriella Gonzalez (2026-02-02). The same Gabriella who
+  brought us cool stuff like [Dhall] and the [pipes] library.
   - Gabriella's findings are much the same as many of us: vibe-coding is not worthless, but needs a
     lot of improvement.
   - She includes the entire transcript of the session, which is very helpful.
@@ -114,19 +141,25 @@ There's been a few things I've read this week.
   of anxiety and depression compared to those who never used HRT. They went on to state that this is
   suggestive of pre-existing mental health problems.
   - This reminded me of a previous article on [HRT links to depression] (_2022-11-11_), that helped
-    mitigate some of the misinformation that was spreading about HRT at the time. Again.
+    mitigate some of the misinformation that was spreading about HRT at the time.
 - I finally got around to reading [2601.15645]: _Towards Reliable Medical LLMs: Benchmarking and
   Enhancing Confidence Estimation of large language Models in Medical Consultation_.
-  - I'm still not convinced that we've yet addressed all the risks associated with the use of LLMs
-    in a clinical or clinically-adjacent setting. Putting aside the oft discussed risks of
-    hallucinations, I think the significant risk of LLMs perpetuating and amplifying social biases
-    still remains unmitigated. Moreover, I remain convinced that such biases are far too entrenched
-    and insidious to be so easily mitigated.
+  - The process used by the authors seems to me to be similar to [LLM-as-a-judge]. My concern here
+    is that models will often exhibit various biases in their judgements, such as preferring answers
+    based on their order, or preferring more verbose answers. Models exhibit bias towards answers by
+    models that have a similar architecture to themselves or are from the same family of models --
+    the wonderfully named [narcissistic evaluators] ([or are they]?).
+  - I’m still not convinced we’ve addressed the risks of using LLMs in clinical or even
+    clinically-adjacent settings. Putting aside the oft discussed risks of hallucinations, I think
+    the significant risk of LLMs perpetuating and amplifying social biases still remains
+    unmitigated. Moreover, I remain convinced that such biases are far too entrenched and insidious
+    to be mitigated without some significant change.
 
 [The Most Dejected I've Ever Felt]: https://www.404media.co/grok-nudify-ai-images-impersonation-onlyfans/
 [Have I hardened against LLMs?]: https://www.baldurbjarnason.com/2026/have-i-hardened-against-ai/
+[The Intelligence Illusion]: https://illusion.baldurbjarnason.com/
 [Turing Post interview with Nathan Lambert]: https://www.turingpost.com/p/nathanlambert
-[The Future was Federated]: https://news.dyne.org/the-future-was-federated/
+[open weight models]: https://en.wikipedia.org/wiki/Open-source_artificial_intelligence
 [My experience with vibe coding]: https://haskellforall.com/2026/02/my-experience-with-vibe-coding
 [Dhall]: https://dhall-lang.org
 [pipes]: https://hackage.haskell.org/package/pipes
@@ -136,6 +169,9 @@ There's been a few things I've read this week.
 [on the effects of the menopause]: https://theconversation.com/menopause-our-study-revealed-how-it-affects-the-brain-cognition-and-mental-health-275329
 [HRT links to depression]: https://theconversation.com/menopause-hrt-linked-to-depression-heres-what-the-evidence-actually-says-194284
 [2601.15645]: https://arxiv.org/abs/2601.15645
+[LLM-as-a-judge]: https://arxiv.org/abs/2412.05579
+[narcissistic evaluators]: https://arxiv.org/abs/2311.09766
+[or are they]: https://arxiv.org/abs/2601.22548
 
 # Random Notes
 
@@ -156,7 +192,7 @@ There's been a few things I've read this week.
   - Where's my Linux client for Proton Drive? Of course, go ahead and make another chat wrapper
     around an LLM, Proton.
 - Speaking of Proton, this week I learned that the [ProtonVPN] app for Linux is a Gtk application.
-  Whilst I'm very happy to see that it's not another Electron app, I'm not sure that I'm entirely
-  happy with it being completely written in Python. But I'll take what I can get.
+  Whilst I'm very happy to see that it's not another Electron app, I'm not entirely thrilled that
+  it’s written in Python. But I’ll take what I can get.
 
 [ProtonVPN]: https://github.com/ProtonVPN/proton-vpn-gtk-app/tree/stable
