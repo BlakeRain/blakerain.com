@@ -1,6 +1,6 @@
 {{ define "main" }}
 <main class="grow flex flex-col gap-8 container mx-auto mt-4 lg:mt-8 mb-20 content">
-  <h1 class="text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
+  <h1 class="text-4xl md:text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
     {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill") }}
     <span>{{ .Data.Plural | title }}</span>
   </h1>

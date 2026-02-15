@@ -4,7 +4,7 @@
     <article>
       <header>
         <div class="container mx-auto flex flex-col items-center">
-          <h1 class="mx-2 md:mx-0 my-10 text-5xl font-bold
+          <h1 class="mx-2 md:mx-0 my-10 text-4xl md:text-5xl font-bold
                     {{- if .Params.icon }} flex flex-row justify-center items-center gap-2{{ else }} text-center{{ end }}">
             {{ with .Params.icon }}
               {{ partial "icons/icon" (dict "vendor" .vendor "name" .name) }}

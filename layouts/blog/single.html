@@ -10,7 +10,7 @@
           style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
         {{- end -}}>
         <div class="container content mx-auto flex flex-col items-center">
-          <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-5xl text-center font-bold leading-normal
+          <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-4xl md:text-5xl text-center font-bold leading-normal
                     {{ if $cover }}my-20 text-white{{ else }}my-10 text-neutral-800 dark:text-neutral-200{{ end }}">
             <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
               {{ .Title }}

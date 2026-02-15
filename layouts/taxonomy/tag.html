@@ -2,7 +2,7 @@
 <main class="grow flex flex-col gap-8 container mx-auto mt-4 lg:mt-8 mb:20 content">
   {{ $tag := index .Site.Data.tags (.Data.Term | lower) }}
   <header>
-    <h1 class="flex flex-row justify-center gap-2 mx-2 md:mx-0 mb-10 text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
+    <h1 class="flex flex-row justify-center gap-2 mx-2 md:mx-0 mb-10 text-4xl md:text-5xl text-center font-bold mt-10 text-neutral-800 dark:text-neutral-200">
       {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill" "className" "mt-1") }}
       <span>Pages Featuring</span>
       <span class="text-blue-700 dark:text-blue-400">{{ with $tag }}{{ .name }}{{ else }}{{ .Data.Term | humanize | title }}{{ end }}</span>
