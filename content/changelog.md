@@ -9,6 +9,12 @@ sitemap:
   disable: true
 ---
 
+# 2026-02-15
+
+- Added the first [weeknote](/weeknotes/2026-W07) to the site.
+- Various CSS and layout improvements.
+- Added optional archive links to [notes](/notes).
+
 # 2026-02-07
 
 - Updated some of the [tag](/tags) descriptions.
