@@ -46,7 +46,7 @@ Where I think I've seen the worst of this is in automatic summarisation of publi
 known a few people to use LLMs to summarise publications and, as mentioned above, several of the
 tools I relied on started pushing  automatic summaries.
 
-## Hallucination {#hallucination}
+# Hallucination {#hallucination}
 
 I think the problem I have found to be most frustrating is relying on the summarisation of
 publications by language models that subsequently hallucinate. One recent example of this was in the
@@ -121,7 +121,7 @@ his blog post on the topic.
 [Anil Madhavapeddy]: https://anil.recoil.org/notes/acm-ai-recs
 [move]: https://social.sigsoft.org/@JonathanAldrich/115737714944382593
 
-## Missing Significant Lessons {#missing-significant-lessons}
+# Missing Significant Lessons {#missing-significant-lessons}
 
 Putting aside the problem of hallucination for now, I think there are more human issues with relying
 on LLM summaries: the loss of the journey and structure from the original publication. Preserving
