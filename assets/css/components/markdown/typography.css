@@ -32,7 +32,7 @@ ol {
       @apply mt-0;
     }
 
-    ul {
+    ul, figure {
       @apply mt-4;
     }
   }
