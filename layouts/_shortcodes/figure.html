@@ -1,13 +1,18 @@
 <figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+  {{- $u := urls.Parse (.Get "src") -}}
+  {{- $src := $u.String -}}
+
   {{- if .Get "link" -}}
     <a href="{{ .Get "link" }}"{{ with .Get "target" }} target="{{ . }}"{{ end }}{{ with .Get "rel" }} rel="{{ . }}"{{ end }}>
+  {{- else if .Get "enlarge" -}}
+    {{- with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
+      <a href="{{ .Permalink }}" target="_blank" rel="noopener noreferrer">
+    {{- end -}}
   {{- end -}}
 
   {{- $width := .Get "width" -}}
   {{- $height := .Get "height" -}}
 
-  {{- $u := urls.Parse (.Get "src") -}}
-  {{- $src := $u.String -}}
   {{- if not $u.IsAbs -}}
     {{- with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
       {{- $spec := "q75 webp" -}}
@@ -16,7 +21,7 @@
       {{- else if (and $width (not $height)) -}}
         {{- $spec = printf "resize %dx %s" $width $spec -}}
       {{- else if (and (not $width) $height) -}}
-        {{- $spec = printf "resize %dx $s" $height $spec -}}
+        {{- $spec = printf "resize x%d %s" $height $spec -}}
       {{- end -}}
       {{- $image := .Process $spec -}}
       {{- $src = $image.Permalink -}}
@@ -32,7 +37,7 @@
     {{- with .Get "height" }} height="{{ . }}"{{ end -}}
     {{- with .Get "loading" }} loading="{{ . }}"{{ end -}}
   ><!-- Closing img tag -->
-  {{- if .Get "link" }}</a>{{ end -}}
+  {{- if or (.Get "link") (.Get "enlarge") }}</a>{{ end -}}
   {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") -}}
     <figcaption>
       {{ with (.Get "title") -}}
