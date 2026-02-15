@@ -103,23 +103,23 @@ h4 {
 }
 
 h1 {
-  @apply text-5xl font-normal mt-8 mb-4;
+  @apply text-4xl font-normal mt-8 mb-4;
   @apply print:text-3xl;
 }
 
 h2 {
-  @apply text-4xl font-normal mt-8 mb-4;
+  @apply text-3xl font-normal mt-8 mb-4;
 }
 
 h3 {
-  @apply text-3xl font-normal mt-6 mb-3;
+  @apply text-2xl font-normal mt-6 mb-3;
 }
 
 h4 {
-  @apply text-2xl font-normal mt-6 mb-2;
+  @apply text-xl font-normal mt-6 mb-2;
 }
 
 h6 {
-  @apply text-xl font-normal mt-4 mb-2;
+  @apply text-lg font-normal mt-4 mb-2;
 }
 
