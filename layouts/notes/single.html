@@ -21,6 +21,10 @@
               <a href="{{ .Permalink }}" title="Link directly to this note" class="colored">
                 Self link
               </a>
+              {{ if .Param "archive" }}
+                <div class="text-gray-500">&#8226;</div>
+                <a class="colored" href="{{ .Param "archive" }}" target="_blank" rel="noopener noreferrer">archive</a>
+              {{ end }}
               <div class="basis-full"></div>
               <a href="{{ .Param "link" }}" title="{{ .Title }}" class="colored normal-case">
                 {{ .Param "link" }}
