@@ -35,6 +35,10 @@ ol {
     ul, figure {
       @apply mt-4;
     }
+
+    p:last-child {
+      @apply mb-6;
+    }
   }
 }
 
