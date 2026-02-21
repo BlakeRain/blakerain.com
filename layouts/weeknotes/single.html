@@ -7,16 +7,19 @@
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
         {{- else if $cover -}}
           {{- $image := $cover.Process "q30 webp" -}}
-          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
+          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)), url('{{ $image.Permalink }}')"
         {{- end -}}>
         <div class="container content mx-auto flex flex-col items-center">
           <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-4xl md:text-5xl text-center font-bold leading-normal
-                    {{ if $cover }}my-20 text-white{{ else }}my-10 text-neutral-800 dark:text-neutral-200{{ end }}">
+                    {{ if $cover }}mt-20 text-white{{ else }}mt-10 text-neutral-800 dark:text-neutral-200{{ end }}">
             <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
               {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
               {{ index $parts 0 }} - Week {{ index $parts 1 }}
             </a>
           </h1>
+          <h2 class="text-2xl text-center mt-4 {{ if $cover }}mb-20 text-neutral-300{{ else }}mb-10 text-neutral-500 dark:text-neutral-400{{ end }}">
+            {{ .Summary }}
+          </h2>
           {{- with .Param "coverImage" -}}
             <div class="w-full uppercase text-sm text-white pb-2">
               {{- if .url -}}
