@@ -6,7 +6,7 @@
         {{ if .Param "customHero" -}}
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
         {{- else if $cover -}}
-          {{- $image := $cover.Process "q75 webp" -}}
+          {{- $image := $cover.Process "q30 webp" -}}
           style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
         {{- end -}}>
         <div class="container content mx-auto flex flex-col items-center">
