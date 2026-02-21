@@ -32,8 +32,8 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
   like the two-part track _The Omen_, comprising [Part 1: Prophecy] and [Part 2: Acquiesce].
 - [Hounds of Bayanay - KEM] --- An awesome folk-metal album from _Hounds of Bayanay_. This band has
   track names that can't render properly in my browser, which is fun (see below).
-- [Shylmagoghnar - Emergence]
-
+- [Shylmagoghnar - Emergence] --- And yet more melodic death. This is a great album, with some
+  excellent tracks. I think my favourite is [A New Dawn].
 
 {{< figure src="bayanay-render-errors.png" width=400 title="Hounds of Bayanay track names can't render properly in my browser" >}}
 
@@ -53,11 +53,17 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 [Hounds of Bayanay - KEM]: https://houndsofbayanay.bandcamp.com/album/kem
 [Shylmagoghnar - Emergence]: https://shylmagoghnar.bandcamp.com/album/emergence
 [Rhapsody's Rain of a Thousand Flames]: https://rhapsody.bandcamp.com/album/rain-of-a-thousand-flames
+[A New Dawn]: https://shylmagoghnar.bandcamp.com/track/a-new-dawn
 
 # 📚 Reading
 
 {{< book
-    title="" >}}
+    url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181"
+    cover="cover-escape-from-capitalism.webp"
+    title="Escape From Capitalism"
+    subtitle="Economics is Political, and Other Liberating Truths"
+    author="Clara E. Mattei"
+    year="2026" >}}
 {{< /book >}}
 
 [Clara Mattei]'s new book [Escape from Capitalism] arrived on Friday, and I completely devoured it
@@ -76,68 +82,108 @@ labour for a wage. The latter, which encapsulates nearly all of us, must sell ou
 for significantly less than it is worth due to our lack of access to the means of production, and
 subsequently have no claim over what we have produced.
 
-- [How a single typo led to RCE in Firefox](https://kqx.io/post/firefox0day/) --- This is great
-  write-up of a bug in Firefox. I've spent quite a bit of time working on code generation and
-  garbage collection, so I really enjoy reading about these bugs, having caused a great many myself.
-  It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent
-  state, even if that inconsistency is not entirely obvious.
+Mattei then goes on to describe how austerity is a tool of capitalism to increase the amount of
+capital that is moved from the working class to the capital class. She then explains how
+unemployment is not only a product of the capitalist system, but also vital to its maintenance.
 
-  And I think, in general, bitflags can be really a good way of shooting yourself in the foot.
+Chapter 4, entitled "_The West Over the Rest_" is a really depressing chapter. She covers the lie
+that the Western path to development could be adopted by any other nation, and that the key to doing
+so is to adopt capitalism. And when those improvements don't manifest, the cause is institutional
+deficiencies. Moreover, the horrendous exploitation of the rest of the world by the Western
+economies is a key source of wealth in the US and Europe. Mattei then corroborates this with several
+increasingly grim statistics and examples of this exploitation at work.
 
-  This reminds me of a similar bug with bitflags and code generation that lead to a lot of debugging
-  and agony, although luckily not an RCE (that I was aware of). A visual effects product I worked
-  on, called Halide, had quite a flexible processing pipeline, in which a number of effects could be
-  arranged as required. Some of these effects required a lot of processing, such as motion-based
-  [deinterlacing]. To improve the speed of the frame processing, Halide would [JIT] the pipeline in
-  the background.
+Mattei explains how various Western institutions are used to maintain this dependency.
 
-  This was a billion years ago, when the AMD [Athlon 64] was still awesome and [SSE3] was very
-  exciting -- the `HADDPS` and `LDDQU` instructions were very handy for video processing -- so we
-  could achieve quite a speed-up by being a bit smarter about how we used these exciting vector
-  instructions. Whilst this seems quaint by today's standards, JIT-ing the pipeline meant that
-  after a couple of seconds Halide's processing speed would increase to the point it could run all
-  of it's effects over HD footage at broadcast speeds. In product demonstrations, people would think
-  we were playing a trick with pre-recorded footage.
+> Technocratic institutions such as the International Monetary Fund (IMF) and the World Bank fortify
+> a relationship of dependency. In June 2024, Gana took out its eighteenth IMF loan since
+> independence, all of which were conditional on strict austerity.
 
-  Anyway, the JIT progressively replaced parts of the pipeline graph with generated or specialised
-  code, eventually reducing the graph to a single function which represented that particular
-  arrangement of effects and options. During the processing of the graph, the JIT would mark the
-  parts of the graph that had passed through the various stages of compilation.
+This process of lending, mandating austerity, forcing countries to sell their national assets and
+deregulate their markets, ultimately leads to economic collapse and debt defaults. Even the helping
+hand of aid is a form of dependency.
 
-  A bug in the marking of some graph nodes meant that the JIT would keep replacing parts of a graph
-  with newly generated code until it consumed all available memory. This had the effect of slightly
-  increasing the speed of the effects pipeline, and then slowing everything down until the software
-  crashed. This particular bug, just like the one in Firefox, was an incorrect bitwise operation
-  buried in a load of mask operation macros.
-- I learned from a [LaurieWired video] that a report from [Trend Micro] has come out on a new
-  phenomenon: [Slopsquatting], where attackers will upload malicious packages to package registries
-  like NPM and PyPI with names that match those that are hallucinated by coding agents.
+> Western gorvernments boast about aid to so-called developing countries, but humanitarian aid is a
+> facade. Many empirical studies confirm that \[..] more money flows out of Africa than goes in.
+> The most impoverished continent is a "net creditor" to the rest of the world. In 2015, African
+> countries received $162 billion, mainly in loans, aid, and personal remittances. But in the same
+> year, $302 billion was taken from the continent \[..].
 
-  This is another example of the rather worrying trend of coding agents being involved, directly and
-  indirectly, in the development and distribution of malware and the creation of vulnerabilities.
-  And the rate of package name hallucinations is not small:
+One of the hardest parts of this chapter is the discussion of Irsael's control over Palestine, the
+Birtish Empire's role in the economic dependence of Palestine, and how, since 1990s Israel has
+become one of the world's leading developers of military surveillance technology. Western countries
+have, of course, benefited immensely from this.
 
-  > A [comprehensive study] (2024-06-12) examining 576,000 Python and JavaScript code samples from
-  > 16 models found that commercial LLMs hallucinated dependencies at a rate of roughly 5%, while
-  > open-source counterparts exhibited rates exceeding 21.7% — yielding over 205,000 unique phantom
-  > package names.
-
-  Laurie also talks about new developments in [CXL]-connected memory, including Intel's [demo]
-  (2025-11-12) of a 5.6 TB shared memory pool accessible by a group of servers. This reminds me of
-  Felicitas Pojtinger's [r3map]: _Remote mmap: High-performance remote memory region mounts and
-  migrations in user space._ Great fun.
-- Found a couple more lists of link dumps:
-  - https://shellsharks.com/link-dumps
-  - https://elizabethtai.com/blogroll/
-
+> Even as they sponsor lavish philanthropic galas, America's biggest banks are cashing in on the
+> destruction of human life. Goldman Sachs and Bank of America have poured $7.2 billion and $3.5
+> billion respectively into Israeli "war bonds" --- profiting off the massacre of starving
+> Palestinians.
 
 [Clara Mattei]: https://www.claramattei.com/
 [Escape from Capitalism]: https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181
 [interview with channel 4]: https://www.youtube.com/watch?v=9M_dq_0ljsc
+
+## How a single typo led to RCE in Firefox {href="https://kqx.io/post/firefox0day/"}
+
+This is great
+write-up of a bug in Firefox. I've spent quite a bit of time working on code generation and
+garbage collection, so I really enjoy reading about these bugs, having caused a great many myself.
+It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent
+, even if that inconsistency is not entirely obvious.
+
+And I think, in general, bitflags can be really a good way of shooting yourself in the foot.
+
+This reminds me of a similar bug with bitflags and code generation that lead to a lot of debugging
+and agony, although luckily not an RCE (that I was aware of). A visual effects product I worked
+on, called Halide, had quite a flexible processing pipeline, in which a number of effects could be
+arranged as required. Some of these effects required a lot of processing, such as motion-based
+[deinterlacing]. To improve the speed of the frame processing, Halide would [JIT] the pipeline in
+the background.
+
+This was a billion years ago, when the AMD [Athlon 64] was still awesome and [SSE3] was very
+exciting -- the `HADDPS` and `LDDQU` instructions were very handy for video processing -- so we
+could achieve quite a speed-up by being a bit smarter about how we used these exciting vector
+instructions. Whilst this seems quaint by today's standards, JIT-ing the pipeline meant that
+after a couple of seconds Halide's processing speed would increase to the point it could run all
+of it's effects over HD footage at broadcast speeds. In product demonstrations, people would think
+we were playing a trick with pre-recorded footage.
+
+Anyway, the JIT progressively replaced parts of the pipeline graph with generated or specialised
+code, eventually reducing the graph to a single function which represented that particular
+arrangement of effects and options. During the processing of the graph, the JIT would mark the
+parts of the graph that had passed through the various stages of compilation.
+
+A bug in the marking of some graph nodes meant that the JIT would keep replacing parts of a graph
+with newly generated code until it consumed all available memory. This had the effect of slightly
+increasing the speed of the effects pipeline, and then slowing everything down until the software
+crashed. This particular bug, just like the one in Firefox, was an incorrect bitwise operation
+buried in a load of mask operation macros.
+
 [Athlon 64]: https://en.wikipedia.org/wiki/Athlon_64
 [SSE3]: https://en.wikipedia.org/wiki/SSE3
 [JIT]: https://en.wikipedia.org/wiki/Just-in-time_compilation
 [deinterlacing]: https://en.wikipedia.org/wiki/Deinterlacing
+
+## Slopsquatting {href="https://documents.trendmicro.com/assets/white_papers/TechBrief-Slopsquatting.pdf"}
+
+I learned from a [LaurieWired video] that a report from [Trend Micro] has come out on a new
+phenomenon: [Slopsquatting], where attackers will upload malicious packages to package registries
+like NPM and PyPI with names that match those that are hallucinated by coding agents.
+
+This is another example of the rather worrying trend of coding agents being involved, directly and
+indirectly, in the development and distribution of malware and the creation of vulnerabilities.
+And the rate of package name hallucinations is not small:
+
+> A [comprehensive study] (2024-06-12) examining 576,000 Python and JavaScript code samples from
+> 16 models found that commercial LLMs hallucinated dependencies at a rate of roughly 5%, while
+> open-source counterparts exhibited rates exceeding 21.7% — yielding over 205,000 unique phantom
+> package names.
+
+Laurie also talks about new developments in [CXL]-connected memory, including Intel's [demo]
+(2025-11-12) of a 5.6 TB shared memory pool accessible by a group of servers. This reminds me of
+Felicitas Pojtinger's [r3map]: _Remote mmap: High-performance remote memory region mounts and
+migrations in user space._ Great fun.
+
 [Trend Micro]: https://www.trendmicro.com/
 [LaurieWired video]: https://www.youtube.com/watch?v=cnX5zJ_qGz0
 [Slopsquatting]: https://documents.trendmicro.com/assets/white_papers/TechBrief-Slopsquatting.pdf
@@ -145,3 +191,4 @@ subsequently have no claim over what we have produced.
 [CXL]: https://en.wikipedia.org/wiki/Compute_Express_Link
 [demo]: https://computeexpresslink.org/blog/intel-sc25-demo-4245/
 [r3map]: https://github.com/pojntfx/r3map
+
