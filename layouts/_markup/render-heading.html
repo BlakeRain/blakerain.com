@@ -1,4 +1,9 @@
 <h{{ .Level }} id="{{ .Anchor }}" {{- with .Attributes.class }} class="{{ . }}" {{- end }}>
-  {{ .Text }}
+  {{ if isset .Attributes "href" }}
+    {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+    <a href="{{ .Attributes.href }}">{{ .Text }}</a>
+  {{ else }}
+    {{ .Text }}
+  {{ end }}
   <a class="heading-anchor" href="#{{ .Anchor }}">#</a>
 </h{{ .Level }}>
