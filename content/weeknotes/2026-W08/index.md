@@ -1,0 +1,147 @@
+---
+date: 2026-02-22T19:15:00
+summary: IRCv3 and Escaping Capitalism
+coverImage:
+  author: Lum3n
+  url: https://www.pexels.com/photo/green-pine-trees-covered-with-fogs-under-white-sky-during-daytime-167699/
+---
+
+
+# 🎶 New Music
+
+After scouring the latest posts on [Angry Metal Guy], I have found a few new albums that I've really
+been enjoying. Several of these came from AMG's [Stuck in the Filter: Nov/Dec 2025] post. I'm
+finding quite a few of my favourite albums in these "_Stuck in the Filter_" posts.
+
+- [Desoration - NON] --- Some fun melodic death metal from New Zealand. I think this is only their
+  second album. Very impressive.
+- [Brainblast - Colossus Suprema] --- More fun melodic death. This is _Brainblast_'s third album,
+  and they're really doing great stuff. If you throw an evolution stone at them they might change
+  into a new _Blind Guardian_.
+- [Gods of Gaia - Escape the Wonderland] --- Time for some symphohic death metal. This is probably
+  the more epic of these albums, and the one I've played the most this week. I really do enjoy the
+  symphonic and melodic stuff, ever since I first got hooked on power metal as a teenager with
+  [Rhapsody's Rain of a Thousand Flames]. I think [Rise Up] is proving to be my favourite song on
+  this album.
+- [Bizarrekult - Alt Som Finnes] --- Another great death metal album from Bizarrekult. I think
+  [Avmakt] is my favourite song on this album.
+- [AngelMaker - This Used to be Heaven] --- More melodic deathcore. I really am starting to worry I
+  might actually like deathcore, especially after [last year's album of the year] was by _Orbit
+  Culture_, another deathcore band. And 2024 would probably have been _Assemble the Chariots'_ album
+  [Unyielding Night] -- yet more deathcore. I'm probably coming down with something. Anyway, I quite
+  like the two-part track _The Omen_, comprising [Part 1: Prophecy] and [Part 2: Acquiesce].
+- [Hounds of Bayanay - KEM] --- An awesome folk-metal album from _Hounds of Bayanay_. This band has
+  track names that can't render properly in my browser, which is fun (see below).
+- [Shylmagoghnar - Emergence]
+
+
+{{< figure src="bayanay-render-errors.png" width=400 title="Hounds of Bayanay track names can't render properly in my browser" >}}
+
+[Angry Metal Guy]: https://www.angrymetalguy.com/
+[Stuck in the Filter: Nov/Dec 2025]: https://www.angrymetalguy.com/stuck-in-the-filter-november-december-2025s-angry-misses/
+[Desoration - NON]: https://desoration.bandcamp.com/album/non
+[Bizarrekult - Alt Som Finnes]: https://bizarrekult.bandcamp.com/album/alt-som-finnes
+[Avmakt]: https://bizarrekult.bandcamp.com/track/avmakt
+[AngelMaker - This Used to be Heaven]: https://angelmaker.bandcamp.com/album/this-used-to-be-heaven
+[last year's album of the year]: /blog/album-of-the-year-2025/#-orbit-culture---death-above-life
+[Unyielding Night]: https://assemblethechariots.bandcamp.com/album/unyielding-night
+[Part 1: Prophecy]: https://angelmaker.bandcamp.com/track/the-omen-part-i-prophecy
+[Part 2: Acquiesce]: https://angelmaker.bandcamp.com/track/the-omen-part-ii-acquiesce-feat-ben-duerr
+[Brainblast - Colossus Suprema]: https://brainblastofficial.bandcamp.com/album/colossus-suprema
+[Gods of Gaia - Escape the Wonderland]: https://godsofgaia.bandcamp.com/album/escape-the-wonderland
+[Rise Up]: https://godsofgaia.bandcamp.com/track/rise-up
+[Hounds of Bayanay - KEM]: https://houndsofbayanay.bandcamp.com/album/kem
+[Shylmagoghnar - Emergence]: https://shylmagoghnar.bandcamp.com/album/emergence
+[Rhapsody's Rain of a Thousand Flames]: https://rhapsody.bandcamp.com/album/rain-of-a-thousand-flames
+
+# 📚 Reading
+
+{{< book
+    title="" >}}
+{{< /book >}}
+
+[Clara Mattei]'s new book [Escape from Capitalism] arrived on Friday, and I completely devoured it
+over the course of the afternoon and into the early evening. It's a really great book. Clara
+Mattei, a Professor of Economics at The University of Tulsa, paints a terrifying picture of the
+state of the world under capitalism.
+
+I first heard Clara Mattei in her [interview with Channel 4], in which she is magnificently
+eloquent in her critique of capitalism and its irrationality. So I was quick to order a copy of
+her book, and I'm very glad I did.
+
+The book proceeds with a concise explanation of what Mattei calls the "capital order". She
+describes how there are two classes: the _capital class_ who control the means of production and
+own the capital that is invested into that production, and the _working class_ who must sell their
+labour for a wage. The latter, which encapsulates nearly all of us, must sell our capacity to work
+for significantly less than it is worth due to our lack of access to the means of production, and
+subsequently have no claim over what we have produced.
+
+- [How a single typo led to RCE in Firefox](https://kqx.io/post/firefox0day/) --- This is great
+  write-up of a bug in Firefox. I've spent quite a bit of time working on code generation and
+  garbage collection, so I really enjoy reading about these bugs, having caused a great many myself.
+  It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent
+  state, even if that inconsistency is not entirely obvious.
+
+  And I think, in general, bitflags can be really a good way of shooting yourself in the foot.
+
+  This reminds me of a similar bug with bitflags and code generation that lead to a lot of debugging
+  and agony, although luckily not an RCE (that I was aware of). A visual effects product I worked
+  on, called Halide, had quite a flexible processing pipeline, in which a number of effects could be
+  arranged as required. Some of these effects required a lot of processing, such as motion-based
+  [deinterlacing]. To improve the speed of the frame processing, Halide would [JIT] the pipeline in
+  the background.
+
+  This was a billion years ago, when the AMD [Athlon 64] was still awesome and [SSE3] was very
+  exciting -- the `HADDPS` and `LDDQU` instructions were very handy for video processing -- so we
+  could achieve quite a speed-up by being a bit smarter about how we used these exciting vector
+  instructions. Whilst this seems quaint by today's standards, JIT-ing the pipeline meant that
+  after a couple of seconds Halide's processing speed would increase to the point it could run all
+  of it's effects over HD footage at broadcast speeds. In product demonstrations, people would think
+  we were playing a trick with pre-recorded footage.
+
+  Anyway, the JIT progressively replaced parts of the pipeline graph with generated or specialised
+  code, eventually reducing the graph to a single function which represented that particular
+  arrangement of effects and options. During the processing of the graph, the JIT would mark the
+  parts of the graph that had passed through the various stages of compilation.
+
+  A bug in the marking of some graph nodes meant that the JIT would keep replacing parts of a graph
+  with newly generated code until it consumed all available memory. This had the effect of slightly
+  increasing the speed of the effects pipeline, and then slowing everything down until the software
+  crashed. This particular bug, just like the one in Firefox, was an incorrect bitwise operation
+  buried in a load of mask operation macros.
+- I learned from a [LaurieWired video] that a report from [Trend Micro] has come out on a new
+  phenomenon: [Slopsquatting], where attackers will upload malicious packages to package registries
+  like NPM and PyPI with names that match those that are hallucinated by coding agents.
+
+  This is another example of the rather worrying trend of coding agents being involved, directly and
+  indirectly, in the development and distribution of malware and the creation of vulnerabilities.
+  And the rate of package name hallucinations is not small:
+
+  > A [comprehensive study] (2024-06-12) examining 576,000 Python and JavaScript code samples from
+  > 16 models found that commercial LLMs hallucinated dependencies at a rate of roughly 5%, while
+  > open-source counterparts exhibited rates exceeding 21.7% — yielding over 205,000 unique phantom
+  > package names.
+
+  Laurie also talks about new developments in [CXL]-connected memory, including Intel's [demo]
+  (2025-11-12) of a 5.6 TB shared memory pool accessible by a group of servers. This reminds me of
+  Felicitas Pojtinger's [r3map]: _Remote mmap: High-performance remote memory region mounts and
+  migrations in user space._ Great fun.
+- Found a couple more lists of link dumps:
+  - https://shellsharks.com/link-dumps
+  - https://elizabethtai.com/blogroll/
+
+
+[Clara Mattei]: https://www.claramattei.com/
+[Escape from Capitalism]: https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181
+[interview with channel 4]: https://www.youtube.com/watch?v=9M_dq_0ljsc
+[Athlon 64]: https://en.wikipedia.org/wiki/Athlon_64
+[SSE3]: https://en.wikipedia.org/wiki/SSE3
+[JIT]: https://en.wikipedia.org/wiki/Just-in-time_compilation
+[deinterlacing]: https://en.wikipedia.org/wiki/Deinterlacing
+[Trend Micro]: https://www.trendmicro.com/
+[LaurieWired video]: https://www.youtube.com/watch?v=cnX5zJ_qGz0
+[Slopsquatting]: https://documents.trendmicro.com/assets/white_papers/TechBrief-Slopsquatting.pdf
+[comprehensive study]: https://arxiv.org/abs/2406.10279
+[CXL]: https://en.wikipedia.org/wiki/Compute_Express_Link
+[demo]: https://computeexpresslink.org/blog/intel-sc25-demo-4245/
+[r3map]: https://github.com/pojntfx/r3map
