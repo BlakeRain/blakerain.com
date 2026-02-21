@@ -1,6 +1,6 @@
 <h{{ .Level }} id="{{ .Anchor }}" {{- with .Attributes.class }} class="{{ . }}" {{- end }}>
   {{ if isset .Attributes "href" }}
-    {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+    {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link" "size" "1.5rem") }}
     <a href="{{ .Attributes.href }}">{{ .Text }}</a>
   {{ else }}
     {{ .Text }}
