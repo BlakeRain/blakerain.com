@@ -3,7 +3,7 @@
   <main class="grow">
     <article>
       <header>
-        <div class="container mx-auto flex flex-col items-center">
+        <div class="content mx-auto flex flex-col items-center">
           <h1 class="mx-2 md:mx-0 my-10 text-4xl md:text-5xl font-bold
                     {{- if .Params.icon }} flex flex-row justify-center items-center gap-2{{ else }} text-center{{ end }}">
             {{ with .Params.icon }}
@@ -18,7 +18,7 @@
           {{ end }}
         </div>
       </header>
-      <div class="container mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 markdown">
+      <div class="content mx-auto 2xl:max-w-7xl mt-6 lg:mt-12 my-20 px-2 sm:px-0 xl:px-16 markdown">
         {{ .Content }}
       </div>
     </article>

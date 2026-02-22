@@ -1,6 +1,8 @@
-@layer components {
+@layer utilities {
   .content {
-    @apply 2xl:max-w-7xl px-2 sm:px-0 xl:px-16;
+    @apply px-2;
     @apply print:px-0 print:max-w-full;
+
+    width: min(100%, 64rem);
   }
 }

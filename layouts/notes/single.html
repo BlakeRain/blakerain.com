@@ -3,7 +3,7 @@
   <main class="grow">
     <article class="h-entry">
       <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed">
-        <div class="container mx-auto content flex flex-col">
+        <div class="mx-auto content flex flex-col">
           <h1 class="mx-2 md:mx-0 mb-10 lg:w-[45rem] self-center text-4xl md:text-5xl text-center font-bold leading-normal mt-10 text-neutral-800 dark:text-neutral-200">
             {{ if isset .Params "link" }}
               {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
@@ -50,7 +50,7 @@
           </div>
         </div>
       </header>
-      <div class="container mx-auto content mt-6 lg:mt-12 mb-20 markdown">
+      <div class="mx-auto content mt-6 lg:mt-12 mb-20 markdown">
         {{ .Content }}
       </div>
     </article>
