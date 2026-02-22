@@ -6,11 +6,63 @@ coverImage:
   url: https://www.pexels.com/photo/green-pine-trees-covered-with-fogs-under-white-sky-during-daytime-167699/
 ---
 
-# IRCv3
+# 💬 IRCv3
 
+I've been continuing in my attempts to find an alternative to Discord after their [recent decision] to force us
+all to submit to age verification. [Last week] I started building an installation of [Rocket.Chat],
+but that has somewhat stalled.
 
-https://social.treehouse.systems/@whitequark/116089585784234453
+This week I saw a [post] by [@whitequark@treehouse.systems] on Mastodon, in which they describe many of
+the new advances in IRCv3. I had no idea that IRC had even been adding updates to its protocol, so I
+was very curious. Certainly in my friend group it seems that nostalgia for IRC is still quite
+strong. Some of the advances that IRCv3 brings that I think are most interesting to me are:
 
+- When joining a channel, you get a backlog of messages that you haven't read yet. This is pretty
+  much one of two important reason to maintain an [IRC bouncer] back in the day.
+- Multiple clients can connect to the same server, using the same account. This addresses the second
+  reason to maintain an IRC bouncer. I used to run my IRC client in a [screen] session on a UNIX
+  [shell account] so it remained connected to the server. I've also used [ZNC], which was a bit more
+  complex, but allowed me to have multiple clients.
+- Your nick remains in the channels you join, even if you're disconnected. You're just marked as
+  away. People can then DM you, and you'll see the messages when you reconnect.
+
+So on Sunday morning --- actually this morning as I write these weeknotes --- I decided to install
+an IRCv3 server. I decided to go with [Ergo], which was quite reasonable to set up in Docker. I've
+also added [The Lounge] (strange name choice, I know), which is a web-based IRC client for people
+who don't want to set up a client.
+
+{{< figure src="the-lounge.png" width=400 enlarge=true title="The Lounge interface in Firefox" >}}
+
+To access the server from my phone I've set up [Igloo] (available for Android and iOS), and having
+the phone and desktop connected to the same IRC server without a bouncer is a revelation! I like the
+interface being so simple, and the use of a monospace font.
+
+{{< figure src="igloo-iphone.png" width=400 title="Igloo running on my iPhone. Such a quite channel 😁" >}}
+
+On the desktop I've set up [Halloy] as [Irssi], my IRC client of choice for the past couple of
+hundred years, hasn't adopted much of the IRCv3 features. Halloy seems to support quite of lot of
+IRCv3 features, and is built using the [iced] GUI framework, which is interesting.
+
+{{< figure src="halloy-desktop.png" width=400 enlarge=true title="Halloy running on my desktop." >}}
+
+Having a [Catppuccin] theme for Halloy is certainly a good way to get my interest 😏.
+
+[recent decision]: /notes/2026-02-12/
+[Last week]: /weeknotes/2026-W07/
+[Rocket.Chat]: https://rocket.chat/
+[post]: https://social.treehouse.systems/@whitequark/116089585784234453
+[@whitequark@treehouse.systems]: https://social.treehouse.systems/@whitequark
+[IRC bouncer]: https://en.wikipedia.org/wiki/IRC_bouncer
+[ZNC]: https://wiki.znc.in/ZNC
+[screen]: https://www.gnu.org/software/screen/
+[shell account]:https://sdf.org/
+[Ergo]: https://github.com/ergochat/ergo
+[The Lounge]: https://thelounge.chat/
+[Igloo]: https://igloo.app/
+[Halloy]: https://halloy.chat/
+[iced]: https://github.com/iced-rs/iced/
+[Catppuccin]: https://catppuccin.com/
+[other themes]: https://themes.halloy.chat/
 
 # 🎶 New Music
 
@@ -20,10 +72,10 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 
 - [Desoration - NON] --- Some fun melodic death metal from New Zealand. I think this is only their
   second album. Very impressive.
-- [Brainblast - Colossus Suprema] --- More fun melodic death. This is _Brainblast_'s third album,
-  and they're really doing great stuff. If you throw an evolution stone at them they might change
-  into a new _Blind Guardian_.
-- [Gods of Gaia - Escape the Wonderland] --- Time for some symphohic death metal. This is probably
+- [Brainblast - Colossus Suprema] --- More fun melodic death. I think this is only _Brainblast_'s
+  third album, and they're really doing great stuff. If you throw an evolution stone at them they
+  might change into a new _Blind Guardian_.
+- [Gods of Gaia - Escape the Wonderland] --- Time for some symphonic death metal. This is probably
   the more epic of these albums, and the one I've played the most this week. I really do enjoy the
   symphonic and melodic stuff, ever since I first got hooked on power metal as a teenager with
   [Rhapsody's Rain of a Thousand Flames]. I think [Rise Up] is proving to be my favourite song on
@@ -62,16 +114,27 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 
 # 📚 Reading
 
-I've been reading again.
+I've been reading things again.
 
 {{< book
     url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181"
     cover="cover-escape-from-capitalism.webp"
-    title="Escape From Capitalism"
+    title="Escape From Capitalism: Science and Economics Etc Longer Title"
     subtitle="Economics is Political, and Other Liberating Truths"
     author="Clara E. Mattei"
-    year="2026" >}}
-{{< /book >}}
+    year="2026"
+    rating=5 >}}
+Economics is sold as pure and apolitical: scientific, neutral, exact. This urgent book exposes its
+true role: to convince us there’s no alternative to capitalism. We live in a world dominated by the
+dogma that austerity is necessary, unemployment natural, endless wars inevitable and central banks
+all-powerful. It doesn't have to be this way.
+
+In her bold, ground-breaking manifesto, economist Clara E. Mattei tears the mask off our economic
+system. She unpacks key concepts like growth, inflation, unemployment and balanced budgets to show
+how they’re used to enforce market dependence, not freedom, stripping us of the power to shape the
+democratic decisions that govern our daily lives. Enduring problems such as poverty and inequality
+are not accidents or bugs in the economy, but core features – justified with pseudoscientific models
+to support a system that unfairly rewards people with the most resources. {{< /book >}}
 
 [Clara Mattei]'s new book [Escape from Capitalism] arrived on Friday, and I completely devoured it
 over the course of the afternoon and into the early evening. It's a really great book. Clara
@@ -109,21 +172,25 @@ This process of lending, mandating austerity, forcing countries to sell their na
 deregulate their markets, ultimately leads to economic collapse and debt defaults. Even the helping
 hand of aid is a form of dependency.
 
-> Western gorvernments boast about aid to so-called developing countries, but humanitarian aid is a
+> Western governments boast about aid to so-called developing countries, but humanitarian aid is a
 > facade. Many empirical studies confirm that \[..] more money flows out of Africa than goes in.
 > The most impoverished continent is a "net creditor" to the rest of the world. In 2015, African
 > countries received $162 billion, mainly in loans, aid, and personal remittances. But in the same
 > year, $302 billion was taken from the continent \[..].
 
-One of the hardest parts of this chapter is the discussion of Irsael's control over Palestine, the
-Birtish Empire's role in the economic dependence of Palestine, and how, since 1990s Israel has
-become one of the world's leading developers of military surveillance technology. Western countries
-have, of course, benefited immensely from this.
+One of the hardest parts of this chapter is the discussion of Israel's control over Palestine, the
+west's role in the economic dependence of Palestine, and how, since 1990s Israel has become one of
+the world's leading developers of military surveillance technology. Western countries have, of
+course, benefited immensely from this.
 
 > Even as they sponsor lavish philanthropic galas, America's biggest banks are cashing in on the
 > destruction of human life. Goldman Sachs and Bank of America have poured $7.2 billion and $3.5
 > billion respectively into Israeli "war bonds" -- profiting off the massacre of starving
 > Palestinians.
+
+The book finishes off with a chapter on the incaompatibilities between democracy and capitalism,
+highlighting some of the more successful efforts around the world to transition to a more democratic
+and socialist system, which is always interesting to hear about.
 
 [Clara Mattei]: https://www.claramattei.com/
 [Escape from Capitalism]: https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181
@@ -137,9 +204,9 @@ garbage collection, so I really enjoy reading about these bugs, having caused a 
 It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent
 , even if that inconsistency is not entirely obvious.
 
-And I think, in general, bitflags can be really a good way of shooting yourself in the foot.
+And I think, in general, bit flags can be really a good way of shooting yourself in the foot.
 
-This reminds me of a similar bug with bitflags and code generation that lead to a lot of debugging
+This reminds me of a similar bug with bit flags and code generation that lead to a lot of debugging
 and agony, although luckily not an RCE (that I was aware of). A visual effects product I worked
 on, called Halide, had quite a flexible processing pipeline, in which a number of effects could be
 arranged as required. Some of these effects required a lot of processing, such as motion-based
@@ -172,7 +239,7 @@ buried in a load of mask operation macros.
 
 ## Slopsquatting {href="https://documents.trendmicro.com/assets/white_papers/TechBrief-Slopsquatting.pdf"}
 
-I learned from a [LaurieWired video] that a report from [Trend Micro] has come out on a new
+I learned from a [LaurieWired video] (2026-02-18) that a report from [Trend Micro] has come out on a new
 phenomenon: [Slopsquatting], where attackers will upload malicious packages to package registries
 like NPM and PyPI with names that match those that are hallucinated by coding agents.
 
@@ -186,7 +253,7 @@ And the rate of package name hallucinations is not small:
 > package names.
 
 Laurie also talks about new developments in [CXL]-connected memory, including Intel's [demo]
-(2025-11-12) of a 5.6 TB shared memory pool accessible by a group of servers. This reminds me of
+(2025-11-12) of a 5.6 TB shared memory pool accessible by a group of servers. This reminds me of
 Felicitas Pojtinger's [r3map]: _Remote mmap: High-performance remote memory region mounts and
 migrations in user space._ Great fun.
 
