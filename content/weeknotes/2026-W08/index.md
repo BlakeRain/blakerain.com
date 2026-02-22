@@ -62,6 +62,8 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 
 # 📚 Reading
 
+I've been reading again.
+
 {{< book
     url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181"
     cover="cover-escape-from-capitalism.webp"
@@ -96,9 +98,8 @@ that the Western path to development could be adopted by any other nation, and t
 so is to adopt capitalism. And when those improvements don't manifest, the cause is institutional
 deficiencies. Moreover, the horrendous exploitation of the rest of the world by the Western
 economies is a key source of wealth in the US and Europe. Mattei then corroborates this with several
-increasingly grim statistics and examples of this exploitation at work.
-
-Mattei explains how various Western institutions are used to maintain this dependency.
+increasingly grim statistics and examples of this exploitation at work, explaining how various
+Western institutions are used to maintain this dependency.
 
 > Technocratic institutions such as the International Monetary Fund (IMF) and the World Bank fortify
 > a relationship of dependency. In June 2024, Gana took out its eighteenth IMF loan since
@@ -121,7 +122,7 @@ have, of course, benefited immensely from this.
 
 > Even as they sponsor lavish philanthropic galas, America's biggest banks are cashing in on the
 > destruction of human life. Goldman Sachs and Bank of America have poured $7.2 billion and $3.5
-> billion respectively into Israeli "war bonds" --- profiting off the massacre of starving
+> billion respectively into Israeli "war bonds" -- profiting off the massacre of starving
 > Palestinians.
 
 [Clara Mattei]: https://www.claramattei.com/
