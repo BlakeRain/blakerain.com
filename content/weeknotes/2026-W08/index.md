@@ -1,5 +1,5 @@
 ---
-date: 2026-02-22T19:15:00
+date: 2026-02-22T18:40:00
 summary: IRCv3 and Escaping Capitalism
 coverImage:
   author: Lum3n
