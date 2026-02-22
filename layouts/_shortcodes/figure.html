@@ -51,6 +51,9 @@
         {{- .Get "attr" | markdownify -}}
         {{- if .Get "attrlink" }}</a>{{ end }}</p>
       {{- end }}
+      {{- if .Get "enlarge" -}}
+        <div class="italic">(click image to enlarge)</div>
+      {{- end -}}
     </figcaption>
   {{- end }}
 </figure>
