@@ -1,70 +1,68 @@
 div.table-wrapper {
-  @apply w-full overflow-x-auto;
+  width: 100%;
+  overflow-x: auto;
 
   &:not(:last-child) {
-    @apply mb-6;
+    margin-bottom: 1.5rem;
   }
 
-  table {
-    @apply min-w-full border-collapse table-auto;
+  & table {
+    min-width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
 
-    thead {
-      @apply bg-transparent dark:bg-neutral-800;
-      @apply dark:text-white;
+    & thead {
+      background-color: transparent;
+      color: inherit;
 
-      tr {
-        th {
-          @apply px-3 py-2;
+      & tr th {
+        padding: 0.5rem 0.75rem;
 
-          &.left {
-            @apply text-left;
-          }
+        &.left {
+          text-align: left;
+        }
 
-          &.right {
-            @apply text-right;
-          }
+        &.right {
+          text-align: right;
+        }
 
-          &.center {
-            @apply text-center;
-          }
+        &.center {
+          text-align: center;
         }
       }
-    } /* thead */
+    }
 
-    tbody {
-      tr {
-        td {
-          @apply whitespace-nowrap px-3 py-2;
+    & tbody tr td {
+      white-space: nowrap;
+      padding: 0.5rem 0.75rem;
 
-          &.left {
-            @apply text-left;
-          }
-
-          &.right {
-            @apply text-right;
-          }
-
-          &.center {
-            @apply text-center;
-          }
-        }
+      &.left {
+        text-align: left;
       }
-    } /* tbody */
+
+      &.right {
+        text-align: right;
+      }
+
+      &.center {
+        text-align: center;
+      }
+    }
 
     &.tight {
-      thead tr th,
-      tbody tr td {
-        @apply px-1 py-1;
+      & thead tr th,
+      & tbody tr td {
+        padding: 0.25rem;
       }
     }
 
     &:not(.borderless) {
-      thead {
-        @apply border-b border-neutral-500;
+      & thead {
+        border-bottom: 1px solid var(--color-border);
       }
 
-      tbody tr {
-        @apply border-b border-neutral-400 dark:border-neutral-600;
+      & tbody tr {
+        border-bottom: 1px solid var(--color-border);
       }
     }
   }

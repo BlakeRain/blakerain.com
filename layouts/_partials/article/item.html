@@ -1,0 +1,48 @@
+<article>
+  {{ if isset .Params "link" }}
+    <h1>
+      {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+      <a class="colored" href="{{ .Param "link" }}" target="_blank" rel="noopener noreferrer">
+        {{ .Title }}
+      </a>
+    </h1>
+  {{ else }}
+    <a class="colored" href="{{ .Permalink }}">
+      <h1>{{ .Title }}</h1>
+    </a>
+  {{ end }}
+  <div class="meta">
+    <div class="meta-row">
+      <span>{{ .Date | time.Format "2 Jan 2006" }}</span>
+      <span class="separator">&#8226;</span>
+      <span>{{ .ReadingTime }} min read</span>
+      {{ if isset .Params "link" }}
+        <span class="separator">&#8226;</span>
+        <a href="{{ .Permalink }}" title="Link directly to this article" class="colored">
+          Self link
+        </a>
+      {{ end }}
+      {{ if isset .Params "archive" }}
+        <span class="separator">&#8226;</span>
+        <a href="{{ .Param "archive" }}" title="Archive of the source article" class="colored">
+          Archive
+        </a>
+      {{ end }}
+    </div>
+    {{ with .Param "tags" }}
+      <div class="tag-list">
+        {{ range $index, $tag := . }}
+          {{ with site.GetPage (printf "/tags/%s" $tag) }}
+            <a href="{{ .Permalink }}" class="tag">
+              {{ $tag | humanize }}
+            </a>
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+  <div class="markdown">
+    {{ templates.Inner . }}
+  </div>
+</article>
+

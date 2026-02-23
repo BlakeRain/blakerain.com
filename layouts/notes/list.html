@@ -1,19 +1,17 @@
 {{ define "main" }}
-<main class="grow content mx-auto mt-4 lg:mt-8 mb-20">
-  <h1 class="text-4xl md:text-5xl font-bold text-center text-neutral-800 dark:text-neutral-200">
+<main class="articles-list content">
+  <h1>
     Notes
   </h1>
-  <h2 class="text-xl text-center mt-8 text-neutral-500 dark:text-neutral-400">
+  <h2>
     {{ .Description }}
   </h2>
-  <div class="flex flex-col gap-8 mt-12 mb-10 p-4 lg:p-0">
+  <div class="items separated">
     {{ $pager := .Paginate .Pages 10 }}
-    {{ range first 1 $pager.Pages }}
-      {{ partial "notes/item.html" . }}
-    {{ end }}
-    {{ range after 1 $pager.Pages }}
-      <div class="h-0 border-t border-dashed border-neutral-500"></div>
-      {{ partial "notes/item.html" . }}
+    {{ range $pager.Pages }}
+      {{ with partial "article/item.html" . }}
+        {{ .Content }}
+      {{ end }}
     {{ end }}
     {{ partial "pager" $pager }}
   </div>

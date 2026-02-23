@@ -9,6 +9,13 @@ sitemap:
   disable: true
 ---
 
+# 2026-02-23
+
+- Replaced literal uses of my name with the site param `author.name`.
+- Moved the navigation menu code to a separate file.
+- Unified the social links into a single partial.
+- Increased the size of the social links in the navigation bar.
+
 # 2026-02-22
 
 - Fixed some markdown styling issues; mostly spacing.

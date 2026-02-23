@@ -1,25 +1,25 @@
 {{ define "main" }}
-<main class="grow flex flex-col gap-8 content mx-auto mt-4 lg:mt-8 mb-20">
-  <h1 class="text-4xl md:text-5xl font-bold flex flex-row justify-center items-center gap-2 text-neutral-800 dark:text-neutral-200">
+<main class="articles-list content">
+  <h1>
     {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill") }}
     <span>{{ .Data.Plural | title }}</span>
   </h1>
-  <p class="text-xl text-center text-neutral-800 dark:text-neutral-200">
+  <h2>
     {{ $count := .Data.Pages | len }}
     There are {{ $count }} {{ if ne $count 1 }}{{ .Data.Plural }}{{ else }}{{ .Data.Singular }}{{ end }} in use across this site.
-  </p>
-  <div class="grid grid-cols-1 md:grid-cols-[max-content_1fr] lg:grid-cols-[max-content_1fr_max-content] md:gap-2">
-    <div class="hidden md:block font-bold text-neutral-800 dark:text-neutral-200 ml-4">{{ .Data.Plural | title }}</div>
-    <div class="hidden md:block font-bold text-neutral-800 dark:text-neutral-200 mr-4">Description</div>
-    <div class="hidden lg:block font-bold text-right text-neutral-800 dark:text-neutral-200 mr-4">Count</div>
-    <div class="border-t border-neutral-800 dark:border-neutral-500 mb-4 md:mb-0 md:col-span-2 lg:col-span-3"></div>
+  </h2>
+  <div class="taxonomy-grid">
+    <h3 class="col1">{{ .Data.Plural | title }}</h3>
+    <h3 class="col2">Description</h3>
+    <h3 class="col3">Count</h3>
+    <div class="divider"></div>
     {{ range .Pages.ByTitle }}
       {{ $tag := index .Site.Data.tags (.LinkTitle | lower) }}
-      <a href="{{ .Permalink }}" class="colored md:ml-4">
+      <a href="{{ .Permalink }}" class="colored">
         {{ with $tag }}{{ .name }}{{ else }}{{ .Title | upper }}{{ end }}
       </a>
-      <div class="mb-4 md:mb-0">{{ with $tag }}{{ with .description }}{{ . }}{{ end }}{{ end }}</div>
-      <div class="hidden lg:block text-right mr-4">
+      <div class="description">{{ with $tag }}{{ with .description }}{{ . }}{{ end }}{{ end }}</div>
+      <div class="count">
         {{ .Pages | len }}
       </div>
     {{ end }}

@@ -61,15 +61,10 @@ module:
   mounts:
     - source: assets
       target: assets
-    - source: hugo_stats.json
-      target: assets/watching/hugo_stats.json
 
 build:
-  writeStats: true
   cachebusters:
-    - source: assets/watching/hugo_stats\.json
-      target: main\.css
-    - source: (postcss|tailwind)\.config\.js
+    - source: postcss\.config\.js
       target: css
     - source: assets/.*\.(js|ts|jsx|tsx)
       target: js

@@ -1,0 +1,20 @@
+:root {
+  --tag-text: var(--color-text-muted);
+  --tag-text-hover: var(--color-link);
+}
+
+.tag-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: warp;
+  gap: 0 0.5rem;
+
+  > .tag {
+    color: var(--tag-text);
+    transition: var(--transition-colors);
+
+    &:hover {
+      color: var(--tag-text-hover);
+    }
+  }
+}

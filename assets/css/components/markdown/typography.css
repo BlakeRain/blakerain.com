@@ -1,135 +1,168 @@
 p {
-  @apply w-full leading-relaxed;
+  width: 100%;
+  line-height: var(--leading-relaxed);
 
-  code {
-    @apply text-nowrap;
+  & code {
+    white-space: nowrap;
   }
 
   &:not(:last-child) {
-    @apply mb-6;
+    margin-bottom: 1.5rem;
   }
 }
 
 strong {
-  @apply font-bold;
-}
-
-@media (prefers-color-scheme: dark) {
-  strong {
-    @apply text-neutral-300;
-  }
+  font-weight: 700;
 }
 
 dl,
 ul,
 ol {
-  @apply w-full self-start mb-6;
+  width: 100%;
+  align-self: flex-start;
+  margin-bottom: 1.5rem;
 
-  li {
-    @apply break-words mt-1 pl-1.5;
+  & li {
+    word-wrap: break-word;
+    margin-top: 0.25rem;
+    padding-left: 0.375rem;
 
     &:first-child {
-      @apply mt-0;
+      margin-top: 0;
     }
 
-    ul, figure {
-      @apply mt-4;
+    & ul,
+    & figure {
+      margin-top: 1rem;
     }
 
-    p:last-child {
-      @apply mb-6;
+    & p:last-child {
+      margin-bottom: 1.5rem;
     }
   }
 }
 
 ol {
-  @apply list-decimal pl-10;
+  list-style-type: decimal;
+  padding-left: 2.5rem;
 }
 
 ul {
-  @apply list-disc pl-10;
+  list-style-type: disc;
+  padding-left: 2.5rem;
 }
 
 pre {
-  @apply w-full rounded-md p-4 overflow-x-auto mb-6;
-  @apply print:border-neutral-800 print:p-2;
+  width: 100%;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
 
-  @apply text-[#4c4f69] dark:text-[#cdd6f4];
-  @apply bg-[#fcfcfc] dark:bg-[#1e1e2e];
+  color: var(--markdown-pre-text);
+  background-color: var(--markdown-pre-bg);
 
-  code {
-    @apply font-mono text-base leading-snug;
+  & code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: var(--text-base);
+    line-height: var(--leading-snug);
+  }
+
+  @media print {
+    border: 1px solid var(--color-text);
+    padding: 0.5rem;
   }
 }
 
 a:not(.plain):not(.heading-anchor) {
-  @apply underline;
-  @apply text-blue-700 hover:text-blue-800;
-  @apply dark:text-blue-400 dark:hover:text-blue-300;
-  @apply transition-colors;
+  text-decoration: underline;
+  color: var(--color-link);
+  transition: var(--transition-colors);
+
+  &:hover {
+    color: var(--color-link-hover);
+  }
 }
 
 a.heading-anchor {
-  @apply opacity-25 ml-2 hover:opacity-100;
-  @apply no-underline;
-  @apply transition-opacity;
+  opacity: 0.25;
+  margin-left: 0.5rem;
+  text-decoration: none;
+  transition: var(--transition-opacity);
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .footnote {
-  @apply mb-6 flex flex-row gap-1 text-base text-gray-500 dark:text-gray-400;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  font-size: var(--text-base);
+  color: var(--color-meta);
 
   &:has(+ .footnote) {
-    @apply mb-0;
+    margin-bottom: 0;
   }
 
-  div.footnote-index {
-    @apply leading-relaxed mr-2;
+  & div.footnote-index {
+    line-height: var(--leading-relaxed);
+    margin-right: 0.5rem;
 
-    &:after {
+    &::after {
       content: ".";
     }
   }
 
-  p {
-    &:last-child {
-      @apply mb-0;
-    }
+  & p:last-child {
+    margin-bottom: 0;
   }
 }
 
 summary {
-  @apply cursor-pointer font-bold bg-neutral-100 dark:bg-neutral-800 p-4 rounded-t-md rounded-b-md;
+  cursor: pointer;
+  font-weight: 700;
+  background-color: var(--color-surface-subtle);
+  padding: 1rem;
+  border-radius: var(--radius-md);
 }
 
 details[open] {
-  summary {
-    @apply rounded-b-none;
+  & summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
-  > figure pre, > div.highlight pre {
-    @apply rounded-t-none;
+  & > figure pre,
+  & > div.highlight pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 
 blockquote {
-  @apply w-full mb-6 border-l-4 border-l-blue-400 px-8;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--color-link);
+  padding-left: 2rem;
+  padding-right: 2rem;
 
-  p, ul, ol {
-    @apply italic text-neutral-600 dark:text-neutral-400;
+  & p,
+  & ul,
+  & ol {
+    font-style: italic;
+    color: var(--color-text-muted);
 
     &:last-child {
-      @apply mb-0;
+      margin-bottom: 0;
     }
   }
 }
 
 mark {
-  @apply rounded-sm;
-  @apply text-black;
-
+  border-radius: var(--radius-sm);
+  color: black;
   background-color: rgba(255, 255, 0, 0.8);
-
-  @media (prefers-color-scheme: dark) {
-    background-color: rgba(255, 255, 0, 0.8);
-  }
 }

@@ -1,23 +1,23 @@
 {{ $page := .page }}
-<nav class="print:hidden top-0 sticky bg-primary backdrop-blur z-10 shadow-md dark:shadow-none text-neutral-200">
-  <div class="content mx-auto flex flex-col md:flex-row px-2 sm:px-4">
-    <div class="flex flex-row justify-between items-center">
-      <a href="/" class="block pr-4 py-4 md:my-0">
-        <img class="block" src="/media/logo-text.png" width="154" height="28" alt="{{ .Site.Params.author.name }}">
+<nav class="site-nav">
+  <div class="site-nav-inner content">
+    <div class="site-nav-header">
+      <a href="/" class="site-nav-logo">
+        <img src="/media/logo-text.png" width="154" height="28" alt="{{ .Site.Params.author.name }}">
       </a>
-      <button id="nav-menu-toggle" type="button" class="md:hidden p-4">
+      <button id="nav-menu-toggle" type="button" class="site-nav-toggle">
         {{ partial "icons/icon" (dict "vendor" "lucide" "name" "menu") }}
         <span class="sr-only">Toggle Menu</span>
       </button>
     </div>
     {{ with site.Menus.main }}
-      <div id="nav-menu" class="md:flex flex-col md:flex-row hidden">
+      <div id="nav-menu" class="site-nav-menu">
         {{ range . }}
           {{ $active := $page.IsMenuCurrent .Menu . }}
           {{ $active = or $active ($page.HasMenuCurrent .Menu .) }}
           <a
             href="{{ .URL }}"
-            class="px-4 py-6 transition-colors hover:underline {{ if $active }}underline{{ end }}">
+            class="site-nav-link {{ if $active }}active{{ end }}">
             {{ .Name }}
           </a>
         {{ end }}
@@ -25,8 +25,9 @@
     {{ end }}
     {{ partial "social-links" (dict
       "mode" "icons"
-      "class" "hidden md:flex flex-row items-center gap-2 ml-auto"
-      "linkClass" "text-neutral-200/75 hover:text-neutral-200"
+      "class" "site-nav-social"
+      "linkClass" "site-nav-social-link"
+      "iconSize" "1.3rem"
     ) }}
   </div>
 </nav>

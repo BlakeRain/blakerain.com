@@ -1,0 +1,12 @@
+.pager {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pager-current {
+  color: var(--color-text-muted);
+}

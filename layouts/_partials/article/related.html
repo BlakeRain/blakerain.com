@@ -1,0 +1,15 @@
+<div class="articles-list related-articles content">
+  <h1>Related Posts</h1>
+  <h2>
+    These are other posts that are related to this one.
+  </h2>
+  <div class="items">
+    {{ range . }}
+      {{ with partial "article/item.html" . }}
+        {{ if .Summary }}
+          {{ .Summary }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  </div>
+</div>

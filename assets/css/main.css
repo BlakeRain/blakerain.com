@@ -1,59 +1,76 @@
-@import "tailwindcss";
+@import "tokens.css";
+@import "reset.css";
 
+@import "components/article.css";
+@import "components/bandcamp.css";
+@import "components/book.css";
 @import "components/button.css";
 @import "components/content.css";
+@import "components/error.css";
 @import "components/field.css";
+@import "components/footer.css";
+@import "components/home.css";
 @import "components/markdown.css";
-@import "components/toggle.css";
-@import "components/tooltip.css";
+@import "components/nav.css";
+@import "components/pager.css";
+@import "components/social.css";
+@import "components/tag.css";
+@import "components/taxonomy.css";
+@import "components/utility.css";
+@import "components/weeknotes.css";
 
 @import "syntax.css";
 
-@source "../content/**/*.md";
-@source "../content/**/*.js";
-@source "../static/**/*.js";
-@source "../layouts/**/*.html";
-@source "../hugo_stats.json";
-@source "../extra_stats.json";
-
-@theme {
-  --color-primary: #13304e;
-  --color-primary-dark: #22293d;
-  --color-primary-light: #1c4773;
-}
-
 :root {
-  --toggle-size: 2rem;
-  --primary-color: #13304e;
+  --body-text: var(--color-text);
+  --body-bg: var(--color-surface);
+
+  --link-colored-text: var(--color-link);
+  --link-colored-text-hover: var(--color-link-hover);
 }
 
-@layer components {
-  body {
-    @apply bg-white text-neutral-800;
-    @apply dark:bg-zinc-900 dark:text-neutral-200;
-    @apply min-h-screen;
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: var(--sans-font-family);
+}
 
-    @apply bg-repeat;
-    background-image: url("/media/cartographer-light.webp");
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 
-    @media (prefers-color-scheme: dark) {
-      background-image: url("/media/cartographer-dark.webp");
-    }
-  }
+  color: var(--body-text);
+  background-color: var(--body-bg);
+  background-repeat: repeat;
+  background-image: url("/media/cartographer-light.webp");
 
-  a {
-    &.colored {
-      @apply underline;
-      @apply text-blue-700 hover:text-blue-800;
-      @apply dark:text-blue-400 dark:hover:text-blue-300;
-      @apply transition-colors;
-    }
+  @media (prefers-color-scheme: dark) {
+    background-image: url("/media/cartographer-dark.webp");
   }
 }
 
-@layer utilities {
-  .hi-svg-inline {
-    display: inline;
-    vertical-align: -0.125rem;
+a.colored {
+  color: var(--link-colored-text);
+  transition: var(--transition-colors);
+
+  &:not(.plain) {
+    text-decoration: underline;
   }
+
+  &:hover {
+    color: var(--link-colored-text-hover);
+  }
+}
+
+/* Inline SVG icons from hugomods/icons */
+.hi-svg-inline {
+  display: inline;
+  vertical-align: -0.125rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }

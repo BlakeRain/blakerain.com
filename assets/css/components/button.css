@@ -1,44 +1,73 @@
-@layer components {
-  .button {
-    @apply inline-flex items-center justify-center;
-    @apply border border-transparent rounded-md;
+/* Button component variables */
+:root {
+  --button-text: var(--color-text-inverse);
+  --button-text-hover: #f5f5f5;
+  --button-bg: var(--color-brand-light);
+  --button-bg-hover: var(--color-brand);
+  --button-bg-active: var(--color-brand);
+  --button-disabled-text: var(--color-disabled);
+  --button-disabled-bg: #e5e7eb;
+  --button-focus-ring: var(--color-brand);
 
-    @apply px-4 py-2;
-    @apply text-sm whitespace-nowrap;
+  --button-outline-border: var(--color-outline);
+  --button-outline-text: var(--color-outline-text);
+  --button-outline-bg-hover: rgba(100, 116, 139, 0.1);
+  --button-outline-bg-active: rgba(51, 65, 85, 0.5);
+}
 
-    @apply text-neutral-200 hover:text-neutral-100;
-    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+/* Button component */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    @apply bg-primary-light dark:bg-primary;
-    @apply disabled:bg-gray-200 dark:disabled:bg-gray-600;
-    @apply active:bg-primary dark:active:bg-primary-light;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
 
-    &:not(:disabled) {
-      @apply hover:bg-primary dark:hover:bg-primary-light;
-    }
+  padding: 0.5rem 1rem;
+  font-size: var(--text-sm);
+  white-space: nowrap;
 
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
-    @apply transition;
+  color: var(--button-text);
+  background-color: var(--button-bg);
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
 
-    &.button-outline {
-      @apply bg-transparent border-slate-700 text-slate-600;
-      @apply dark:border-slate-600 dark:text-slate-500;
+  &:hover:not(:disabled) {
+    color: var(--button-text-hover);
+    background-color: var(--button-bg-hover);
+  }
 
-      &:hover {
-        @apply bg-slate-500/10 dark:text-slate-500;
-      }
+  &:active:not(:disabled) {
+    background-color: var(--button-bg-active);
+  }
 
-      &:active {
-        @apply bg-slate-700/50;
-      }
-    }
+  &:disabled {
+    color: var(--button-disabled-text);
+    background-color: var(--button-disabled-bg);
+    cursor: not-allowed;
+  }
 
-    &:focus {
-      box-shadow: none;
-    }
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--button-focus-ring);
+  }
 
-    > svg {
-      @apply mr-1;
-    }
+  & > svg {
+    margin-right: 0.25rem;
+  }
+}
+
+/* Outline button variant */
+.button.button-outline {
+  background-color: transparent;
+  border-color: var(--button-outline-border);
+  color: var(--button-outline-text);
+
+  &:hover:not(:disabled) {
+    background-color: var(--button-outline-bg-hover);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--button-outline-bg-active);
   }
 }

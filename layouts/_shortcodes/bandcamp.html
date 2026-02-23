@@ -1,7 +1,7 @@
 {{ $album := .Get "album" }}
 {{ $tracklist := .Get "tracklist" }}
 {{ $url := .Get "url" }}
-<div class="my-6 flex flex-row justify-center">
+<div class="bandcamp-embed">
   <iframe
     style="border: 0; width: 500px; height: {{ if default false (.Get "tracklist") }}472px{{ else }}120px{{ end }};"
     src="https://bandcamp.com/EmbeddedPlayer/album={{ $album }}/size=large/bgcol=333333/linkcol=0f91ff/{{ if default false (.Get "tracklist") }}tracklist=true{{ end }}/artwork=small/transparent=true/"

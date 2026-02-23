@@ -4,7 +4,7 @@
   icon:
     vendor: simple-icons
     name: forgejo
-  hover_color: "hover:text-[#C2410C] dark:hover:text-[#FB923C]"
+  hover_class: social-link-forgejo
 
 - name: GitHub
   url: https://github.com/BlakeRain
@@ -12,7 +12,7 @@
   icon:
     vendor: bootstrap
     name: github
-  hover_color: "hover:text-black dark:hover:text-white"
+  hover_class: social-link-github
 
 - name: Mastodon
   url: https://mastodonapp.uk/@BlakeRain
@@ -20,7 +20,7 @@
   icon:
     vendor: bootstrap
     name: mastodon
-  hover_color: "hover:text-[#6364FF]"
+  hover_class: social-link-mastodon
 
 - name: LinkedIn
   url: https://www.linkedin.com/in/blakerain
@@ -28,4 +28,4 @@
   icon:
     vendor: bootstrap
     name: linkedin
-  hover_color: "hover:text-[#0A66C2]"
+  hover_class: social-link-linkedin

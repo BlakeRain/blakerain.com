@@ -1,55 +1,79 @@
 figure {
-  @apply w-full mb-6 flex flex-col items-center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  div.highlight {
-    @apply w-full overflow-x-scroll;
+  & div.highlight {
+    width: 100%;
+    overflow-x: scroll;
   }
 
-  pre {
-    @apply mb-0;
-    @apply w-full bg-neutral-100 dark:bg-neutral-800 rounded-md p-4 overflow-x-scroll;
-    @apply print:border-neutral-800 print:p-2;
+  & pre {
+    margin-bottom: 0;
+    width: 100%;
+    background-color: var(--color-surface-subtle);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    overflow-x: scroll;
 
-    code {
-      @apply font-mono leading-snug;
+    & code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      line-height: var(--leading-snug);
+    }
+
+    @media print {
+      padding: 0.5rem;
     }
   }
 
-  img {
-    @apply h-auto rounded-md;
+  & img {
+    height: auto;
+    max-width: 100%;
+    border-radius: var(--radius-md);
   }
 
   &.quote {
-    @apply relative items-start;
+    position: relative;
+    align-items: flex-start;
 
-    &:before {
+    &::before {
       position: absolute;
-      top: 24px;
+      top: -18px;
       left: -44px;
-      content: "“";
+      content: "\201c";
       font-size: 6rem;
+      line-height: 1;
+      display: none;
+      color: var(--color-text-subtle);
 
-      @apply text-neutral-400 dark:text-neutral-700;
-      @apply hidden md:block;
-    }
-
-    p {
-      @apply italic mb-0;
-      @apply text-neutral-600 dark:text-neutral-400;
-    }
-
-    cite {
-      &:before {
-        content: "— ";
+      @media (--screen-md) {
+        display: block;
       }
+    }
 
-      @apply font-sans ml-4;
+    & p {
+      font-style: italic;
+      margin-bottom: 0;
+      color: var(--color-text-muted);
+    }
+
+    & cite {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      margin-left: 1rem;
+
+      &::before {
+        content: "— ";
+      }
     }
   }
 }
 
 figcaption {
-  @apply mt-4 font-sans text-sm text-center;
-  @apply text-neutral-600 dark:text-neutral-400;
+  margin-top: 1rem;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-sm);
+  text-align: center;
+  color: var(--color-text-muted);
 }
-

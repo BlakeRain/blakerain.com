@@ -1,0 +1,43 @@
+/* Weeknotes component variables */
+:root {
+  --weeknotes-title-text: var(--color-text);
+  --weeknotes-line: var(--color-text-muted);
+  --weeknotes-subtitle-text: var(--color-text-muted);
+  --weeknotes-subtitle-cover-text: var(--color-text-soft);
+}
+
+.weeknotes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 2.5rem;
+  padding: 1rem;
+
+  @media (--screen-lg) {
+    padding: 0;
+  }
+
+  > article {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    gap: 0.25rem 1rem;
+    align-items: center;
+
+    > a {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+    }
+
+    > .line {
+      height: 0;
+      border-top: 1px dashed var(--weeknotes-line);
+    }
+
+    > p {
+      grid-column: span 3;
+      color: var(--weeknotes-summary-text);
+      font-style: italic;
+    }
+  }
+}

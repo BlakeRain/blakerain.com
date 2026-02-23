@@ -1,47 +1,45 @@
-<div class="grid grid-cols-[8rem_1fr] gap-5 p-5 border border-neutral-200 dark:border-none rounded-md bg-white dark:bg-neutral-800 rounded-md bg-white dark:bg-neutral-800 mb-6">
-  <div class="hidden sm:block md:row-span-2">
+<div class="book-card">
+  <div class="book-cover">
     <a href="{{ .Get "url" }}" target="_blank" rel="noopener">
-      <img class="block w-full h-auto rounded-md" src="{{ .Get "cover" }}" alt="Book Cover of {{ .Get "title" }}">
+      <img class="book-cover" src="{{ .Get "cover" }}" alt="Book Cover of {{ .Get "title" }}">
     </a>
   </div>
-  <div class="col-start-1 sm:col-start-2 col-end-3">
-    <h3 class="flex flex-row justify-between gap-2 text-2xl mt-0 mb-1">
-      <a class="no-underline text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" href="{{ .Get "url" }}" target="_blank" rel="noopener">
+  <div class="book-info">
+    <h3>
+      <a href="{{ .Get "url" }}" target="_blank" rel="noopener">
         {{ .Get "title" }}
       </a>
       {{ with .Get "rating" }}
-        <div class="hidden sm:block cursor-default flex flex-row gap-x-1 text-lg text-gray-500 dark:text-gray-400" title="Rating {{ . }}/5">
+        <div class="book-rating" title="Rating {{ . }}/5">
           {{ strings.Repeat . "★" }}{{ strings.Repeat (sub 5 .) "☆" }}
         </div>
       {{ end }}
     </h3>
     {{ with .Get "subtitle" }}
-      <h4 class="text-lg font-semibold text-gray-500 dark:text-gray-400 mt-0 mb-1">
+      <h4>
         {{ . }}
       </h4>
     {{ end }}
-    <div class="flex flex-row flex-wrap gap-x-1 gap-y-0 text-sm text-gray-500 dark:text-gray-400 mb-3">
+    <div class="book-meta">
       <div>{{ .Get "author" }}</div>
       {{ with .Get "year" }}
-        <div class="text-gray-500">&#8226;</div>
+        <div class="separator">&#8226;</div>
         <div>{{ . }}</div>
       {{ end }}
       {{ with .Get "pages" }}
-        <div class="text-gray-500">&#8226;</div>
+        <div class="separator">&#8226;</div>
         <div>{{ . }}</div>
       {{ end }}
     </div>
     {{ with .Get "rating" }}
-      <div class="sm:hidden cursor-default flex flex-row gap-x-1 text-lg text-gray-500 dark:text-gray-400" title="Rating {{ . }}/5">
+      <div class="book-rating-mobile" title="Rating {{ . }}/5">
         {{ strings.Repeat . "★" }}{{ strings.Repeat (sub 5 .) "☆" }}
       </div>
     {{ end }}
   </div>
-  <div class="col-start-1 md:col-start-2 col-end-3">
-    <p class="mb-2">
-      {{ .Inner | markdownify }}
-    </p>
-    <a class="no-underline text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" href="{{ .Get "url" }}" target="_blank" rel="noopener">
+  <div class="book-content">
+    {{ .Inner | markdownify }}
+    <a class="book-link" href="{{ .Get "url" }}" target="_blank" rel="noopener">
       View book {{ partial "icons/icon" (dict "vendor" "lucide" "name" "arrow-right") }}
     </a>
   </div>

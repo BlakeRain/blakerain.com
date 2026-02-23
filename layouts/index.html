@@ -3,54 +3,54 @@
   <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/index.xml">
 {{ end }}
 {{ define "main" }}
-  <main class="h-card mx-auto flex flex-col gap-4 md:w-[38rem] break-words px-6 my-6 md:my-20 h-card">
-    <img class="u-photo w-48 h-auto mb-2 self-center rounded-full shadow-xl dark:border dark:border-primary bg-primary/50"
+  <main class="home-main h-card">
+    <img class="home-photo u-photo"
       alt="Blake Rain" loading="lazy" decoding="async" src="/media/photo-small.webp">
-    <h1 class="self-center text-4xl font-extrabold">Blake Rain</h1>
-    <h2 class="self-center text-xl text-neutral-500 dark:text-neutral-400">Software Engineer at Cignpost</h2>
+    <h1 class="home-title">Blake Rain</h1>
+    <h2 class="home-subtitle">Software Engineer at Cignpost</h2>
     <a style="display: none;" class="u-url" href="https://blakerain.com/" rel="me">Blake Rain</a>
     {{ partial "social-links" (dict
       "mode" "icons"
-      "class" "text-2xl flex flex-row gap-4 justify-center text-stone-500 dark:text-stone-400"
-      "linkClass" "transition-transform hover:scale-125"
+      "class" "home-social"
+      "linkClass" "home-social-link"
     ) }}
-    <p class="mt-8 p-note text-justify">
+    <p class="home-bio p-note">
       Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
-      <span class="text-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
+      <span class="home-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
       software engineer at Cignpost.
     </p>
-    <p class="text-justify">
+    <p class="home-text">
       When I find time I enjoy experimenting with technology. I do try and remember to share my
       findings on my <a class="colored" href="/blog">blog</a>, and any useful <a class="colored"
       href="/notes">notes</a> I find along the way.
     </p>
-    <div class="flex flex-row gap-4 items-center mt-10">
-      <h1 class="text-2xl font-bold">Latest Posts</h1>
-      <div class="grow h-0 border-t border-dashed border-neutral-500"></div>
+    <div class="home-section-header">
+      <h1 class="home-section-title">Latest Posts</h1>
+      <div class="home-section-line"></div>
     </div>
-    <ul class="flex flex-col gap-4 mt-2">
+    <ul class="home-posts">
       {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
         <li>
-          <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+          <a href="{{ .RelPermalink }}" class="home-post-title colored">
             {{ .Title }}
           </a>
-          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          <p class="home-post-date">
             {{ .Date.Format "2 January 2006" }}
           </p>
         </li>
       {{ end }}
     </ul>
-    <div class="flex flex-row gap-4 items-center mt-10">
-      <h1 class="text-2xl font-bold">Latest Notes</h1>
-      <div class="grow h-0 border-t border-dashed border-neutral-500"></div>
+    <div class="home-section-header">
+      <h1 class="home-section-title">Latest Notes</h1>
+      <div class="home-section-line"></div>
     </div>
-    <ul class="flex flex-col gap-4 mt-2">
+    <ul class="home-posts">
       {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
         <li>
-          <a href="{{ .RelPermalink }}" class="text-lg font-semibold colored">
+          <a href="{{ .RelPermalink }}" class="home-post-title colored">
             {{ .Title }}
           </a>
-          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          <p class="home-post-date">
             {{ .Date.Format "2 January 2006" }}
           </p>
         </li>

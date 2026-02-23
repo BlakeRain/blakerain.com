@@ -1,12 +1,9 @@
-@layer utilities {
-  div.highlight {
-    @import "./syntax/catppuccin-latte.css";
-  }
-
-  @media (prefers-color-scheme: dark) {
-    div.highlight {
-      @import "./syntax/catppuccin-mocha.css";
-    }
-  }
+div.highlight {
+  @import "./syntax/catppuccin-latte.css";
 }
 
+@media (prefers-color-scheme: dark) {
+  div.highlight {
+    @import "./syntax/catppuccin-mocha.css";
+  }
+}

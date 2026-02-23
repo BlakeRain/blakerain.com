@@ -1,27 +1,27 @@
 
-<footer class="print:hidden bg-primary text-neutral-400 text-sm mt-4 min-h-[10rem] flex-col">
-  <div class="content mx-auto flex flex-col gap-4 md:gap-0 py-6 px-8 sm:px-4 sm:flex-row sm:items-start sm:justify-between">
-    <div class="flex flex-row flex-wrap gap-x-2 gap-y-1">
-      <a href="/copyright" class="hover:text-neutral-50">
+<footer class="site-footer">
+  <div class="site-footer-inner content">
+    <div class="site-footer-left">
+      <a href="/copyright" class="site-footer-link">
         Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} {{ .Site.Params.author.name }}
       </a>
       {{ with site.Menus.footer_left }}
-        <div class="basis-full"></div>
+        <div class="site-footer-break"></div>
         {{ range . }}
-          <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+          <a class="site-footer-link" href="{{ .URL }}">{{ .Name }}</a>
         {{ end }}
       {{ end }}
     </div>
-    <div class="flex flex-row flex-wrap sm:justify-end gap-x-2 gap-y-1">
+    <div class="site-footer-right">
       {{ with site.Menus.footer_right }}
         {{ range . }}
-          <a class="hover:text-neutral-50" href="{{ .URL }}">{{ .Name }}</a>
+          <a class="site-footer-link" href="{{ .URL }}">{{ .Name }}</a>
         {{ end }}
-        <div class="basis-full"></div>
+        <div class="site-footer-break"></div>
       {{ end }}
-      {{ partial "social-links" (dict "mode" "text" "wrap" false "linkClass" "hover:text-neutral-50") }}
+      {{ partial "social-links" (dict "mode" "text" "wrap" false "linkClass" "site-footer-link") }}
       <a
-        class="hover:text-neutral-50"
+        class="site-footer-link"
         href="https://status.blacktreenetworks.com/"
         title="Service status"
         target="_blank"
@@ -31,12 +31,12 @@
     </div>
   </div>
   {{ if hugo.IsDevelopment }}
-    <div class="flex flex-row justify-center mb-4 gap-2">
-      <div class="opacity-50 sm:opacity-100">sm</div>
-      <div class="opacity-50 md:opacity-100">md</div>
-      <div class="opacity-50 lg:opacity-100">lg</div>
-      <div class="opacity-50 xl:opacity-100">xl</div>
-      <div class="opacity-50 2xl:opacity-100">2xl</div>
+    <div class="site-footer-breakpoints">
+      <div class="sm">sm</div>
+      <div class="md">md</div>
+      <div class="lg">lg</div>
+      <div class="xl">xl</div>
+      <div class="xxl">2xl</div>
     </div>
   {{ end }}
 </footer>

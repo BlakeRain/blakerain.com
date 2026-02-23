@@ -3,5 +3,5 @@
 {{ with or (.Page.Resources.Get $name) (resources.Get $name) }}
   <script type="module">import "{{ .RelPermalink }}";</script>
 {{ else }}
-  <div class="text-2xl text-red-400">Unable to locate script: <code>{{ $name }}</code></div>
+  <div class="module-error">Unable to locate script: <code>{{ $name }}</code></div>
 {{ end }}

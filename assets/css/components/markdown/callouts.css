@@ -1,78 +1,192 @@
 .callout {
-  @apply rounded-md p-4 text-base mb-6;
-  @apply border dark:border-0 print:border-2 print:p-2;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  font-size: var(--text-base);
+  margin-bottom: 1.5rem;
+  border: 1px solid;
 
-  > p {
-    @apply m-0;
+  @media print {
+    background-color: transparent;
+    border-width: 2px;
+    padding: 0.5rem;
   }
 
-  .callout-label {
-    @apply inline-flex items-center gap-1 font-bold font-sans;
+  @media (prefers-color-scheme: dark) {
+    border: none;
+  }
+
+  & > p {
+    margin: 0;
+  }
+
+  & .callout-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     text-transform: uppercase;
 
-    > svg {
-      @apply w-[1.2rem] h-[1.5rem];
+    & > svg {
+      width: 1.2rem;
+      height: 1.5rem;
     }
   }
 
-  &.note, &.info {
-    @apply bg-blue-200 print:bg-transparent border-blue-400 print:border-blue-200 dark:bg-blue-950;
+  /* Note / Info variant - Blue */
+  &.note,
+  &.info {
+    background-color: #bfdbfe;
+    border-color: #60a5fa;
 
-    .callout-label {
-      @apply text-blue-600 dark:text-blue-400;
+    & .callout-label {
+      color: #2563eb;
     }
 
-    > .body {
-      @apply text-black dark:text-white;
+    & > .body {
+      color: black;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #bfdbfe;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #172554;
+
+      & .callout-label {
+        color: #60a5fa;
+      }
+
+      & > .body {
+        color: white;
+      }
     }
   }
 
-  &.tip, &.todo {
-    @apply bg-teal-100 print:bg-transparent border-teal-600 print:border-teal-900 dark:bg-teal-900/50;
+  /* Tip / Todo variant - Teal */
+  &.tip,
+  &.todo {
+    background-color: #ccfbf1;
+    border-color: #0d9488;
 
-    .callout-label {
-      @apply text-teal-600 dark:text-teal-300;
+    & .callout-label {
+      color: #0d9488;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #134e4a;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      background-color: rgba(20, 78, 74, 0.5);
+
+      & .callout-label {
+        color: #5eead4;
+      }
     }
   }
 
+  /* Success variant - Green */
   &.success {
-    @apply bg-green-100 print:bg-transparent border-green-600 print:border-green-900 dark:bg-green-900/50;
+    background-color: #dcfce7;
+    border-color: #16a34a;
 
-    .callout-label {
-      @apply text-green-600 dark:text-green-400;
+    & .callout-label {
+      color: #16a34a;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #14532d;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      background-color: rgba(20, 83, 45, 0.5);
+
+      & .callout-label {
+        color: #4ade80;
+      }
     }
   }
 
+  /* Question variant - Amber */
   &.question {
-    @apply bg-amber-200/10 print:bg-transparent border-amber-600 print:border-amber-500;
+    background-color: rgba(253, 230, 138, 0.1);
+    border-color: #d97706;
 
-    .callout-label {
-      @apply text-amber-600 dark:text-amber-200;
+    & .callout-label {
+      color: #d97706;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #f59e0b;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      & .callout-label {
+        color: #fde68a;
+      }
     }
   }
 
+  /* Warning variant - Orange */
   &.warning {
-    @apply bg-orange-500/10 print:bg-transparent border-orange-500 print:border-orange-500;
+    background-color: rgba(249, 115, 22, 0.1);
+    border-color: #f97316;
 
-    .callout-label {
-      @apply text-orange-600;
+    & .callout-label {
+      color: #ea580c;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #f97316;
     }
   }
 
+  /* Danger variant - Red */
   &.danger {
-    @apply bg-red-500/25 print:bg-transparent border-red-600 print:border-red-500;
+    background-color: rgba(239, 68, 68, 0.25);
+    border-color: #dc2626;
 
-    .callout-label {
-      @apply text-red-600 dark:text-red-400;
+    & .callout-label {
+      color: #dc2626;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #ef4444;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      & .callout-label {
+        color: #f87171;
+      }
     }
   }
 
+  /* Example variant - Violet */
   &.example {
-    @apply bg-violet-900/25 print:bg-transparent border-violet-600 print:border-violet-900;
+    background-color: rgba(76, 29, 149, 0.25);
+    border-color: #7c3aed;
 
-    .callout-label {
-      @apply text-violet-700 dark:text-violet-400;
+    & .callout-label {
+      color: #6d28d9;
+    }
+
+    @media print {
+      background-color: transparent;
+      border-color: #4c1d95;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      & .callout-label {
+        color: #a78bfa;
+      }
     }
   }
-} /* .callout */
-
+}

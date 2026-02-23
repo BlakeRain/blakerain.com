@@ -1,57 +1,110 @@
-@layer components {
-  label {
-    @apply block text-sm font-medium mb-1;
-    @apply text-neutral-700 dark:text-neutral-300;
-    @apply disabled:text-gray-400 dark:disabled:text-gray-800;
+/* Field component variables */
+:root {
+  --label-text: var(--color-text-secondary);
+  --label-text-disabled: var(--color-disabled);
+
+  --field-bg: #f9fafb;
+  --field-text: var(--color-disabled-dark);
+  --field-border: var(--color-disabled);
+  --field-border-focus: var(--color-brand-light);
+  --field-focus-ring: rgba(28, 71, 115, 0.2);
+  --field-disabled-bg: #f3f4f6;
+  --field-disabled-border: #e5e7eb;
+  --field-disabled-text: var(--color-meta);
+  --field-invalid-border: var(--color-error);
+
+  --field-icon-color: var(--color-border);
+
+  @media (prefers-color-scheme: dark) {
+    --field-text: white;
+  }
+}
+
+/* Form label */
+label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--label-text);
+
+  &:disabled {
+    color: var(--label-text-disabled);
+  }
+}
+
+/* Form field input */
+.field {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  font-size: var(--text-base);
+
+  outline: none;
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--field-bg);
+  color: var(--field-text);
+
+  &:focus {
+    border-color: var(--field-border-focus);
+    box-shadow: 0 0 0 2px var(--field-focus-ring);
   }
 
-  .field {
-    @apply block w-full px-2.5 py-2;
-    @apply sm:text-sm;
-    @apply outline-none border rounded-lg;
-    @apply bg-gray-50 border-gray-400 text-gray-900;
-    @apply dark:bg-zinc-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white;
-    @apply focus:ring-primary-light focus:border-primary-light;
-
-    &:disabled {
-      @apply bg-gray-100 border-gray-200 text-gray-500;
-      @apply dark:bg-zinc-800 dark:border-gray-700 dark:text-gray-500;
-    }
-
-    &:invalid {
-      @apply border-red-500;
-      @apply dark:border-red-400;
-    }
+  &:disabled {
+    background-color: var(--field-disabled-bg);
+    border-color: var(--field-disabled-border);
+    color: var(--field-disabled-text);
+    cursor: not-allowed;
   }
 
-  .input-icons {
-    @apply relative;
-
-    svg:first-child,
-    svg:last-child {
-      @apply pointer-events-none absolute top-1/2 -mt-2.5 text-gray-300 dark:text-gray-500;
-    }
-
-    svg:first-child {
-      @apply left-3;
-    }
-
-    svg:last-child {
-      @apply right-3;
-    }
-
-    select,
-    input[type="text"],
-    input[type="number"],
-    input[type="password"] {
-      &.icon-left {
-        @apply pl-10;
-      }
-
-      &.icon-right {
-        @apply pr-10;
-      }
-    }
+  &:invalid {
+    border-color: var(--field-invalid-border);
   }
 
+  @media (--screen-sm) {
+    font-size: var(--text-sm);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &::placeholder {
+      color: var(--field-placeholder);
+    }
+  }
+}
+
+/* Input with icons */
+.input-icons {
+  position: relative;
+
+  & svg:first-child,
+  & svg:last-child {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    margin-top: -0.625rem;
+    color: var(--field-icon-color);
+  }
+
+  & svg:first-child {
+    left: 0.75rem;
+  }
+
+  & svg:last-child {
+    right: 0.75rem;
+  }
+
+  & select,
+  & input[type="text"],
+  & input[type="number"],
+  & input[type="password"] {
+    &.icon-left {
+      padding-left: 2.5rem;
+    }
+
+    &.icon-right {
+      padding-right: 2.5rem;
+    }
+  }
 }

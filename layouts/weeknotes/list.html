@@ -1,28 +1,26 @@
 {{ define "main" }}
-<main class="grow mx-auto mt-4 lg:mt-8 mb-20 content">
-  <h1 class="text-4xl md:text-5xl font-bold text-center text-neutral-800 dark:text-neutral-200">
+<main class="articles-list content">
+  <h1>
     Weeknotes
   </h1>
-  <h2 class="text-xl text-center mt-8 text-neutral-500 dark:text-neutral-400">
+  <h2>
     {{ .Description }}
   </h2>
-  <div class="flex flex-col gap-4 mt-12 mb-10 p-4 lg:p-0">
+  <div class="weeknotes-list">
     {{ $pager := .Paginate .Pages 10 }}
     {{ range  $pager.Pages }}
       <article>
-        <div class="grid grid-cols-[max-content_1fr_max-content] gap-x-4 gap-y-1 items-center">
-          <a class="colored text-lg font-semibold" href="{{ .Permalink }}">
-            {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
-            {{ index $parts 0 }} - Week {{ index $parts 1 }}
-          </a>
-          <div class="h-0 border-t border-dashed border-neutral-500"></div>
-          <div class="text-neutral-700 dark:text-neutral-300">
-            {{ .Date | time.Format "2 Jan 2006" }}
-          </div>
-          <div class="col-span-3 text-neutral-700 dark:text-neutral-300 italic">
-            {{ .Summary }}
-          </div>
+        <a class="colored" href="{{ .Permalink }}">
+          {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
+          {{ index $parts 0 }} - Week {{ index $parts 1 }}
+        </a>
+        <div class="line"></div>
+        <div>
+          {{ .Date | time.Format "2 Jan 2006" }}
         </div>
+        <p>
+          {{ .Summary }}
+        </p>
       </article>
     {{ end }}
     {{ partial "pager" $pager }}

@@ -52,7 +52,7 @@
     {{ end }}
     {{ block "head" . }}{{ end }}
   </head>
-  <body class="flex flex-col">
+  <body>
     {{ partial "navigation" (dict "page" .) }}
     {{ block "main" . }}{{ end }}
     {{ partial "footer" . }}

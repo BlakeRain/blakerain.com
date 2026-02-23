@@ -1,14 +1,31 @@
-@layer components {
-  .markdown {
-    @apply flex flex-col;
-    @apply font-sans font-normal text-lg print:text-base;
-    @apply text-neutral-800 dark:text-neutral-300;
+:root {
+  --markdown-pre-text: #4c4f69;
+  --markdown-pre-bg: #fcfcfc;
 
-    @import "markdown/headings.css";
-    @import "markdown/figures.css";
-    @import "markdown/goat.css";
-    @import "markdown/callouts.css";
-    @import "markdown/typography.css";
-    @import "markdown/tables.css";
+  @media (prefers-color-scheme: dark) {
+    --markdown-pre-text: #cdd6f4;
+    --markdown-pre-bg: #1e1e2e;
   }
+}
+
+.markdown {
+  display: flex;
+  flex-direction: column;
+
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: var(--text-lg);
+
+  color: var(--color-text);
+
+  @media print {
+    font-size: var(--text-base);
+  }
+
+  @import "markdown/headings.css";
+  @import "markdown/figures.css";
+  @import "markdown/goat.css";
+  @import "markdown/callouts.css";
+  @import "markdown/typography.css";
+  @import "markdown/tables.css";
 }
