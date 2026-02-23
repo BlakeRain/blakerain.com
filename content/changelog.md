@@ -9,6 +9,21 @@ sitemap:
   disable: true
 ---
 
+# 2026-02-22
+
+- Fixed some markdown styling issues; mostly spacing.
+- Fixed some cover image quality issues.
+- Fixed an issue with background images on iOS (no `background-position`).
+- Fixed layout of the `book` shortcode on mobile devices.
+- Fixed handling of notes that don't have a link.
+- Added the [weeknote](/weeknotes/2026-W08) for 2026-W08.
+- Add note to figures when you can click image to enlarge.
+- Add the summary of a weeknote to the title block.
+- Add support for external links in headings.
+- Add subtitle to the book shortcode.
+- Cleaned up the width of the site content to be more consistent.
+- Removed all the `/tools` pages, as I haven't visited them in a while.
+
 # 2026-02-15
 
 - Added the first [weeknote](/weeknotes/2026-W07) to the site.
