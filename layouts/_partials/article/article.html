@@ -1,10 +1,14 @@
 {{ $title := "" }}
 {{ $page := . }}
+{{ $subtitle := false }}
 {{ if isset . "page" }}
   {{ $page = .page }}
   {{ $title = $page.Title }}
   {{ if isset . "title" }}
     {{ $title = .title }}
+  {{ end }}
+  {{ if isset . "subtitle" }}
+    {{ $subtitle = .subtitle }}
   {{ end }}
 {{ else }}
   {{ $title = .Title }}
@@ -20,11 +24,14 @@
       style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ $image.Permalink }}')"
     {{- end -}}>
     <div class="content mx-auto inner">
-      <h1 class="{{ if $cover }}with-cover{{ end }}">
+      <h1 class="{{ if $cover }}with-cover{{ end }}{{ if $subtitle }} with-subtitle{{ end }}">
         <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">
           {{ $title }}
         </a>
       </h1>
+      {{ if $subtitle }}
+        <h2 class="{{ if $cover }}with-cover{{ end }}">{{ .Summary }}</h2>
+      {{ end }}
       {{- with .Param "coverImage" -}}
         <div class="cover-credit">
           {{- if .url -}}

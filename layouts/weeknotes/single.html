@@ -2,7 +2,7 @@
   <main class="page-main">
     {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
     {{ $title := printf "%s - Week %s" (index $parts 0) (index $parts 1) }}
-    {{ $cfg := dict "page" . "title" $title }}
+    {{ $cfg := dict "page" . "title" $title "subtitle" true }}
     {{ partial "article/article" $cfg }}
   </main>
 {{ end }}
