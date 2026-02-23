@@ -2,12 +2,12 @@
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
   <main class="grow">
     <article class="h-entry">
-      <header class="bg-no-repeat bg-[50%] bg-cover bg-fixed"
+      <header class="bg-no-repeat bg-cover bg-center"
         {{ if .Param "customHero" -}}
           style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
         {{- else if $cover -}}
           {{- $image := $cover.Process "q30 webp" -}}
-          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ $image.Permalink }}')"
+          style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ $image.Permalink }}')"
         {{- end -}}>
         <div class="content mx-auto flex flex-col items-center">
           <h1 class="mx-2 md:mx-0 lg:w-[45rem] text-4xl md:text-5xl text-center font-bold leading-normal

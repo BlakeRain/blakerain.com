@@ -2,7 +2,7 @@
   {{ $cover := .Resources.GetMatch "cover.jpg" }}
   <main class="grow">
     <article class="h-entry">
-      <header class="bg-[50%] bg-no-repeat bg-cover bg-fixed">
+      <header>
         <div class="mx-auto content flex flex-col">
           <h1 class="mx-2 md:mx-0 mb-10 lg:w-[45rem] self-center text-4xl md:text-5xl text-center font-bold leading-normal mt-10 text-neutral-800 dark:text-neutral-200">
             {{ if isset .Params "link" }}
