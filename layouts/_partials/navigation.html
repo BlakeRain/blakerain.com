@@ -3,7 +3,7 @@
   <div class="content mx-auto flex flex-col md:flex-row px-2 sm:px-4">
     <div class="flex flex-row justify-between items-center">
       <a href="/" class="block pr-4 py-4 md:my-0">
-        <img class="block" src="/media/logo-text.png" width="154" height="28" alt="Blake Rain">
+        <img class="block" src="/media/logo-text.png" width="154" height="28" alt="{{ .Site.Params.author.name }}">
       </a>
       <button id="nav-menu-toggle" type="button" class="md:hidden p-4">
         {{ partial "icons/icon" (dict "vendor" "lucide" "name" "menu") }}

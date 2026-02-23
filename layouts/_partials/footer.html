@@ -3,7 +3,7 @@
   <div class="content mx-auto flex flex-col gap-4 md:gap-0 py-6 px-8 sm:px-4 sm:flex-row sm:items-start sm:justify-between">
     <div class="flex flex-row flex-wrap gap-x-2 gap-y-1">
       <a href="/copyright" class="hover:text-neutral-50">
-        Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} Blake Rain
+        Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} {{ .Site.Params.author.name }}
       </a>
       {{ with site.Menus.footer_left }}
         <div class="basis-full"></div>

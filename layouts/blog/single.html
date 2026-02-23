@@ -38,7 +38,7 @@
           <div>{{ .ReadingTime }} min read</div>
           <div class="basis-full"></div>
           <div>by</div>
-          <a rel="author" class="p-author h-card" href="https://blakerain.com/">Blake Rain</a>
+          <a rel="author" class="p-author h-card" href="https://blakerain.com/">{{ .Site.Params.author.name }}</a>
         </div>
         {{ with .Param "tags" }}
           <div class="flex flex-row flex-wrap gap-x-2 gap-y-0">
