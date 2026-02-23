@@ -48,7 +48,7 @@ IRCv3 features, and is built using the [iced] GUI framework, which is interestin
 Having a [Catppuccin] theme for Halloy is certainly a good way to get my interest 😏.
 
 [recent decision]: /notes/2026-02-12/
-[Last week]: /weeknotes/2026-W07/
+[Last week]: /weeknotes/2026-w07/
 [Rocket.Chat]: https://rocket.chat/
 [post]: https://social.treehouse.systems/@whitequark/116089585784234453
 [@whitequark@treehouse.systems]: https://social.treehouse.systems/@whitequark
@@ -60,6 +60,7 @@ Having a [Catppuccin] theme for Halloy is certainly a good way to get my interes
 [The Lounge]: https://thelounge.chat/
 [Igloo]: https://igloo.app/
 [Halloy]: https://halloy.chat/
+[Irssi]: https://irssi.org/
 [iced]: https://github.com/iced-rs/iced/
 [Catppuccin]: https://catppuccin.com/
 [other themes]: https://themes.halloy.chat/
@@ -119,7 +120,7 @@ I've been reading things again.
 {{< book
     url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181"
     cover="cover-escape-from-capitalism.webp"
-    title="Escape From Capitalism: Science and Economics Etc Longer Title"
+    title="Escape From Capitalism"
     subtitle="Economics is Political, and Other Liberating Truths"
     author="Clara E. Mattei"
     year="2026"
