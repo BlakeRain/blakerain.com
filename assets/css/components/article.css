@@ -110,7 +110,7 @@
   header {
     background-repeat: no-repeat;
     background-size: cover;
-    bakground-position: center;
+    background: center;
 
     > .inner {
       display: flex;
