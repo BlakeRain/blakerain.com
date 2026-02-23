@@ -1,5 +1,5 @@
 {{ define "main" }}
   <main class="page-main">
-    {{ partial "article/article" . }}
+    {{ partial "article/article" (dict "page" . "meta" false) }}
   </main>
 {{ end }}

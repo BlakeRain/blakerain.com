@@ -1,6 +1,6 @@
 {{ define "main" }}
   <main class="page-main">
-    {{ partial "article/article" . }}
+    {{ partial "article/article" (dict "page" .) }}
     {{ with (where (.Site.RegularPages.Related .) "Section" "blog" | first 5) }}
       {{ partial "article/related" . }}
     {{ end }}
