@@ -30,12 +30,8 @@
     ) }}
   </div>
 </nav>
-<script type="text/javascript">
-  window.addEventListener("DOMContentLoaded", () => {
-    const navMenu = document.getElementById("nav-menu");
-    document.getElementById("nav-menu-toggle").addEventListener("click", () => {
-      navMenu.classList.toggle("hidden");
-      navMenu.classList.toggle("flex");
-    });
-  });
-</script>
+{{ $js := resources.Get "js/navigation.js" }}
+{{ if hugo.IsProduction }}
+  {{ $js = $js | minify | fingerprint }}
+{{ end }}
+<script src="{{ $js.RelPermalink }}" defer></script>
