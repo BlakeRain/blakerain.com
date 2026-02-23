@@ -1,0 +1,31 @@
+- name: Forgejo
+  url: https://git.blakerain.com/BlakeRain
+  title: Forgejo profile
+  icon:
+    vendor: simple-icons
+    name: forgejo
+  hover_color: "hover:text-[#C2410C] dark:hover:text-[#FB923C]"
+
+- name: GitHub
+  url: https://github.com/BlakeRain
+  title: GitHub profile
+  icon:
+    vendor: bootstrap
+    name: github
+  hover_color: "hover:text-black dark:hover:text-white"
+
+- name: Mastodon
+  url: https://mastodonapp.uk/@BlakeRain
+  title: "@BlakeRain@mastodonapp.uk"
+  icon:
+    vendor: bootstrap
+    name: mastodon
+  hover_color: "hover:text-[#6364FF]"
+
+- name: LinkedIn
+  url: https://www.linkedin.com/in/blakerain
+  title: LinkedIn profile
+  icon:
+    vendor: bootstrap
+    name: linkedin
+  hover_color: "hover:text-[#0A66C2]"

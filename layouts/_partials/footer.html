@@ -19,30 +19,7 @@
         {{ end }}
         <div class="basis-full"></div>
       {{ end }}
-      <a
-        class="hover:text-neutral-50"
-        href="https://git.blakerain.com/BlakeRain"
-        title="My Forgejo profile"
-        target="_blank"
-        rel="noreferrer">
-        Forgejo
-      </a>
-      <a
-        class="hover:text-neutral-50"
-        href="https://github.com/BlakeRain"
-        title="My GitHub profile"
-        target="_blank"
-        rel="noreferrer">
-        GitHub
-      </a>
-      <a
-        class="hover:text-neutral-50"
-        href="https://mastodonapp.uk/@BlakeRain"
-        title="@BlakeRain@mastodonapp.uk"
-        target="_blank"
-        rel="noreferrer">
-        Mastodon
-      </a>
+      {{ partial "social-links" (dict "mode" "text" "wrap" false "linkClass" "hover:text-neutral-50") }}
       <a
         class="hover:text-neutral-50"
         href="https://status.blacktreenetworks.com/"

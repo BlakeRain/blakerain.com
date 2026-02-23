@@ -23,36 +23,11 @@
         {{ end }}
       </div>
     {{ end }}
-    <div class="hidden md:flex flex-row items-center gap-2 ml-auto">
-      <a href="https://git.blakerain.com/BlakeRain"
-        class="text-neutral-200/75 hover:text-neutral-200"
-        title="Forgejo profile"
-        target="_blank"
-        rel="noreferrer">
-        {{ partial "icons/icon" (dict "vendor" "simple-icons" "name" "forgejo") }}
-      </a>
-      <a href="https://github.com/BlakeRain"
-        class="text-neutral-200/75 hover:text-neutral-200"
-        title="GitHub profile"
-        target="_blank"
-        rel="noreferrer">
-        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "github") }}
-      </a>
-      <a href="https://mastodonapp.uk/@BlakeRain"
-        class="text-neutral-200/75 hover:text-neutral-200"
-        title="@BlakeRain@mastodonapp.uk"
-        target="_blank"
-        rel="noreferrer">
-        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "mastodon") }}
-      </a>
-      <a href="https://www.linkedin.com/in/blakerain"
-        class="text-neutral-200/75 hover:text-neutral-200"
-        target="_blank"
-        title="LinkedIn profile"
-        rel="noreferrer">
-        {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "linkedin") }}
-      </a>
-    </div>
+    {{ partial "social-links" (dict
+      "mode" "icons"
+      "class" "hidden md:flex flex-row items-center gap-2 ml-auto"
+      "linkClass" "text-neutral-200/75 hover:text-neutral-200"
+    ) }}
   </div>
 </nav>
 <script type="text/javascript">
