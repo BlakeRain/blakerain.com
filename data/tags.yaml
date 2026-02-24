@@ -1,3 +1,6 @@
+agents:
+  name: Agents
+  description: Typically referring to attempts at automation using LLMs.
 ai:
   name: AI
   description: Artificial Intelligence. A branch of computer science.
