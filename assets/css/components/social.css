@@ -1,32 +1,13 @@
-/* Social link component variables */
-:root {
-  --social-forgejo-hover: #C2410C;
-  --social-github-hover: black;
-  --social-mastodon-hover: #6364FF;
-  --social-linkedin-hover: #0A66C2;
+.socials {
+  > a:hover {
+    &.forgejo  { color: #c2410c; }
+    &.github   { color: #24292e; }
+    &.mastodon { color: #6364FF; }
+    &.linkedin { color: #0A66C2; }
 
-  @media (prefers-color-scheme: dark) {
-    --social-forgejo-hover: #FB923C;
-    --social-github-hover: white;
+    @media (prefers-color-scheme: dark) {
+      &.forgejo  { color: #fB923c; }
+      &.github   { color: white;   }
+    }
   }
-}
-
-/* ===========================================
-   Social Links - Icon hover colors
-   =========================================== */
-
-.social-link-forgejo:hover {
-  color: var(--social-forgejo-hover);
-}
-
-.social-link-github:hover {
-  color: var(--social-github-hover);
-}
-
-.social-link-mastodon:hover {
-  color: var(--social-mastodon-hover);
-}
-
-.social-link-linkedin:hover {
-  color: var(--social-linkedin-hover);
 }

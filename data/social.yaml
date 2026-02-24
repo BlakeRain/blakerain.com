@@ -1,31 +1,31 @@
 - name: Forgejo
   url: https://git.blakerain.com/BlakeRain
   title: Forgejo profile
+  class: forgejo
   icon:
     vendor: simple-icons
     name: forgejo
-  hover_class: social-link-forgejo
 
 - name: GitHub
   url: https://github.com/BlakeRain
   title: GitHub profile
+  class: github
   icon:
     vendor: bootstrap
     name: github
-  hover_class: social-link-github
 
 - name: Mastodon
   url: https://mastodonapp.uk/@BlakeRain
   title: "@BlakeRain@mastodonapp.uk"
+  class: mastodon
   icon:
     vendor: bootstrap
     name: mastodon
-  hover_class: social-link-mastodon
 
 - name: LinkedIn
   url: https://www.linkedin.com/in/blakerain
   title: LinkedIn profile
+  class: linkedin
   icon:
     vendor: bootstrap
     name: linkedin
-  hover_class: social-link-linkedin

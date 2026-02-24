@@ -3,13 +3,13 @@
 {{- $linkClass := .linkClass | default "" -}}
 {{- $wrap := .wrap | default true -}}
 {{- $iconSize := .iconSize | default "" -}}
-{{- if $wrap }}<div class="{{ $class }}">{{ end -}}
+{{- if $wrap }}<div class="{{ $class }} socials">{{ end -}}
   {{- range site.Data.social }}
     <a href="{{ .url }}"
       target="_blank"
       title="{{ .title }}"
       rel="me noopener noreferrer"
-      class="{{ $linkClass }} {{ if eq $mode "icons" }}{{ .hover_class }}{{ end }}">
+      class="{{ $linkClass }} {{ if eq $mode "icons" }}{{ .class }}{{ end }}">
       {{- if eq $mode "icons" -}}
         {{ partial "icons/icon" (dict "vendor" .icon.vendor "name" .icon.name "size" $iconSize) }}
       {{- else -}}
