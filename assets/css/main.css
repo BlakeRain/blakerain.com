@@ -69,12 +69,3 @@ a.colored {
   display: inline;
   vertical-align: -0.125rem;
 }
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.no-wrap {
-  white-space: nowrap;
-}
