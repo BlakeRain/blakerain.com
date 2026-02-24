@@ -1,27 +1,25 @@
-
 <footer class="site-footer">
-  <div class="site-footer-inner content">
-    <div class="site-footer-left">
+  <div class="content mx-auto">
+    <div class="left">
       <a href="/copyright" class="site-footer-link">
         Copyright &copy; {{ .Site.Lastmod | time.Format "2006" }} {{ .Site.Params.author.name }}
       </a>
       {{ with site.Menus.footer_left }}
-        <div class="site-footer-break"></div>
+        <div class="break"></div>
         {{ range . }}
-          <a class="site-footer-link" href="{{ .URL }}">{{ .Name }}</a>
+          <a href="{{ .URL }}">{{ .Name }}</a>
         {{ end }}
       {{ end }}
     </div>
-    <div class="site-footer-right">
+    <div class="right">
       {{ with site.Menus.footer_right }}
         {{ range . }}
-          <a class="site-footer-link" href="{{ .URL }}">{{ .Name }}</a>
+          <a href="{{ .URL }}">{{ .Name }}</a>
         {{ end }}
-        <div class="site-footer-break"></div>
+        <div class="break"></div>
       {{ end }}
       {{ partial "social-links" (dict "mode" "text" "wrap" false "linkClass" "site-footer-link") }}
       <a
-        class="site-footer-link"
         href="https://status.blacktreenetworks.com/"
         title="Service status"
         target="_blank"
