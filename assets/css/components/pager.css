@@ -3,8 +3,13 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
   margin-top: 2rem;
+  font-size: var(--text-lg);
+
+  @media (--screen-lg) {
+    gap: 1rem;
+  }
 }
 
 .pager-current {
