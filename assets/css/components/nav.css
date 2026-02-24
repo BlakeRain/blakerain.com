@@ -1,7 +1,6 @@
 :root {
   --nav-text: #e5e5e5;
   --nav-social-text: rgba(229, 229, 229, 0.75);
-  --nav-social-text-hover: var(--color-text-inverse);
 }
 
 .site-navigation {
