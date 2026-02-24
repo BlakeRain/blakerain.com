@@ -11,8 +11,7 @@ sitemap:
 
 # 2026-02-24
 
-- Remove use of Tailwind CSS. This meant quite a bit of work, just to get the site to look the
-  same as before 🫠
+- Remove use of Tailwind CSS. This meant quite a [bit of work](https://git.blakerain.com/BlakeRain/blakerain.com/compare/before-tool-removal...v2.13.0), just to get the site to look the same as before 🫠
 
 # 2026-02-23
 
