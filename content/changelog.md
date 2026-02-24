@@ -9,6 +9,11 @@ sitemap:
   disable: true
 ---
 
+# 2026-02-24
+
+- Remove use of Tailwind CSS. This meant quite a bit of work, just to get the site to look the
+  same as before 🫠
+
 # 2026-02-23
 
 - Replaced literal uses of my name with the site param `author.name`.
