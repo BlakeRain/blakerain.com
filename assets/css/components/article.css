@@ -47,6 +47,10 @@
       h1 {
         font-size: var(--text-2xl);
         font-weight: var(--weight-bold);
+
+        > svg {
+          height: 1.25rem;
+        }
       }
 
       > .meta {
