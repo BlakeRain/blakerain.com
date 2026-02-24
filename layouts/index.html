@@ -3,58 +3,55 @@
   <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/index.xml">
 {{ end }}
 {{ define "main" }}
-  <main class="home-main h-card">
-    <img class="home-photo u-photo"
+  <main class="home h-card">
+    <img class="photo u-photo"
       alt="Blake Rain" loading="lazy" decoding="async" src="/media/photo-small.webp">
-    <h1 class="home-title">Blake Rain</h1>
-    <h2 class="home-subtitle">Software Engineer at Cignpost</h2>
+    <h1>Blake Rain</h1>
+    <h2>Software Engineer at Cignpost</h2>
     <a style="display: none;" class="u-url" href="https://blakerain.com/" rel="me">Blake Rain</a>
     {{ partial "social-links" (dict
       "mode" "icons"
-      "class" "home-social"
-      "linkClass" "home-social-link"
+      "class" "socials"
     ) }}
-    <p class="home-bio p-note">
+    <p class="p-note">
       Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
-      <span class="home-nowrap">C/C++</span>, and Haskell. I am currently working as a senior
+      <span class="no-wrap">C/C++</span>, and Haskell. I am currently working as a senior
       software engineer at Cignpost.
     </p>
-    <p class="home-text">
+    <p>
       When I find time I enjoy experimenting with technology. I do try and remember to share my
       findings on my <a class="colored" href="/blog">blog</a>, and any useful <a class="colored"
       href="/notes">notes</a> I find along the way.
     </p>
-    <div class="home-section-header">
-      <h1 class="home-section-title">Latest Posts</h1>
-      <div class="home-section-line"></div>
-    </div>
-    <ul class="home-posts">
-      {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
-        <li>
-          <a href="{{ .RelPermalink }}" class="home-post-title colored">
-            {{ .Title }}
-          </a>
-          <p class="home-post-date">
-            {{ .Date.Format "2 January 2006" }}
-          </p>
-        </li>
-      {{ end }}
-    </ul>
-    <div class="home-section-header">
-      <h1 class="home-section-title">Latest Notes</h1>
-      <div class="home-section-line"></div>
-    </div>
-    <ul class="home-posts">
-      {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
-        <li>
-          <a href="{{ .RelPermalink }}" class="home-post-title colored">
-            {{ .Title }}
-          </a>
-          <p class="home-post-date">
-            {{ .Date.Format "2 January 2006" }}
-          </p>
-        </li>
-      {{ end }}
-    </ul>
+    <section>
+      <h1>Latest Posts</h1>
+      <ul class="posts">
+        {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
+          <li>
+            <a href="{{ .RelPermalink }}" class="colored">
+              {{ .Title }}
+            </a>
+            <p>
+              {{ .Date.Format "2 January 2006" }}
+            </p>
+          </li>
+        {{ end }}
+      </ul>
+    </section>
+    <section>
+      <h1>Latest Notes</h1>
+      <ul class="posts">
+        {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
+          <li>
+            <a href="{{ .RelPermalink }}" class="colored">
+              {{ .Title }}
+            </a>
+            <p>
+              {{ .Date.Format "2 January 2006" }}
+            </p>
+          </li>
+        {{ end }}
+      </ul>
+    </section>
   </main>
 {{ end }}
