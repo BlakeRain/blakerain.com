@@ -1,32 +1,32 @@
 {{ $page := .page }}
-<nav class="site-nav">
-  <div class="site-nav-inner content">
-    <div class="site-nav-header">
-      <a href="/" class="site-nav-logo">
+<nav class="site-navigation">
+  <div class="content">
+    <div class="header">
+      <a href="/">
         <img src="/media/logo-text.png" width="154" height="28" alt="{{ .Site.Params.author.name }}">
       </a>
-      <button id="nav-menu-toggle" type="button" class="site-nav-toggle">
+      <button id="nav-menu-toggle" type="button">
         {{ partial "icons/icon" (dict "vendor" "lucide" "name" "menu") }}
         <span class="sr-only">Toggle Menu</span>
       </button>
     </div>
     {{ with site.Menus.main }}
-      <div id="nav-menu" class="site-nav-menu">
+      <ul id="nav-menu">
         {{ range . }}
           {{ $active := $page.IsMenuCurrent .Menu . }}
           {{ $active = or $active ($page.HasMenuCurrent .Menu .) }}
-          <a
-            href="{{ .URL }}"
-            class="site-nav-link {{ if $active }}active{{ end }}">
-            {{ .Name }}
-          </a>
+          <li>
+            <a
+              href="{{ .URL }}"
+              class="{{ if $active }}active{{ end }}">
+              {{ .Name }}
+            </a>
+          </li>
         {{ end }}
-      </div>
+      </ul>
     {{ end }}
     {{ partial "social-links" (dict
       "mode" "icons"
-      "class" "site-nav-social"
-      "linkClass" "site-nav-social-link"
       "iconSize" "1.3rem"
     ) }}
   </div>
