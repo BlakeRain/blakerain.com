@@ -1,0 +1,17 @@
+{% macro social_links(mode="icons", class="", linkClass="", wrap=true, iconSize=undefined) %}
+  {%- if wrap %}<div class="{{ class }} socials">{% endif %}
+    {%- for social in load_data("social.yaml") %}
+      <a href="{{ social.url }}"
+        target="_blank"
+        title="{{ social.title }}"
+        rel="me noopener noreferrer"
+        class="{{ linkClass }} {% if mode == "icons" %}{{ social.class }}{% endif %}">
+        {%- if mode == "icons" -%}
+          {{ icon(social.icon.vendor, social.icon.name, size=iconSize) }}
+        {%- else -%}
+          {{ social.name }}
+        {%- endif -%}
+      </a>
+    {%- endfor %}
+  {%- if wrap %}</div>{% endif %}
+{% endmacro %}

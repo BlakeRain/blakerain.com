@@ -24,17 +24,20 @@ interactivity. This project, whilst complete, has not been without some frustrat
 I felt it might be worth documenting some of the more interesting problems I encountered along the
 way.
 
-> [!NOTE]
-> This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
-> whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
-> the change over to using hugo.
+{% from "macros/callout.html" import callout %}
+{% call callout("warning") %}
+This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
+whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
+the change over to using hugo.
+{% endcall %}
 
 [v2.2.3]: https://git.blakerain.com/BlakeRain/blakerain.com/src/tag/v2.2.3
 
-# What is SSG and Hydration? {#what-is-ssg-and-hydration}
+# What is SSG and Hydration? { #what-is-ssg-and-hydration }
 
-> [!NOTE]
-> If you're already familiar with this topic, you might want to skip ahead to the next section.
+{% call callout("note") %}
+If you're already familiar with this topic, you might want to skip ahead to the next section.
+{% endcall %}
 
 These days, it is fairly common for web applications to use libraries such as [React] or [Vue.js]
 to power their user interface. These libraries typically offer excellent approaches to building
@@ -60,7 +63,7 @@ SSG as a mechanism to achieve this. In order to maintain the rich interactive in
 an SPA, frameworks will offer support for _hydration_: a process whereby client-side JavaScript
 attaches to the existing HTML served in the initial response, rather than generating it.
 
-# The Yew Web Framework {#the-yew-web-framework}
+# The Yew Web Framework { #the-yew-web-framework }
 
 [Yew] is a component-based framework for [Rust] that is similar to [React], and typically compiles
 to [WebAssembly]. Tools like [Trunk] can make the processes of building an SPA using Yew quite a
@@ -95,16 +98,17 @@ fn hydrate_my_app() {
 }
 ```
 
-> [!NOTE]
-> The `LocalServerRenderer` and hydration support will require the `ssr` and `hydration` features to
-> be enabled for the `yew` crate.
+{% call callout("note") %}
+The `LocalServerRenderer` and hydration support will require the `ssr` and `hydration` features to
+be enabled for the `yew` crate.
+{% endcall %}
 
 This is very close to what I needed in order to achieve my goal of a hydrating SSG using WebAssembly:
 
 1. I knew that I could generate some static HTML from a Yew application (SSG), and
 2. Once loaded into the browser, I could attach a Yew application to that HTML (hydration).
 
-# Preparing for Hydration {#preparing-for-hydration}
+# Preparing for Hydration { #preparing-for-hydration }
 
 In order for the dynamic elements of the site to be available once the statically generated HTML has
 been loaded by the web browser, the Yew application needs to be attached to the DOM using hydration.
@@ -123,7 +127,7 @@ trunk build --release --features hydration
 This generates the `index.html` that I use as a template in the SSG along with the WebAssembly of
 the hydrating application.
 
-## Using Phantom Components {#phantom-components}
+## Using Phantom Components { #phantom-components }
 
 During hydration, I needed to make sure that the elements found in the HTML generated during SSG and
 loaded into the browser correspond exactly to those the hydrating application expects. This is
@@ -145,7 +149,7 @@ pub fn app() -> Html {
 }
 ```
 
-## Rendering Markdown {#rendering-markdown}
+## Rendering Markdown { #rendering-markdown }
 
 The main purpose of this site is to render some Markdown. I have fairly particular requirements for
 the HTML generated from these Markdown documents. For example, I want images to be included with
@@ -361,7 +365,7 @@ The last post in the table, [Overlays with Custom Widgets in GTK], is the larges
 byte strings at 72kb. As you can see from the second-to-last column, the byte strings compress quite
 well, which helps with the transmission of the produced WebAssembly.
 
-# Static Generation {#static-generation}
+# Static Generation { #static-generation }
 
 To achieve the static site generation (SSG), I built a simple tool as part of the site called
 [site-build]. This tool generates the static version of the site by taking the following steps:
@@ -374,7 +378,7 @@ To achieve the static site generation (SSG), I built a simple tool as part of th
    JavaScript glue.
 1. Generate things like the `sitemap.xml`, and the Atom and RSS feeds.
 
-## HTML Template {#html-template}
+## HTML Template { #html-template }
 
 Each page that is rendered does so by injecting the output of the `yew::LocalServerRenderer` into an
 HTML template; remember that Yew will expect to hydrate into the `<body>` element, so I must also
@@ -419,7 +423,7 @@ The `site-build` program loads the `index.html` from the `dist` directory and ma
 locations for the `<body>` and `<head>` tags. These locations are used to insert rendered HTML into
 both the `<head>` and `<body>` elements of each page.
 
-## Rendering Routes {#rendering-routes}
+## Rendering Routes { #rendering-routes }
 
 In order to render all the routes, I first needed both a function that could take a `Route` and
 render it to an HTML file and some `Iterator` over `Route`. In order to get an iterator over the
@@ -498,10 +502,11 @@ pub fn static_app(props: &StaticAppProps) -> Html {
 }
 ```
 
-> [!NOTE]
-> Something you might have noticed here is the addition of the `HeadContext` type in the
-> `StaticAppProps`. This is used to capture HTML that should be written into the `<head>` element,
-> rather than the `<body>`. I'll get to that in the next section.
+{% call callout("note") %}
+Something you might have noticed here is the addition of the `HeadContext` type in the
+`StaticAppProps`. This is used to capture HTML that should be written into the `<head>` element,
+rather than the `<body>`. I'll get to that in the next section.
+{% endcall %}
 
 With the `StaticApp` component prepared I was then able to render each route using the
 [`LocalServerRenderer`] introduced earlier:
@@ -537,7 +542,7 @@ async fn render_route(&self, route: Route) -> String {
 The output of this function is a `String` that contains the `index.html` output from Trunk,
 with the HTML generated for the given `Route` inserted. This can then be written to a file.
 
-## Page Titles and Metadata {#page-titles-and-metadata}
+## Page Titles and Metadata { #page-titles-and-metadata }
 
 For each page that I generated, I not only needed to inject HTML into the `<body>`, but also into
 the `<head>`. For example, if I did not do this, each page would have the same `<title>`: that which
@@ -599,16 +604,17 @@ performing static rendering. To enable this, I added a `HeadContext` that contai
 When I use the `<Head>` component and the `HeadContext` is available, a copy of the HTML that would
 be inserted into the `<head>` is also added to the `HeadContext`.
 
-> [!TIP] Definition of HeadContext
-> Currently the `HeadContext` type just wraps an `Rc<RefCell<Vec<Html>>>`. It provides a function to
-> add an `Html` to the `Vec`, and another function to clone the `Vec<Html>` out of the
-> `HeadContext`. The use of `Rc<RefCell<...>>` is fine in this case, as I'm using the
-> `LocalServerRenderer`. However, the `ServerRenderer::with_props()` constructor requires that the
-> property type is `Send`, which is not true for `HeadContext`.
->
-> If you want to use the `ServerRenderer` type instead of `LocalServerRenderer`, you will probably
-> want to change the `HeadContext` type to somethine like an `Arc<Mutex<...>>` rather than an
-> `Rc<RefCell<...>>`.
+{% call callout("tip", title="Definition of HeadContext") %}
+Currently the `HeadContext` type just wraps an `Rc<RefCell<Vec<Html>>>`. It provides a function to
+add an `Html` to the `Vec`, and another function to clone the `Vec<Html>` out of the
+`HeadContext`. The use of `Rc<RefCell<...>>` is fine in this case, as I'm using the
+`LocalServerRenderer`. However, the `ServerRenderer::with_props()` constructor requires that the
+property type is `Send`, which is not true for `HeadContext`.
+
+If you want to use the `ServerRenderer` type instead of `LocalServerRenderer`, you will probably
+want to change the `HeadContext` type to somethine like an `Arc<Mutex<...>>` rather than an
+`Rc<RefCell<...>>`.
+{% endcall %}
 
 When it comes to rendering the application, I provide the `HeadContext` value in the `StaticApp`
 component, and capture any `Html` stored in it. After rendering the contents of the `<body>` a new
@@ -648,7 +654,7 @@ The site removes the elements that were added during SSG by simply removing all 
 `<head>` tag between the `<script>` tags with the IDs `head-ssg-before` and `head-ssg-after`. I also
 remove these marker `<script>` tags as well.
 
-## Copying and Generating Resources {#copying-and-generating-resources}
+## Copying and Generating Resources { #copying-and-generating-resources }
 
 The remaining tasks for the `site-build` program to complete are as follows:
 

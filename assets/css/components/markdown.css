@@ -1,3 +1,10 @@
+@import "markdown/headings.css";
+@import "markdown/figures.css";
+@import "markdown/goat.css";
+@import "markdown/callouts.css";
+@import "markdown/typography.css";
+@import "markdown/tables.css";
+
 :root {
   --markdown-pre-text: #4c4f69;
   --markdown-pre-bg: #fcfcfc;
@@ -21,11 +28,4 @@
   @media print {
     font-size: var(--text-base);
   }
-
-  @import "markdown/headings.css";
-  @import "markdown/figures.css";
-  @import "markdown/goat.css";
-  @import "markdown/callouts.css";
-  @import "markdown/typography.css";
-  @import "markdown/tables.css";
 }

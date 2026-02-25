@@ -4,11 +4,10 @@ date: 2026-02-03T16:47:38
 tags:
   - AI
   - LLM
-params:
-  numberedHeadings: false
-  coverImage:
-    author: Kate Holovacheva
-    url: https://www.pexels.com/photo/close-up-of-plant-leaves-covered-in-hoarfrost-15684738/
+numberedHeadings: false
+coverImage:
+  author: Kate Holovacheva
+  url: https://www.pexels.com/photo/close-up-of-plant-leaves-covered-in-hoarfrost-15684738/
 ---
 
 I don't like automatic summarisation any more. Especially in the context of technical publications.
@@ -46,7 +45,7 @@ Where I think I've seen the worst of this is in automatic summarisation of publi
 known a few people to use LLMs to summarise publications and, as mentioned above, several of the
 tools I relied on started pushing  automatic summaries.
 
-# Hallucination {#hallucination}
+# Hallucination { #hallucination }
 
 I think the problem I have found to be most frustrating is relying on the summarisation of
 publications by language models that subsequently hallucinate. One recent example of this was in the
@@ -67,7 +66,8 @@ an AI summary of the paper:
 This information is presented as part of the _AI Key Findings_ for this paper, along with other
 important sounding headings like _Methodology_ and _Significance_:
 
-{{< figure src="arxivlens-misrepresenting-paper.png" title="A screenshot of an incorrect summary of a paper. I didn't care enough to capture it entirely." >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("arxivlens-misrepresenting-paper.png", caption="A screenshot of an incorrect summary of a paper. I didn't care enough to capture it entirely.") }}
 
 This summary was surprising to me, as I knew that the abstract of the paper told a different story:
 
@@ -121,7 +121,7 @@ his blog post on the topic.
 [Anil Madhavapeddy]: https://anil.recoil.org/notes/acm-ai-recs
 [move]: https://social.sigsoft.org/@JonathanAldrich/115737714944382593
 
-# Missing Significant Lessons {#missing-significant-lessons}
+# Missing Significant Lessons { #missing-significant-lessons }
 
 Putting aside the problem of hallucination for now, I think there are more human issues with relying
 on LLM summaries: the loss of the journey and structure from the original publication. Preserving

@@ -1,0 +1,52 @@
+{% from "macros/social-links.html" import social_links %}
+{% extends "base.html" %}
+{% block head %}
+  <link rel="blogroll" type="text/xml" href="/downloads/feeds.opml.xml" title="Blake Rain's blogroll"/>
+  <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/index.xml">
+{% endblock %}
+{% block main %}
+<main class="home h-card">
+  <img class="photo u-photo"
+    alt="Blake Rain" loading="lazy" decoding="async" src="/media/photo-small.webp">
+  <h1>Blake Rain</h1>
+  <h2>Software Engineer at Cignpost</h2>
+  <a style="display: none;" class="u-url" href="https://blakerain.com/" rel="me">Blake Rain</a>
+  {{ social_links(mode="icons", class="socials") }}
+  <p class="p-note">
+    Hello, my name is Blake Rain, I am a UK-based software engineer with a passion for Rust,
+    <span class="no-wrap">C/C++</span>, and Haskell. I am currently working as a senior
+    software engineer at Cignpost.
+  </p>
+  <p>
+    When I find time I enjoy experimenting with technology. I do try and remember to share my
+    findings on my <a class="colored" href="/blog">blog</a>, and any useful <a class="colored"
+    href="/notes">notes</a> I find along the way.
+  </p>
+  <section>
+    <h1>Latest Posts</h1>
+    <ul class="posts">
+      {% for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) | take(4) %}
+        <li>
+          <a href="{{ path_parent(page.path) | safe }}/" class="colored">
+            {{ page.frontmatter.title }}
+          </a>
+          <p>{{ page.frontmatter.date | date(format="[day] [month repr:long] [year]") }}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
+    <h1>Latest Notes</h1>
+    <ul class="posts">
+      {% for page in load_pages("notes") | sort(attribute="frontmatter.date", reverse=true) | take(4) %}
+        <li>
+          <a href="{{ path_parent(page.path) | safe }}/" class="colored">
+            {{ page.frontmatter.title }}
+          </a>
+          <p>{{ page.frontmatter.date | date(format="[day] [month repr:long] [year]") }}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+</main>
+{% endblock %}

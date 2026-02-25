@@ -1,0 +1,5 @@
+<{% if start is number %}ol{% if start != 1 %} start="{{ start }}"{% endif %}{% else %}ul{% endif %}>
+  {% for item in items -%}
+    <li>{{ item | safe }}</li>
+  {%- endfor %}
+</{% if start is number %}ol{% else %}ul{% endif %}>

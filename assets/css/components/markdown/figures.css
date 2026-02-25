@@ -1,79 +1,81 @@
-figure {
-  width: 100%;
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  & div.highlight {
+.markdown {
+  figure {
     width: 100%;
-    overflow-x: scroll;
-  }
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  & pre {
-    margin-bottom: 0;
-    width: 100%;
-    background-color: var(--color-surface-subtle);
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    overflow-x: scroll;
-
-    & code {
-      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-      line-height: var(--leading-snug);
+    & div.highlight {
+      width: 100%;
+      overflow-x: scroll;
     }
 
-    @media print {
-      padding: 0.5rem;
-    }
-  }
+    & pre {
+      margin-bottom: 0;
+      width: 100%;
+      background-color: var(--color-surface-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      overflow-x: scroll;
 
-  & img {
-    height: auto;
-    max-width: 100%;
-    border-radius: var(--radius-md);
-  }
+      & code {
+        font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        line-height: var(--leading-snug);
+      }
 
-  &.quote {
-    position: relative;
-    align-items: flex-start;
-
-    &::before {
-      position: absolute;
-      top: -18px;
-      left: -44px;
-      content: "\201c";
-      font-size: 6rem;
-      line-height: 1;
-      display: none;
-      color: var(--color-text-subtle);
-
-      @media (--screen-md) {
-        display: block;
+      @media print {
+        padding: 0.5rem;
       }
     }
 
-    & p {
-      font-style: italic;
-      margin-bottom: 0;
-      color: var(--color-text-muted);
+    & img {
+      height: auto;
+      max-width: 100%;
+      border-radius: var(--radius-md);
     }
 
-    & cite {
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      margin-left: 1rem;
+    &.quote {
+      position: relative;
+      align-items: flex-start;
 
       &::before {
-        content: "— ";
+        position: absolute;
+        top: -18px;
+        left: -44px;
+        content: "\201c";
+        font-size: 6rem;
+        line-height: 1;
+        display: none;
+        color: var(--color-text-subtle);
+
+        @media (--screen-md) {
+          display: block;
+        }
+      }
+
+      & p {
+        font-style: italic;
+        margin-bottom: 0;
+        color: var(--color-text-muted);
+      }
+
+      & cite {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        margin-left: 1rem;
+
+        &::before {
+          content: "— ";
+        }
       }
     }
   }
-}
 
-figcaption {
-  margin-top: 1rem;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-sm);
-  text-align: center;
-  color: var(--color-text-muted);
+  figcaption {
+    margin-top: 1rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+  }
 }

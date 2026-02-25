@@ -1,0 +1,20 @@
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        {%- for heading in headings %}
+          <th {%- if alignments[loop.index0] is string %} style="text-align: {{ alignments[loop.index0] }}"{% endif %}>{{ heading | safe }}</th>
+        {%- endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {%- for row in rows %}
+        <tr>
+          {%- for cell in row %}
+            <td {%- if alignments[loop.index0] is string %} style="text-align: {{ alignments[loop.index0] }}"{% endif %}>{{ cell | safe }}</td>
+          {%- endfor %}
+        </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</div>

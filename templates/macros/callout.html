@@ -1,0 +1,26 @@
+{%- set ICONS = {
+  "note":     "pencil",
+  "info":     "info",
+  "todo":     "circle-check",
+  "tip":      "flame",
+  "success":  "check",
+  "question": "circle-help",
+  "warning":  "triangle-alert",
+  "failure":  "x",
+  "danger":   "zap",
+  "bug":      "bug",
+  "example":  "list"
+} -%}
+{%- macro callout(type, title=none) -%}
+{%- set title = title if title is not none else (type | title) -%}
+{%- set icon_name = ICONS[type] | default("triangle-alert") -%}
+<aside class="callout {{ type }}">
+  <p>
+    <strong class="callout-label">
+      <span aria-hidden="true">{{ icon("lucide", icon_name) }}</span>
+      {{ title }}
+    </strong>
+  </p>
+  {{ caller() }}
+</aside>
+{%- endmacro -%}

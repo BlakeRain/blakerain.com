@@ -1,4 +1,5 @@
 ---
+title: 2026 - Week W08
 date: 2026-02-22T18:40:00
 summary: IRCv3 and Escaping Capitalism
 coverImage:
@@ -31,19 +32,20 @@ an IRCv3 server. I decided to go with [Ergo], which was quite reasonable to set 
 also added [The Lounge] (strange name choice, I know), which is a web-based IRC client for people
 who don't want to set up a client.
 
-{{< figure src="the-lounge.png" width=400 enlarge=true title="The Lounge interface in Firefox" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("the-lounge.png", width="400", enlarge=true, caption="The Lounge interface in Firefox") }}
 
 To access the server from my phone I've set up [Igloo] (available for Android and iOS), and having
 the phone and desktop connected to the same IRC server without a bouncer is a revelation! I like the
 interface being so simple, and the use of a monospace font.
 
-{{< figure src="igloo-iphone.png" width=400 title="Igloo running on my iPhone. Such a quite channel 😁" >}}
+{{ figure("igloo-iphone.png", width="400", caption="Igloo running on my iPhone. Such a quite channel 😁") }}
 
 On the desktop I've set up [Halloy] as [Irssi], my IRC client of choice for the past couple of
 hundred years, hasn't adopted much of the IRCv3 features. Halloy seems to support quite of lot of
 IRCv3 features, and is built using the [iced] GUI framework, which is interesting.
 
-{{< figure src="halloy-desktop.png" width=400 enlarge=true title="Halloy running on my desktop." >}}
+{{ figure("halloy-desktop.png", width="400", enlarge=true, caption="Halloy running on my desktop.") }}
 
 Having a [Catppuccin] theme for Halloy is certainly a good way to get my interest 😏.
 
@@ -93,7 +95,7 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 - [Shylmagoghnar - Emergence] --- And yet more melodic death. This is a great album, with some
   excellent tracks. I think my favourite is [A New Dawn].
 
-{{< figure src="bayanay-render-errors.png" width=400 title="Hounds of Bayanay track names can't render properly in my browser" >}}
+{{ figure("bayanay-render-errors.png" ,width="400", caption="Hounds of Bayanay track names can't render properly in my browser") }}
 
 [Angry Metal Guy]: https://www.angrymetalguy.com/
 [Stuck in the Filter: Nov/Dec 2025]: https://www.angrymetalguy.com/stuck-in-the-filter-november-december-2025s-angry-misses/
@@ -117,14 +119,15 @@ finding quite a few of my favourite albums in these "_Stuck in the Filter_" post
 
 I've been reading things again.
 
-{{< book
-    url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181"
-    cover="cover-escape-from-capitalism.webp"
-    title="Escape From Capitalism"
-    subtitle="Economics is Political, and Other Liberating Truths"
-    author="Clara E. Mattei"
-    year="2026"
-    rating=5 >}}
+{% from "macros/book.html" import book %}
+{% call book(
+    url="https://www.penguin.co.uk/books/468201/escape-from-capitalism-by-mattei-clara-e/9780241742181",
+    cover="cover-escape-from-capitalism.webp",
+    title="Escape From Capitalism",
+    subtitle="Economics is Political, and Other Liberating Truths",
+    author="Clara E. Mattei",
+    year="2026",
+    rating=5) %}
 Economics is sold as pure and apolitical: scientific, neutral, exact. This urgent book exposes its
 true role: to convince us there’s no alternative to capitalism. We live in a world dominated by the
 dogma that austerity is necessary, unemployment natural, endless wars inevitable and central banks
@@ -135,7 +138,8 @@ system. She unpacks key concepts like growth, inflation, unemployment and balanc
 how they’re used to enforce market dependence, not freedom, stripping us of the power to shape the
 democratic decisions that govern our daily lives. Enduring problems such as poverty and inequality
 are not accidents or bugs in the economy, but core features – justified with pseudoscientific models
-to support a system that unfairly rewards people with the most resources. {{< /book >}}
+to support a system that unfairly rewards people with the most resources.
+{% endcall %}
 
 [Clara Mattei]'s new book [Escape from Capitalism] arrived on Friday, and I completely devoured it
 over the course of the afternoon and into the early evening. It's a really great book. Clara

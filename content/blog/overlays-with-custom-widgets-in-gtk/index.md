@@ -33,7 +33,8 @@ makes more sense for it to live in a pane.
 
 The third option is my favourite, and is reminiscent of applications like Blender.
 
-{{< figure src="image.png" title="Blender showing it's Transform overlay on the right, within the 3D view" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("image.png", caption="Blender showing it's Transform overlay on the right, within the 3D view") }}
 
 It's interesting to me that we don't often see this kind of UI in many GTK applications, which I
 worry might lead people to believe that GTK is pretty underwhelming as a UI library.
@@ -42,7 +43,7 @@ In this article I thought it would be fun to walk through creating a simple GTK 
 uses an [overlay](https://developer.gnome.org/gtk3/stable/GtkOverlay.html) widget to render a set of
 controls over the top of a custom drawn widget.
 
-{{< figure src="Collapsible-Controls-Overlay-Demo_2102.png" title="Simple application using an overlay widget" >}}
+{{ figure("Collapsible-Controls-Overlay-Demo_2102.png", caption="Simple application using an overlay widget") }}
 
 As we're only focusing on the GTK side of things, I decided to use Python instead of C++.
 
@@ -100,7 +101,7 @@ Gtk.main()
 
 We can now run our Python script and we should get a nice square window with nothing in it.
 
-{{< figure src="image-2.png" title="Showing the main window with no content" >}}
+{{ figure("image-2.png", caption="Showing the main window with no content") }}
 
 Now that we have our main window in place we can move on to our custom drawn control. We're going to
 use a [`Gtk.DrawingArea`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/DrawingArea.html) that
@@ -154,7 +155,7 @@ class MainWindow(Gtk.Window):
 With these changes in place, when we run our Python script we will get a window with the dark-grey
 background we rendered in our `MapEditor.on_draw` method.
 
-{{< figure src="image-3.png" title="" >}}
+{{ figure("image-3.png") }}
 
 No doubt your are now as overwhelmed by excitement as I am that we changed the background color of
 the window.
@@ -257,7 +258,7 @@ Running our script again we will see that the terminal is filled with motion eve
 passes over the `MapEditor` widget in our window. When we press and release the mouse buttons with
 the mouse pointer over our `MapEditor` widget we also see press and release events.
 
-{{< figure src="image-4.png" title="" >}}
+{{ figure("image-4.png") }}
 
 To implement our panning we first want to keep track of the mouse motion and the currently held
 mouse button. We'll do so using three fields:
@@ -365,7 +366,7 @@ def on_draw(self, widget, context):
 With these changes in place we should see messages in our terminal when we drag the cursor over our
 `MapEditor` that show the camera updating.
 
-{{< figure src="image-5.png" title="" >}}
+{{ figure("image-5.png") }}
 
 However, we're not getting anything in our widget yet, as the camera coordinates are not being used
 in our rendering.
@@ -373,7 +374,7 @@ in our rendering.
 Next we'll add the grid rendering to our `MapEditor` widget. We'll draw two grids: a minor grid that
 draws a line every 10 pixels and a major grid every 100 pixels:
 
-{{< figure src="image-6.png" title="The major and minor grid lines" >}}
+{{ figure("image-6.png", caption="The major and minor grid lines") }}
 
 A fairly nice approach to rendering this grid is to offset the start position of the grid lines by
 the camera coordinates, modulus the size of each grid line. This way, as the camera moves, the
@@ -385,7 +386,7 @@ This may be somewhat hard to understand, so here is an animation that shows the 
 being updated by dragging the mouse. The start corner of the major grid is rendered with a green
 square and the minor grid with a red square.
 
-{{< figure src="recording1.gif" title="" >}}
+{{ figure("recording1.gif") }}
 
 The grid appears to be panning as the mouse moves, however we can see that all we're actually doing
 is slightly offsetting the starting point for the rendering of the grid.
@@ -414,7 +415,7 @@ then offset by half a pixel. The reason for this half-pixel offset is to make su
 lines are always cleanly rendered with little to no aliasing visible. If we rendered the grid using
 fractional values instead, we would end up with heavy aliasing as shown in the animation below.
 
-{{< figure src="recording2.gif" title="" >}}
+{{ figure("recording2.gif") }}
 
 You can see how the grid is almost moving in and out of focus as it pans. This is
 [because](https://www.cairographics.org/FAQ/#sharp_lines) Cairo renders a line with a thickness of
@@ -517,7 +518,7 @@ Now we'll define the class for our control panel groups. Each group is presented
 [expandable](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Expander.html) widget with a title.
 Much like our `ControlPanel` widget, we support adding child widgets as rows.
 
-{{< figure src="image-7.png" title="A ControlPanelGroup with some controls" >}}
+{{ figure("image-7.png", caption="A ControlPanelGroup with some controls") }}
 
 ```python
 class ControlPanelGroup(Gtk.Expander):
@@ -599,7 +600,7 @@ When we run our Python script we will see that the expanders and their widgets a
 over the top of our map editor. Unfortunately, when expanded, they cover far too much of the editor
 viewport!
 
-{{< figure src="image-8.png" title="" >}}
+{{ figure("image-8.png") }}
 
 What we want to do now is to tell the
 [`Gtk.Overlay`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Overlay.html) widget where to place
@@ -611,7 +612,7 @@ overlays using the
 properties of the overlaid widget. There are a number of options for these properties, which change
 where they are placed:
 
-{{< figure src="image-9.png" title="Various <code>halign</code> and <code>valign</code> options and their effects on overlay placement" >}}
+{{ figure("image-9.png", caption="Various <code>halign</code> and <code>valign</code> options and their effects on overlay placement") }}
 
 We want to position our control panel in the top-right of the window. To do this we want to call the
 [`set_halign()`](https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.set_halign)
@@ -636,7 +637,7 @@ This arranges the panel in the top-right of the window, which is much better. Ho
 that there is a new problem: the size of the control panel changes when we expand and collapse each
 of the `ControlPanelGroup` widgets.
 
-{{< figure src="Peek-2021-01-14-20-14.gif" title="" >}}
+{{ figure("Peek-2021-01-14-20-14.gif") }}
 
 Of course this is perfectly natural behaviour for a GTK application. However, we want to fix the
 width of the control panel. We'll do this by specifying the width in the size request for each
@@ -663,7 +664,7 @@ class ControlPanelGroup(Gtk.Expander):
 With this change our control panel seems a bit more sane. Well, it doesn't jump around as much as it
 did before.
 
-{{< figure src="Peek-2021-01-14-20-18.gif" title="" >}}
+{{ figure("Peek-2021-01-14-20-18.gif") }}
 
 We still have a problem that the control panel has no background to it. To understand why this is we
 can dive into the CSS nodes of our application using the
@@ -679,39 +680,39 @@ GTK_DEBUG=interactive python3 collapse-controls.py
 
 This will bring up the GTK inspector alongside our application:
 
-{{< figure src="image-10-1.png" title="" >}}
+{{ figure("image-10-1.png") }}
 
 We can now navigate through the object tree until we get to our `MyControlPanel` widget.
 
-{{< figure src="image-11-1.png" title="" >}}
+{{ figure("image-11-1.png") }}
 
 With this selected we can switch to the CSS nodes by selecting the light-bulb in the top-left of the
 inspector window to change to properties view (the icon will change from a light-bulb to a list
 icon). We can then select _CSS nodes_ from the dropdown beneath it.
 
-{{< figure src="image-12.png" title="" >}}
+{{ figure("image-12.png") }}
 
 Taking a look at the CSS properties for the `MyControlPanel` widget on the right side of the
 inspector we can see that there is no background color or image specified:
 
-{{< figure src="image-13.png" title="" >}}
+{{ figure("image-13.png") }}
 
 We want to change that, so we'll edit the CSS for our application. To apply out CSS we'll add a
 `control-panel` class to our `MyControlPanel` widget from within the GTK inspector. To add a class,
 double-click in the _Style Classes_ column for the current widget. This brings up the
 `Style Classes` popover where we can add our new class:
 
-{{< figure src="image-14.png" title="" >}}
+{{ figure("image-14.png") }}
 
 Click the `+` button in the `Style Classes` popover to add a new class, and enter the name
 `control-panel`.
 
-{{< figure src="image_o-15.png" title="" >}}
+{{ figure("image_o-15.png") }}
 
 We can now edit the inline CSS for by selecting the _CSS_ tab in the top of the inspector. This
 presents us with an editor in which we can write some CSS.
 
-{{< figure src="image-16.png" title="" >}}
+{{ figure("image-16.png") }}
 
 We're going to add the following CSS to set the background color of our control panel widget – to
 which we've just applied the `control-panel` class. We'll set the background color to the standard
@@ -726,7 +727,7 @@ background color for the current GTK theme.
 Immediately after making this change you should see that our control panel now has a background
 color:
 
-{{< figure src="image-18.png" title="" >}}
+{{ figure("image-18.png") }}
 
 Whilst we're live editing the CSS we might as well add some padding to the control panel too.
 
@@ -740,11 +741,11 @@ Whilst we're live editing the CSS we might as well add some padding to the contr
 This will nudge our control groups away from the edges of the control panel, and make the UI a
 little cleaner looking.
 
-{{< figure src="image-19.png" title="" >}}
+{{ figure("image-19.png") }}
 
 Looking closely at the bottom-left corner of the control panel, we can see quite a sharp corner:
 
-{{< figure src="image-20.png" title="" >}}
+{{ figure("image-20.png") }}
 
 Let's update our stylesheet a bit more to round off the bottom-left corner with a four pixel radius.
 
@@ -756,7 +757,7 @@ Let's update our stylesheet a bit more to round off the bottom-left corner with 
 }
 ```
 
-{{< figure src="image-22.png" title="" >}}
+{{ figure("image-22.png") }}
 
 Now that we're happier with the appearance of our control panel we can add the CSS to our Python
 script. To do this we need to load our CSS into a

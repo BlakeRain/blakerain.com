@@ -59,9 +59,10 @@ Anyway, on with 2025's albums.
 
 # ❶ Orbit Culture - Death Above Life
 
-{{< bandcamp tracklist=true album="3674515130" url="https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio" >}}
+{% from "macros/bandcamp.html" import bandcamp %}
+{% call bandcamp(tracklist=true, album="3674515130", url="https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio") %}
 Death Above Life (24-bit HD audio) by Orbit Culture
-{{< /bandcamp >}}
+{% endcall %}
 
 I never imagined myself being a fan of [deathcore], but ever since the release of [Unyielding Night]
 by [Assemble the Chariots] I started to find other deathcore albums I enjoyed. I've heard it argued
@@ -90,9 +91,9 @@ up for the year.
 
 ## ❷ Sin Deliverance - Universe of Nightmares
 
-{{< bandcamp album="106313663" url="https://sindeliverance.bandcamp.com/album/universe-of-nightmares-remixed-remastered-instrumentals" >}}
+{% call bandcamp(album="106313663", url="https://sindeliverance.bandcamp.com/album/universe-of-nightmares-remixed-remastered-instrumentals") %}
 Universe of nightmares (Remixed/Remastered +Instrumentals) by Sin Deliverance
-{{< /bandcamp >}}
+{% endcall %}
 
 To be honest, the [initial release] of this album in June was promising, but probably wouldn't have
 made this list; certainly not all the way up to second place. The newly [remixed and remastered]
@@ -108,9 +109,9 @@ their own right.
 
 ## ❸ Lorna Shore - I Feel the Everblack Festering Within Me
 
-{{< bandcamp album="2232652807" url="https://lornashore.bandcamp.com/album/i-feel-the-everblack-festering-within-me-24-bit-hd-audio" >}}
+{% call bandcamp(album="2232652807", url="https://lornashore.bandcamp.com/album/i-feel-the-everblack-festering-within-me-24-bit-hd-audio") %}
 I Feel The Everblack Festering Within Me (24-bit HD audio) by Lorna Shore
-{{< /bandcamp >}}
+{% endcall %}
 
 [Lorna Shore]'s new album [I Feel the Everblack Festering Within Me] was released in September and
 was a good second on this list until Sin Deliverance delivered. It seems that Lorna Shore might be
@@ -129,9 +130,9 @@ noises?
 
 ## ❹ Enterré Vivant - 悪罪 (Akuzaï)
 
-{{< bandcamp album="3874696856" url="https://enterrevivant.bandcamp.com/album/akuza" >}}
+{% call bandcamp(album="3874696856", url="https://enterrevivant.bandcamp.com/album/akuza") %}
 悪罪 (Akuzaï) by Enterré Vivant
-{{< /bandcamp >}}
+{% endcall %}
 
 The depressive black metal album [Akuzaï] (evil crime) from [Enterré Vivant] (buried alive) was
 released in May. I only came across it when catching up on May's [Stuck in the Filter] on AMG.
@@ -148,9 +149,9 @@ and layering make it worth multiple listens.
 
 ## ❺ Clouds - Desprins
 
-{{< bandcamp album="390535546" url="https://cloudsofficial.bandcamp.com/album/desprins" >}}
+{% call bandcamp(album="390535546", url="https://cloudsofficial.bandcamp.com/album/desprins") %}
 Desprins by Clouds Official
-{{< /bandcamp >}}
+{% endcall %}
 
 The new [Desprins] from [Clouds], released back in January of 2025. I've not heard Clouds before, so
 this was a nice discovery. I can be pretty picky about atmospheric doom, but this album was

@@ -1,0 +1,6 @@
+<dl>
+  {%- for term, definition in definitions -%}
+    <dt>{{ term | safe }}</dt>
+    <dd>{{ definition | safe }}</dd>
+  {%- endfor -%}
+</dl>

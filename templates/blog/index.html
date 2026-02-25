@@ -1,0 +1,22 @@
+{% from "macros/article/item.html" import article_item %}
+{% extends "base.html" %}
+{% block main %}
+<main class="articles-list content">
+  <h1>
+    Blog
+  </h1>
+  <div class="items separated">
+    {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) if page.base != "blog" %}
+      {% call article_item(page) -%}
+        <p>
+          {%- if page.frontmatter.summary -%}
+            {{ page.frontmatter.summary | safe }}
+          {%- else -%}
+            {{ page.summary | safe }}
+          {%- endif -%}
+        </p>
+      {%- endcall %}
+    {%- endfor %}
+  </div>
+</main>
+{% endblock %}

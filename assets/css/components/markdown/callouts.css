@@ -1,191 +1,193 @@
-.callout {
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  font-size: var(--text-base);
-  margin-bottom: 1.5rem;
-  border: 1px solid;
-
-  @media print {
-    background-color: transparent;
-    border-width: 2px;
-    padding: 0.5rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    border: none;
-  }
-
-  & > p {
-    margin: 0;
-  }
-
-  & .callout-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-weight: 700;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    text-transform: uppercase;
-
-    & > svg {
-      width: 1.2rem;
-      height: 1.5rem;
-    }
-  }
-
-  /* Note / Info variant - Blue */
-  &.note,
-  &.info {
-    background-color: #bfdbfe;
-    border-color: #60a5fa;
-
-    & .callout-label {
-      color: #2563eb;
-    }
-
-    & > .body {
-      color: black;
-    }
+.markdown {
+  .callout {
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    font-size: var(--text-base);
+    margin-bottom: 1.5rem;
+    border: 1px solid;
 
     @media print {
       background-color: transparent;
-      border-color: #bfdbfe;
+      border-width: 2px;
+      padding: 0.5rem;
     }
 
     @media (prefers-color-scheme: dark) {
-      background-color: #172554;
+      border: none;
+    }
+
+    & > p {
+      margin: 0;
+    }
+
+    & .callout-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 700;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      text-transform: uppercase;
+
+      & > svg {
+        width: 1.2rem;
+        height: 1.5rem;
+      }
+    }
+
+    /* Note / Info variant - Blue */
+    &.note,
+    &.info {
+      background-color: #bfdbfe;
+      border-color: #60a5fa;
 
       & .callout-label {
-        color: #60a5fa;
+        color: #2563eb;
       }
 
       & > .body {
-        color: white;
+        color: black;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #bfdbfe;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        background-color: #172554;
+
+        & .callout-label {
+          color: #60a5fa;
+        }
+
+        & > .body {
+          color: white;
+        }
       }
     }
-  }
 
-  /* Tip / Todo variant - Teal */
-  &.tip,
-  &.todo {
-    background-color: #ccfbf1;
-    border-color: #0d9488;
-
-    & .callout-label {
-      color: #0d9488;
-    }
-
-    @media print {
-      background-color: transparent;
-      border-color: #134e4a;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      background-color: rgba(20, 78, 74, 0.5);
+    /* Tip / Todo variant - Teal */
+    &.tip,
+    &.todo {
+      background-color: #ccfbf1;
+      border-color: #0d9488;
 
       & .callout-label {
-        color: #5eead4;
+        color: #0d9488;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #134e4a;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        background-color: rgba(20, 78, 74, 0.5);
+
+        & .callout-label {
+          color: #5eead4;
+        }
       }
     }
-  }
 
-  /* Success variant - Green */
-  &.success {
-    background-color: #dcfce7;
-    border-color: #16a34a;
-
-    & .callout-label {
-      color: #16a34a;
-    }
-
-    @media print {
-      background-color: transparent;
-      border-color: #14532d;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      background-color: rgba(20, 83, 45, 0.5);
+    /* Success variant - Green */
+    &.success {
+      background-color: #dcfce7;
+      border-color: #16a34a;
 
       & .callout-label {
-        color: #4ade80;
+        color: #16a34a;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #14532d;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        background-color: rgba(20, 83, 45, 0.5);
+
+        & .callout-label {
+          color: #4ade80;
+        }
       }
     }
-  }
 
-  /* Question variant - Amber */
-  &.question {
-    background-color: rgba(253, 230, 138, 0.1);
-    border-color: #d97706;
+    /* Question variant - Amber */
+    &.question {
+      background-color: rgba(253, 230, 138, 0.1);
+      border-color: #d97706;
 
-    & .callout-label {
-      color: #d97706;
-    }
-
-    @media print {
-      background-color: transparent;
-      border-color: #f59e0b;
-    }
-
-    @media (prefers-color-scheme: dark) {
       & .callout-label {
-        color: #fde68a;
+        color: #d97706;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #f59e0b;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        & .callout-label {
+          color: #fde68a;
+        }
       }
     }
-  }
 
-  /* Warning variant - Orange */
-  &.warning {
-    background-color: rgba(249, 115, 22, 0.1);
-    border-color: #f97316;
-
-    & .callout-label {
-      color: #ea580c;
-    }
-
-    @media print {
-      background-color: transparent;
+    /* Warning variant - Orange */
+    &.warning {
+      background-color: rgba(249, 115, 22, 0.1);
       border-color: #f97316;
-    }
-  }
 
-  /* Danger variant - Red */
-  &.danger {
-    background-color: rgba(239, 68, 68, 0.25);
-    border-color: #dc2626;
-
-    & .callout-label {
-      color: #dc2626;
-    }
-
-    @media print {
-      background-color: transparent;
-      border-color: #ef4444;
-    }
-
-    @media (prefers-color-scheme: dark) {
       & .callout-label {
-        color: #f87171;
+        color: #ea580c;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #f97316;
       }
     }
-  }
 
-  /* Example variant - Violet */
-  &.example {
-    background-color: rgba(76, 29, 149, 0.25);
-    border-color: #7c3aed;
+    /* Danger variant - Red */
+    &.danger {
+      background-color: rgba(239, 68, 68, 0.25);
+      border-color: #dc2626;
 
-    & .callout-label {
-      color: #6d28d9;
-    }
-
-    @media print {
-      background-color: transparent;
-      border-color: #4c1d95;
-    }
-
-    @media (prefers-color-scheme: dark) {
       & .callout-label {
-        color: #a78bfa;
+        color: #dc2626;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #ef4444;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        & .callout-label {
+          color: #f87171;
+        }
+      }
+    }
+
+    /* Example variant - Violet */
+    &.example {
+      background-color: rgba(76, 29, 149, 0.25);
+      border-color: #7c3aed;
+
+      & .callout-label {
+        color: #6d28d9;
+      }
+
+      @media print {
+        background-color: transparent;
+        border-color: #4c1d95;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        & .callout-label {
+          color: #a78bfa;
+        }
       }
     }
   }

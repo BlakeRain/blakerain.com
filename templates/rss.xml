@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    {% if target == "blog" -%}
+      <link>{{ site.base_url }}blog/</link>
+      <title>Blake Rain's Blog Posts</title>
+      <description>Recent blog posts by Blake Rain</description>
+      <atom:link href="https://blakerain.com/blog/index.xml" rel="self" type="application/rss+xml"/>
+    {%- elif target == "notes" -%}
+      <link>{{ site.base_url }}notes/</link>
+      <title>Blake Rain's Notes</title>
+      <description>Recent notes by Blake Rain</description>
+      <atom:link href="https://blakerain.com/notes/index.xml" rel="self" type="application/rss+xml"/>
+    {%- else -%}
+      <link>{{ site.base_url }}</link>
+      <title>Blake Rain</title>
+      <description>Recent content by Blake Rain</description>
+      <atom:link href="https://blakerain.com/index.xml" rel="self" type="application/rss+xml"/>
+    {%- endif %}
+    <language>en-GB</language>
+    <managingEditor>blake@blakerain.com (Blake Rain)</managingEditor>
+    <webMaster>blake@blakerain.com (Blake Rain)</webMaster>
+    <lastBuildDate>{{ env.now | datetime(format="rfc2822") }}</lastBuildDate>
+    {% if target == "blog" -%}
+      {% set pages = load_pages("blog") -%}
+    {%- elif target == "notes" -%}
+      {% set pages = load_pages("notes") -%}
+    {%- else -%}
+      {% set pages = load_pages("blog") -%}
+      {% set pages = pages | chain(load_pages("notes")) -%}
+      {% set pages = pages | chain(load_pages("weeknotes")) -%}
+    {%- endif %}
+    {%- set pages = pages | sort(attribute="frontmatter.date") | reverse -%}
+    {% for page in pages -%}
+    {% if not page.frontmatter.rss or not page.frontmatter.rss.skip -%}
+    <item>
+      <title>{{ page.frontmatter.title | default(page.path) }}</title>
+      <link>{{ base_url(path_parent(page.path)) | safe }}/</link>
+      <pubDate>{{ page.frontmatter.date | datetime(format="rfc2822") }}</pubDate>
+      <author>blake@blakerain.com (Blake Rain)</author>
+      <guid>{{ base_url(path_parent(page.path)) | safe }}</guid>
+      <description><![CDATA[
+        TOOD: put the content here
+        <hr>
+        <p>Thanks for reading this post via RSS! 👋</p>
+        <a href="mailto:blake@blakerain.com?subject=Feedback on {{ page.path }}">Reply to this post by email</a>
+      ]]></description>
+    </item>
+    {%- endif %}
+    {% endfor %}
+  </channel>
+</rss>

@@ -1,21 +1,40 @@
-div.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+.markdown {
+  div.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
 
-  &:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
+    &:not(:last-child) {
+      margin-bottom: 1.5rem;
+    }
 
-  & table {
-    min-width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
+    & table {
+      min-width: 100%;
+      border-collapse: collapse;
+      table-layout: auto;
 
-    & thead {
-      background-color: transparent;
-      color: inherit;
+      & thead {
+        background-color: transparent;
+        color: inherit;
 
-      & tr th {
+        & tr th {
+          padding: 0.5rem 0.75rem;
+
+          &.left {
+            text-align: left;
+          }
+
+          &.right {
+            text-align: right;
+          }
+
+          &.center {
+            text-align: center;
+          }
+        }
+      }
+
+      & tbody tr td {
+        white-space: nowrap;
         padding: 0.5rem 0.75rem;
 
         &.left {
@@ -30,39 +49,22 @@ div.table-wrapper {
           text-align: center;
         }
       }
-    }
 
-    & tbody tr td {
-      white-space: nowrap;
-      padding: 0.5rem 0.75rem;
-
-      &.left {
-        text-align: left;
+      &.tight {
+        & thead tr th,
+        & tbody tr td {
+          padding: 0.25rem;
+        }
       }
 
-      &.right {
-        text-align: right;
-      }
+      &:not(.borderless) {
+        & thead {
+          border-bottom: 1px solid var(--color-border);
+        }
 
-      &.center {
-        text-align: center;
-      }
-    }
-
-    &.tight {
-      & thead tr th,
-      & tbody tr td {
-        padding: 0.25rem;
-      }
-    }
-
-    &:not(.borderless) {
-      & thead {
-        border-bottom: 1px solid var(--color-border);
-      }
-
-      & tbody tr {
-        border-bottom: 1px solid var(--color-border);
+        & tbody tr {
+          border-bottom: 1px solid var(--color-border);
+        }
       }
     }
   }

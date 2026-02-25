@@ -32,7 +32,8 @@ They use two benchmarks, a simulation of a customer service agent and a general 
 evaluation the reliability of a range of LLMs from OpenAI, Anthropic, and Google. They show that,
 whilst accuracy has improved quite rapidly, reliability has only improved slightly over time.
 
-{{< figure src="reliability-over-time.png" height=400 title="Excerpt from Figure 1: Reliability gains lag behind capability progress" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("reliability-over-time.png", height="400", caption="Excerpt from Figure 1: Reliability gains lag behind capability progress") }}
 
 One of my initial takeaways is that the scope of what they mean by "safety" is quite limited to only
 operational safety, and does not include many of the [harms] and [biases] that I am often quite

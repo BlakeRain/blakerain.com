@@ -13,7 +13,8 @@ account and moved over to the [Mastodon] social network. I first learned about F
 news showed up on a [Reddit post] on `r/entertainment` showing his last tweet: the message
 "Goodbye", written in scrabble tiles.
 
-{{< figure src="fry-scrabble.jpg" title="Stephen Fry says Goodbye" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("fry-scrabble.jpg", caption="Stephen Fry says Goodbye") }}
 
 It seems that Fry subsequently deleted his Twitter account, leaving behind some twelve million
 followers, of which I was one. I remember that Fry was one of the early adopters of Twitter, and
@@ -44,7 +45,7 @@ showing the increasing number of Mastodon users. At the time of writing this, on
 Sunday morning, this bot is reporting that over sixty thousand new users have been added in the past
 24 hours.
 
-{{< figure src="example-user-count.jpg" title="Increasing Mastodon Accounts" >}}
+{{ figure("example-user-count.jpg", caption="Increasing Mastodon Accounts") }}
 
 Getting a handle on how Mastodon works was quite easy: there are a lot of resources that explain how
 to use the Mastodon web interface, and the generally accepted behaviour. Detailed information on how
@@ -66,15 +67,14 @@ One of the people I found was Hugh Rundle. Hugh has made some interesting points
 Invasion], which I think is an important read to anybody moving to Mastodon from Twitter. Hugh tells
 an important part of the story that I'm not sure is being considered.
 
-{{< quote author="Hugh Rundle" url="https://www.hughrundle.net/home-invasion/" >}}
-
+{% from "macros/quote.html" import quote %}
+{% call quote(author="Hugh Rundle", url="https://www.hughrundle.net/home-invasion/") %}
 There's another, smaller group of people mourning a social media experience that was destroyed this
 week — the people who were active on Mastodon and the broader fediverse prior to November 2022. The
 nightclub has a new brash owner, and the dancefloor has emptied. People are pouring in to the quiet
 houseparty around the corner, cocktails still in hand, demanding that the music be turned up,
 walking mud into the carpet, and yelling over the top of the quiet conversation.
-
-{{< /quote >}}
+{% endcall %}
 
 I really hope that we can behave in a way that doesn't ruin the house party.
 
@@ -85,7 +85,7 @@ someone's profile corresponds to their Mastodon account (without paying $8). For
 Mastodon profile the link to this website has a green check, as my website has a link back to my
 Mastodon profile.
 
-{{< figure src="verified-website.jpg" title="Verified Website in Mastodon Profile" >}}
+{{ figure("verified-website.jpg", caption="Verified Website in Mastodon Profile") }}
 
 This was achieved by adding a `rel="me"` to the anchor that links back to my Mastodon profile in the
 navigation header at the top of this site:

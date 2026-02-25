@@ -1,0 +1,45 @@
+{% macro article_item(page) %}
+<article>
+  {% if page.frontmatter.link %}
+    <h1>
+      {{ icon("lucide", "external-link") }}
+      <a class="colored" href="{{ page.frontmatter.link }}" target="_blank" rel="noopener noreferrer">
+        {{ page.frontmatter.title }}
+      </a>
+    </h1>
+  {% else %}
+    <a class="colored" href="/{{ page.base }}/">
+      <h1>{{ page.frontmatter.title }}</h1>
+    </a>
+  {% endif %}
+  <div class="meta">
+    <div class="meta-row">
+      <span>{{ page.frontmatter.date | date(format="[day] [month repr:short] [year]") }}</span>
+      <span class="separator">&#8226;</span>
+      <span>READING TIME</span>
+      {% if page.frontmatter.link %}
+        <span class="separator">&#8226;</span>
+        <a href="/{{ page.base }}/" title="Link directly to this article" class="colored">
+          Self link
+        </a>
+      {% endif %}
+      {% if page.frontmatter.archive %}
+        <span class="separator">&#8226;</span>
+        <a href="{{ page.frontmatter.archive }}" title="Archive of the source article" class="colored">
+          Archive
+        </a>
+      {% endif %}
+    </div>
+    {% if page.frontmatter.tags -%}
+      <div class="tag-list">
+        {% for tag in page.frontmatter.tags -%}
+          <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+        {% endfor -%}
+      </div>
+    {% endif -%}
+  </div>
+  <div class="markdown">
+    {{ caller() }}
+  </div>
+</article>
+{% endmacro %}

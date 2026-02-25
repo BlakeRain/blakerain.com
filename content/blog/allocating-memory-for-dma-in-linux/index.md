@@ -33,7 +33,7 @@ In this more recent model of PCI, the [North Bridge](<https://en.wikipedia.org/w
 
 When programming a device connected via PCIe, you will typically be writing a base address for a region of memory that you have prepared for the device to access. However, this memory cannot be allocated in the usual way. This is due to the way memory addresses are translated by the [MMU](https://en.wikipedia.org/wiki/Memory_management_unit) and the operating system – the memory that we traditionally allocate from the operating system is _virtual_.
 
-# Virtual and Physical Addresses {#virt-and-phy-addresses}
+# Virtual and Physical Addresses { #virt-and-phy-addresses }
 
 Typical memory allocation, such as when we use `malloc` or `new`, ultimately uses memory the operating system has reserved for our process. The address that we receive from the OS will be an address in the [virtual memory](https://en.wikipedia.org/wiki/Virtual_memory) maintained by the OS.
 
@@ -50,13 +50,14 @@ It is important, therefore, that for any allocated memory we are able to obtain 
 
 In order to address these two primary concerns we need to look to an alternative means of memory allocation than the traditional `malloc` and `new`. Moreover, as we are likely to need more than a standard page's worth of space (typically 4Kib), we need to allocate memory using larger pages of memory.
 
-# Establishing Physical Addresses {#physical-addresses}
+# Establishing Physical Addresses { #physical-addresses }
 
 We understand that a process operates on virtual memory, and that memory is arranged in pages. The question now arises as to how we can establish the corresponding physical address for any given virtual address.
 
 An answer to this lies in the process page map. The page map is a table that provides a correspondence between a virtual page number and the physical address of that page, along with some flags that tell us information about the page's residency. Each entry in the table is a 64-bit value, with bits 63 down through 55 providing the various flags, and bits 54 to 0 giving the page frame number (assuming the page is in RAM).
 
-{{< figure src="image-2-1.png" title="Layout of an entry in the page map" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("image-2-1.png", caption="Layout of an entry in the page map") }}
 
 Note that bits 54 through 0 are only the physical page frame number if the page is currently in memory. Under other circumstances it can indicate such things as the swap type and offset. We can ascertain whether the page is actually in RAM by checking if bit 63 is set. If bit 63 is set then the bits 54 through 0 are the page frame number.
 
@@ -132,7 +133,7 @@ static uintptr_t virtual_to_physical(const void *vaddr) {
 
 We can now use the `virtual_to_physical` function to ascertain the physical address of some memory that we allocate from the operating system. This is the address that we pass on to our hardware.
 
-# Linux Huge Pages {#hugepages}
+# Linux Huge Pages { #hugepages }
 
 Now we know how to establish the physical address corresponding to a virtual address, the problem still remains that we need to obtain an address for _contiguous physical memory_, rather than merely the physical address of a single page. We are also still limited by the fact that the operating system may subject our memory to swapping and other operations.
 
@@ -167,7 +168,7 @@ Something to note is that the kernel will try and balance the huge page pool ove
 
 Huge pages provide a rather nice solution to our problem of obtaining large contiguous regions of memory that are not going to be swapped out by the operating system.
 
-# Establishing Huge Page Availability {#hugepage-availability}
+# Establishing Huge Page Availability { #hugepage-availability }
 
 The first step towards allocating huge pages is to establish what huge pages are available to us. To do so we're going to query some files in the `/sys/kernel/mm/hugepages` directory. If any huge pages are configured, this directory will contain sub-directories for each huge page size:
 
@@ -259,7 +260,7 @@ std::vector<HugePageInfo> HugePageInfo::load() {
 }
 ```
 
-# Allocating a Huge Page {#allocating}
+# Allocating a Huge Page { #allocating }
 
 Each huge page allocation is described by a `HugePage` structure. This structure encapsulates the virtual and physical address of an allocated huge page along with the size of the page in bytes.
 
@@ -298,7 +299,7 @@ HugePage::Ref HugePageInfo::allocate() const {
 
 The value that we return from `allocate` constructs a `HugePage` with the virtual address that we received from `mmap`, the equivalent physical address as calculated by our `virtual_to_physical` function and the size of the huge page.
 
-# Deallocating a Hugepage {#deallocating}
+# Deallocating a Hugepage { #deallocating }
 
 Once we no longer wish to retain a huge page we need to release it back into the huge page pool maintained by the operating system.
 
@@ -311,7 +312,7 @@ HugePage::~HugePage() {
 }
 ```
 
-# Dividing Up a Hugepage into Buffers {#dividing-into-buffers}
+# Dividing Up a Hugepage into Buffers { #dividing-into-buffers }
 
 **Note:** _If you only wanted to know about the allocation of huge pages then you can skip to the [conclusion](#conclusion)._
 
@@ -637,7 +638,7 @@ DMAPool::~DMAPool() {
 
 With the `DMAPool` implemented we can begin to portion out buffers of the required size and alignment to hardware. Hardware will require the physical address of each `Buffer` we allocate from the pool, which is available in the `Buffer::phy` field. Our process is also able to access this memory via the pointer in the `Buffer::address` field.
 
-# Conclusion {#conclusion}
+# Conclusion { #conclusion }
 
 Preparing memory for use with DMA may seem a bit more complex than necessary. As developers we're often shielded from the details of memory management by useful abstractions such as those provided by `malloc` and `new`. This can mean that we are rarely exposed to the manner in which memory is managed by the operating system and our programs.
 

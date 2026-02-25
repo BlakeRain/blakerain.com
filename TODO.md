@@ -1,0 +1,7 @@
+- [x] Handle parsing of Markdown image links.
+- [x] Handle foot note definitions and references.
+- [x] Figure out summaries, either from front-matter, first paragraph(s), or detecting dividers.
+- [x] Don't convert GIF
+- [ ] Syntax highlighting code blocks.
+- [ ] Calculate reading type from word count.
+- [ ] Add in metadata for various pages (e.g. `<meta name="twitter:description">` etc).

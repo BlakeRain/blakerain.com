@@ -1,0 +1,46 @@
+{% macro book(url, title, cover, author, subtitle=none, rating=0, year=0, pages=0) %}
+<div class="book-card">
+  <div class="book-cover">
+    <a href="{{ url }}" target="_blank" rel="noopener">
+      <img class="book-cover" src="{{ cover }}" alt="Book Cover of {{ title }}">
+    </a>
+  </div>
+  <div class="book-info">
+    <h3>
+      <a href="{{ url }}" target="_blank" rel="noopener">
+        {{ title }}
+      </a>
+      {% if rating > 0 -%}
+        <div class="book-rating" title="Rating {{ rating }}/5">
+          {{ repeat("★", rating) }}{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}
+        </div>
+      {% endif -%}
+    </h3>
+    {% if subtitle %}
+      <h4>{{ subtitle }}</h4>
+    {% endif -%}
+    <div class="book-meta">
+      <div>{{ author }}</div>
+      {% if year > 0 %}
+        <div class="separator">&#8226;</div>
+        <div>{{ year }}</div>
+      {% endif %}
+      {% if pages > 0 %}
+        <div class="separator">&#8226;</div>
+        <div>{{ pages }}</div>
+      {% endif %}
+    </div>
+    {% if rating > 0 -%}
+      <div class="book-rating-mobile" title="Rating {{ rating }}/5">
+        {{ repeat("★", rating) }}{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}
+      </div>
+    {% endif -%}
+  </div>
+  <div class="book-content">
+    {{ caller() }}
+    <a class="book-link" href="{{ url }}" target="_blank" rel="noopener">
+      View book {{ icon("lucide", "arrow-right") }}
+    </a>
+  </div>
+</div>
+{% endmacro %}

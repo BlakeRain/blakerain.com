@@ -18,11 +18,12 @@ was somewhat unprepared for how annoying the process ended up being. Migrating _
 quite painless, since ProtonMail includes a feature to fetch mail from an external IMAP server
 (called [EasySwitch]), so I was expecting a similar level of convenience when going the other way.
 
-
-> [!NOTE] Better ways may exist
-> I would usually use [fetchmail] to get email from one IMAP account into another, but ProtonMail
-> does not support IMAP access, so that was not an option. There may be other options for exporting
-> from ProtonMail, but my cursory search did not turn up anything useful.
+{% from "macros/callout.html" import callout %}
+{% call callout("note", "Better ways may exist") %}
+I would usually use [fetchmail] to get email from one IMAP account into another, but ProtonMail
+does not support IMAP access, so that was not an option. There may be other options for exporting
+from ProtonMail, but my cursory search did not turn up anything useful.
+{% endcall %}
 
 To allow exporting mail, ProtonMail's [documentation] seems to only offer a single option: using the
 [export tool]. This is a command-line tool that you run locally, which connects to your ProtonMail

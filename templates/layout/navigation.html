@@ -1,0 +1,30 @@
+{% from "macros/social-links.html" import social_links %}
+<nav class="site-navigation">
+  <div class="content">
+    <div class="header">
+      <a href="/">
+        <img src="/media/logo-text.png" width="154" height="28" alt="Blake Rain">
+      </a>
+      <button id="nav-menu-toggle" type="button">
+        {{ icon("lucide", "menu") }}
+        <span class="sr-only">Toggle Menu</span>
+      </button>
+    </div>
+    <ul id="nav-menu">
+      <li>
+        <a href="/about/">About Me</a>
+      </li>
+      <li>
+        <a href="/blog/">Blog</a>
+      </li>
+      <li>
+        <a href="/notes/">Notes</a>
+      </li>
+      <li>
+        <a href="/weeknotes/">Weeknotes</a>
+      </li>
+    </ul>
+    {{ social_links(mode="icons", iconSize="1.3rem") }}
+  </div>
+</nav>
+<script src="/js/navigation.js" defer></script>

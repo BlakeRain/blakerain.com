@@ -1,0 +1,66 @@
+{%- set cover = null %}
+{%- if file_exists("content/" ~ page.base ~ "/cover.png") %}
+{%-   set cover = "cover.png" %}
+{%- elif file_exists("content/" ~ page.base ~ "/cover.jpg") %}
+{%-   set cover = "cover.jpg" %}
+{%- endif %}
+{%- if cover is string %}
+{%-   set cover_image = image_process(cover, "q30") %}
+{%- else %}
+{%-   set cover_image = null %}
+{%- endif %}
+<article class="h-entry article">
+  <header
+    {% if page.frontmatter.customHero -%}
+      style="{{ page.frontmatter.customHero | replace("\n", " ") }}"
+    {%- elif cover_image is mapping -%}
+      style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ cover_image.path }}')"
+    {%- endif -%}>
+    <div class="content mx-auto inner">
+      <h1 class="{% if cover_image is mapping %}with-cover{% endif %}{% if subtitle %} with-subtitle {% endif %}">
+        <a href="/{{ page.base }}" class="u-url p-name" rel="bookmark">
+          {{ page.frontmatter.title }}
+        </a>
+      </h1>
+      {% if subtitle -%}
+        <h2 class="{% if cover_image is mapping %}with-cover{% endif %}">
+          {{ page.frontmatter.summary }}
+        </h2>
+      {%- endif %}
+      {% if page.frontmatter.coverImage -%}
+        <div class="cover-credit">
+          {% if page.frontmatter.coverImage.url -%}
+            <a href="{{ page.frontmatter.coverImage.url }}">
+              Cover photo by {{ page.frontmatter.coverImage.author }}
+            </a>
+          {% else -%}
+            <span>
+              Cover photo by {{ page.frontmatter.coverImage.author }}
+            </span>
+          {%- endif %}
+        </div>
+      {%- endif %}
+    </div>
+  </header>
+  {% if options.meta is not boolean or options.meta -%}
+  <div class="content mx-auto meta">
+    <div class="meta-details">
+      <div class="dt-published">{{ page.frontmatter.date | date(format="[day] [month repr:long] [year]") }}</div>
+      <div class="separator">&#8226;</div>
+      <div>READING TIME</div>
+      <div class="meta-break"></div>
+      <a rel="author" class="p-author h-card" href="https://blakerain.com/">Blake Rain</a>
+    </div>
+    {% if page.frontmatter.tags -%}
+      <div class="tag-list">
+        {% for tag in page.frontmatter.tags -%}
+          <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+        {% endfor -%}
+      </div>
+    {% endif -%}
+  </div>
+  {% endif %}
+  <div class="content mx-auto markdown {% if page.frontmatter.numberedHeadings %}numbered-headings{% endif %}">
+    {{ page.content | safe }}
+  </div>
+</article>

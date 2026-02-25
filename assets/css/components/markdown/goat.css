@@ -1,10 +1,12 @@
-div.goat {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.markdown {
+  div.goat {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 
-  & svg {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-    font-size: var(--text-sm);
+    & svg {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: var(--text-sm);
+    }
   }
 }

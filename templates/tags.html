@@ -1,0 +1,31 @@
+{%- extends "base.html" %}
+{%- block title %}Tags{% endblock %}
+{%- block main %}
+{%- set ns = namespace(pagecounts={}) %}
+{%- for page in load_pages("") if page.frontmatter.tags %}
+  {%- for tag in page.frontmatter.tags %}
+    {%- set count = ns.pagecounts[tag] | default(0) %}
+    {%- set ns.pagecounts = assign(ns.pagecounts, tag, count + 1) %}
+  {%- endfor %}
+{%- endfor %}
+<main class="articles-list content">
+  <h1>
+    {{ icon("bootstrap", "tags-fill") }}
+    <span>Tags</span>
+  </h1>
+  <h2>
+    There are {{ page.tags | length }} tags in use across this site.
+  </h2>
+  <div class="taxonomy-grid">
+    <h3 class="col1">Tag</h3>
+    <h3 class="col2">Description</h3>
+    <h3 class="col3">Count</h3>
+    <div class="divider"></div>
+    {% for name, tag in page.tags | dictsort if ns.pagecounts[name] > 0 %}
+      <a href="/tags/{{ name | safe }}/" class="colored">{{ name }}</a>
+      <div class="description">{{ tag.description }}</div>
+      <div class="count">{{ ns.pagecounts[name] | default(0) }}</div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
