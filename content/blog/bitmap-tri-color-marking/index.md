@@ -6,6 +6,9 @@ tags:
 date: 2020-12-05T15:12:33
 summary: |
   In this post I look at a simple tri-color marking implementation that uses bitmap operations to walk the heap.
+coverImage:
+  author: Possessed Photography
+  url: https://unsplash.com/photos/sodimm-ram-stick-nuc3NFB_6po
 ---
 
 Recently I've been experimenting with various garbage collection implementations, with an eye
