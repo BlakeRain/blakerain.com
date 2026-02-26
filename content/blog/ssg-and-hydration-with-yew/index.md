@@ -24,7 +24,7 @@ interactivity. This project, whilst complete, has not been without some frustrat
 I felt it might be worth documenting some of the more interesting problems I encountered along the
 way.
 
-> [!NOTE]
+> [!WARNING]
 > This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
 > whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
 > the change over to using hugo.
