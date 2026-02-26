@@ -93,13 +93,8 @@ r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
 
 # Colophon { .no-outline }
 
-This website was built with [Hugo] and [Tailwind] CSS. The source code is available on my
-self-hosted [Forgejo](https://git.blakerain.com/BlakeRain/blakerain.com) and on
-[GitHub](https://github.com/BlakeRain/blakerain.com).
-
-<div id="wcb" class="carbonbadge wcb-d"></div>
-<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
-
+This website was built with [Hugo]. The source code is available on my self-hosted
+[Forgejo](https://git.blakerain.com/BlakeRain/blakerain.com).
 
 [Rust]: https://rust-lang.org/
 [Haskell]: https://www.haskell.org/
