@@ -1,6 +1,6 @@
 :root {
   --footer-bg: var(--color-brand);
-  --footer-text: var(--color-text-subtle);
+  --footer-text: #d4d4d4;;
   --footer-link-hover: #fafafa;
 }
 
