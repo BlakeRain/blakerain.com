@@ -17,8 +17,8 @@ changed quite a bit, so I thought I'd write about that too.
 <!--more-->
 
 In 2025 I stopped using Spotify, and now fully self-host my music on [Navidrome]. The final push
-came in the form of an [AMG] post in July, where they talk about issues with Spotify's payments to
-artists and increasing interest in AI-generated music.
+came in the form of an [AMG] post in July, in which they talk about issues with Spotify's payments to
+artists and their increasing interest in serving AI-generated music.
 
 This has meant that I've had to purchase a lot more music in 2025, mostly from favourite artists,
 but also from some bands where I've previously only listened to a track or two. Scanning through
@@ -29,9 +29,9 @@ sometimes quite a challenge, not to mention quite expensive.
 I've found that there are immediate benefits to entirely self-hosting my music and buying albums
 rather than streaming individual tracks:
 
-1. I'm no longer being pulled in various directions by Spotify's algorithms. I certainly don't want
-   my choice of music to be influenced by an algorithm that I don't understand. Spotify is not my
-   friend, and their incentives are not going to be aligned in my favour. I think I'd rather have
+1. I'm no longer being pulled in various directions by Spotify's algorithms. I certainly no longer
+   want my choice of music to be influenced by an algorithm that I don't understand. Spotify is not
+   my friend, and their incentives are not going to be aligned with min. I think I'd rather have
    recommendations from humans.
 1. Going back to buying albums has been a wonderful experience of rediscovering how artists can tell
    their stories through their music. For the most part, music I listened to consisted primarily of
@@ -64,12 +64,13 @@ Death Above Life (24-bit HD audio) by Orbit Culture
 {{< /bandcamp >}}
 
 I never imagined myself being a fan of [deathcore], but ever since the release of [Unyielding Night]
-by [Assemble the Chariots] I started to find other deathcore albums I enjoyed. I've heard it argued
-that Assemble The Chariots are actually symphonic death metal, so I'm probably completely confused.
+by [Assemble the Chariots] in 2024 I started to find other deathcore albums I enjoyed. I've heard it
+argued that _Assemble The Chariots_ are actually symphonic death metal, so I'm probably completely
+confused.
 
-Last year, [Death Above Life] from [Orbit Culture] came out in October. This album really stood out
-to me over the other deathcore contender: Lorna Shore's [I Feel the Everblack Festering Within Me]
-(more on this album in the _Runners Up_ section below). I think the tracks [Nerve] and [Bloodhound]
+In 2025 [Orbit Culture] released [Death Above Life]. This album really stood out to me over the
+other deathcore contender: _Lorna Shore_'s [I Feel the Everblack Festering Within Me] (more on this
+album in the [Runners Up](#runners-up) section below). I think the tracks [Nerve] and [Bloodhound]
 are probably my favourite tracks on the album.
 
 [deathcore]: https://en.wikipedia.org/wiki/Deathcore
@@ -115,10 +116,10 @@ I Feel The Everblack Festering Within Me (24-bit HD audio) by Lorna Shore
 [Lorna Shore]'s new album [I Feel the Everblack Festering Within Me] was released in September and
 was a good second on this list until Sin Deliverance delivered. It seems that Lorna Shore might be
 the most recognised deathcore band around, and I often see other deathcore bands being compared to
-them. I think this album is a good continuation of Lorna Shore's sound, but I'm still not entirely
+them. I think this album is a good continuation of _Lorna Shore_'s sound, but I'm still not entirely
 happy with the "breakdowns" (or whatever they're called), especially at the end of [Prison of
 Flesh]. They seem less frequent, or at least less obvious, than in their [Immortal] album, which was
-a nicer sound than Everblack, but was really quite ruined by breakdowns in the middle of quite
+a nicer sound than _Everblack_, but was really quite ruined by breakdowns in the middle of quite
 excellent tracks. I mean, why stop what is otherwise excellent music every now and then just to make
 noises?
 
@@ -135,7 +136,7 @@ noises?
 
 The depressive black metal album [Akuzaï] (evil crime) from [Enterré Vivant] (buried alive) was
 released in May. I only came across it when catching up on May's [Stuck in the Filter] on AMG.
-Overall I find the album quote moving, and at times somewhat disturbing. I think a good example of
+Overall I find the album quite moving, and at times somewhat disturbing. I think a good example of
 this is the tracks [Chûtô] or [Jain], which often descend into wailing. It's pretty moving stuff,
 with drawn out melodic guitars and the usual black metal screaming, yet a fair amount of variation
 and layering make it worth multiple listens.
@@ -152,8 +153,8 @@ and layering make it worth multiple listens.
 Desprins by Clouds Official
 {{< /bandcamp >}}
 
-The new [Desprins] from [Clouds], released back in January of 2025. I've not heard Clouds before, so
-this was a nice discovery. I can be pretty picky about atmospheric doom, but this album was
+The new [Desprins] from [Clouds], released back in January of 2025. I've not heard _Clouds_ before,
+so this was a nice discovery. I can be pretty picky about atmospheric doom, but this album was
 definitely a highlight of the year. The use of a flute really elevates the music. For example, the
 flute turns up at around the two-minute mark in [Forge Another Nightmare], and then sets up as an
 awesome counterpoint to [Neagoe]'s vocals, changing things in such an unexpected way.
@@ -166,22 +167,23 @@ awesome counterpoint to [Neagoe]'s vocals, changing things in such an unexpected
 # Honourable Mentions
 
 Scrolling through the list of 2025 releases in Navidrome, there where several other albums that I
-really liked. Given that I can't really just dump all 2025's albums in a big list, here are what I
-think are a few of the more interesting finds.
+really liked. Given that I can't really dump all 2025's albums in a big list, here are what I think
+are a few of the more interesting finds.
 
-- [Igorrr -- Amen](https://igorrr.bandcamp.com/album/amen) --- Igorrr are such a fun band. This
-  album is a pretty great demonstration of genre-bending in a way that I actually find appealing.
-- [Lord Of The Lost -- OPVS NOIR Vol. 1](https://lordofthelost.bandcamp.com/album/opvs-noir-vol-1)
-  --- Another great album from Lord Of The Lost, with some excellent guest appearances like Within
-  Temptation, Stimmgewalk, and Takes of Time.
-- [Tempestuous Fall -- The Descent of Mortals Past](https://midnightodyssey.bandcamp.com/album/the-descent-of-mortals-past)
-  --- The first albume I've heard from [Temestuous Fall]. The songs [Psyche], [Ulysses], and
-  [Aeneas] are certainly worth a listen.
+- [Tempestuous Fall -- The Descent of Mortals Past] --- The first album I've heard from [Tempestuous
+  Fall]. The songs [Psyche], [Ulysses], and [Aeneas] are certainly worth a listen.
+- [Igorrr -- Amen] --- _Igorrr_ are such a fun band. This album is a pretty great demonstration of
+  genre-bending in a way that I actually find appealing.
+- [Lord Of The Lost -- OPVS NOIR Vol. 1] --- Another great album from _Lord Of The Lost_, with some
+  excellent guest appearances like _Within Temptation_, _Stimmgewalk_, and _Tales of Time_.
 
-[Temestuous Fall]: https://www.metal-archives.com/bands/Tempestuous_Fall/3540347012
+[Tempestuous Fall -- The Descent of Mortals Past]: https://midnightodyssey.bandcamp.com/album/the-descent-of-mortals-past
+[Tempestuous Fall]: https://www.metal-archives.com/bands/Tempestuous_Fall/3540347012
 [Psyche]: https://midnightodyssey.bandcamp.com/track/psyche-temptation-of-the-divine
 [Ulysses]: https://midnightodyssey.bandcamp.com/track/ulysses-requiem-of-the-sea
 [Aeneas]: https://midnightodyssey.bandcamp.com/track/aeneas-guide-me-home
+[Igorrr -- Amen]: https://igorrr.bandcamp.com/album/amen
+[Lord Of The Lost -- OPVS NOIR Vol. 1]: https://lordofthelost.bandcamp.com/album/opvs-noir-vol-1
 
 # Dedication
 
@@ -194,8 +196,8 @@ passed away in June.
 It was Ian who introduced me to metal in my teens. I still remember the first mix tape he made me
 (an actual _tape_). The first track was something like Rhapsody's [Rain of a Thousand Flames], and I
 was instantly hooked. I spent a lot of weekends over at his house, or meeting in [Borders bookshop]
-on Briggate in Leeds (now a Virgin Money bank). On IRC I knew Ian as Runewolf, where we hung out in
-the `#truemetalmp3` channel on Undernet. It was with Ian and friends that I would go to [Wacken]
+on Briggate in Leeds (now a Virgin Money bank). On IRC I knew Ian as _Runewolf_, where we hung out
+in the `#truemetalmp3` channel on Undernet. It was with Ian and friends that I would go to [Wacken]
 for the awesome metal festival there.
 
 As is often the way, Ian and I drifted apart over the last few years, especially with my move down
