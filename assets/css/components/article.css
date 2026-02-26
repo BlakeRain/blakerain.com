@@ -114,7 +114,7 @@
   header {
     background-repeat: no-repeat;
     background-size: cover;
-    background: center;
+    background-position: center;
 
     > .inner {
       display: flex;
