@@ -24,12 +24,12 @@ jobs:
         run: |
           npm i
 
-      - name: Setup node
+      - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.22
 
-      - name: Setup hugo
+      - name: Setup Hugo
         uses: https://github.com/peaceiris/actions-hugo@v3
         with:
           hugo-version: latest
@@ -43,13 +43,20 @@ jobs:
           hugo --minify
 
       - name: Deploy the site
+        env:
+          BUNNY_STORAGE_HOST: ${{ secrets.BUNNY_STORAGE_HOST }}
+          BUNNY_STORAGE_USERNAME: ${{ secrets.BUNNY_STORAGE_USERNAME }}
+          BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
         run: |
           apt-get update -y
-          apt-get install -y rsync
-          echo "${{ secrets.SSH_DEPLOYMENT_KEY }}" > deploy_key
-          chmod 600 ./deploy_key
-          rsync -chrlvzi --delete \
-            -e 'ssh -i ./deploy_key -p 22 -o StrictHostKeyChecking=no' \
-            public/ \
-            blakerain-com@blakerain.com:/
-          rm ./deploy_key
+          apt-get install -y lftp
+          lftp -u "${BUNNY_STORAGE_USERNAME},${BUNNY_STORAGE_PASSWORD}" \
+            "sftp://${BUNNY_STORAGE_HOST}" \
+            -e "set sftp:auto-confirm yes; mirror -R --delete --verbose public/ /; quit"
+
+      - name: Purge CDN cache
+        run: |
+          curl -sf -X POST \
+            "https://api.bunny.net/pullzone/${{ secrets.BUNNY_PULLZONE_ID }}/purgeCache" \
+            -H "AccessKey: ${{ secrets.BUNNY_API_KEY }}" \
+            -H "Content-Length: 0"
