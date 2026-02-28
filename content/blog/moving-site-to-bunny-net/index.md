@@ -546,7 +546,7 @@ billing for these regions is $0.01/GB per month.
 
 {{< figure src="bunny-cdn-pricing-zone.png" caption="Pricing Zones for the CDN" >}}
 
-Next I added a cusstom hostname for the `blakerain.com` domain. Entering `blakerain.com` into the
+Next I added a custom hostname for the `blakerain.com` domain. Entering `blakerain.com` into the
 _Add custom hostname_ box in the _hostnames_ section of the CDN admin page gives me the following
 feedback (note I used `test.blakerain.com` here, as I'd already added `blakerain.com`):
 
@@ -671,12 +671,12 @@ jobs:
             -H "Content-Length: 0"
 ```
 
-With the changes to the deplyment workflow in place, I created and pushed a new tag: [v2.14.3]. This
+With the changes to the deployment workflow in place, I created and pushed a new tag: [v2.14.3]. This
 was built and, _somehow_ [deployed] perfectly without any issues.
 
 {{< figure src="site-deployment-success.png" caption="Successful deployment of `v2.14.3`" >}}
 
-With the site dpeloyed successfully, and seemingly all the Terraform and other infrastructure all
+With the site deployed successfully, and seemingly all the Terraform and other infrastructure all
 set up correctly, I was able to finally go to bed.
 
 [copyright page]: https://blakerain.com/copyright
