@@ -1,5 +1,17 @@
 div.highlight {
   @import "./syntax/catppuccin-latte.css";
+
+  &.text-wrap {
+    pre {
+      white-space: pre-wrap;
+    }
+
+    &.aggressive {
+      pre {
+        overflow-wrap: anywhere;
+      }
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {

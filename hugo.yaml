@@ -40,6 +40,10 @@ markup:
   highlight:
     noClasses: false
     wrapperClass: highlight
+  tableOfContents:
+    ordered: true
+    startLevel: 1
+    endLevel: 5
 
 outputs:
   home: ["html", "rss"]
