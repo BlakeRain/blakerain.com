@@ -19,6 +19,9 @@ bunny:
 c:
   name: C
   description: A general-purpose programming language.
+cdn:
+  name: CDN
+  description: A content delivery network.
 cpp:
   name: C++
   description: A general-purpose programming language that is an extension of the C programming language.
@@ -34,6 +37,9 @@ docker:
 email:
   name: Email
   description: Still the best way to communicate with others.
+eu:
+  name: EU
+  description: The European Union.
 gc:
   name: GC
   description: Garbage Collection. A way of automatically reclaiming memory that is no longer in use.
