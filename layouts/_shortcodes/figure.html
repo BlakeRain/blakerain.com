@@ -15,7 +15,7 @@
 
   {{- if not $u.IsAbs -}}
     {{- with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
-      {{- $spec := "q75 webp" -}}
+      {{- $spec := "q90 webp" -}}
       {{- if (and $width $height) -}}
         {{- $spec = printf "resize %dx%d %s" $width $height $spec -}}
       {{- else if (and $width (not $height)) -}}

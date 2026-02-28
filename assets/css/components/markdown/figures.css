@@ -68,12 +68,16 @@ figure {
       }
     }
   }
-}
 
-figcaption {
-  margin-top: 1rem;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: var(--text-sm);
-  text-align: center;
-  color: var(--color-text-muted);
+  figcaption {
+    margin-top: 0.5rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-sm);
+    text-align: center;
+    color: var(--color-text-muted);
+
+    p {
+      margin-bottom: 0 !important;
+    }
+  }
 }
