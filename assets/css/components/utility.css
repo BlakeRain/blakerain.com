@@ -23,3 +23,7 @@
 .no-wrap {
   white-space: nowrap;
 }
+
+.page-main {
+  flex-grow: 1;
+}
