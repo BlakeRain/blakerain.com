@@ -2,6 +2,7 @@
 title: About Me
 date: 2018-10-22T07:21:38
 summary: Some information about me, what I do and have done.
+subtitle: true
 menus:
   - main
   - footer_left

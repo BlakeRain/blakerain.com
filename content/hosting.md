@@ -1,6 +1,7 @@
 ---
 title: Self-hosting
 summary: A list of things that I self host.
+subtitle: true
 ---
 
 Inspired by [Matze's page](https://kittsteiner.blog/self-hosting/), below is a list of the services

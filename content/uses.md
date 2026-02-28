@@ -2,6 +2,7 @@
 title: Uses
 date: 2025-08-21T19:44:30
 summary: A list of hardware and software I use.
+subtitle: true
 menus:
   - footer_left
 params:

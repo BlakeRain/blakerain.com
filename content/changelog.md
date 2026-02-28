@@ -1,6 +1,7 @@
 ---
 title: Changelog
 summary: A log of changes made to this website.
+subtitle: true
 menus:
   - footer_right
 params:

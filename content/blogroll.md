@@ -1,6 +1,7 @@
 ---
 title: Blogroll
 summary: A list of other sites that I read and recommend.
+subtitle: true
 menus:
   - footer_right
 params:
