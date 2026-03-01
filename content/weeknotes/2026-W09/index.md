@@ -21,12 +21,14 @@ site] over to [Bunny CDN], and migrated a toy web application over to their Magi
 A new book arrived this week, along with a new issue of [Paged Out!]. I've also been catching up on
 previous issues of [CACM], and I'm nearly ready to start on this years first issue: [volume 69, no
 1]. I've also started working though the [AISI]'s publication [Understanding AI Trajectories]:
-Mapping the Limitations of Current AI Systems.
+Mapping the Limitations of Current AI Systems, although that was quite interrupted by the [new
+paper] from Kapoor and Narayanan.
 
 [CACM]: https://cacm.acm.org/
 [volume 69, no 1]: https://cacm.acm.org/issue/january-2026/
 [AISI]: https://www.aisi.gov.uk/
 [Understanding AI Trajectories]: https://www.aisi.gov.uk/blog/mapping-the-limitations-of-current-ai-systems
+[new paper]: /notes/2026-02-24/
 
 ## Paged Out! Issue #8
 
