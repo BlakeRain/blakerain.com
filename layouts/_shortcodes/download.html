@@ -1,0 +1,5 @@
+{{- $file      := .Get "file" -}}
+{{- $resource  := .Page.Resources.Get $file -}}
+{{- $text      := .Inner | default $file -}}
+
+<a href="{{ $resource.RelPermalink }}">{{ $text | markdownify }}</a>{{- "" -}}
