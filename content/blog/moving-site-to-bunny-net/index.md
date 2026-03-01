@@ -36,9 +36,9 @@ secure location.
 
 # Bunny CDN
 
-I've been keeping an eye on Bunny for a while now, after learning about their CDN them a few years
-ago. The Bunny CDN network covers [77 countries] over six continents, and they've been adding quite
-a lot of features to their network. A few that I've wanted to test are:
+I've been keeping an eye on Bunny for a while now, after learning about their CDN a few years ago.
+The Bunny CDN network covers [77 countries] over six continents, and they've been adding quite a lot
+of features to their network. A few that I've wanted to test are:
 
 - [Magic containers], which allows you to deploy containers to the Bunny network.
 - [Edge scripting], which runs Deno on the edge. I'd have preferred to be able to deploy
@@ -67,24 +67,26 @@ Before I moved this site to Bunny, I mostly hosted everything on either servers 
 [Hetzner] or, for personal things like [Readeck], at home on a Dell PowerEdge server. A couple of
 things are still left on an old [Linode] VPS that I've had since 2011.
 
-I've been using [Hetzner] for a couple of years now, and I've found them to be very good and
-reliable. I also use their [StorageBox] as one of the destinations for all my backups. This site
-([blakerain.com]), along with several other services, are all hosted on the Hetzner server, and
-served via [Caddy]. I've listed some of the services I run on my [hosting] slash-page.
+I've been using [Hetzner] for a couple of years now, and I've found them to be very reliable. I also
+use their [StorageBox] as one of the destinations for all my backups. This site ([blakerain.com]),
+along with several other services, are all hosted on a Hetzner server, and served via [Caddy].
+I've listed some of the services I run on my [hosting] slash-page.
 
-The Linode server is still running, but since they [sold to Akamai] in 2022 I've been ushering
-services away from it and onto Hetzner servers. I wasn't kinda heartbroken about this or anything.
+The Linode server is still running, but since they [sold to Akamai] in 2022, I've been ushering
+services away from it and onto Hetzner servers. I wasn't kinda heartbroken about this or anything:
+a VPS I've been running for nearly 15 years has some memories attached to it.
 
 The servers at home run personal services like [Readeck] along with a few [other services], and I
-access all that over a [Nebula] VPN.
+access those over a [Nebula] VPN.
 
 All my DNS is done by [AWS Route53], which also serves as my registrar.
 
 [Hetzner]: https://www.hetzner.com/
+[Linode]: https://www.linode.com/
 [StorageBox]: https://www.hetzner.com/storage/storage-box/
 [blakerain.com]: https://blakerain.com/
 [Caddy]: https://caddyserver.com/
-[sold to Akami]: https://www.akamai.com/newsroom/press-release/akamai-to-acquire-linode
+[sold to Akamai]: https://www.akamai.com/newsroom/press-release/akamai-to-acquire-linode
 [Readeck]: https://readeck.org/en/
 [hosting]: /hosting/
 [other services]: /uses/
@@ -96,8 +98,7 @@ All my DNS is done by [AWS Route53], which also serves as my registrar.
 To move this site to Bunny's CDN, I needed to make the following changes:
 
 1. Change the DNS nameservers for `blakerain.com` from Route53 to Bunny's nameservers.
-1. Change the [Terraform] templates to use Bunny's DNS service for creating the DNS records for each
-   service under `blakerain.com`.
+1. Change the [Terraform] templates to use Bunny's DNS service.
 1. Set up the [Bunny Storage] zone for the `blakerain.com` website.
 1. Create a CDN zone for the `blakerain.com` website backed by the storage zone.
 1. Alter the [deployment script] to use SFTP to upload the site to the storage zone and issue a
@@ -170,7 +171,8 @@ with open(sys.argv[1]) as f:
         print(f"{name}\t{ttl}\tIN\t{rtype}\t{value}")
 ````
 
-This gave me some output that looks like this, which I could then import into Bunny's DNS service.
+This gave me some output that looks like the example below, which I could then import into Bunny's
+DNS service.
 
 ```
 blakerain.com.	300	IN	A	85.10.205.2
@@ -325,9 +327,9 @@ resource "bunnynet_dns_record" "freshrss" {
 }
 ```
 
-Notice first that the `name` property does not include the domain name itself. To signal the apex of
-the domain, the `name` property is set to the empty string. An example of this would be the `MX`
-record for the `blakerain.com` domain:
+Notice first that the `name` property does not include the domain name itself. To signify a record
+at the apex of the domain, the `name` property is set to the empty string. An example of this would
+be the `MX` record for the `blakerain.com` domain:
 
 ```hcl
 resource "bunnynet_dns_record" "mx_blakerain" {
@@ -512,8 +514,8 @@ two regions, $0.005/GB per additional region, up to a total of 9 regions.
 {{< figure src="bunny-storage-tiers.png" caption="Selection of storage tier for a storage zone" >}}
 
 For the main storage region I selected _London (UK)_ with replication in _Frankfurt (DE)_ and _New
-York (US)_. This gives me a total of three regions. This gives a total monthly storage cost of
-$0.025/GB. Given that the this website it 45.26 MB, I think this will be affordable.
+York (US)_. This gives me a total of three regions, and a total monthly storage cost of $0.025/GB.
+Given that this website it 45.26 MB, which is around 4% of a GB, I think this will be affordable.
 
 {{< figure src="bunny-storage-regions.png" caption="Selection of storage regions for a storage zone" >}}
 
@@ -536,12 +538,12 @@ this sites [404 page].
 
 Next I needed to set up the CDN, which would handle the delivery of the website content stored in
 the Storage Zone. For the _Origin Type_ I chose _Storage Zone_, and selected the storage zone I
-created above. I selected the _standard Tier_, which charges at $10/TB.
+created above. I selected the _Standard Tier_, which charges at $10/TB.
 
 {{< figure src="bunny-cdn-origin.png" caption="Origin Type for the CDN" >}}
 
 For the CDN _Pricing Zones_, I selected _Europe_ and _North America_, which is consistent with the
-two main sources of traffic to this site (I guess all the bots run in the US and Europe). The
+two main sources of traffic to this site (ignoring the bots that are coming from Singapore). The
 billing for these regions is $0.01/GB per month.
 
 {{< figure src="bunny-cdn-pricing-zone.png" caption="Pricing Zones for the CDN" >}}
@@ -553,20 +555,20 @@ feedback (note I used `test.blakerain.com` here, as I'd already added `blakerain
 {{< figure src="bunny-cdn-add-domain.png" caption="Adding a custom hostname for the CDN" >}}
 
 You can see here that I needed to add a `CNAME` record pointing to `blakerain-com.b-cdn.net`, which
-is the first hostname given to the CDN zone by Bunny. "Hopping" over to the _DNS_ settings for
+is the first hostname given to the CDN zone by Bunny. Hopping over to the _DNS_ settings for
 `blakerain.com` I added a new `CNAME` record as requested, leaving the _Hostname_ field blank for
 the apex of the domain:
 
 {{< figure src="bunny-dns-setup-apex-cname.png" height=813 enlarge=true caption="Adding a CNAME record for the apex of the domain" >}}
 
 > [!INFO]
-> Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537], which
-> celebrated it's 30th birthday in February. These days the kids are ignoring RFCs and [doing
+> Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537] (which
+> celebrated it's 30th birthday in February). These days the kids are ignoring RFCs and [doing
 > whatever they want], where "whatever they want" means flattening the CNAME records into an A
 > record.
 >
 > This is a silly feature, and custom behaviour that should not be encouraged. But it's also really
-> convenient, so I'm going to try and fit in with the kids.
+> convenient, so I'm going to try and fit in.
 
 With the DNS record in place, I returned to the CDN admin page and clicked _Verify and Activate
 SSL_. After a brief pause, Bunny confirmed that the certificate was now in place, and I could see
@@ -611,14 +613,16 @@ the `~/www` directory for this user.
 > entry corresponding to that key to limit the access:
 >
 > ```plain {class="text-wrap"}
-> from="192.168.204.0/24",no-agent-forwarding,no-port-forwarding,no-pty,no-X11-fowrarding,command="/user/bin/rrsync ~/www/" ssh-ed25519 AAAAC3.... worker@git.blakerain.com
+> from="192.168.204.0/24",no-agent-forwarding,no-port-forwarding,no-pty,no-X11-forwarding,command="/user/bin/rrsync ~/www/" ssh-ed25519 AAAAC3.... worker@git.blakerain.com
 > ```
 >
-> This limits the access to the server-side component of `rsync` (called `rrsync`), limits the IP
+> This limits the access to the restriction script of `rsync` (called [`rrsync`]), limits the IP
 > address to the IP address of the Forgejo action runner, limits all the SSH options, and finally
 > chroots rsync to the `~/www` directory.
 >
 > Pretty fun stuff 😀
+
+[`rrsync`]: https://man7.org/linux/man-pages/man1/rrsync.1.html
 
 Now that the deployment workflow needs to send the built site to Bunny CDN, I can drop all the
 `rsync` stuff and use `lftp` to upload the site to the storage zone and then issue a cache purge.
@@ -699,7 +703,7 @@ I have two key takeaways from the process of moving my DNS and deploying this si
 
 Bunny, if you ever read this, I think you're doing a _truly fantastic_ job. I think that adding
 things like Magic Containers, Edge Functions, and Bunny Database to the mix are great decisions, and
-likely key drivers in promoting commercial use of Bunny.
+likely key drivers in promoting adoption of Bunny.
 
 Could I recommend Bunny professionally? Yes-ish... I'm most of the way towards a positive
 recommendation, but the lack of detail in the documentation is such a big issue. I've heard that
@@ -709,7 +713,7 @@ I'm getting to that point though (more ominous rumbling sounds).
 # Next Steps
 
 Of course, after successfully migrating this site to Bunny's lovely CDN, I didn't actually go
-straight to bed like a should. After all, a modicum of success is only encouragement for further
+straight to bed like I should. After all, a modicum of success is only encouragement for further
 experimentation! So, my next step was to stay up far too late to try and make use of Bunny's [Magic
 Containers] and [Bunny Database] offerings, and I had the perfect ~victim~ candidate for a very
 simple app that I could deploy without feeling any remorse if I ruined it.
@@ -718,9 +722,9 @@ So I changed my super-simple pastebin app [cement] over to use Bunny's Database 
 deployed it in their container orchestration using Terraform. You can access this app at
 [paste.blakerain.com].
 
-Of course, I found out some more things about Bunny along the way. Most of them were small bumps
-along the way, until I crashed and burned and could go no further... 😮 But that will have to wait for
-another post.
+Of course, I found out some more things about using Bunny. There were also some small bumps along
+the way, with one significant roadblock I've yet to overcome. But that will have to wait for another
+post.
 
 [cement]: https://git.blakerain.com/BlakeRain/cement
 [paste.blakerain.com]: https://paste.blakerain.com/
