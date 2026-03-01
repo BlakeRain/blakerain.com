@@ -1,7 +1,10 @@
 <div class="book-card">
   <div class="book-cover">
     <a href="{{ .Get "url" }}" target="_blank" rel="noopener">
-      <img class="book-cover" src="{{ .Get "cover" }}" alt="Book Cover of {{ .Get "title" }}">
+      {{ $cover := .Get "cover" }}
+      {{ $cover  = .Page.Resources.Get $cover }}
+      {{ $cover  = $cover.Process "q75 webp" }}
+      <img class="book-cover" src="{{ $cover.Permalink }}" alt="Book Cover of {{ .Get "title" }}">
     </a>
   </div>
   <div class="book-info">

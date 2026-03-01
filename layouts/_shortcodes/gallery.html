@@ -1,7 +1,7 @@
 {{ $src      := .Get "src" }}
 {{ $caption  := .Get "caption" }}
 {{ $images   := .Page.Resources.Match (printf "%s/*.jpg" $src) }}
-{{ $metadata := .Page.Resources.Get (printf "%s/metadata.yaml" $src) }}
+{{ $metadata := .Page.Resources.Get (printf "%s/gallery.yaml" $src) }}
 {{ $metadata := $metadata.Content | transform.Unmarshal }}
 <figure class="gallery">
   {{ with $caption }}
