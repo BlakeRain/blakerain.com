@@ -1,0 +1,28 @@
+figure.gallery {
+  > figcaption {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    margin-bottom: 1rem;
+  }
+
+  > div.gallery-images {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 2rem;
+
+    @media (--screen-lg) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+
+      &:has(.caption) {
+        column-gap: 2rem;
+      }
+    }
+
+    .caption {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+  }
+}

@@ -68,7 +68,9 @@ figure {
       }
     }
   }
+}
 
+figure:not(.gallery) {
   figcaption {
     margin-top: 0.5rem;
     font-family: ui-sans-serif, system-ui, sans-serif;

@@ -1,0 +1,24 @@
+{{ $src      := .Get "src" }}
+{{ $caption  := .Get "caption" }}
+{{ $images   := .Page.Resources.Match (printf "%s/*.jpg" $src) }}
+{{ $metadata := .Page.Resources.Get (printf "%s/metadata.yaml" $src) }}
+{{ $metadata := $metadata.Content | transform.Unmarshal }}
+<figure class="gallery">
+  {{ with $caption }}
+    <figcaption>{{ . }}</figcaption>
+  {{ end }}
+  <div class="gallery-images">
+    {{ range $images }}
+      {{ $caption := index $metadata.captions (path.BaseName .Name) }}
+      {{ $image   := .Process "resize 768x q90 webp" }}
+      <div>
+        <a href="{{ .RelPermalink }}" target="_blank" rel="noopener noreferrer">
+          <img src="{{ $image.Permalink }}" {{ with $caption }}alt="{{ . }}"{{ end }} />
+        </a>
+        {{ with $caption }}
+          <div class="caption">{{ . }}</div>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+</figure>
