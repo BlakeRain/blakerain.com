@@ -37,7 +37,7 @@ To access the server from my phone I've set up [Igloo] (available for Android an
 the phone and desktop connected to the same IRC server without a bouncer is a revelation! I like the
 interface being so simple, and the use of a monospace font.
 
-{{< figure src="igloo-iphone.png" width=400 title="Igloo running on my iPhone. Such a quite channel 😁" >}}
+{{< figure src="igloo-iphone.png" width=400 title="Igloo running on my iPhone. Such a quiet channel 😁" >}}
 
 On the desktop I've set up [Halloy] as [Irssi], my IRC client of choice for the past couple of
 hundred years, hasn't adopted much of the IRCv3 features. Halloy seems to support quite of lot of
@@ -55,7 +55,7 @@ Having a [Catppuccin] theme for Halloy is certainly a good way to get my interes
 [IRC bouncer]: https://en.wikipedia.org/wiki/IRC_bouncer
 [ZNC]: https://wiki.znc.in/ZNC
 [screen]: https://www.gnu.org/software/screen/
-[shell account]:https://sdf.org/
+[shell account]: https://sdf.org/
 [Ergo]: https://github.com/ergochat/ergo
 [The Lounge]: https://thelounge.chat/
 [Igloo]: https://igloo.app/
@@ -189,7 +189,7 @@ course, benefited immensely from this.
 > billion respectively into Israeli "war bonds" -- profiting off the massacre of starving
 > Palestinians.
 
-The book finishes off with a chapter on the incaompatibilities between democracy and capitalism,
+The book finishes off with a chapter on the incompatibilities between democracy and capitalism,
 highlighting some of the more successful efforts around the world to transition to a more democratic
 and socialist system, which is always interesting to hear about.
 
@@ -202,8 +202,7 @@ and socialist system, which is always interesting to hear about.
 This is great
 write-up of a bug in Firefox. I've spent quite a bit of time working on code generation and
 garbage collection, so I really enjoy reading about these bugs, having caused a great many myself.
-It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent
-, even if that inconsistency is not entirely obvious.
+It can be surprisingly easy for a GC to end up in a state where the heap is in an inconsistent state, even if that inconsistency is not entirely obvious.
 
 And I think, in general, bit flags can be really a good way of shooting yourself in the foot.
 
@@ -219,7 +218,7 @@ exciting -- the `HADDPS` and `LDDQU` instructions were very handy for video proc
 could achieve quite a speed-up by being a bit smarter about how we used these exciting vector
 instructions. Whilst this seems quaint by today's standards, JIT-ing the pipeline meant that
 after a couple of seconds Halide's processing speed would increase to the point it could run all
-of it's effects over HD footage at broadcast speeds. In product demonstrations, people would think
+of its effects over HD footage at broadcast speeds. In product demonstrations, people would think
 we were playing a trick with pre-recorded footage.
 
 Anyway, the JIT progressively replaced parts of the pipeline graph with generated or specialised

@@ -19,7 +19,7 @@ site] over to [Bunny CDN], and migrated a toy web application over to their Magi
 # 📚 Reading
 
 A new book arrived this week, along with a new issue of [Paged Out!]. I've also been catching up on
-previous issues of [CACM], and I'm nearly ready to start on this years first issue: [volume 69, no
+previous issues of [CACM], and I'm nearly ready to start on this year's first issue: [volume 69, no
 1]. I've also started working though the [AISI]'s publication [Understanding AI Trajectories]:
 Mapping the Limitations of Current AI Systems, although that was quite interrupted by the [new
 paper] from Kapoor and Narayanan.
@@ -34,11 +34,11 @@ paper] from Kapoor and Narayanan.
 
 Issue #8 of [Paged Out!] arrived this week. I really enjoy the idea of having one article per page.
 The occasional page of artwork is very cool. I recommend giving these a read: they have some very
-interesting nuggets of information, and the limit to a single page seems for force the authors to
+interesting nuggets of information, and the limit to a single page seems to force the authors to
 create an effective gist of the topic. I learned about a library for serialising data using B-trees
 called [lite³], which I'm going to have to play with.
 
-You can the issues on the [Paged Out!] website as PDFs. I've been ordering the past three issues as
+You can find the issues on the [Paged Out!] website as PDFs. I've been ordering the past three issues as
 printed books, as they are quite fetching.
 
 {{< gallery src="pagedout" >}}
@@ -82,7 +82,7 @@ Once we decided on garbage collection, its actual implementation could be postpo
 toy examples were being done.
 {{< /quote >}}
 
-As an amateur programming language designed, I have on several occasions used the same excuse to
+As an amateur programming language designer, I have on several occasions used the same excuse to
 avoid paying attention to the subtleties of memory management and the interaction of a language's
 runtime with a garbage collector. There are several language design decisions that, after
 encountering problems in the collector, I've had grudgingly to walk back or modify.

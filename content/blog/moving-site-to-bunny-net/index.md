@@ -58,7 +58,7 @@ But before I begin, let me share a little of how things stood as of Friday night
 [Magic containers]: https://bunny.net/magic-containers/
 [Edge scripting]: https://bunny.net/edge-scripting/
 [Bunny Database]: https://bunny.net/database/
-[libSQL]:https://github.com/tursodatabase/libsql
+[libSQL]: https://github.com/tursodatabase/libsql
 [Turso]: https://turso.tech/
 
 # The Previous Situation
@@ -73,7 +73,7 @@ along with several other services, are all hosted on a Hetzner server, and serve
 I've listed some of the services I run on my [hosting] slash-page.
 
 The Linode server is still running, but since they [sold to Akamai] in 2022, I've been ushering
-services away from it and onto Hetzner servers. I wasn't kinda heartbroken about this or anything:
+services away from it and onto Hetzner servers. I was kinda heartbroken about this or anything:
 a VPS I've been running for nearly 15 years has some memories attached to it.
 
 The servers at home run personal services like [Readeck] along with a few [other services], and I
@@ -169,7 +169,7 @@ with open(sys.argv[1]) as f:
             value = value.replace('""', '" "')
 
         print(f"{name}\t{ttl}\tIN\t{rtype}\t{value}")
-````
+```
 
 This gave me some output that looks like the example below, which I could then import into Bunny's
 DNS service.
@@ -343,7 +343,7 @@ resource "bunnynet_dns_record" "mx_blakerain" {
 }
 ```
 
-Notice that, rather than writing `10 hz1.blakctreenetworks.com` for the DNS record value, we just
+Notice that, rather than writing `10 hz1.blacktreenetworks.com` for the DNS record value, we just
 write the value of `hz1.blacktreenetworks.com` and pass the priority in the `priority` property.
 
 Also notice the extra `latency_zone` and `monitor_type` properties. I get these values from the
@@ -527,7 +527,7 @@ in the _FTP and API Access_ section of the storage zone administration.
 
 Another setting I changed was the _404 File Path_. This is found under the _Error handling_ section
 in the administration of the storage zone. There I set the _404 File Path_ to `/404.html`, which is
-this sites [404 page].
+this site's [404 page].
 
 {{< figure src="bunny-storage-error-pages.png" caption="Setting the 404 file path for the storage zone" >}}
 
@@ -563,7 +563,7 @@ the apex of the domain:
 
 > [!INFO]
 > Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537] (which
-> celebrated it's 30th birthday in February). These days the kids are ignoring RFCs and [doing
+> celebrated its 30th birthday in February). These days the kids are ignoring RFCs and [doing
 > whatever they want], where "whatever they want" means flattening the CNAME records into an A
 > record.
 >
