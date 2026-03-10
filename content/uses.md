@@ -10,7 +10,12 @@ params:
 ---
 
 This page lists the software and development tools that I use on a regular basis. You might also be
-interested in my [self hosting](/hosting) page that lists what services I self-host.
+interested in my [self hosting](/hosting) page that lists what services I self-host. I also maintain
+a [personal awesome list] and there are a lot of links on [links.blakerain.com] that are a lot more
+organised.
+
+[personal awesome list]: https://git.blakerain.com/BlakeRain/awesome-list
+[links.blakerain.com]: https://links.blakerain.com/
 
 # Software
 
@@ -141,7 +146,7 @@ two sections: one for Chromium and one for Firefox.
 [Single File (Chrome)]: https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle
 [StreetPass (Chrome)]: https://chromewebstore.google.com/detail/streetpass-for-mastodon/fphjfedjhinpnjblomfebcjjpdpakhhn
 [StreetPass (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/streetpass-for-mastodon/
-[Tube Archivist (Chrome)]: https://chromewebstore.google.com/detail/tubearchivist-companion/jjnkmicfnfojkkgobdfeieblocadmcie
+[TubeArchivist (Chrome)]: https://chromewebstore.google.com/detail/tubearchivist-companion/jjnkmicfnfojkkgobdfeieblocadmcie
 [uBlock Origin]: https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
 [uBlock Origin Lite]: https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh
 [Vimium (Chrome)]: https://chromewebstore.google.com/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb
