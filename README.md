@@ -13,6 +13,8 @@
 
 </div>
 
+---
+
 This is the repository for my website [blakerain.com](https://blakerain.com/), which features a blog and some informational pages.
 
 The website is built using [hugo] and deployed by a GitHub [workflow].
