@@ -90,15 +90,16 @@
   }
 
   &.related-articles {
-    border-top: 1px solid var(--color-meta);
+    border-top: 1px dashed var(--color-meta);
     padding: 2rem 0;
+    margin-top: 8rem;
 
     > h1, > h2 {
       text-align: left;
     }
 
     > h1 {
-      font-size: var(--text-4xl);
+      font-size: var(--text-3xl);
       font-weight: var(--weight-bold);
     }
 
@@ -126,7 +127,7 @@
         font-size: var(--text-4xl);
         text-align: center;
         font-weight: var(--weight-bold);
-        line-height: var(--leading-normal);
+        line-height: var(--leading-snug);
         color: var(--color-text);
 
         @media (--screen-md) {

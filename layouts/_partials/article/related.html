@@ -6,9 +6,6 @@
   <div class="items">
     {{ range . }}
       {{ with partial "article/item.html" . }}
-        {{ if .Summary }}
-          {{ .Summary }}
-        {{ end }}
       {{ end }}
     {{ end }}
   </div>
