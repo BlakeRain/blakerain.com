@@ -17,7 +17,7 @@
 
 This is the repository for my website [blakerain.com](https://blakerain.com/), which features a blog and some informational pages.
 
-The website is built using [hugo] and deployed by a GitHub [workflow].
+The website is built using [hugo] and deployed by a Forgejo [workflow].
 
 ## Building
 
@@ -31,4 +31,4 @@ hugo --minify
 A development server can be started with `hugo server -D --disableFastRender`.
 
 [hugo]: https://gohugo.io/
-[workflow]: https://github.com/BlakeRain/blakerain.com/src/commit/db43f1ef5388379ed408528966c87ff4096a7503/.github/workflows/deploy.yaml
+[workflow]: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/.forgejo/workflows/deploy.yaml
