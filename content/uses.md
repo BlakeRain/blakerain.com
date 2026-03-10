@@ -15,25 +15,26 @@ interested in my [self hosting](/hosting) page that lists what services I self-h
 # Software
 
 - [1Password] - My preferred password manager.
-- [Bitwarden] - My other password manager. [{{< ico bootstrap github >}}](https://github.com/bitwarden)
-- [Easy Move+Resize] - Move and resize windows on MacOS like you're using a normal OS.
+- [Bitwarden] - My other password manager.
 - [Feishin] - A cross-platform desktop client for Subsonic.
 - [Firefox] - My main web browser on MacOS and Linux. Specifically I use the [developer edition].
-  [hg](https://hg-edge.mozilla.org/mozilla-central/)
+- [LibreOffice] - A great open-source office suite.
+- [Navidrome] - A self-hosted music server. I use this instead of Spotify or Apple Music.
+- [NetNewsWire] - An RSS reader for iOS and macOS.
+- [Obsidian] - Note-taking and PKM application.
+- [SearXNG] - A self-hosted search engine. Used as my default on all devices where I have a choice.
+- [Syncthing]  - For syncing files between devices.
+- [Thunderbird] - A FOSS email client.
+- [Zotero] - A tool for managing your research library.
+
+## MacOS and iOS Specific
+
+- [Easy Move+Resize] - Move and resize windows on MacOS like you're using a normal OS.
 - [HammerSpoon] - Utility for automating MacOS, useful for emulating some of the features I miss
   from Linux desktop environments. Unfortunately I'm only using this for [launching terminals] these
-  days. [{{< ico bootstrap github >}}](https://github.com/Hammerspoon/hammerspoon)
-- [LibreOffice] - A great open-source office suite.
+  days.
 - [Mona] - iOS client for [Mastodon].
-- [Navidrome] - A self-hosted music server. I use this instead of Spotify or Apple Music. [{{< ico bootstrap github >}}](https://github.com/navidrome/navidrome/)
-- [NetNewsWire] - An RSS reader for iOS and macOS. [{{< ico bootstrap github >}}](https://github.com/Ranchero-Software/NetNewsWire)
-- [Obsidian] - Note-taking and PKM application.
-- [Raycast] - My application launcher of choice on MacOS.
-- [SearXNG] - A self-hosted search engine. Used as my default on all devices where I have a choice.
-  [{{< ico bootstrap github >}}](https://github.com/searxng/searxng/tree/master)
-- [Syncthing]  - For syncing files between devices. [{{< ico bootstrap github >}}](https://github.com/syncthing/syncthing)
-- [Thunderbird] - A FOSS email client. [hg](https://hg-edge.mozilla.org/comm-central/)
-- [Zotero] - A tool for managing your research library. [{{< ico bootstrap github >}}](https://github.com/zotero/zotero)
+- [Raycast] - Application launcher for MacOS.
 
 # Development
 
@@ -47,33 +48,64 @@ interested in my [self hosting](/hosting) page that lists what services I self-h
 
 # Services
 
-- [Readwise Reader](https://readwise.io/read) - Reading and highlighting. Works well with Obsidian.
-  I may end up dropping this in favour of [Readeck](https://readeck.org/en/), but not due to any
-  fault of Readwise.
+Paid services that I use for various bits and pieces. Some of these services are used for
+self-hosting. If you're interested, I provide a [self-hosting](/hosting) page that lists what
+services I self-host.
+
+- [Bunny](https://bunny.net/) - A European [CDN] service that is expanding to include a number of
+  other useful edge services.
+- [Hetzner](https://www.hetzner.com/) - A provided of various dedicated and cloud services. I mostly
+  use their fantastic [dedicated servers](https://www.hetzner.com/dedicated-rootserver/) and their
+  [Storage Box](https://www.hetzner.com/storage/storage-box/).
 - [Proton](https://proton.me/) - Email and VPN services. Whilst I self-host my email, I keep Proton
   around for all their other services.
 
-# Firefox Extensions
+# Browser Extensions
 
-- [Blog Quest] - Silently collects RSS feeds as you browse the internet.
-  [{{< ico bootstrap github >}}](https://github.com/robalexdev/blog-quest).
-- [Linkding Extension] - Companion extension to [Linkding](https://linkding.link/).
-  [{{< ico bootstrap github >}}](https://github.com/sissbruecker/linkding-extension/)
-- [Dark Reader] - Dark mode for Firefox.
-  [{{< ico bootstrap github >}}](https://github.com/darkreader/darkreader)
-- [Mastodon Redirector] - Redirects Mastodon links to a Mastadon instance of your choice, saving you
-  from having to search the username on your instance.
-  [{{< ico bootstrap github >}}](https://github.com/bramus/mastodon-redirector)
-- [Obsidian Web Clipper] - An extension that lets you highlgith and extract content from a web page
-  into your [Obsidian] vault.
-- [Readeck] - Extension that extracts content into [Readeck](https://readeck.org/en/). I used this
+Apart from the usual extensions like password managers, there are some extensions that I think you
+might want to consider. As I've been move away from Firefox, I've started to split this list into
+two sections: one for Chromium and one for Firefox.
+
+## Chromium
+
+- [Blog Quest (Chrome)] - Silently collects RSS feeds as you browse the internet.
+- [Consent-O-Matic (Chrome)] - A Chrome extension that automatically handles GDPR consent forms.
+- [Dark Reader (Chrome)] - Dark mode for Chrome.
+- [Linkding Extension (Chrome)] - Companion extension to [Linkding](https://linkding.link/).
+- [Mastodon Redirector (Chrome)] - Redirects Mastodon links to a Mastodon instance of your choice,
+  saving you from having to search the username on your instance.
+- [Obsidian Web Clipper (Chrome)] - An extension that lets you highlight and extract content from a
+  web page into your [Obsidian] vault.
+- [Readeck (Chrome)] - Extension that extracts content into [Readeck](https://readeck.org/en/). I
+  used this to add content to my [self-hosted](/hosting) instance of Readeck.
+- [Single File (Chrome)] - A Chrome extension that lets you download a whole page and all its assets
+  as a single HTML file. I typically use this to download a single-page archive to then upload to my
+  [archivebox](https://archivebox.io/) instance.
+- [StreetPass (Chrome)] - Monitors sites that you visit and silently collects Mastodon profiles.
+- [TubeArchivist (Chrome)] - A Chrome extension for interacting with a self-hosted
+  [TubeArchivist](https://www.tubearchivist.com/)
+- [uBlock Origin Lite] - Blocks ads and trackers. This is an MV3-based form of the original [uBlock
+  Origin].
+- [Vimium (Chrome)] - Adds Vim-like key bindings to Chromium.
+- [Zotero Connector (Chrome)] - A Chrome extension that eases adding content to Zotero.
+
+## Firefox Extensions
+
+- [Blog Quest (Firefox)] - Silently collects RSS feeds as you browse the internet.
+- [Dark Reader (Firefox)] - Dark mode for Firefox.
+- [Linkding Extension (Firefox)] - Companion extension to [Linkding](https://linkding.link/).
+- [Mastodon Redirector (Firefox)] - Redirects Mastodon links to a Mastodon instance of your choice,
+  saving you from having to search the username on your instance.
+- [Obsidian Web Clipper (Firefox)] - An extension that lets you highlight and extract content from a
+  web page into your [Obsidian] vault.
+- [Readeck (Firefox)] - Extension that extracts content into [Readeck](https://readeck.org/en/). I used this
   to add content to my [self-hosted](/hosting) instance of Readeck.
-- [StreetPass] - Monitors sites that you visit and silently collects Mastodon profiles.
-  [{{< ico bootstrap github >}}](https://github.com/tvler/streetpass)
+- [StreetPass (Firefox)] - Monitors sites that you visit and silently collects Mastodon profiles.
 - [uBlock Origin] - A well-known content blocker for Firefox.
-- [Vimium] - Adds Vim-like key bindings to Firefox.
-  [{{< ico bootstrap github >}}](https://github.com/philc/vimium)
-- [Zotero Connector] - A Firefoaax extension that eases adding content to Zotero.
+- [Vimium (Firefox)] - Adds Vim-like key bindings to Firefox.
+- [Zotero Connector] - A Firefox extension that eases adding content to Zotero.
+
+[CDN]: https://en.wikipedia.org/wiki/Content_delivery_network
 
 [1Password]: https://1password.com/
 [Bitwarden]: https://bitwarden.com/
@@ -93,16 +125,29 @@ interested in my [self hosting](/hosting) page that lists what services I self-h
 [Thunderbird]: https://www.thunderbird.net/
 [Zotero]: https://www.zotero.org/
 
-[Blog Quest]: https://addons.mozilla.org/en-US/firefox/addon/blog-quest/
-[Dark Reader]: https://addons.mozilla.org/en-US/firefox/addon/darkreader/
-[Linkding Extension]: https://addons.mozilla.org/en-US/firefox/addon/linkding-extension/
-[Mastodon Redirector]: https://addons.mozilla.org/en-US/firefox/addon/mastodon-profile-redirect/
-[Obsidian Web Clipper]: https://obsidian.md/clipper
-[Readeck]: https://addons.mozilla.org/en-US/firefox/addon/readeck/
-[StreetPass]: https://addons.mozilla.org/en-US/firefox/addon/streetpass-for-mastodon/
+[Blog Quest (Chrome)]: https://chromewebstore.google.com/detail/blog-quest/ghmfhadmoephkndjiahchiobgclmkkpi
+[Blog Quest (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/blog-quest/
+[Consent-O-Matic (Chrome)]: https://chromewebstore.google.com/detail/consent-o-matic/mdjildafknihdffpkfmmpnpoiajfjnjd
+[Dark Reader (Chrome)]: https://chromewebstore.google.com/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh
+[Dark Reader (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/darkreader/
+[Linkding Extension (Chrome)]: https://chromewebstore.google.com/detail/linkding-extension/beakmhbijpdhipnjhnclmhgjlddhidpe
+[Linkding Extension (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/linkding-extension/
+[Mastodon Redirector (Chrome)]: https://chromewebstore.google.com/detail/mastodon-redirector/limifnkopacddgpihodacjeckfkpbfoe
+[Mastodon Redirector (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/mastodon-profile-redirect/
+[Obsidian Web Clipper (Chrome)]: https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf
+[Obsidian Web Clipper (Firefox)]: https://obsidian.md/clipper
+[Readeck (Chrome)]: https://chromewebstore.google.com/detail/readeck/jnmcpmfimecibicbojhopfkcbmkafhee
+[Readeck (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/readeck/
+[Single File (Chrome)]: https://chromewebstore.google.com/detail/singlefile/mpiodijhokgodhhofbcjdecpffjipkle
+[StreetPass (Chrome)]: https://chromewebstore.google.com/detail/streetpass-for-mastodon/fphjfedjhinpnjblomfebcjjpdpakhhn
+[StreetPass (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/streetpass-for-mastodon/
+[Tube Archivist (Chrome)]: https://chromewebstore.google.com/detail/tubearchivist-companion/jjnkmicfnfojkkgobdfeieblocadmcie
 [uBlock Origin]: https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
-[Vimium]: https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/?utm_content=addons-manager-reviews-link/
+[uBlock Origin Lite]: https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh
+[Vimium (Chrome)]: https://chromewebstore.google.com/detail/vimium/dbepggeogbaibhgnhhndojpepiihcmeb
+[Vimium (Firefox)]: https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/?utm_content=addons-manager-reviews-link/
 [Zotero Connector]: https://www.zotero.org/
+[Zotero Connector (Chrome)]: https://chromewebstore.google.com/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc
 
 [launching terminals]: https://git.blakerain.com/BlakeRain/dotfiles/src/commit/65f74dbc00c90a826df8fee8c93a4717f8ea2007/hammerspoon/init.lua#L5
 [mastodon]: https://joinmastodon.org/
