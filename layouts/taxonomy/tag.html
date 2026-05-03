@@ -1,6 +1,6 @@
 {{ define "main" }}
 <main class="articles-list content">
-  {{ $tag := index .Site.Data.tags (.Data.Term | lower) }}
+  {{ $tag := index hugo.Data.tags (.Data.Term | lower) }}
   <h1>
     {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "tags-fill" "className" "tag-title-icon") }}
     <span>Pages Featuring</span>

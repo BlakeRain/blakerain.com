@@ -14,7 +14,7 @@
     <h3 class="col3">Count</h3>
     <div class="divider"></div>
     {{ range .Pages.ByTitle }}
-      {{ $tag := index .Site.Data.tags (.LinkTitle | lower) }}
+      {{ $tag := index hugo.Data.tags (.LinkTitle | lower) }}
       <a href="{{ .Permalink }}" class="colored">
         {{ with $tag }}{{ .name }}{{ else }}{{ .Title | upper }}{{ end }}
       </a>

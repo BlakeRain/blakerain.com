@@ -4,7 +4,7 @@
 {{- $wrap := .wrap | default true -}}
 {{- $iconSize := .iconSize | default "" -}}
 {{- if $wrap }}<div class="{{ $class }} socials">{{ end -}}
-  {{- range site.Data.social }}
+  {{- range hugo.Data.social }}
     <a href="{{ .url }}"
       target="_blank"
       title="{{ .title }}"
