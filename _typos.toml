@@ -4,12 +4,13 @@ extend-exclude = ["static/*"]
 [default]
 extend-ignore-identifiers-re = [
   "ure\\d+",
-  "UE\\d+"
+  "UE\\d+",
+  "bse\\d+",
 ]
 
 [default.extend-words]
-ure0 = "ure0"
-ue306 = "UE306"
 grap = "grap"
-Vesseles = "Vesseles"
 Som = "Som"
+ue306 = "UE306"
+ure0 = "ure0"
+Vesseles = "Vesseles"
