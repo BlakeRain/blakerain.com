@@ -20,9 +20,16 @@
 
   > article {
     display: grid;
-    grid-template-columns: max-content 1fr max-content;
+    grid-template-columns: 3.5rem max-content 1fr max-content;
     gap: 0.25rem 1rem;
     align-items: center;
+
+    > img.cover, > div.cover {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.5rem;
+      grid-row: 1 / span 2;
+    }
 
     > a {
       font-size: var(--text-lg);
@@ -35,7 +42,7 @@
     }
 
     > p {
-      grid-column: span 3;
+      grid-column: 2 / span 3;
       color: var(--weeknotes-summary-text);
       font-style: italic;
     }

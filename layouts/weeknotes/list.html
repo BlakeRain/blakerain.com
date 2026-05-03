@@ -10,6 +10,13 @@
     {{ $pager := .Paginate .Pages 10 }}
     {{ range  $pager.Pages }}
       <article>
+        {{ $cover := .Resources.GetMatch "cover.jpg" }}
+        {{ with $cover }}
+          {{- $image := $cover.Process "crop 200x200 Smart webp q30 hint icon" -}}
+          <img class="cover" src="{{ $image.Permalink }}" alt="Cover image for {{ .Title }}">
+        {{ else }}
+          <div class="cover"></div>
+        {{ end }}
         <a class="colored" href="{{ .Permalink }}">
           {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}
           {{ index $parts 0 }} - Week {{ index $parts 1 }}
