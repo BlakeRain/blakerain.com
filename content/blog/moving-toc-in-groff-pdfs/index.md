@@ -70,7 +70,7 @@ tools:
 1. [`pdfgrep`] is used to find the start of the table of contents.
 1. [`pdftk`] that is used to rearrange the pages and edit the bookmarks in the PDF.
 
-The script and the sources for a demo PDF file can be found [on GitHub](https://github.com/BlakeRain/toc-rel).
+The script and the sources for a demo PDF file can be found [on Forgejo](https://git.blakerain.com/BlakeRain/toc-rel).
 The repository contains a `Makefile` that uses `groff` to create the demonstration PDF that is used
 in the remainder of this post. Running `make` in a clone of this repository will create a `demo.pdf`
 that demonstrates the table of contents being moved just after the cover page.
@@ -431,7 +431,7 @@ rm "$input".rearranged
 cat "$input".output
 ```
 
-You can find these scripts and an example groff source file [on GitHub](https://github.com/BlakeRain/toc-rel).
+You can find these scripts and an example groff source file [on Forgejo](https://git.blakerain.com/BlakeRain/toc-rel).
 
 [groff]: https://www.gnu.org/software/groff/
 [activity]: http://git.savannah.gnu.org/cgit/groff.git/log/

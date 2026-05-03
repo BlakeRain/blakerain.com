@@ -160,8 +160,7 @@ might go some way to ease the propagation of block lists and increase transparen
 [wild1145]: https://mastodonapp.uk/@wild1145
 [times radio]: https://www.thetimes.co.uk/radio/show/20221109-11630/2022-11-09
 [@mastodonusercount@bitcoinhackers.org]: https://bitcoinhackers.org/@mastodonusercount
-[achieved]:
-  https://github.com/BlakeRain/blakerain.com/blob/aa9d84610fef9640d7da45af93f74a38139b35b0/components/Navigation.tsx#L81-L92k
+[achieved]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/aa9d84610fef9640d7da45af93f74a38139b35b0/components/Navigation.tsx#L81-L92
 [mastodon documentation]: https://docs.joinmastodon.org
 [guidetomastodon]: https://github.com/joyeusenoelle/GuideToMastodon
 [home invasion]: https://www.hughrundle.net/home-invasion/

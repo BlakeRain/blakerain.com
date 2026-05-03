@@ -178,14 +178,10 @@ nervous of cases where I'm using the `Index` trait of a `HashMap`, or just `unwr
 `expect`-ing a value where I should be using `match` and `if let`. I think I'd better go over the
 Lambda functions again some other time to round off the edges.
 
-As before, all code is available on [GitHub](https://github.com/BlakeRain/blakerain.com), with the
-Rust Lambda functions found in the
-[lambda](https://github.com/BlakeRain/blakerain.com/tree/main/lambda) directory.
-
 [lambda-http]: https://docs.rs/lambda_http/latest/lambda_http/
-[dockerfile]: https://github.com/BlakeRain/blakerain.com/blob/215a856698da63947ef821d0ebb6276080607952/lambda/Dockerfile
+[dockerfile]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/215a856698da63947ef821d0ebb6276080607952/lambda/Dockerfile
 [ecr]: https://gallery.ecr.aws/lambda/provided
-[build script]: https://github.com/BlakeRain/blakerain.com/blob/215a856698da63947ef821d0ebb6276080607952/lambda/build.sh
+[build script]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/215a856698da63947ef821d0ebb6276080607952/lambda/build.sh
 [fernet]: https://docs.rs/fernet/0.1.4/fernet/
 [library dependencies]: https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html#configuration-layers-path
 [named-value]: https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html

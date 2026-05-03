@@ -716,7 +716,7 @@ other posts in the works that I need to finish off.
 [`Renderer`]: https://docs.rs/yew/0.20.0/yew/struct.Renderer.html
 [`ServerRenderer`]: https://docs.rs/yew/0.20.0/yew/struct.ServerRenderer.html
 [`LocalServerRenderer`]: https://docs.rs/yew/0.20.0/yew/struct.LocalServerRenderer.html
-[site-build]: https://github.com/BlakeRain/blakerain.com/blob/main/src/bin/site-build.rs
+[site-build]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/5494e204b44f0eaa46b7703f19222eb75b1bf533/src/bin/site-build.rs
 [postcss]: https://postcss.org/
 [enum-iterator]: https://docs.rs/enum-iterator/1.4.1/enum_iterator/trait.Sequence.html
 [`Sequence`]: https://docs.rs/enum-iterator/latest/enum_iterator/trait.Sequence.html

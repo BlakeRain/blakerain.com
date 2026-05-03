@@ -13,8 +13,8 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
 - [Caddy](https://caddyserver.com/) – Web server and reverse proxy. I use it to manage TLS
   certificates with [Let's Encrypt](https://letsencrypt.org/), and to route traffic to the various
   services I run. Pretty much everything is behind Caddy.
-- [Cement](https://github.com/BlakeRain/cement) – A self-hosted pastebin service. You can find it at
-  [paste.blakerain.com](https://paste.blakerain.com/). This is one of my own projects.
+- [Cement](https://git.blakerain.com/BlakeRain/cement) – A self-hosted pastebin service. You can
+  find it at [paste.blakerain.com](https://paste.blakerain.com/). This is one of my own projects.
 - [changedetection.io](https://changedetection.io/) – A self-hosted change detection service. I
   mostly use this to detect things like new comments on [Hacker News](https://news.ycombinator.com/).
 - [Forgejo](https://forgejo.org/) – A recent edition to my self-hosted services. I used to run
@@ -36,8 +36,8 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   formats and metadata. Also supports (Open)Subsonic APIs, which work with lots of clients.
 - [Open WebUI](https://github.com/open-webui/open-webui) – Self-hosted interface to LLMs. Useful for
   shouting at LLMs via API with a reasonable UI.
-- [Parcel](https://github.com/BlakeRain/parcel) – A self-hosted file sharing service. Actually
-  another project of mine. I use it to share files with friends and family, with some teams
+- [Parcel](https://git.blakerain.com/BlakeRain/parcel) – A self-hosted file sharing service.
+  Actually another project of mine. I use it to share files with friends and family, with some teams
   configured for different groups.
 - [Postfix](https://www.postfix.org/) + [Dovecot](https://www.dovecot.org/) – I run my own email
   server. The build is quite custom, not an off-the-shelf deployment. There's software to manage all
