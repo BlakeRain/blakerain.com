@@ -8,12 +8,151 @@ params:
   color: "#14b8a6"
   source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/static/scripts/tools/position-calculator.js
   icon: { vendor: "mdi", name: "cash-check" }
+  styles: |
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .calc-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem 0.5rem;
+      align-content: start;
+      border-radius: 0.375rem;
+      border: 1px solid #d1d5dc;
+      background-color: #e5e5e5;
+      padding: 1rem;
+    }
+
+    .calc-panel.report {
+      marigin-top: 1rem;
+    }
+
+    .calc-panel > .header > h1, .calc-panel > h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .calc-subgrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .quantity-pair {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .grow {
+      flex-grow: 1;
+    }
+
+    .help {
+      color: #737373;
+      font-size: 0.75rem;
+    }
+
+    .danger {
+      color: #e7000b;
+    }
+
+    .quantity-buttons {
+      display: grid;
+      grid-auto-flow: column;
+      gap: 0.5rem;
+      padding-top: 1.5rem;
+    }
+
+    .report-panel {
+      display: grid;
+      grid-template-columns: min-content 1fr max-content;
+      gap: 0.5rem;
+
+      .description {
+        grid-column: span 3 / span 3;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+    }
+
+    .report-panel .row {
+      display: grid;
+      grid-column: span 3 / span 3;
+      grid-template-columns: subgrid;
+      align-items: center;
+
+      > .label {
+        font-weight: 700;
+        grid-column-start: 2;
+      }
+
+      > .value {
+        text-align: right;
+        grid-column-start: 3;
+      }
+    }
+
+    .report-panel .help {
+      position: relative;
+      cursor: pointer;
+
+      > svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      > .tooltip {
+        display: none;
+      }
+
+      &:hover > .tooltip {
+        display: block;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .calc-panel {
+        border: none;
+        background-color: #18181b;
+      }
+
+      .danger {
+        color: #ff6467;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .calc-panel:not(.report) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .calc-panel > .header {
+        grid-column: span 2 / span 2;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .calc-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .calc-panel.stop-loss {
+        margin-top: 1rem;
+      }
+    }
 ---
 <calculator-controller>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <div class="md:col-span-2">
-        <h1 class="text-xl font-bold mb-2 mt-0">Account Information</h1>
+  <div class="calc-grid">
+    <div class="calc-panel">
+      <div class="header">
+        <h1>Account Information</h1>
       </div>
       <div>
         <label for="accountCurrency">Account Currency</label>
@@ -24,33 +163,33 @@ params:
       <div>
         <label for="accountValue">Account Value</label>
         <account-amount>
-          <input id="accountValue" class="field text-right" type="text" />
+          <input id="accountValue" class="field right" type="text" />
         </account-amount>
       </div>
       <div>
         <label for="marginRisk">Margin Risk %</label>
         <account-margin-risk>
-          <input id="marginRisk" class="field text-right" type="text" />
+          <input id="marginRisk" class="field right" type="text" />
         </account-margin-risk>
       </div>
       <div>
         <label for="positionRisk">Position Risk %</label>
         <account-position-risk>
-          <input id="positionRisk" class="field text-right" type="text" />
+          <input id="positionRisk" class="field right" type="text" />
         </account-position-risk>
       </div>
       <div>
         <label for="places">Decimal Places</label>
         <account-places>
-          <input id="places" class="field text-right" type="text" />
+          <input id="places" class="field right" type="text" />
         </account-places>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <div class="md:col-span-2">
-        <h1 class="text-xl font-bold mb-2 mt-0">Position Information</h1>
+    <div class="calc-panel">
+      <div class="header">
+        <h1>Position Information</h1>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="calc-subgrid">
         <div>
           <label for="positionCurrency">Position</label>
           <position-currency>
@@ -69,7 +208,7 @@ params:
           <label for="positionMargin">Position Margin</label>
         </position-margin-label>
         <position-margin>
-          <input id="positionMargin" class="field text-right" type="text" />
+          <input id="positionMargin" class="field right" type="text" />
         </position-margin>
       </div>
       <div>
@@ -84,91 +223,89 @@ params:
       <div>
         <label for="openPrice">Open Price</label>
         <position-open-price>
-          <input id="openPrice" class="field text-right" type="text" />
+          <input id="openPrice" class="field right" type="text" />
         </position-open-price>
       </div>
       <div>
         <label for="quantity">Quantity</label>
-        <div class="flex flex-row gap-2 items-center">
+        <div class="quantity-pair">
           <position-quantity-toggle></position-quantity-toggle>
           <position-quantity class="grow">
-            <input id="quantity" class="field text-right" type="text" />
+            <input id="quantity" class="field right" type="text" />
           </position-quantity>
         </div>
       </div>
-      <div class="grid grid-flow-col gap-2 pt-6">
+      <div class="quantity-buttons">
         <affordable-position>
-          <button type="button" class="button w-full">Affordable</button>
+          <button type="button" class="button" style="width: 100%">Affordable</button>
         </affordable-position>
         <optimal-position>
-          <button type="button" class="button w-full">Stop Loss</button>
+          <button type="button" class="button" style="width: 100%">Stop Loss</button>
         </optimal-position>
       </div>
       <div>
         <label for="stopLoss">Stop Loss</label>
-        <div class="flex flex-row gap-2 items-center">
+        <div class="quantity-pair">
           <position-stop-loss-toggle></position-stop-loss-toggle>
           <position-stop-loss class="grow">
-            <input id="stopLoss" class="field text-right" type="text" />
+            <input id="stopLoss" class="field right" type="text" />
           </position-stop-loss>
         </div>
       </div>
       <div>
         <label for="stopLossDistance">Stop Loss Distance</label>
         <position-stop-loss-distance>
-          <input id="stopLossDistance" class="field text-right" type="text" />
+          <input id="stopLossDistance" class="field right" type="text" />
         </position-stop-loss-distance>
       </div>
       <div>
         <label for="takeProfit">Take Profit</label>
-        <div class="flex flex-row gap-2 items-center">
+        <div class="quantity-pair">
           <position-take-profit-toggle></position-take-profit-toggle>
           <position-take-profit class="grow">
-            <input id="takeProfit" class="field text-right" type="text" />
+            <input id="takeProfit" class="field right" type="text" />
           </position-take-profit>
         </div>
       </div>
       <div>
         <label for="takeProfitDistance">Take Profit Distance</label>
         <position-take-profit-distance>
-          <input id="takeProfitDistance" class="field text-right" type="text" />
+          <input id="takeProfitDistance" class="field right" type="text" />
         </position-take-profit-distance>
       </div>
     </div>
-    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
-    dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 mt-4">
-      <h1 class="text-lg font-medium mb-2 mt-0">Position Size Information</h1>
+    <div class="calc-panel report">
+      <h1>Position Size Information</h1>
       <position-size-report>
-        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        <div class="report-panel">
         </div>
       </position-size-report>
     </div>
-    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300
-    dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4 lg:mt-4">
-      <h1 class="text-lg font-medium mb-2 mt-0">Stop Loss Positioning</h1>
+    <div class="calc-panel report">
+      <h1>Stop Loss Positioning</h1>
       <stop-loss-report>
-        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        <div class="report-panel">
         </div>
       </stop-loss-report>
-      <p class="text-neutral-500 text-sm">
+      <p class="help">
         This panel shows the maximum available stop loss, given the position size and the account
         position risk.
       </p>
     </div>
-    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <h1 class="text-lg font-medium mb-2 mt-0">Take Profit</h1>
+    <div class="calc-panel report">
+      <h1>Take Profit</h1>
       <take-profit-report>
-        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        <div class="report-panel">
         </div>
       </take-profit-report>
     </div>
-    <div class="grid grid-cols-1 gap-2 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <h1 class="text-lg font-medium mb-2 mt-0">Planned Stop Loss Maximum</h1>
+    <div class="calc-panel report">
+      <h1>Planned Stop Loss Maximum</h1>
       <planned-stop-loss-report>
-        <div class="grid grid-cols-[min-content_1fr_max-content] gap-2">
+        <div class="report-panel">
         </div>
       </planned-stop-loss-report>
-      <p class="text-neutral-500 text-sm">
+      <p class="help">
         This panel shows the maximum position size available, given the entered position stop loss and the account position risk.
       </p>
     </div>

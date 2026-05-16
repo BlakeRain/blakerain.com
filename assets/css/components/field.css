@@ -17,6 +17,9 @@
 
   @media (prefers-color-scheme: dark) {
     --field-text: white;
+    --field-bg: #24242b;
+    --field-disabled-bg: #18181b;
+    --field-disabled-border: #3f3f46;
   }
 }
 
@@ -71,6 +74,10 @@ label {
     &::placeholder {
       color: var(--field-placeholder);
     }
+  }
+
+  &.right {
+    text-align: right;
   }
 }
 

@@ -1,0 +1,66 @@
+:root {
+  --toggle-size: 2rem;
+}
+
+.toggle-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle {
+  display: block;
+  position: relative;
+  cursor: pointer;
+
+  width: calc(2 * var(--toggle-size));
+  height: var(--toggle-size);
+
+  &.active {
+    .toggle-background {
+      background-color: var(--color-brand);
+
+      @media (prefers-color-scheme: dark) {
+        background-color: var(--color-brand-light);
+      }
+    }
+
+    .toggle-inner {
+      right: 0rem;
+    }
+  }
+
+  .toggle-background {
+    position: absolute;
+    background-color: #a4a4a4;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #343434;
+    }
+
+    width: calc(2 * var(--toggle-size));
+    height: calc(0.5 * var(--toggle-size));
+    top: calc(0.25 * var(--toggle-size));
+
+    border-radius: calc(0.5 * var(--toggle-size));
+
+    transition: background-color 0.125s ease-in-out;
+  }
+
+  .toggle-inner {
+    position: absolute;
+    background-color: white;
+
+    width: var(--toggle-size);
+    height: var(--toggle-size);
+    top: 0;
+    right: var(--toggle-size);
+
+    border-radius: calc(0.5 * var(--toggle-size));
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+
+    transition: right 0.125s ease-in-out;
+  }
+}

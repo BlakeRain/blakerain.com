@@ -7,33 +7,178 @@ params:
   color: "#34d399"
   source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/static/scripts/tools/rr-and-risk.js
   icon: { vendor: "mdi", "name": "table-heart" }
+  styles: |
+    .rr-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+
+      h1 {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+    }
+
+    .rr-parameters {
+      order: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      column-gap: 0.5rem;
+      row-gap: 1rem;
+      align-content: start;
+      border-radius: 0.375rem;
+      border: 1px solid #d1d5dc;
+      background-color: #e5e5e5;
+      padding: 1rem;
+    }
+
+    .rr-outcome-table {
+      order: 3;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      align-content: start;
+      border-radius: 0.375rem;
+      border: 1px solid #d1d5dc;
+      background-color: #e5e5e5;
+      padding: 1rem;
+
+      > .heading {
+        grid-column: span 5 / span 5;
+        display: grid;
+        grid-template-columns: subgrid;
+        font-weight: 700;
+        text-align: right;
+
+        > div {
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid #99a1af;
+        }
+      }
+
+      > .body {
+        grid-column: span 5 / span 5;
+        display: grid;
+        grid-template-columns: subgrid;
+        text-align: right;
+      }
+    }
+
+    .rr-stats {
+      order: 2;
+      display: grid;
+      grid-template-columns: 1fr max-content;
+      align-content: start;
+      border-radius: 0.375rem;
+      border: 1px solid #d1d5dc;
+      background-color: #e5e5e5;
+      padding: 1rem;
+
+      risk-reward-results-summary {
+        grid-column: span 2 / span 2;
+        display: grid;
+        grid-template-columns: subgrid;
+        column-gap: 1rem;
+        text-align: right;
+
+        > :nth-child(odd) {
+          font-weight: 700;
+        }
+
+        > :nth-child(even) {
+          text-align: right;
+        }
+
+        > .spacer {
+          margin-top: 0.5rem;
+          padding-top: 0.5rem;
+          border-top: 1px solid #99a1af;
+        }
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .rr-parameters {
+        border: none;
+        background-color: #18181b;
+      }
+
+      .rr-outcome-table {
+        border: none;
+        background-color: #18181b;
+
+        > .heading > div {
+          border-bottom-color: #52525c;
+        }
+      }
+
+      .rr-stats {
+        border: none;
+        background-color: #18181b;
+
+        risk-reward-results-summary > .spacer {
+          border-top-color: #52525c;
+        }
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .rr-grid {
+        grid-template-columns: 1fr max-content max-content;
+      }
+
+      .rr-parameters {
+        order: 2;
+      }
+
+      .rr-outcome-table {
+        order: 1;
+      }
+
+      .rr-stats {
+        order: 3;
+      }
+    }
 ---
 <risk-reward-controller>
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_max-content_max-content] gap-2">
-    <div class="order-1 lg:order-2 grid grid-cols-1 gap-x-2 gap-y-4 content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <h1 class="text-xl font-bold mb-2 mt-0">Parameters</h1>
+  <div class="rr-grid">
+    <div class="rr-parameters">
+      <h1>Parameters</h1>
       <div>
         <label for="ratio">Risk-Reward Ratio</label>
         <risk-reward-ratio>
-          <input type="text" id="ratio" class="field text-right">
+          <input type="text" id="ratio" class="field right">
         </risk-reward-ratio>
       </div>
       <div>
         <label for="chance">Chance of Success</label>
         <risk-reward-chance>
-          <input type="text" id="chance" class="field text-right">
+          <input type="text" id="chance" class="field right">
         </risk-reward-chance>
       </div>
       <div>
         <label for="risk">Position Risk</label>
         <risk-reward-risk>
-          <input type="text" id="risk" class="field text-right">
+          <input type="text" id="risk" class="field right">
         </risk-reward-risk>
       </div>
       <div>
         <label for="open">Account Open</label>
         <risk-reward-open>
-          <input type="text" id="open" class="field text-right">
+          <input type="text" id="open" class="field right">
         </risk-reward-open>
       </div>
       <div>
@@ -49,58 +194,57 @@ params:
       <div id="jitter_frac_container" class="hidden">
         <label for="jitter_frac">Jitter Fraction</label>
         <risk-reward-jitter-frac>
-          <input type="text" id="jitter_frac" class="field text-right">
+          <input type="text" id="jitter_frac" class="field right">
         </risk-reward-jitter-frac>
       </div>
       <div id="jitter_sigma_container" class="hidden">
         <label for="jitter_sigma">Jitter Sigma</label>
         <risk-reward-jitter-sigma>
-          <input type="text" id="jitter_sigma" class="field text-right">
+          <input type="text" id="jitter_sigma" class="field right">
         </risk-reward-jitter-sigma>
       </div>
       <div>
         <label for="trials">Number of Trials</label>
         <risk-reward-trials>
-          <input type="text" id="trials" class="field text-right">
+          <input type="text" id="trials" class="field right">
         </risk-reward-trials>
       </div>
-      <div class="flex flex-row justify-end">
+      <div class="buttons">
         <risk-reward-rerun>
           <button type="button" class="button">Rerun</button>
         </risk-reward-rerun>
       </div>
     </div>
-    <div class="order-3 lg:order-1 grid grid-cols-5 gap-2 content-start rounded-md border
-    border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <div class="col-span-5 grid grid-cols-subgrid font-bold text-right">
-        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Trial</div>
-        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Open</div>
-        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">At Risk</div>
-        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Outcome</div>
-        <div class="pb-2 border-b border-b-gray-400 dark:border-b-zinc-600">Close</div>
+    <div class="rr-outcome-table">
+      <div class="heading">
+        <div>Trial</div>
+        <div>Open</div>
+        <div>At Risk</div>
+        <div>Outcome</div>
+        <div>Close</div>
       </div>
-      <risk-reward-results class="col-span-5 grid grid-cols-subgrid text-right">
+      <risk-reward-results class="body">
       </risk-reward-results>
     </div>
-    <div class="order-2 lg:order-3 grid grid-cols-[1fr_max-content] content-start rounded-md border border-gray-300 dark:border-none bg-neutral-200 dark:bg-zinc-900 p-4">
-      <h1 class="text-xl font-bold mb-2 mt-0">Results</h1>
-      <risk-reward-results-summary class="col-span-2 grid grid-cols-subgrid gap-x-4 text-right">
-        <div class="font-bold">Open</div>
-        <div class="text-right"></div>
-        <div class="font-bold">Close</div>
-        <div class="text-right"></div>
-        <div class="font-bold">Change</div>
-        <div class="text-right"></div>
-        <div class="font-bold mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600">Total Profit</div>
-        <div class="text-right mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600"></div>
-        <div class="font-bold">Total Loss</div>
-        <div class="text-right"></div>
-        <div class="font-bold mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600">Wins</div>
-        <div class="text-right mt-2 pt-2 border-t border-t-gray-400 dark:border-t-zinc-600"></div>
-        <div class="font-bold">Losses</div>
-        <div class="text-right"></div>
-        <div class="font-bold">Ratio</div>
-        <div class="text-right"></div>
+    <div class="rr-stats">
+      <h1>Results</h1>
+      <risk-reward-results-summary>
+        <div>Open</div>
+        <div></div>
+        <div>Close</div>
+        <div></div>
+        <div>Change</div>
+        <div></div>
+        <div class="spacer">Total Profit</div>
+        <div class="spacer"></div>
+        <div>Total Loss</div>
+        <div></div>
+        <div class="spacer">Wins</div>
+        <div class="spacer"></div>
+        <div>Losses</div>
+        <div></div>
+        <div>Ratio</div>
+        <div></div>
       </risk-reward-results-summary>
   </div>
 </risk-reward-controller>

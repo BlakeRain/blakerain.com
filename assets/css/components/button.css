@@ -13,6 +13,11 @@
   --button-outline-text: var(--color-outline-text);
   --button-outline-bg-hover: rgba(100, 116, 139, 0.1);
   --button-outline-bg-active: rgba(51, 65, 85, 0.5);
+
+  @media (prefers-color-scheme: dark) {
+    --button-disabled-bg: #3f3f46;
+    --button-disabled-text: #99a1af;
+  }
 }
 
 /* Button component */

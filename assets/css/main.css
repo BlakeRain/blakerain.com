@@ -18,6 +18,9 @@
 @import "components/tag.css";
 @import "components/taxonomy.css";
 @import "components/toc.css";
+@import "components/toggle.css";
+@import "components/tools.css";
+@import "components/tooltip.css";
 @import "components/utility.css";
 @import "components/weeknotes.css";
 

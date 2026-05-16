@@ -1,0 +1,199 @@
+/* tools pages. */
+.tools {
+  flex-grow: 1;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+
+  @media (--screen-lg) {
+    margin-top: 2rem;
+  }
+
+  > h1 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    text-align: center;
+    color: var(--color-text);
+
+    @media (--screen-md) {
+      font-size: var(--text-5xl);
+    }
+  }
+
+  > h2 {
+    width: 100%;
+    font-size: var(--text-xl);
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--notes-subtitle-text);
+
+    @media (--screen-md) {
+      width: 45rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  > .items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    /* margin-top: 2.5rem; */
+    /* margin-bottom: 2.5rem; */
+    padding: 1rem;
+
+    @media (--screen-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (--screen-lg) {
+      /* margin-top: 5rem; */
+      /* margin-bottom: 5rem; */
+    }
+
+    > li {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border-color: var(--color-border);
+      border-width: 1px;
+      box-shadow: var(--shadow-md);
+
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 12rem 1fr min-content;
+
+      @media (prefers-color-scheme: dark) {
+        border: none;
+        box-shadow: none;
+      }
+
+      > .header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: rgb(0, 0, 0, 0.8);
+        font-size: var(--text-7xl);
+        border-top-left-radius: var(--radius-xl);
+        border-top-right-radius: var(--radius-xl);
+
+        @media (prefers-color-scheme: dark) {
+          filter: brightness(0.75);
+        }
+      }
+
+      > .details {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1rem;
+
+        .vibe-coded {
+          color: #e7000b;
+          font-transform: uppercase;
+
+          @media (prefers-color-scheme: dark) {
+            color: #ff6467;
+          }
+        }
+
+        .built-by-me {
+          color: #00a63e;
+          font-transform: uppercase;
+        }
+
+        > h1 {
+          font-size: var(--text-2xl);
+          font-weight: var(--weight-semibold);
+
+          > a {
+            &:hover {
+              color: #193cb8;
+
+              @media (prefers-color-scheme: dark) {
+                color: #8ec5ff;
+              }
+            }
+          }
+        }
+
+        > p {
+          color: #6a7282;
+
+          @media (prefers-color-scheme: dark) {
+            color: #99a1af;
+          }
+        }
+      }
+
+      > .links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid #99a1af;
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+
+        @media (prefers-color-scheme: dark) {
+          border-top-color: #3f3f46;
+        }
+
+        > a {
+          padding: 0.75rem 0;
+          cursor: pointer;
+          text-align: center;
+
+          &:hover {
+            background-color: #f3f4f6;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            &:hover {
+              background-color: #3f3f46;
+            }
+          }
+
+          &:first-child {
+            border-bottom-left-radius: var(--radius-xl);
+            border-right: 1px solid #99a1af;
+
+            @media (prefers-color-scheme: dark) {
+              border-right-color: #3f3f46;
+            }
+          }
+
+          &:last-child {
+            border-bottom-right-radius: var(--radius-xl);
+          }
+        }
+      }
+    }
+  }
+}
+
+.tool {
+  flex-grow: 1;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+
+  @media (--screen-lg) {
+    margin-top: 2rem;
+  }
+
+  > header {
+    margin-bottom: 2rem;
+
+    > h1 {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      text-align: center;
+      color: var(--color-text);
+
+      @media (--screen-md) {
+        font-size: var(--text-5xl);
+      }
+    }
+  }
+}
