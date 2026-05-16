@@ -1,0 +1,504 @@
+---
+title: Generate Fetchmail Configuration
+summary: |
+  Generate fetchmail configuration files for retrieving emails from remote IMAP servers and
+  delivering them to a local recipient.
+params:
+  vibe_coded: true
+  color: "#22d3ee"
+  source: https://git.blakerain.com/BlakeRain/vibe-coding/src/branch/main/generate-fetchmail-config/index.html
+  icon: { vendor: "mdi", name: "email-arrow-right" }
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fetchmail Config Generator</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0b0f14;
+  --panel: #121821;
+  --panel-2: #0f141c;
+  --text: #e6eef7;
+  --muted: #9bb1c9;
+  --accent: #7cc4ff;
+  --danger: #ff6b6b;
+  --ok: #6ee7b7;
+  --border: #223041;
+  --input: #16202b;
+  --input-focus: #1b2836;
+  --code: #0a1118;
+  --yellow: #facc15;
+}
+* { box-sizing: border-box }
+html,body { height:100% }
+body {
+  margin:0; font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg); color: var(--text);
+}
+header {
+  position: sticky; top: 0; z-index: 5;
+  background: linear-gradient(180deg, rgba(11,15,20,0.9), rgba(11,15,20,0.7) 70%, rgba(11,15,20,0));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 20px }
+h1 { font-size: 20px; margin: 0 0 10px; letter-spacing: .2px }
+.sub { color: var(--muted); margin: 0 0 8px }
+.grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(12, 1fr);
+}
+.card {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+label { display:block; font-weight:600; margin-bottom:6px }
+.row { display:flex; gap:10px; align-items:center; flex-wrap: wrap }
+.help { color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 4px }
+input[type="text"], input[type="number"], input[type="password"], select, textarea {
+  width: 100%; padding: 10px 12px; border-radius: 8px;
+  background: var(--input); border: 1px solid var(--border); color: var(--text);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); background: var(--input-focus) }
+.checkbox {
+  display:flex; align-items:center; gap: 8px; user-select: none; cursor: pointer;
+}
+.checkbox input { width: 18px; height: 18px }
+.btn {
+  appearance: none; border: 1px solid var(--border); background: #122131; color: var(--text);
+  padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600;
+}
+.btn:hover { border-color: var(--accent) }
+.btn.primary { background: linear-gradient(180deg, #1a334a, #112437); border-color: #1f4263 }
+.btn.danger { background: #2a1416; border-color: #5a2a2e; color: #ffb4b4 }
+.btn.ghost { background: transparent }
+pre {
+  background: var(--code); color: var(--text); padding: 16px; border-radius: 10px; overflow: auto;
+  border: 1px solid var(--border); margin: 0;
+  white-space: pre; tab-size: 2;
+}
+.small { font-size: 12px; color: var(--muted) }
+.badge { background: #17324a; color: #bfe2ff; border: 1px solid #214b6d; padding: 2px 8px; border-radius: 999px; font-size: 12px }
+hr.sep { border: none; border-top: 1px solid var(--border); margin: 12px 0 }
+.field-row { display:grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+.field { grid-column: span 12 }
+.field.col-6 { grid-column: span 6 }
+.field.col-4 { grid-column: span 4 }
+.field.col-3 { grid-column: span 3 }
+.field.col-2 { grid-column: span 2 }
+section h2 { margin: 0 0 10px; font-size: 16px }
+footer { color: var(--muted); padding: 12px 0 24px }
+.kv { display:flex; gap:8px; align-items:center; flex-wrap: wrap }
+.kv .pair { background: #0f1822; border: 1px solid var(--border); padding: 6px 8px; border-radius: 6px; font-size: 12px }
+.notice { color: var(--yellow) }
+@media (max-width: 860px) {
+  .grid { grid-template-columns: repeat(6, 1fr) }
+  .field.col-6, .field.col-4, .field.col-3, .field.col-2 { grid-column: span 6 }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Fetchmail Config Generator</h1>
+    <p class="sub">Create a .fetchmailrc to sync mail from one or more IMAP sources to a single destination via SMTP.</p>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <!-- Destination (SMTP) -->
+    <section class="card" style="grid-column: span 12">
+      <h2>Destination (SMTP delivery)</h2>
+      <div class="field-row">
+        <div class="field col-6">
+          <label for="destHost">Destination host (smtphost)</label>
+          <input id="destHost" type="text" value="hz1.blacktreenetworks.com" autocomplete="off">
+          <div class="help">fetchmail will forward retrieved mail to this SMTP server</div>
+        </div>
+        <div class="field col-3">
+          <label for="destPort">SMTP port</label>
+          <input id="destPort" type="number" min="1" max="65535" value="587">
+        </div>
+        <div class="field col-3">
+          <label for="destTls">TLS</label>
+          <select id="destTls">
+            <option value="starttls" selected>STARTTLS (587)</option>
+            <option value="ssl">SSL/TLS (465)</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div class="field col-6">
+          <label class="checkbox"><input id="destCertck" type="checkbox"> Enforce certificate check (sslcertck)</label>
+          <div class="help">If enabled, fetchmail will verify server certs (recommended with proper CA store)</div>
+        </div>
+        <div class="field col-6">
+          <label for="daemon">Run as daemon (seconds)</label>
+          <input id="daemon" type="number" min="0" value="0">
+          <div class="help">Set >0 to have fetchmail poll periodically (e.g., 300). Leave 0 to run once.</div>
+        </div>
+        <div class="field col-6">
+          <label for="defaultRecipient">Default recipient (smtpname)</label>
+          <input id="defaultRecipient" type="text" placeholder="user@destination.tld">
+          <div class="help">Used if a source does not set its own recipient override.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global options -->
+    <section class="card" style="grid-column: span 12">
+      <h2>Global options</h2>
+      <div class="field-row">
+        <div class="field col-4">
+          <label class="checkbox"><input id="setNoSyslog" type="checkbox"> no syslog</label>
+        </div>
+        <div class="field col-4">
+          <label class="checkbox"><input id="setSilent" type="checkbox"> silent</label>
+        </div>
+        <div class="field col-4">
+          <label class="checkbox"><input id="setShowdots" type="checkbox" checked> set showdots</label>
+        </div>
+      </div>
+      <div class="help">These control logging and output. You can adjust as needed.</div>
+    </section>
+
+    <!-- Sources -->
+    <section class="card" style="grid-column: span 12">
+      <div class="row" style="justify-content: space-between">
+        <h2 style="margin:0">Source IMAP accounts</h2>
+        <div class="row">
+          <button class="btn" id="addGmail">+ Gmail preset</button>
+          <button class="btn" id="addOutlook">+ Outlook preset</button>
+          <button class="btn primary" id="addSource">+ Add source</button>
+        </div>
+      </div>
+      <div id="sources"></div>
+    </section>
+
+    <!-- Output -->
+    <section class="card" style="grid-column: span 12">
+      <div class="row" style="justify-content: space-between; align-items: center">
+        <h2 style="margin:0">Generated .fetchmailrc</h2>
+        <div class="row">
+          <button class="btn" id="copyBtn">Copy</button>
+          <button class="btn" id="downloadBtn">Download</button>
+        </div>
+      </div>
+      <pre id="output"></pre>
+      <div class="row" style="justify-content: space-between; margin-top:10px">
+        <div class="small">Review before use. Store as ~/.fetchmailrc and run: chmod 600 ~/.fetchmailrc</div>
+        <div class="kv">
+          <span class="pair">imap</span>
+          <span class="pair">SMTP forward</span>
+          <span class="pair">TLS optional</span>
+          <span class="pair">multiple sources</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="grid-column: span 12">
+      <h2>Notes</h2>
+      <ul class="small">
+        <li>Passwords are written in plain text in the config you download; ensure file permissions are 600.</li>
+        <li>For Gmail, you’ll need an app password if 2FA is enabled; OAuth is not supported here.</li>
+        <li>Folder selection is optional; if omitted, all folders may be fetched depending on server and options.</li>
+        <li>For certificate checking, ensure your system CA store is available or specify sslcertpath in your environment.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="container">
+  <div>No data leaves your browser. Pure client-side, single file.</div>
+</footer>
+
+<script>
+const el = sel => document.querySelector(sel);
+const mk = (tag, attrs = {}, children = []) => {
+  const n = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v;
+    else if (k === "style") n.setAttribute("style", v);
+    else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.substring(2), v);
+    else if (v === true) n.setAttribute(k, "");
+    else if (v !== false && v != null) n.setAttribute(k, v);
+  }
+  if (!Array.isArray(children)) children = [children];
+  for (const c of children) n.append(c instanceof Node ? c : document.createTextNode(c));
+  return n;
+};
+
+let sourceId = 0;
+
+function addSource(preset) {
+  const id = ++sourceId;
+  const card = mk("div", { class: "card", style: "margin-top:12px" });
+
+  const header = mk("div", { class: "row", style: "justify-content: space-between; margin-bottom:8px" }, [
+    mk("div", {}, [
+      mk("span", { class: "badge" }, preset?.name ? `Preset: ${preset.name}` : `Source #${id}`)
+    ]),
+    mk("div", { class: "row" }, [
+      mk("button", { class: "btn danger", onclick: () => { card.remove(); update(); } }, "Remove")
+    ])
+  ]);
+
+  const grid = mk("div", { class: "field-row" });
+
+  const host = mk("input", { type: "text", value: preset?.host || "", placeholder: "imap.example.com" });
+  const port = mk("input", { type: "number", min: "1", max: "65535", value: preset?.port ?? 993 });
+  const tls = mk("select", {}, [
+    mk("option", { value: "ssl", selected: (preset?.tls ?? "ssl") === "ssl" }, "SSL/TLS (993)"),
+    mk("option", { value: "starttls", selected: (preset?.tls ?? "ssl") === "starttls" }, "STARTTLS (143)"),
+    mk("option", { value: "none", selected: (preset?.tls ?? "ssl") === "none" }, "None")
+  ]);
+  const username = mk("input", { type: "text", value: preset?.username || "", placeholder: "user@example.com" });
+  const password = mk("input", { type: "password", value: preset?.password || "", placeholder: "password" });
+  const folders = mk("input", { type: "text", value: preset?.folders || "", placeholder: "Comma-separated folders (optional)" });
+  const smtpname = mk("input", { type: "text", value: preset?.smtpname || "", placeholder: "Optional recipient override (smtpname)" });
+  const fetchAll = mk("input", { type: "checkbox", checked: preset?.fetchAll ?? true });
+  const keep = mk("input", { type: "checkbox", checked: preset?.keep ?? true });
+  const idle = mk("input", { type: "checkbox", checked: preset?.idle ?? false });
+  const interval = mk("input", { type: "number", min: "0", value: preset?.interval ?? 0 });
+
+  const seen = mk("input", { type: "checkbox", checked: preset?.fetchSeen ?? true });
+  const limit = mk("input", { type: "number", min: "0", value: preset?.limit ?? 0 });
+  const envelope = mk("input", { type: "text", value: preset?.envelope || "", placeholder: "Envelope header (optional)" });
+
+  function field(lbl, input, col="col-4", help="") {
+    const wrap = mk("div", { class: `field ${col}` });
+    wrap.append(mk("label", {}, lbl), input);
+    if (help) wrap.append(mk("div", { class: "help" }, help));
+    return wrap;
+  }
+  function check(lbl, input, col="col-3", help="") {
+    const wrap = mk("div", { class: `field ${col}` });
+    const lab = mk("label", { class: "checkbox" }, [input, mk("span", {}, lbl)]);
+    wrap.append(lab);
+    if (help) wrap.append(mk("div", { class: "help" }, help));
+    return wrap;
+  }
+
+  [host, port, tls, username, password, folders, smtpname, fetchAll, keep, idle, interval, seen, limit, envelope].forEach(inp => {
+    inp.addEventListener("input", update);
+    inp.addEventListener("change", update);
+  });
+
+  grid.append(
+    field("IMAP host", host, "col-6"),
+    field("Port", port, "col-2"),
+    field("TLS", tls, "col-4"),
+    field("Username", username, "col-6"),
+    field("Password", password, "col-6"),
+    field("Folders (optional)", folders, "col-12", "Example: INBOX,Sent,Archive — leave blank to let server default"),
+    check("fetchall (include already-seen mail)", fetchAll, "col-4"),
+    check("keep on server (do not delete)", keep, "col-4"),
+    check("idle (IMAP IDLE when daemon>0)", idle, "col-4"),
+    field("Per-poll interval seconds (0=global)", interval, "col-4"),
+    check("do not expunge seen (adds 'expunge 0')", seen, "col-4", "When enabled, fetched messages are not expunged on the server."),
+    field("Message size limit (KB, 0=none)", limit, "col-4"),
+    field("Envelope header (optional)", envelope, "col-6", "e.g., Delivered-To or X-Original-To"),
+    field("Recipient override (smtpname, optional)", smtpname, "col-6", "If set, mail is forwarded as this recipient.")
+  );
+
+  card.append(header, grid);
+  el("#sources").append(card);
+  update();
+}
+
+function presets() {
+  return {
+    gmail: {
+      name: "Gmail",
+      host: "imap.gmail.com",
+      port: 993,
+      tls: "ssl",
+      fetchAll: true,
+      keep: true,
+      idle: true,
+      folders: "",
+      username: "",
+      password: ""
+    },
+    outlook: {
+      name: "Outlook",
+      host: "outlook.office365.com",
+      port: 993,
+      tls: "ssl",
+      fetchAll: true,
+      keep: true,
+      idle: true
+    }
+  };
+}
+
+function esc(str) {
+  return String(str).replace(/'/g, "'\\''");
+}
+
+function buildConfig() {
+  const destHost = el("#destHost").value.trim();
+  const destPort = parseInt(el("#destPort").value || "0", 10) || 587;
+  const destTls = el("#destTls").value;
+  const destCertck = el("#destCertck").checked;
+  const daemon = parseInt(el("#daemon").value || "0", 10) || 0;
+  const defaultRecipient = (el("#defaultRecipient")?.value || "").trim();
+
+  const setNoSyslog = el("#setNoSyslog").checked;
+  const setSilent = el("#setSilent").checked;
+  const setShowdots = el("#setShowdots").checked;
+
+  const blocks = [];
+
+  blocks.push("# Generated by Fetchmail Config Generator");
+  blocks.push("# Save as ~/.fetchmailrc and chmod 600 ~/.fetchmailrc");
+  blocks.push("");
+
+  const global = [];
+  if (daemon > 0) global.push(`set daemon ${daemon}`);
+  if (setNoSyslog) global.push("set no syslog");
+  if (setSilent) global.push("set silent");
+  if (setShowdots) global.push("set showdots");
+  if (global.length) blocks.push(global.join("\n"), "");
+
+  const smtpParts = [];
+  if (destHost) smtpParts.push(`smtphost '${esc(destHost)}'`);
+  if (destPort) smtpParts.push(`smtpport ${destPort}`);
+  if (destTls === "ssl") {
+    smtpParts.push("ssl");
+  } else if (destTls === "starttls") {
+    smtpParts.push("sslproto tls1");
+    smtpParts.push("sslcertck");
+  }
+  if (destCertck) {
+    if (!smtpParts.includes("sslcertck")) smtpParts.push("sslcertck");
+  } else {
+    const i = smtpParts.indexOf("sslcertck");
+    if (i >= 0) smtpParts.splice(i, 1);
+  }
+
+  const srcCards = Array.from(document.querySelectorAll("#sources .card"));
+  if (srcCards.length === 0) {
+    blocks.push("# Add at least one source IMAP account above.");
+    return blocks.join("\n");
+  }
+
+  for (const card of srcCards) {
+    const host = card.querySelector('input[placeholder="imap.example.com"]').value.trim();
+    const user = card.querySelector('input[placeholder="user@example.com"]').value.trim();
+    const pass = card.querySelector('input[type="password"]').value || "";
+
+    const selects = card.querySelectorAll("select");
+    const tls = selects[0]?.value || "ssl";
+    const numberInputs = card.querySelectorAll('input[type="number"]');
+    const port = parseInt(numberInputs[0]?.value || "0", 10) || (tls === "ssl" ? 993 : 143);
+
+    const folderStr = card.querySelector('input[placeholder^="Comma-separated"]').value.trim();
+    const fetchAll = card.querySelectorAll('input[type="checkbox"]')[0]?.checked ?? true;
+    const keep = card.querySelectorAll('input[type="checkbox"]')[1]?.checked ?? true;
+    const idle = card.querySelectorAll('input[type="checkbox"]')[2]?.checked ?? false;
+    const interval = parseInt(numberInputs[1]?.value || "0", 10) || 0;
+
+    const preventExpunge = card.querySelectorAll('input[type="checkbox"]')[3]?.checked ?? false;
+    const limitKB = parseInt(numberInputs[2]?.value || "0", 10) || 0;
+    const envelope = card.querySelector('input[placeholder^="Envelope"]').value.trim();
+    const smtpnameVal = card.querySelector('input[placeholder^="Optional recipient override"]').value.trim();
+
+    const lines = [];
+    const pollHead = [`poll '${esc(host)}' protocol IMAP`];
+    if (port) pollHead.push(`port ${port}`);
+    if (tls === "ssl") pollHead.push("ssl");
+    if (tls === "starttls") pollHead.push("sslproto tls1");
+
+    const pollFlags = [];
+    if (fetchAll) pollFlags.push("fetchall");
+    if (keep) pollFlags.push("keep"); else pollFlags.push("nokeep");
+    if (idle) pollFlags.push("idle");
+    if (limitKB > 0) pollFlags.push(`limit ${limitKB}k`);
+    if (envelope) pollFlags.push(`envelope '${esc(envelope)}'`);
+    if (interval > 0) pollFlags.push(`interval ${interval}`);
+    if (preventExpunge) pollFlags.push("expunge 0");
+
+    const userLine = [`user '${esc(user)}' with password '${esc(pass)}'`];
+    const effectiveRcpt = smtpnameVal || defaultRecipient;
+    if (effectiveRcpt) userLine.push(`smtpname '${esc(effectiveRcpt)}'`);
+
+    const smtps = [...smtpParts];
+    if (smtps.length) userLine.push(smtps.join(" "));
+
+    const folderBits = [];
+    if (folderStr) {
+      const arr = folderStr.split(",").map(s => s.trim()).filter(Boolean);
+      if (arr.length) folderBits.push("folders", arr.map(f => `'${esc(f)}'`).join(" "));
+    }
+
+    const pollLine = pollHead.join(" ");
+
+    lines.push(pollLine);
+    lines.push("  " + userLine.join(" "));
+    if (pollFlags.length) lines.push("  " + pollFlags.join(" "));
+    if (folderBits.length) lines.push("  " + folderBits.join(" "));
+    lines.push("");
+    blocks.push(lines.join("\n"));
+  }
+
+  return blocks.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+
+function update() {
+  const txt = buildConfig();
+  el("#output").textContent = txt;
+}
+
+function download(text, filename) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = mk("a", { href: url, download: filename });
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  a.remove();
+}
+
+function init() {
+  el("#addSource").addEventListener("click", () => addSource());
+  el("#addGmail").addEventListener("click", () => addSource(presets().gmail));
+  el("#addOutlook").addEventListener("click", () => addSource(presets().outlook));
+  ["#destHost","#destPort","#destTls","#destCertck","#daemon","#setNoSyslog","#setSilent","#setShowdots","#defaultRecipient"].forEach(s => {
+    el(s).addEventListener("input", update);
+    el(s).addEventListener("change", update);
+  });
+  el("#copyBtn").addEventListener("click", async () => {
+    const txt = el("#output").textContent;
+    try {
+      await navigator.clipboard.writeText(txt);
+      el("#copyBtn").textContent = "Copied";
+      setTimeout(() => el("#copyBtn").textContent = "Copy", 1200);
+    } catch {
+      const ta = mk("textarea", { style: "position:fixed;left:-9999px;top:-9999px" }, txt);
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+      el("#copyBtn").textContent = "Copied";
+      setTimeout(() => el("#copyBtn").textContent = "Copy", 1200);
+    }
+  });
+  el("#downloadBtn").addEventListener("click", () => {
+    const txt = el("#output").textContent;
+    download(txt, ".fetchmailrc");
+  });
+  addSource();
+  update();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
+

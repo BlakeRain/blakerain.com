@@ -1,0 +1,507 @@
+---
+title: Generate TOTP
+summary: Generate TOTP codes for two-factor authentication. Only useful for testing.
+params:
+  vibe_coded: true
+  color: "#a3e635"
+  source: https://git.blakerain.com/BlakeRain/vibe-coding/src/branch/main/generate-totp/index.html
+  icon: { vendor: "mdi", name: "timer-lock" }
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TOTP Generator</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0b0d10;
+      --panel: #12151a;
+      --panel-2: #171b22;
+      --text: #e6edf3;
+      --muted: #9aa7b3;
+      --accent: #7aa2f7;
+      --success: #2ecc71;
+      --danger: #ff6b6b;
+      --warning: #f1c40f;
+      --border: #2a2f38;
+      --code: #d1e7ff;
+      --shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, #0a0c10, #0c1016 40%, #0b0d10);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      max-width: 880px;
+      padding: 24px 16px 8px;
+    }
+
+    h1 { font-size: 22px; margin: 0 0 8px; font-weight: 700; letter-spacing: 0.2px; }
+    .subtitle { color: var(--muted); font-size: 13px; }
+
+    main { width: 100%; max-width: 880px; padding: 8px 16px 32px; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 20px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: transform 0.02s ease-in-out, border-color .2s, background .2s;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover { border-color: #3b4251; }
+    .btn:active { transform: translateY(1px); }
+    .btn.primary { border-color: #3a62b1; background: linear-gradient(180deg, #182134, #101829); color: #dbe6ff; }
+    .btn.danger { border-color: #63343a; background: linear-gradient(180deg, #2a1416, #1c0f11); color: #ffd6d6; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .label { font-weight: 600; font-size: 15px; }
+    .sub { color: var(--muted); font-size: 12px; }
+
+    .code {
+      font-variant-numeric: tabular-nums;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--code);
+      user-select: text;
+      padding: 8px 0 4px;
+    }
+
+    .meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+    .badge { border: 1px solid var(--border); padding: 4px 8px; border-radius: 999px; background: #0f1218; }
+
+    .progress {
+      position: relative;
+      height: 6px;
+      background: #0e1218;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress > .bar {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0%;
+      background: linear-gradient(90deg, #3b82f6, #22d3ee);
+      transition: width .25s linear;
+    }
+
+    .form {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 10px;
+    }
+
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 12px; color: var(--muted); }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: #0e1218;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .field textarea { min-height: 70px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .grid-3 { display: grid; gap: 10px; grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 720px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    .list-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+    .spacer { height: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TOTP Generator</h1>
+    <div class="subtitle">Add secrets or otpauth URLs. Codes update live. Everything stays on your device.</div>
+  </header>
+  <main>
+    <section class="form" id="add-form">
+      <div class="grid-3">
+        <div class="field">
+          <label>Issuer</label>
+          <input id="issuer" placeholder="e.g. GitHub">
+        </div>
+        <div class="field">
+          <label>Account</label>
+          <input id="account" placeholder="e.g. [email protected]">
+        </div>
+        <div class="field">
+          <label>Digits</label>
+          <select id="digits">
+            <option value="6" selected>6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="field">
+          <label>Period (seconds)</label>
+          <input id="period" type="number" min="5" max="120" step="1" value="30">
+        </div>
+        <div class="field">
+          <label>Algorithm</label>
+          <select id="algo">
+            <option value="SHA-1" selected>SHA-1</option>
+            <option value="SHA-256">SHA-256</option>
+            <option value="SHA-512">SHA-512</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Secret (Base32) or otpauth URL</label>
+          <input id="secret" placeholder="JBSWY3DPEHPK3PXP or otpauth://...">
+        </div>
+      </div>
+      <div class="toolbar">
+        <button class="btn primary" id="add-btn">Add Entry</button>
+        <button class="btn" id="import-btn">Import JSON</button>
+        <button class="btn" id="export-btn">Export JSON</button>
+        <button class="btn danger" id="clear-btn" title="Clear all saved entries from this device">Clear Storage</button>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+
+    <section id="list"></section>
+  </main>
+
+  <template id="card-template">
+    <div class="card" data-id="">
+      <div class="row">
+        <div>
+          <div class="label" data-label>Label</div>
+          <div class="sub" data-sub></div>
+        </div>
+        <div class="meta">
+          <span class="badge" data-seconds>30s</span>
+          <button class="btn" data-edit>Edit</button>
+          <button class="btn danger" data-remove>Remove</button>
+        </div>
+      </div>
+      <div class="code" data-code>000000</div>
+      <div class="progress"><div class="bar" data-bar></div></div>
+    </div>
+  </template>
+
+  <script>
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    const state = {
+      items: [],
+      timer: null,
+      tickMs: 200,
+    };
+
+    const STORAGE_KEY = 'totp.entries.v1';
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
+    }
+    function load() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try { return JSON.parse(raw) || []; } catch { return []; }
+    }
+
+    function uid() {
+      return Math.random().toString(36).slice(2)+Date.now().toString(36);
+    }
+
+    function parseOtpauth(url) {
+      try {
+        const u = new URL(url);
+        if (u.protocol !== 'otpauth:') return null;
+        if (u.hostname !== 'totp') return null;
+        const label = decodeURIComponent(u.pathname.replace(/^\//,''));
+        const issuerFromLabel = label.includes(':') ? label.split(':')[0] : '';
+        const account = label.includes(':') ? label.split(':').slice(1).join(':').trim() : label;
+        const params = u.searchParams;
+        const secret = params.get('secret') || '';
+        const issuer = params.get('issuer') || issuerFromLabel;
+        const digits = +(params.get('digits') || 6);
+        const period = +(params.get('period') || 30);
+        const algo = (params.get('algorithm') || 'SHA1').toUpperCase().replace('SHA1','SHA-1').replace('SHA256','SHA-256').replace('SHA512','SHA-512');
+        return { secret, issuer, account, digits, period, algo };
+      } catch(e) { return null; }
+    }
+
+    const Base32 = {
+      alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+      decode(input) {
+        const clean = (input || '').toUpperCase().replace(/\s|=+$/g,'');
+        let bits = '';
+        for (const c of clean) {
+          const val = this.alphabet.indexOf(c);
+          if (val < 0) continue;
+          bits += val.toString(2).padStart(5,'0');
+        }
+        const bytes = [];
+        for (let i=0; i+8<=bits.length; i+=8) bytes.push(parseInt(bits.slice(i,i+8),2));
+        return new Uint8Array(bytes);
+      }
+    };
+
+    async function hmac(keyBytes, msgBytes, algo) {
+      const subtle = crypto.subtle;
+      const algoMap = { 'SHA-1':'SHA-1', 'SHA-256':'SHA-256', 'SHA-512':'SHA-512' };
+      const key = await subtle.importKey('raw', keyBytes, { name:'HMAC', hash: algoMap[algo] || 'SHA-1' }, false, ['sign']);
+      const sig = await subtle.sign('HMAC', key, msgBytes);
+      return new Uint8Array(sig);
+    }
+
+    function intToBytes(num) {
+      const b = new Uint8Array(8);
+      for (let i=7; i>=0; i--) { b[i] = num & 0xff; num = Math.floor(num/256); }
+      return b;
+    }
+
+    function truncate(hmacBytes) {
+      const offset = hmacBytes[hmacBytes.length-1] & 0x0f;
+      const p = hmacBytes.slice(offset, offset+4);
+      const val = ((p[0] & 0x7f) << 24) | (p[1] << 16) | (p[2] << 8) | (p[3]);
+      return val >>> 0;
+    }
+
+    async function totp({ secret, digits=6, period=30, algo='SHA-1' }, forTimeMs) {
+      const key = Base32.decode(secret);
+      const counter = Math.floor((forTimeMs ?? Date.now()) / 1000 / period);
+      const msg = intToBytes(counter);
+      const mac = await hmac(key, msg, algo);
+      const bin = truncate(mac);
+      const mod = 10 ** digits;
+      return String(bin % mod).padStart(digits, '0');
+    }
+
+    function formatLabel(it) {
+      const left = it.issuer ? it.issuer : 'TOTP';
+      const right = it.account ? ` – ${it.account}` : '';
+      return left + right;
+    }
+
+    function renderList() {
+      const container = $('#list');
+      container.innerHTML = '';
+      if (!state.items.length) {
+        const d = document.createElement('div');
+        d.className = 'list-empty';
+        d.textContent = 'No entries yet. Add a secret above to get started.';
+        container.appendChild(d);
+        return;
+      }
+      const tpl = document.getElementById('card-template');
+      for (const it of state.items) {
+        const node = tpl.content.firstElementChild.cloneNode(true);
+        node.dataset.id = it.id;
+        node.querySelector('[data-label]').textContent = formatLabel(it);
+        node.querySelector('[data-sub]').textContent = `${it.algo} • ${it.digits} digits`;
+        node.querySelector('[data-seconds]').textContent = `${it.period}s`;
+        node.querySelector('[data-remove]').addEventListener('click', () => removeItem(it.id));
+        node.querySelector('[data-edit]').addEventListener('click', () => editItem(it.id));
+        container.appendChild(node);
+      }
+    }
+
+    async function updateLoop() {
+      const now = Date.now();
+      for (const it of state.items) {
+        const el = document.querySelector(`.card[data-id="${it.id}"]`);
+        if (!el) continue;
+        const codeEl = el.querySelector('[data-code]');
+        const bar = el.querySelector('[data-bar]');
+        try {
+          const code = await totp(it, now);
+          codeEl.textContent = code;
+        } catch(e) {
+          codeEl.textContent = 'Invalid secret';
+        }
+        const t = Math.floor(now/1000);
+        const rem = it.period - (t % it.period);
+        const pct = ((it.period - rem) / it.period) * 100;
+        bar.style.width = pct + '%';
+      }
+    }
+
+    function startTimer() {
+      if (state.timer) clearInterval(state.timer);
+      state.timer = setInterval(updateLoop, state.tickMs);
+      updateLoop();
+    }
+
+    function addItemFromForm() {
+      const issuer = $('#issuer').value.trim();
+      const account = $('#account').value.trim();
+      const digits = +$('#digits').value;
+      const period = +$('#period').value;
+      const algo = $('#algo').value;
+      const secInput = $('#secret').value.trim();
+      let entry = null;
+      if (/^otpauth:\/\//i.test(secInput)) {
+        entry = parseOtpauth(secInput);
+        if (!entry) return alert('Invalid otpauth URL');
+      } else {
+        if (!secInput) return alert('Please enter a Base32 secret or an otpauth URL');
+        entry = { secret: secInput, issuer, account, digits, period, algo };
+      }
+      entry.id = uid();
+      state.items.push(entry);
+      save();
+      renderList();
+      updateLoop();
+      $('#secret').value = '';
+    }
+
+    function removeItem(id) {
+      const idx = state.items.findIndex(x => x.id === id);
+      if (idx >= 0) {
+        state.items.splice(idx,1);
+        save();
+        renderList();
+      }
+    }
+
+    function editItem(id) {
+      const it = state.items.find(x => x.id===id);
+      if (!it) return;
+      const issuer = prompt('Issuer', it.issuer || '') ?? it.issuer;
+      const account = prompt('Account', it.account || '') ?? it.account;
+      const digits = +(prompt('Digits (6/7/8)', String(it.digits)) ?? it.digits);
+      const period = +(prompt('Period seconds', String(it.period)) ?? it.period);
+      const algo = prompt('Algorithm (SHA-1, SHA-256, SHA-512)', it.algo) ?? it.algo;
+      Object.assign(it, { issuer, account, digits, period, algo });
+      save();
+      renderList();
+      updateLoop();
+    }
+
+    function exportJson() {
+      const data = JSON.stringify(state.items, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'totp-entries.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJson() {
+      const inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'application/json';
+      inp.onchange = () => {
+        const f = inp.files?.[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const items = JSON.parse(String(reader.result) || '[]');
+            if (!Array.isArray(items)) throw new Error('Bad format');
+            const cleaned = items.map(x => ({
+              id: uid(),
+              secret: String(x.secret||'').trim(),
+              issuer: String(x.issuer||'').trim(),
+              account: String(x.account||'').trim(),
+              digits: +(+x.digits || 6),
+              period: +(+x.period || 30),
+              algo: (String(x.algo||'SHA-1')).toUpperCase().replace('SHA1','SHA-1').replace('SHA256','SHA-256').replace('SHA512','SHA-512')
+            })).filter(x => x.secret);
+            state.items.push(...cleaned);
+            save();
+            renderList();
+            updateLoop();
+          } catch(e) {
+            alert('Failed to import JSON');
+          }
+        };
+        reader.readAsText(f);
+      };
+      inp.click();
+    }
+
+    function clearStorage() {
+      if (!confirm('This will remove all saved entries from this device. Continue?')) return;
+      state.items = [];
+      save();
+      renderList();
+      updateLoop();
+    }
+
+    function init() {
+      state.items = load().map(x => ({
+        id: x.id || uid(),
+        issuer: x.issuer || '',
+        account: x.account || '',
+        secret: x.secret || '',
+        digits: +(+x.digits || 6),
+        period: +(+x.period || 30),
+        algo: (x.algo || 'SHA-1').toUpperCase().replace('SHA1','SHA-1').replace('SHA256','SHA-256').replace('SHA512','SHA-512')
+      })).filter(x => x.secret);
+      renderList();
+      startTimer();
+
+      $('#add-btn').addEventListener('click', addItemFromForm);
+      $('#export-btn').addEventListener('click', exportJson);
+      $('#import-btn').addEventListener('click', importJson);
+      $('#clear-btn').addEventListener('click', clearStorage);
+
+      $('#secret').addEventListener('keydown', (e) => { if (e.key==='Enter') addItemFromForm(); });
+    }
+
+    init();
+  </script>
+</body>
+</html>
+

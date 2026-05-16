@@ -1,0 +1,410 @@
+---
+title: Mail Profile .mobileconfig Generator
+summary: Create an iOS/macOS configuration profile for IMAP/SMTP. No passwords or signing. Runs entirely in your browser.
+params:
+  vibe_coded: true
+  color: "#fbbf24"
+  source: https://git.blakerain.com/BlakeRain/vibe-coding/src/branch/main/generate-mobile-config/index.html
+  icon: { vendor: "simple-icons", name: "apple" }
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generate .mobileconfig for Mail</title>
+  <style>
+    :root { --bg:#0b0f14; --panel:#121821; --muted:#8aa1b4; --text:#e6edf3; --accent:#3aa3ff; --error:#ff6b6b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; background:var(--bg); color:var(--text); }
+    header { padding:24px 16px; text-align:center; border-bottom:1px solid #1f2a37; background:linear-gradient(180deg, #0b0f14 0%, #0e141c 100%); }
+    h1 { margin:0 0 6px; font-size:20px; }
+    header p { margin:0; color:var(--muted); font-size:13px; }
+    main { max-width:1100px; margin:0 auto; padding:20px; display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    @media (max-width: 980px) { main { grid-template-columns: 1fr; } }
+    .card { background:var(--panel); border:1px solid #1f2a37; border-radius:12px; padding:16px; }
+    .card h2 { margin:0 0 12px; font-size:16px; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .row-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
+    .row + .row, .row-3 + .row-3 { margin-top:10px; }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input[type="text"], input[type="number"], select { width:100%; background:#0d131b; border:1px solid #273449; color:var(--text); border-radius:10px; padding:10px 12px; outline:none; }
+    input[type="text"]:focus, input[type="number"]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(58,163,255,.15); }
+    .inline { display:flex; align-items:center; gap:10px; }
+    .help { font-size:11px; color:#9fb2c5; margin-top:4px; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    button { background:var(--accent); color:#001; border:0; border-radius:10px; padding:10px 14px; font-weight:600; cursor:pointer; }
+    button.secondary { background:#223044; color:var(--text); }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+    pre { margin:0; padding:12px; background:#0a1017; border:1px solid #1f2a37; border-radius:10px; color:#d7e4ef; max-height:440px; overflow:auto; font-size:12px; }
+    .error { color:var(--error); font-size:12px; margin-top:6px; }
+    .footer { text-align:center; color:var(--muted); font-size:12px; padding:14px 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mail Profile .mobileconfig Generator</h1>
+    <p>Create an iOS/macOS configuration profile for IMAP/SMTP. No passwords or signing. Runs entirely in your browser.</p>
+  </header>
+  <main>
+    <section class="card" style="grid-column: 1 / -1;">
+      <h2>Profile metadata</h2>
+      <div class="row">
+        <div>
+          <label>Installation scope</label>
+          <select id="scope">
+            <option value="User">User (iOS/macOS)</option>
+            <option value="System">System (macOS)</option>
+          </select>
+          <div class="help">User scope installs under the current user on iOS/macOS. System scope requires admin and is macOS-only.</div>
+        </div>
+        <div>
+          <label>Organization</label>
+          <input id="org" type="text" placeholder="Example Corp">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Profile display name</label>
+          <input id="profileName" type="text" placeholder="Example Corp Mail">
+        </div>
+        <div>
+          <label>Profile identifier (base)</label>
+          <input id="profileId" type="text" placeholder="com.example.mail">
+          <div class="help">Used as PayloadIdentifier prefix (e.g., com.example.mail.profile and .mail).</div>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Profile description</label>
+          <input id="profileDesc" type="text" placeholder="Configures a managed Mail account">
+        </div>
+        <div>
+          <label>Mail payload display name</label>
+          <input id="payloadName" type="text" placeholder="Example Corp Mail Account">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Identity</h2>
+      <div class="row">
+        <div>
+          <label>Email address</label>
+          <input id="email" type="text" placeholder="[email protected]">
+        </div>
+        <div>
+          <label>Display name</label>
+          <input id="displayName" type="text" placeholder="Jane Doe">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Use same username for IMAP/SMTP</label>
+          <div class="inline"><input id="sameUser" type="checkbox" checked> <span class="help">Uncheck to set different usernames</span></div>
+        </div>
+        <div>
+          <label>Username</label>
+          <input id="username" type="text" placeholder="jane" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>IMAP (Incoming)</h2>
+      <div class="row-3">
+        <div>
+          <label>Host</label>
+          <input id="imapHost" type="text" placeholder="imap.example.com">
+        </div>
+        <div>
+          <label>Security</label>
+          <select id="imapSecurity">
+            <option value="ssl">SSL/TLS</option>
+            <option value="starttls">STARTTLS</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div>
+          <label>Port</label>
+          <input id="imapPort" type="number" min="1" max="65535" value="993">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>IMAP username</label>
+          <input id="imapUser" type="text" placeholder="(defaults to Username)">
+        </div>
+        <div>
+          <label>Authentication</label>
+          <select id="imapAuth">
+            <option value="EmailAuthPassword">Password</option>
+            <option value="EmailAuthNone">None</option>
+          </select>
+        </div>
+      </div>
+      <div class="help">IMAP defaults: SSL 993, STARTTLS 143, None 143</div>
+    </section>
+
+    <section class="card">
+      <h2>SMTP (Outgoing)</h2>
+      <div class="row-3">
+        <div>
+          <label>Host</label>
+          <input id="smtpHost" type="text" placeholder="smtp.example.com">
+        </div>
+        <div>
+          <label>Security</label>
+          <select id="smtpSecurity">
+            <option value="starttls">STARTTLS</option>
+            <option value="ssl">SSL/TLS</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div>
+          <label>Port</label>
+          <input id="smtpPort" type="number" min="1" max="65535" value="587">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>SMTP username</label>
+          <input id="smtpUser" type="text" placeholder="(defaults to Username)">
+        </div>
+        <div>
+          <label>Authentication</label>
+          <select id="smtpAuth">
+            <option value="EmailAuthPassword">Password</option>
+            <option value="EmailAuthNone">None</option>
+          </select>
+        </div>
+      </div>
+      <div class="help">SMTP defaults: STARTTLS 587, SSL 465, None 25</div>
+    </section>
+
+    <section class="card" style="grid-column: 1 / -1;">
+      <h2>Generate</h2>
+      <div class="actions">
+        <button id="generateBtn">Generate .mobileconfig</button>
+        <button id="downloadBtn" class="secondary" disabled>Download file</button>
+        <button id="copyBtn" class="secondary" disabled>Copy to clipboard</button>
+      </div>
+      <div id="errors" class="error"></div>
+      <div style="margin-top:10px;">
+        <pre id="output" aria-label="mobileconfig output"></pre>
+      </div>
+    </section>
+  </main>
+  <div class="footer">Tip: iOS/macOS will prompt to install when opening the downloaded .mobileconfig file.</div>
+
+<script>
+(function(){
+  const el = id => document.getElementById(id);
+  const scope = el('scope');
+  const org = el('org');
+  const profileName = el('profileName');
+  const profileId = el('profileId');
+  const profileDesc = el('profileDesc');
+  const payloadName = el('payloadName');
+
+  const email = el('email');
+  const displayName = el('displayName');
+  const sameUser = el('sameUser');
+  const username = el('username');
+  const imapHost = el('imapHost');
+  const imapSecurity = el('imapSecurity');
+  const imapPort = el('imapPort');
+  const imapUser = el('imapUser');
+  const imapAuth = el('imapAuth');
+
+  const smtpHost = el('smtpHost');
+  const smtpSecurity = el('smtpSecurity');
+  const smtpPort = el('smtpPort');
+  const smtpUser = el('smtpUser');
+  const smtpAuth = el('smtpAuth');
+
+  const generateBtn = el('generateBtn');
+  const downloadBtn = el('downloadBtn');
+  const copyBtn = el('copyBtn');
+  const errors = el('errors');
+  const output = el('output');
+
+  function uuidv4(){
+    const a = new Uint8Array(16);
+    crypto.getRandomValues(a);
+    a[6] = (a[6] & 0x0f) | 0x40;
+    a[8] = (a[8] & 0x3f) | 0x80;
+    const h = [...a].map(x=>x.toString(16).padStart(2,'0')).join('');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+  }
+
+  function coalesce(v, fallback) { return (v ?? '').toString().trim() || fallback; }
+
+  function defaultPorts() {
+    const imap = imapSecurity.value;
+    if (imap === 'ssl') imapPort.value = 993;
+    else if (imap === 'starttls') imapPort.value = 143;
+    else imapPort.value = 143;
+
+    const smtp = smtpSecurity.value;
+    if (smtp === 'ssl') smtpPort.value = 465;
+    else if (smtp === 'starttls') smtpPort.value = 587;
+    else smtpPort.value = 25;
+  }
+
+  imapSecurity.addEventListener('change', defaultPorts);
+  smtpSecurity.addEventListener('change', defaultPorts);
+  defaultPorts();
+
+  sameUser.addEventListener('change', ()=>{
+    const useSame = sameUser.checked;
+    imapUser.disabled = useSame;
+    smtpUser.disabled = useSame;
+    if (useSame) { imapUser.value = ''; smtpUser.value = ''; }
+  });
+  sameUser.dispatchEvent(new Event('change'));
+
+  function validate(){
+    const errs = [];
+    const emailVal = email.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailVal)) errs.push('A valid email address is required.');
+    if (!profileId.value.trim()) errs.push('Profile identifier (base) is required.');
+    if (!profileName.value.trim()) errs.push('Profile display name is required.');
+    if (!payloadName.value.trim()) errs.push('Mail payload display name is required.');
+    if (!imapHost.value.trim()) errs.push('IMAP host is required.');
+    if (!smtpHost.value.trim()) errs.push('SMTP host is required.');
+    const p1 = Number(imapPort.value); if (!Number.isInteger(p1) || p1 < 1 || p1 > 65535) errs.push('IMAP port must be 1-65535.');
+    const p2 = Number(smtpPort.value); if (!Number.isInteger(p2) || p2 < 1 || p2 > 65535) errs.push('SMTP port must be 1-65535.');
+    return errs;
+  }
+
+  function xmlEscape(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\'/g,'&apos;');
+  }
+
+  function build(){
+    const errs = validate();
+    if (errs.length) { errors.textContent = errs.join(' '); return null; }
+    errors.textContent = '';
+
+    const idBase = profileId.value.trim();
+    const orgName = coalesce(org.value, '');
+    const mailDisplay = payloadName.value.trim();
+
+    const emailAddr = email.value.trim();
+    const display = coalesce(displayName.value, emailAddr);
+    const commonUser = username.value.trim() || emailAddr;
+    const imapUsername = sameUser.checked ? commonUser : (imapUser.value.trim() || commonUser);
+    const smtpUsername = sameUser.checked ? commonUser : (smtpUser.value.trim() || commonUser);
+
+    const imapUseSSL = imapSecurity.value === 'ssl';
+    const smtpUseSSL = smtpSecurity.value === 'ssl';
+
+    // Apple keys
+    const payloadUUID = uuidv4();
+    const mailUUID = uuidv4();
+
+    const mailPayload = {
+      PayloadType: 'com.apple.mail.managed',
+      PayloadVersion: 1,
+      PayloadIdentifier: `${idBase}.mail`,
+      PayloadUUID: mailUUID,
+      PayloadDisplayName: mailDisplay,
+      PayloadDescription: 'Configures a Mail account',
+      PayloadOrganization: orgName,
+
+      EmailAddress: emailAddr,
+      EmailAccountDescription: coalesce(profileDesc.value, 'Managed Mail Account'),
+      EmailAccountName: display,
+      EmailAccountType: 'EmailTypeIMAP',
+
+      IncomingMailServerHostName: imapHost.value.trim(),
+      IncomingMailServerPortNumber: Number(imapPort.value),
+      IncomingMailServerUseSSL: imapUseSSL,
+      IncomingMailServerUsername: imapUsername,
+      IncomingMailServerAuthentication: imapAuth.value,
+      // Password omitted intentionally
+
+      OutgoingMailServerHostName: smtpHost.value.trim(),
+      OutgoingMailServerPortNumber: Number(smtpPort.value),
+      OutgoingMailServerUseSSL: smtpUseSSL,
+      OutgoingMailServerUsername: smtpUsername,
+      OutgoingMailServerAuthentication: smtpAuth.value,
+      OutgoingPasswordSameAsIncomingPassword: sameUser.checked,
+      // Outgoing password omitted intentionally
+
+      PreventAppSheet: false
+    };
+
+    // Convert JS object to Apple plist XML (subset) manually
+    function plistValue(v){
+      if (typeof v === 'string') return `<string>${xmlEscape(v)}</string>`;
+      if (typeof v === 'number') return `<integer>${v}</integer>`;
+      if (typeof v === 'boolean') return v ? '<true/>' : '<false/>';
+      if (Array.isArray(v)) return `<array>${v.map(plistValue).join('')}</array>`;
+      if (v && typeof v === 'object') return objToPlist(v);
+      return '<string />';
+    }
+    function objToPlist(obj){
+      return `<dict>${Object.entries(obj).map(([k,val])=>`<key>${xmlEscape(k)}</key>${plistValue(val)}`).join('')}</dict>`;
+    }
+
+    const profile = {
+      PayloadType: 'Configuration',
+      PayloadVersion: 1,
+      PayloadIdentifier: `${idBase}.profile`,
+      PayloadUUID: payloadUUID,
+      PayloadDisplayName: profileName.value.trim(),
+      PayloadDescription: coalesce(profileDesc.value, 'Installs a managed Mail account'),
+      PayloadOrganization: orgName,
+      PayloadRemovalDisallowed: false,
+      PayloadScope: scope.value,
+      PayloadContent: [ mailPayload ]
+    };
+
+    const plist = `<?xml version="1.0" encoding="UTF-8"?>\n`+
+      `<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n`+
+      `<plist version="1.0">${objToPlist(profile)}</plist>\n`;
+
+    return { plist, filename: `${emailAddr.replace(/[^A-Za-z0-9_.-]+/g,'_') || 'mail'}.mobileconfig` };
+  }
+
+  let lastBlobUrl = null;
+  function setOutput(text){
+    output.textContent = text || '';
+    const has = !!text;
+    downloadBtn.disabled = !has;
+    copyBtn.disabled = !has;
+  }
+
+  generateBtn.addEventListener('click', ()=>{
+    const res = build();
+    if (!res) return;
+    setOutput(res.plist);
+    if (lastBlobUrl) URL.revokeObjectURL(lastBlobUrl);
+    const blob = new Blob([res.plist], { type: 'application/x-apple-aspen-config' });
+    lastBlobUrl = URL.createObjectURL(blob);
+    downloadBtn.dataset.href = lastBlobUrl;
+    downloadBtn.dataset.filename = res.filename;
+  });
+
+  downloadBtn.addEventListener('click', ()=>{
+    if (!downloadBtn.dataset.href) return;
+    const a = document.createElement('a');
+    a.href = downloadBtn.dataset.href;
+    a.download = downloadBtn.dataset.filename || 'profile.mobileconfig';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  copyBtn.addEventListener('click', async ()=>{
+    if (!output.textContent) return;
+    try { await navigator.clipboard.writeText(output.textContent); copyBtn.textContent = 'Copied!'; setTimeout(()=>copyBtn.textContent='Copy to clipboard',1200); }
+    catch { copyBtn.textContent = 'Copy failed'; setTimeout(()=>copyBtn.textContent='Copy to clipboard',1200); }
+  });
+})();
+</script>
+</body>
+</html>
+
