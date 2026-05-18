@@ -89,20 +89,6 @@
         gap: 1rem;
         margin: 1rem;
 
-        .vibe-coded {
-          color: #e7000b;
-          font-transform: uppercase;
-
-          @media (prefers-color-scheme: dark) {
-            color: #ff6467;
-          }
-        }
-
-        .built-by-me {
-          color: #00a63e;
-          font-transform: uppercase;
-        }
-
         > h1 {
           font-size: var(--text-2xl);
           font-weight: var(--weight-semibold);

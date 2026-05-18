@@ -5,8 +5,7 @@
     <span class="font-bold">Tools</span>
   </h1>
   <h2>
-    Some of these were built by me, others were vibe-coded. All are open source and run in the
-    browser with little to no dependencies.
+    Some small web-based tools
   </h2>
   <ul class="items">
     {{ range .Pages }}
@@ -18,17 +17,6 @@
           {{ end }}
         </div>
         <div class="details">
-          {{ if .Params.vibe_coded }}
-            <div class="vibe-coded">
-              {{ partial "icons/icon" (dict "vendor" "bootstrap" "name" "robot") }}
-              Vibe Coded
-            </div>
-          {{ else }}
-            <div class="built-by-me">
-              {{ partial "icons/icon" (dict "vendor" "lucide" "name" "smile") }}
-              Built by me
-            </div>
-          {{ end }}
           <h1>
             <a class="hover:text-blue-800 dark:hover:text-blue-300" href="{{ .RelPermalink }}">{{ .Title }}</a>
           </h1>
