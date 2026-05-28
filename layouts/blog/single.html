@@ -1,9 +1,11 @@
 {{- define "head" -}}
   {{- with .Resources.GetMatch "cover.jpg" -}}
-    {{- $image  := .Process "q30 webp" -}}
-    {{- $style  := printf ".article header.cover-image { background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('%s'); }" $image.Permalink -}}
-    {{- $sha256 := $style | sha256 -}}
-    <style type="text/css" integrity="sha256-{{ $sha256 }}">{{ $style | safeCSS }}</style>
+    {{- $image := .Process "q30 webp" -}}
+    <style>
+      .article header.cover-image {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ $image.Permalink }}');
+      }
+    </style>
   {{- end -}}
 {{- end -}}
 {{ define "main" }}
