@@ -10,6 +10,10 @@ sitemap:
   disable: true
 ---
 
+# 2026-05-28
+
+- Changed the [tools](/tools) pages to use Hugo [page resources](https://gohugo.io/content-management/page-resources/) for their scripts and stylesheets, rather than using inline `<script>` and `<style>` tags. This is mostly in support of a cleaner `Content-Security-Policy` header.
+
 # 2026-02-24
 
 - Remove use of Tailwind CSS. This meant quite a [bit of work](https://git.blakerain.com/BlakeRain/blakerain.com/compare/before-tool-removal...v2.13.0), just to get the site to look the same as before 🫠
