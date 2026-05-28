@@ -1,8 +1,10 @@
 {{- define "head" -}}
-  {{- with .Params.styles -}}
-    <style>
-      {{ . | safeCSS }}
-    </style>
+  {{- with .Resources.GetMatch "style.css" -}}
+    {{- $styles := . | css.PostCSS (dict "inlineImports" true) -}}
+    {{- if hugo.IsProduction -}}
+      {{- $styles = $styles | minify | fingerprint | resources.PostProcess -}}
+    {{- end -}}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}">
   {{- end -}}
 {{- end -}}
 {{- define "main" -}}
