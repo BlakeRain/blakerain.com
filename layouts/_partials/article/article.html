@@ -10,7 +10,8 @@
       {{ if .Param "customHero" -}}
         style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
       {{- else if $cover -}}
-        class="cover-image"
+        {{- $image := $cover.Process "q30 webp" -}}
+        style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ $image.Permalink }}')"
       {{- end -}}>
       <div class="content mx-auto inner">
         <h1 class="{{ if $cover }}with-cover{{ end }}{{ if $subtitle }} with-subtitle{{ end }}">
