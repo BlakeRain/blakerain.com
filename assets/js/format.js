@@ -11,4 +11,3 @@ export function formatNumber(value, thousands, places, prefix, suffix) {
 
   return neg + (prefix || "") + formatter.format(aval) + (suffix || "");
 }
-

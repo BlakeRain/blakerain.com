@@ -44,4 +44,3 @@ export class CurrencySelectElement extends HTMLElement {
     });
   }
 }
-

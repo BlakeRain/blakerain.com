@@ -1,5 +1,5 @@
-import { NumberInputElement } from "../elements/number-input.js";
-import { formatNumber } from "../format.js";
+import { NumberInputElement } from "../../js/number-input.js";
+import { formatNumber } from "../../js/format.js";
 
 class State extends EventTarget {
   constructor() {
@@ -200,7 +200,7 @@ function computeReturnTable(state) {
       open: account,
       risk,
       ret,
-      close: account + ret
+      close: account + ret,
     });
 
     account += ret;
@@ -232,11 +232,11 @@ class RiskRewardControllerElement extends HTMLElement {
 }
 
 /**
-  * Find the nearest parent element that is a controller.
-  *
-  * @param {HTMLElement} element The starting element
-  * @returns {RiskRewardControllerElement | null} The nearest parent controller element
-  */
+ * Find the nearest parent element that is a controller.
+ *
+ * @param {HTMLElement} element The starting element
+ * @returns {RiskRewardControllerElement | null} The nearest parent controller element
+ */
 function findControllerParent(element) {
   let parent = element.parentElement;
   while (parent) {
@@ -376,7 +376,7 @@ class RiskRewardJitterElement extends HTMLElement {
 
     this._select.value = this._controller.state._jitter;
     this._select.addEventListener("change", (event) => {
-    this._controller.state._jitter = event.target.value;
+      this._controller.state._jitter = event.target.value;
     });
   }
 }
@@ -552,7 +552,7 @@ class RiskRewardResultsSummaryElement extends HTMLElement {
 
     this.children[11].innerText = formatNumber(wins, true, 0);
     this.children[13].innerText = formatNumber(losses, true, 0);
-    this.children[15].innerText = formatNumber(100.0 * wins / (wins + losses), true, 2, "", "%");
+    this.children[15].innerText = formatNumber((100.0 * wins) / (wins + losses), true, 2, "", "%");
   }
 }
 
@@ -569,3 +569,16 @@ customElements.define("risk-reward-rerun", RiskRewardRerunElement);
 customElements.define("risk-reward-results", RiskRewardResultsElement);
 customElements.define("risk-reward-results-summary", RiskRewardResultsSummaryElement);
 
+(function () {
+  const jitterFracContainer = document.getElementById("jitter_frac_container");
+  const jitterSigmaContainer = document.getElementById("jitter_sigma_container");
+
+  function jitterChanged(event) {
+    const jitter = event.target.value;
+    jitterFracContainer.classList.toggle("hidden", jitter !== "uniform");
+    jitterSigmaContainer.classList.toggle("hidden", jitter !== "gaussian");
+  }
+
+  const jitterSelect = document.getElementById("jitter");
+  jitterSelect.addEventListener("change", jitterChanged);
+})();

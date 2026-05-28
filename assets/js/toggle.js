@@ -90,4 +90,3 @@ export class ToggleElement extends HTMLElement {
     this._labelElement.textContent = this._label;
   }
 }
-

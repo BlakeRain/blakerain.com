@@ -5,7 +5,7 @@ summary: |
 params:
   vibe_coded: false
   color: "#34d399"
-  source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/static/scripts/tools/rr-and-risk.js
+  source: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/content/tools/rr-and-risk/index.js
   icon: { vendor: "mdi", "name": "table-heart" }
 ---
 <risk-reward-controller>
@@ -39,7 +39,7 @@ params:
       <div>
         <label for="jitter">Jitter</label>
         <risk-reward-jitter>
-          <select id="jitter" class="field" onchange="jitterChanged(event)">
+          <select id="jitter" class="field">
             <option value="none" selected>No Jitter</option>
             <option value="uniform">Uniform</option>
             <option value="gaussian">Gaussian</option>
@@ -103,15 +103,3 @@ params:
       </risk-reward-results-summary>
   </div>
 </risk-reward-controller>
-<script type="module" src="/scripts/tools/rr-and-risk.js"></script>
-<script>
-  const jitterFracContainer = document.getElementById("jitter_frac_container");
-  const jitterSigmaContainer = document.getElementById("jitter_sigma_container");
-
-  function jitterChanged(event) {
-    const jitter = event.target.value;
-    console.log(`jitter changed to ${jitter}`);
-    jitterFracContainer.classList.toggle("hidden", jitter !== "uniform");
-    jitterSigmaContainer.classList.toggle("hidden", jitter !== "gaussian");
-  }
-</script>

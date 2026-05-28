@@ -1,4 +1,4 @@
-import { formatNumber } from "../format.js";
+import { formatNumber } from "./format.js";
 
 export class NumberInputElement extends HTMLElement {
   _thousands = false;
@@ -132,7 +132,7 @@ export class NumberInputElement extends HTMLElement {
       this._thousands,
       this._places,
       this._prefix,
-      this._suffix
+      this._suffix,
     );
   }
 
@@ -144,4 +144,3 @@ export class NumberInputElement extends HTMLElement {
     }
   }
 }
-

@@ -1,7 +1,7 @@
-import { CurrencySelectElement } from "../elements/currency-select.js";
-import { NumberInputElement } from "../elements/number-input.js";
-import { ToggleElement } from "../elements/toggle.js";
-import { formatNumber } from "../format.js";
+import { CurrencySelectElement } from "../../js/currency-select.js";
+import { NumberInputElement } from "../../js/number-input.js";
+import { ToggleElement } from "../../js/toggle.js";
+import { formatNumber } from "../../js/format.js";
 
 /** @type {Record<string, Record<string, number>>} */
 const EXCHANGE_RATES = {};

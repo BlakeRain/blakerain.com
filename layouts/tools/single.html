@@ -16,4 +16,11 @@
     </header>
     {{ .Content }}
   </main>
+  {{- with .Resources.GetMatch "index.js" -}}
+    {{- $script := . | js.Build (dict "target" "es2020") -}}
+    {{- if hugo.IsProduction -}}
+      {{- $script = $script | minify | fingerprint | resources.PostProcess -}}
+    {{- end -}}
+    <script src="{{ $script.RelPermalink }}" type="module"></script>
+  {{- end -}}
 {{- end -}}
