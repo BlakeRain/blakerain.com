@@ -51,6 +51,10 @@ outputs:
   taxonomy: ["html"]
   term: ["html"]
 
+security:
+  allowContent:
+    - ".*"
+
 module:
   hugoVersion:
     min: 0.154.0
