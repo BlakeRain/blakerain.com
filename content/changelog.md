@@ -12,7 +12,19 @@ sitemap:
 
 # 2026-05-28
 
-- Changed the [tools](/tools) pages to use Hugo [page resources](https://gohugo.io/content-management/page-resources/) for their scripts and stylesheets, rather than using inline `<script>` and `<style>` tags. This is mostly in support of a cleaner `Content-Security-Policy` header.
+- Changed the [tools](/tools) pages to use Hugo [page
+  resources](https://gohugo.io/content-management/page-resources/) for their scripts and
+  stylesheets, rather than using inline `<script>` and `<style>` tags. This is mostly in support of
+  a cleaner `Content-Security-Policy` header.
+- Updated the [human.json](https://codeberg.org/robida/human.json) file to include some new vouches.
+  I generated these vouches using a variant of a script by [Seth
+  Larson](https://sethmlarson.dev/ive-added-human-dot-json-to-my-website), which I tweaked a bit to
+  accept the nested outlines in the OPML exports from [FreshRSS](https://freshrss.org/), and to avoid
+  overwriting the vouches file and output the new file to stdout. You can find the modified script
+  [here](https://paste.blakerain.com/thounickud).
+- I added a new release of
+  [cement](https://git.blakerain.com/BlakeRain/-/packages/container/cement/v2.3.0) which includes a
+  feature to embed a paste. I've used this to replace GitHub Gists.
 
 # 2026-02-24
 
