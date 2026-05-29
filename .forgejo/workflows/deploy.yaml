@@ -5,6 +5,12 @@ on:
     tags:
       - v*
   workflow_dispatch:
+    inputs:
+      force-upload:
+        description: Force a full upload (ignore file sizes)
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy-site:
@@ -47,12 +53,20 @@ jobs:
           BUNNY_STORAGE_HOST: ${{ secrets.BUNNY_STORAGE_HOST }}
           BUNNY_STORAGE_USERNAME: ${{ secrets.BUNNY_STORAGE_USERNAME }}
           BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
+          FORCE_UPLOAD: ${{ inputs.force-upload || 'false' }}
         run: |
           apt-get update -y
           apt-get install -y lftp
+
+          if [ "$FORCE_UPLOAD" = "true" ]; then
+            IGNORE_TIME=""
+          else
+            IGNORE_TIME="--ignore-time"
+          fi
+
           lftp -u "${BUNNY_STORAGE_USERNAME},${BUNNY_STORAGE_PASSWORD}" \
             "sftp://${BUNNY_STORAGE_HOST}" \
-            -e "set sftp:auto-confirm yes; mirror -R --delete --verbose public/ /; quit"
+            -e "set sftp:auto-confirm yes; mirror -R --delete ${IGNORE_TIME} --verbose public/ /; quit"
 
       - name: Purge CDN cache
         run: |
