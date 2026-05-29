@@ -47,7 +47,11 @@
     {{- end }}
     {{- range $pages }}
     <item>
-      <title>{{ trim .Title " \n\r\t" }}</title>
+      {{- $itemTitle := .Title }}
+      {{- if and (eq .Section "weeknotes") (not .Title) }}
+        {{- $itemTitle = printf "Weeknote %s" (index (strings.Split .File.Dir "/") 1) }}
+      {{- end }}
+      <title>{{ trim $itemTitle " \n\r\t" }}</title>
       <link>{{ .Permalink }}</link>
       <pubDate>{{ .PublishDate.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
       {{- with $authorEmail }}<author>{{ . }}{{ with $authorName }} ({{ . }}){{ end }}</author>{{ end }}
@@ -57,7 +61,7 @@
           {{ printf `<![CDATA[%s]]>` . | safeHTML }}
         {{ end -}}
         {{ `<![CDATA[<hr><p>Thanks for reading this post via RSS! 👋</p>]]>` | safeHTML }}
-        {{ printf `<![CDATA[<a href="mailto:%s?subject=%s">Reply to this post by email</a>]]>` $authorEmail (urls.PathEscape .Title) | safeHTML }}
+        {{ printf `<![CDATA[<a href="mailto:%s?subject=%s">Reply to this post by email</a>]]>` $authorEmail (urls.PathEscape $itemTitle) | safeHTML }}
       </description>
     </item>
     {{- end }}
