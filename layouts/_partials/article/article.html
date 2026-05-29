@@ -9,10 +9,14 @@
     <header
       {{ if .Param "customHero" -}}
         style="{{ replace (.Param "customHero") "\n" " " | safe.CSS }}"
-      {{- else if $cover -}}
-        {{- $image := $cover.Process "q30 webp" -}}
-        style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('{{ $image.Permalink }}')"
       {{- end -}}>
+      {{ if and $cover (not (.Param "customHero")) }}
+        {{- $image := $cover.Process "q30 webp" -}}
+        <div class="cover-wrapper" aria-hidden="true">
+          <img class="cover-image" src="{{ $image.Permalink }}" alt="" />
+          <div class="cover-gradient"></div>
+        </div>
+      {{ end }}
       <div class="content mx-auto inner">
         <h1 class="{{ if $cover }}with-cover{{ end }}{{ if $subtitle }} with-subtitle{{ end }}">
           <a href="{{ .Permalink }}" class="u-url p-name" rel="bookmark">

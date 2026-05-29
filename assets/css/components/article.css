@@ -113,9 +113,27 @@
 
 .article {
   header {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    position: relative;
+    overflow: hidden;
+    clip-path: inset(0);
+
+    .cover-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+
+      .cover-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .cover-gradient {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+      }
+    }
 
     > .inner {
       display: flex;
