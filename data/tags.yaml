@@ -31,6 +31,9 @@ databases:
 discord:
   name: Discord
   description: A chat and voice chat application.
+dnssec:
+  name: DNSSEC
+  description: Domain Name System Security Extensions. A protocol for securing DNS.
 docker:
   name: Docker
   description: A containerization platform.
