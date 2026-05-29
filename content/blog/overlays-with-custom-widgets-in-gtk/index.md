@@ -812,6 +812,6 @@ class ControlPanel(Gtk.Box):
 
 After this final change to the `ControlPanel` widget we should have a demo that works fairly well.
 
-If you want to download the source code for this demo you can find it at the following GitHub Gist:
+If you want the source code for this demo you can find it at the following paste:
 
-<script src="https://gist.github.com/BlakeRain/f62732c37dcb3a4950134a9b37d4913b.js"></script>
+{{< cement code="revogutorp" >}}

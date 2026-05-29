@@ -173,5 +173,5 @@ Well, until they exceeded their mailbox quota 🙄
 [ProtonMail]: https://proton.me/mail
 [EasySwitch]: https://proton.me/support/easy-switch
 [documentation]: https://proton.me/support/proton-mail-export-tool
-[terrible tool]: https://gist.github.com/BlakeRain/3da733c65dfa194fc70c8978b7e514f7
+[terrible tool]: https://paste.blakerain.com/oogenuounn
 [fetchmail]: https://www.fetchmail.info/

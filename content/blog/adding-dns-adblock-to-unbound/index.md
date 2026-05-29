@@ -354,9 +354,9 @@ I have the `gen-adblock.sh` script along with my `adblock.exceptions` file in my
 the Raspberry Pi. When I want to update the DNS ad-blocker configuration I can just run this script
 and then restart Unbound.
 
-I've included the source for the `gen-adblock.sh` script in the following Gist on GitHub.
+I've included the source for the `gen-adblock.sh` script in the following paste:
 
-<script src="https://gist.github.com/BlakeRain/75bc52434528dcabb6ca87908d70468e.js"></script>
+{{< cement code="rassyneery" >}}
 
 [previous post]: /blog/raspberrypi-openbsd-firewall/
 [OpenBSD]: https://www.openbsd.org/

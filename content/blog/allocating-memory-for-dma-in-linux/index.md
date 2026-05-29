@@ -643,4 +643,4 @@ Preparing memory for use with DMA may seem a bit more complex than necessary. As
 
 I hope that this post may be of some use to those of you that need to communicate memory with devices connected to the PCI bus. You can find the complete listing as a GitHub gist:
 
-<script src="https://gist.github.com/BlakeRain/354a21571fa9dfe432b46b833ccec595.js"></script>
+{{< cement code="omalleyest" >}}
