@@ -6,7 +6,7 @@
 .tag-list {
   display: flex;
   flex-direction: row;
-  flex-wrap: warp;
+  flex-wrap: wrap;
   gap: 0 0.5rem;
 
   > .tag {

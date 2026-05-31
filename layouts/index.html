@@ -25,33 +25,42 @@
     </p>
     <section>
       <h1>Latest Posts</h1>
-      <ul class="posts">
-        {{ range first 4 (sort (where .Site.RegularPages "Section" "blog") "Date" "desc") }}
-          <li>
-            <a href="{{ .RelPermalink }}" class="colored">
-              {{ .Title }}
-            </a>
-            <p>
-              {{ .Date.Format "2 January 2006" }}
-            </p>
-          </li>
-        {{ end }}
-      </ul>
+      {{ partial "_inline/index.articles.html" (dict "section" "blog") }}
     </section>
     <section>
       <h1>Latest Notes</h1>
-      <ul class="posts">
-        {{ range first 4 (sort (where .Site.RegularPages "Section" "notes") "Date" "desc") }}
-          <li>
-            <a href="{{ .RelPermalink }}" class="colored">
-              {{ .Title }}
-            </a>
-            <p>
-              {{ .Date.Format "2 January 2006" }}
-            </p>
-          </li>
-        {{ end }}
-      </ul>
+      {{ partial "_inline/index.articles.html" (dict "section" "notes") }}
     </section>
   </main>
+{{ end }}
+{{ define "_partials/_inline/index.articles.html" }}
+  {{- $section := .section -}}
+  <ul class="posts">
+    {{ range first 4 (sort (where site.RegularPages "Section" $section) "Date" "desc") }}
+      <li>
+        <a href="{{ .RelPermalink }}" class="colored">
+          {{ .Title }}
+        </a>
+        <ul class="metadata">
+          <li>
+            {{ .Date.Format "2 January 2006" }}
+          </li>
+          {{ with .Param "tags" }}
+            <li class="spacer">•</li>
+            <li>
+              <ul class="tag-list">
+                {{ range $index, $tag := . }}
+                  {{ with site.GetPage (printf "/tags/%s" $tag) }}
+                    <a href="{{ .Permalink }}" class="tag p-category">
+                      {{ $tag | humanize }}
+                    </a>
+                  {{ end }}
+                {{ end }}
+              </ul>
+            </li>
+          {{ end }}
+        </ul>
+      </li>
+    {{ end }}
+  </ul>
 {{ end }}

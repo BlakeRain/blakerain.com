@@ -105,15 +105,29 @@
       gap: 1rem;
       margin-top: 1.5rem;
 
-      a {
-        font-size: var(--text-lg);
-        font-weight: 600;
-      }
+      > li {
+        > a {
+          font-size: var(--text-lg);
+          font-weight: 600;
+        }
 
-      p {
-        font-size: var(--text-sm);
-        color: var(--color-text-muted);
+        ul.metadata {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
 
+          font-size: var(--text-sm);
+          text-transform: uppercase;
+          color: var(--color-text-muted);
+
+          @media (--screen-md) {
+            justify-content: space-between;
+
+            .spacer {
+              display: none;
+            }
+          }
+        }
       }
     }
   }
