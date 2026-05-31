@@ -1,6 +1,6 @@
 {{ $src      := .Get "src" }}
 {{ $caption  := .Get "caption" }}
-{{ $images   := .Page.Resources.Match (printf "%s/*.jpg" $src) }}
+{{ $images   := .Page.Resources.Match (printf "%s/*" $src) }}
 {{ $metadata := .Page.Resources.Get (printf "%s/gallery.yaml" $src) }}
 {{ $metadata := $metadata.Content | transform.Unmarshal }}
 <figure class="gallery">
@@ -8,13 +8,22 @@
     <figcaption>{{ . }}</figcaption>
   {{ end }}
   <div class="gallery-images">
-    {{ range $images }}
+    {{ range where $images "ResourceType" "image" }}
       {{ $caption := index $metadata.captions (path.BaseName .Name) }}
       {{ $image   := .Process "resize 768x q90 webp" }}
+      {{ $link    := .RelPermalink }}
+      {{ if reflect.IsMap $caption }}
+        {{ $link    = index $caption "link" }}
+        {{ $caption = index $caption "caption" }}
+      {{ end }}
       <div>
-        <a href="{{ .RelPermalink }}" target="_blank" rel="noopener noreferrer">
-          <img src="{{ $image.Permalink }}" {{ with $caption }}alt="{{ . }}"{{ end }} />
-        </a>
+        {{ if $link }}
+          <a href="{{ $link }}" target="_blank" rel="noopener noreferrer">
+        {{ end }}
+            <img src="{{ $image.Permalink }}" {{ with $caption }}alt="{{ . }}"{{ end }} />
+        {{ if $link }}
+          </a>
+        {{ end }}
         {{ with $caption }}
           <div class="caption">{{ . }}</div>
         {{ end }}
