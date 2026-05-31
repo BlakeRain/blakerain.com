@@ -1,7 +1,8 @@
 [files]
-extend-exclude = ["static/*"]
+extend-exclude = ["static/*", "*.yaml"]
 
 [default]
+check-filename = false
 extend-ignore-identifiers-re = [
   "ure\\d+",
   "UE\\d+",
