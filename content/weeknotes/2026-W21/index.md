@@ -41,7 +41,7 @@ A Hill to Die Upon by Mental Cruelty
   this one marked down in my calendar, as I was excited to have all three in the series. To be
   honest, whilst I did enjoy some of the tracks on this album, it was probably the least enjoyable
   of the three. The [first OPVS NOIR] had some real gems (e.g. [Moonstruck (feat. Stimmgewalt)] and
-  [The Sadness in Everything (feat. Tales of Time)]), which might have spolied me somewhat.
+  [The Sadness in Everything (feat. Tales of Time)]), which might have spoiled me somewhat.
 - [Saturnus - The Lighthouse Session 2] --- I had to have this album after the [first one]. The
   acoustic version of [All Alone] on the first _Lighthouse Session_ was such a moving nostalgia trip
   I had to dig out the old original CD. Strange to think that _Veronica Decides to Die_ was released
@@ -64,7 +64,7 @@ Vígríðr by Gealdýr
 {{< /bandcamp >}}
 
 - [Gealdýr - Vígríðr] --- I've been a fan of Gealdýr for a couple of years now, so I was very keen to get
-  ahold of this album. It is such peacful and beautiful music. This guys vocals are amazing.
+  ahold of this album. It is such peaceful and beautiful music. This guys vocals are amazing.
 - [Draconian - In Somnolent Ruin] --- The new release from Draconian. I've been following Draconian
   for as long as I can remember, and they're possibly one of my favourite groups. As Draconian
   albums go, _In Somnolent Ruin_ is just more of the same: epic doom metal contrasting between
@@ -72,7 +72,7 @@ Vígríðr by Gealdýr
 - [Fleshgod Apocalypse - Labyrinth] --- An older album by Fleshgod Apocalypse from August 2013. I've
   started to really enjoy this band after I heard their album [Opera] last year. Since then, I've
   been working my way backwards through their releases. I've found Labyrinth to be quite good, but
-  not quite as good as their susbsequent albums [King] and [Veleno].
+  not quite as good as their subsequent albums [King] and [Veleno].
 - [Fleshgod Apocalypse - Agony] --- This is the oldest Fleshgod Apocalypse album I've bought,
   released back in 2011. Their sound was a bit different back then, and it's fascinating to hear the
   evolution of their music over the years. I think this is as far back as I'll go with this band.
@@ -155,7 +155,7 @@ Look at these awesome effects!
 
 It's been quite good fun watching people start to adjust to the real cost of using LLMs, especially
 for very token-heavy activities like [agentic coding]. Seeing people discover that their
-subscription is potentially subsidising significant cost is interesting. On of my favorites is a
+subscription is potentially subsidising significant cost is interesting. On of my favourites is a
 post [on Reddit] showing a $39 subscription to GitHub Copilot would have cost them $5,815.77 if
 billed on a per-token basis.
 
@@ -165,7 +165,7 @@ I've not really understood the draw to these subscriptions. Paying a subscriptio
 only using Claude in ClaudeCode with aggressive rate-limits? No thanks. I'm not that keen on using
 one specific LLM just for code generation. Even for the other work I do with LLMs, these large and
 expensive models have always seemed more of a product of marketing hype than being actually
-significanly better.
+significantly better.
 
 For me, the attraction of these frontier models has only diminished over time. Consider that the
 recent [Deepseek 4 Pro scores] 73.6 on SWE-Bench Verified, and [Claude Sonnet 4.6 scores] 79.6. DS4
@@ -185,7 +185,7 @@ less likely to change my behavior based on knowledge of what model I was using, 
 the [prompt box] in OpenCode so it lies about the model selection.
 
 By the end of April I was quite convinced that I had absolutely no idea what model performed best
-for day-to-day use of OpenCode. There were several occassions where I could have sworn I was using a
+for day-to-day use of OpenCode. There were several occasions where I could have sworn I was using a
 frontier model, only to discover I was using Kimi K2.5 or something. I was quite happy to confirm to
 myself, albeit unscientifically, that I really could just pick a model that delivers the best score
 to price ratio.
@@ -193,7 +193,7 @@ to price ratio.
 Whilst my overall usage of LLMs has decreased by just over 20% over the past three months after
 various experiments have come to an end, my OpenRouter spend has dropped by 75% since March, mostly
 attributed to token usage shifting away from frontier models. Claude Sonnet 4.6 was the only
-frontier model to receive any use in May, at a meager 12M tokens. All the remaining tokens went to
+frontier model to receive any use in May, at a meagre 12M tokens. All the remaining tokens went to
 much cheaper models. I have even started to exclude the frontier models from any experiments I run,
 which is certainly going to help reduce the cost.
 
