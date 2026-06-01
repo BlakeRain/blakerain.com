@@ -1,6 +1,6 @@
 ---
 title: My Favorite Technical Books
-date: 2026-03-10T20:00:00
+date: 2026-06-10T20:00:00
 tags:
   - books
 coverImage:
@@ -8,9 +8,7 @@ coverImage:
   url: https://unsplash.com/@drewcoffman?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText
 ---
 
-As 2025 has come to a close, I wanted to write a bit about some of my favourite albums of the year.
-Whilst my listening habits haven't changed much this year, _how_ I listen to and acquire music has
-changed quite a bit, so I thought I'd write about that too.
+Introduction to the favourite books.
 
 <!--more-->
 
@@ -26,6 +24,15 @@ changed quite a bit, so I thought I'd write about that too.
 A book about the UNIX typesetting system Troff. There's a [second book] that describes the `grap`
 tool along with the `ms` macros.
 
+[LaTeX] was definitely a thing, but I was blissfully unaware of it for quite a long time when I was
+younger. I _did_ have a copy of `troff` (in the old `SUNWdoc` package). I _think_ it was the whole
+DWB suite, but I'm not so sure any more: my memory of these times is pretty hazy.
+
+I found this book in a charity shop in Headingley in Leeds, and it unlocked a whole new world of
+formatting documents. I remember using `troff` to format the write-up of my coursework: a level
+editor for a game I was writing.
+
+[LaTeX]: https://en.wikipedia.org/wiki/LaTeX
 [second book]: https://www.librarything.com/work/7646664/t/Document-Formatting-and-Typesetting-on-the-Unix-System-Grap%25252F-Mv%25252F-MS-and-Troff-Document-Formatting-Typesetting-on-the-UNIX-Sytem
 {{< /book >}}
 
@@ -35,6 +42,23 @@ tool along with the `ms` macros.
     cover="cover-c.jpg"
     year="1988"
     url="https://www.librarything.com/work/3600740/t/The-C-Programming-Language-2nd-Edition" >}}
+This book was a great introduction to the C programming language, but I quickly came to realise that
+the book was quite a bit of out date.
+
+The first C compiler I used was [Borland's] C and C++ compiler [Turbo C++ 3]. I think I quickly
+moved to using the [GNU C Compiler] on Solaris, probably version 3 or something, then the same later
+on Linux. This pushed me to prefer GCC on Microsoft DOS (and later Windows), so I ended up using
+[DJGPP].
+
+Well, according to the [contents of the Solaris 8 software companion CD], I was using GCC 2.95.2.
+It's amazing that these archives are available for us to check up on things like this.
+
+[contents of the Solaris 8 software companion CD]: https://ia600701.us.archive.org/view_archive.php?archive=/16/items/sun-solaris-8-0101/sun-solaris-8-0101-software-companion-sparc.iso
+
+[Borland's]: https://en.wikipedia.org/wiki/Borland
+[Turbo C++ 3]: https://en.wikipedia.org/wiki/Turbo_C%2B%2B
+[GNU C Compiler]: https://gcc.gnu.org/
+[DJGPP]: https://www.delorie.com/djgpp/
 {{< /book >}}
 
 {{< book
@@ -43,7 +67,19 @@ tool along with the `ms` macros.
     cover="cover-cpp.jpg"
     year="2003"
     url="https://www.librarything.com/work/11938782/t/The-C%2B%2B-Programming-Language-%7BSpecial-3rd-Edition%7D" >}}
-This book was hard for little me to get through.
+This book was hard for little me to get through. I started with an earlier edition of this book,
+possibly the second edition, and it really was quite a learning curve. By the time I was finishing
+high school I was already quite familiar with the language, and decided to take on the ridiculously
+ambitious project of writing a C++ compiler. Suffice to say, this book, along with the C++
+specification (which I got for my birthday), was instrumental in my implementation.
+
+I bought my copy of the 3rd edition of this book from a fantastic bookshop in Leeds called Borders
+Bookshop -- actually a US company -- that was a real favourite for a lot of Leeds. Their original
+cafe used to have a fantastic range of coffees!
+
+Anyway, I knew at the time that the project was far too ambitious for a teenager to pull off. And of
+course, I never actually finished the compiler, giving up after I got stuck on template
+instantiation. By that point, my interest in graphics had far exceeded my interest in compilers.
 {{< /book >}}
 
 {{< book
@@ -214,9 +250,10 @@ changes to how I normally roll based on Michael's advice.
 
 ## Enshittification
 
-I can highly recommend all of Cory Doctorow's books. He has a nearly an entire bookshelf in my
-living room, and they're all excellent. Some of my favourites of his fiction books include [Makers],
-the [Little Brother] series, and the more recent [Martin Hench] series.
+I can highly recommend all of Cory Doctorow's books. Whilst not strictly speaking technical books
+like the others in this post, he has a nearly an entire bookshelf in my living room to himself. Some
+of my favourites of his fiction books include [Makers], the [Little Brother] series, and the more
+recent [Martin Hench] series.
 
 His non-fiction books are probably the most important. The most recent of which is his book
 _Enshittification_, which describes the process of how everything online became terrible, and what
@@ -228,7 +265,7 @@ we can do about it.
     cover="cover-ensh.jpg"
     year="2025"
     url="https://bookshop.org/p/books/enshittification-why-everything-suddenly-got-worse-and-what-to-do-about-it-cory-doctorow/d3f8483b158906ce" >}}
-Enshittification: It’s not just you—the internet sucks now. It’s been enshittified. That was no
+Enshittification: It’s not just you — the internet sucks now. It’s been enshittified. That was no
 accident, and it’s not gonna fix itself. Here’s how we’ll disenshittify it so we can have a new,
 good internet.
 {{< /book >}}
