@@ -13,6 +13,9 @@ aws:
 bash:
   name: Bash
   description: A Unix shell.
+books:
+  name: Books
+  description: Books I've read.
 bunny:
   name: Bunny
   description: A European CDN.
