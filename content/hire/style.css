@@ -1,0 +1,221 @@
+/* Components for the hire page */
+@import "./assets/css/tokens.css";
+
+.hire-cta {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  margin: 1.5rem 0;
+}
+
+.hire-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  margin: 1.5rem 0;
+
+  @media (--screen-md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.hire-card {
+  padding: 1.25rem;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background-color: var(--color-surface-raised);
+
+  & > h3 {
+    margin: 0 0 0.5rem;
+
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+  }
+
+  & > p {
+    margin: 0;
+
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+
+    color: var(--color-text-secondary);
+  }
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+
+  column-gap: 1.25rem;
+
+  @media (--screen-md) {
+    grid-template-columns: 11rem 1.5rem 1fr;
+    column-gap: 1.5rem;
+  }
+
+  > li {
+    display: grid;
+    grid-column: 1 / 4;
+    grid-template-columns: subgrid;
+    margin: 0;
+
+    &:first-child .timeline-marker::before {
+      top: calc(0.35em + 0.375rem);
+    }
+
+    &:last-child .timeline-marker::before {
+      height: calc(0.35em + 0.375rem);
+      bottom: auto;
+    }
+
+    &.contracting {
+      .timeline-marker::before {
+        background: repeating-linear-gradient(
+          to bottom,
+          var(--color-border) 0 4px,
+          transparent 4px 8px
+        );
+      }
+
+      .timeline-marker::after {
+        border-radius: var(--radius-sm);
+      }
+    }
+  }
+}
+
+.timeline-marker {
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  grid-column: 1;
+  grid-row: 1 / 3;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    background: var(--color-border);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0.35em;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+  }
+
+  @media (--screen-md) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.timeline-when {
+  grid-column: 2;
+  grid-row: 1;
+
+  @media (--screen-md) {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: right;
+  }
+}
+
+.timeline-date {
+  display: block;
+  /* font-size: var(--text-sm); */
+  color: var(--color-meta);
+
+  @media (--screen-md) {
+    font-size: var(--text-lg);
+  }
+}
+
+.timeline-company {
+  display: block;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+
+  @media (--screen-md) {
+     font-size: var(--text-lg);
+  }
+}
+
+.timeline-details {
+  padding-bottom: 1.5rem;
+
+  grid-column: 2;
+  grid-row: 2;
+
+  @media (--screen-md) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  > h3 {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+
+    @media (--screen-md) {
+      font-size: var(--text-lg);
+    }
+  }
+
+  > p {
+    margin: 0.25rem 0 0;
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-secondary);
+  }
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  column-gap: 0.5rem;
+
+  padding: 0;
+  margin: 0 0 0 1.5rem;
+
+  > li {
+    display: grid;
+    grid-column: 1 / 4;
+    grid-template-columns: subgrid;
+    align-items: center;
+
+    &.forgejo {
+      > svg {
+        color: #c2410c;
+
+        @media (prefers-color-scheme: dark) {
+          color: #fB923c;
+        }
+      }
+    }
+  }
+}

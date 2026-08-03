@@ -1,3 +1,4 @@
+@layer site {
 @import "tokens.css";
 @import "reset.css";
 
@@ -74,4 +75,5 @@ a.colored {
 .hi-svg-inline {
   display: inline;
   vertical-align: -0.125rem;
+}
 }

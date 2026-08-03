@@ -9,8 +9,8 @@
   --button-disabled-bg: #e5e7eb;
   --button-focus-ring: var(--color-brand);
 
-  --button-outline-border: var(--color-outline);
-  --button-outline-text: var(--color-outline-text);
+  --button-outline-border: var(--button-bg);
+  --button-outline-text: var(--buton-text);
   --button-outline-bg-hover: rgba(100, 116, 139, 0.1);
   --button-outline-bg-active: rgba(51, 65, 85, 0.5);
 
