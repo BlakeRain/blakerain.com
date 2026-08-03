@@ -15,7 +15,7 @@ for senior, principal, and staff engineering roles.
 
 <div class="hire-cta">
   <a class="plain button" href="/downloads/cv.pdf">Download my CV (PDF)</a>
-  <a class="plain button" href="mailto:blake@blakerain.com">Email me</a>
+  <a class="plain button" href="mailto:blake.rain@blakerain.com">Email me</a>
 </div>
 
 ---
@@ -179,7 +179,7 @@ code on GitHub and my self-hosted Forgejo instance.
   <li>
     {{< ico vendor="bootstrap" name="envelope-at" >}}
     <span>Email</span>
-    {{< encode-link protocol="mailto" target="blake@blakerain.com" text="blake@blakerain.com" >}}
+    {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
   </li>
   <li>
     {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}}

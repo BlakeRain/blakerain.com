@@ -12,11 +12,12 @@ Hello! I'm Blake Rain, a UK-based software engineer with a passion for [Rust], C
 I'm a seasoned user of [neovim] and a Linux and Unix enthusiast. I'm currently available for new
 opportunities: see my [hire me](/hire) page.
 
-Over the years, I have been privileged to work across diverse sectors, from film processing and
-industrial automation to property management. My projects range from developing accelerated
-post-processing software for the emerging digital film industry, prototyping control boards for
-industrial automation, to creating tools to boost commercial property investment and contact centre
-automation.
+Over the past twenty years, I have been privileged to work across diverse sectors: film
+post-production, industrial automation, property technology, telecoms, and regulated financial and
+health services. My projects range from accelerated post-processing software for the emerging
+digital film industry and prototyping control boards for industrial automation, to
+packet-processing appliances for contact centres, cloud-native platforms on AWS, and AI-assisted
+compliance tooling.
 
 These experiences have lead me to develop skills in system design, low-level system development,
 Unix and Linux kernel development, electronic design, network development, firmware development for
@@ -60,6 +61,12 @@ These projects have led to a fairly wide ranging experience:
   automated deduction tools.
 - User interface development in terminal applications and GTK; later moving to web-application
   development for my sins.
+- Cloud-native development on AWS: serverless orchestration, infrastructure as code, and AI/ML
+  integration in production systems written in Rust.
+- Building and maintaining compliance in regulated environments, including PCI-DSS Level 1 service
+  provider audits and FCA conduct risk.
+
+For a full career timeline and selected highlights, see my [hire page](/hire).
 
 # Getting in touch { .no-outline }
 
@@ -71,7 +78,7 @@ If you need to get in touch with me, you can either use
   <li>
     {{< ico vendor="bootstrap" name="envelope-at" >}}
     <span>Email</span>
-    {{< encode-link protocol="mailto" target="blake@blakerain.com" text="blake@blakerain.com" >}}
+    {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
   </li>
   <li>
     {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}}
@@ -116,6 +123,4 @@ This website was built with [Hugo]. The source code is available on my self-host
 [Haskell]: https://www.haskell.org/
 [Mastodon]: https://mastodonapp.uk/@BlakeRain
 [neovim]: https://neovim.io
-[Cignpost]: https://www.cignpost.com/
 [Hugo]: https://gohugo.io/
-[Tailwind]: https://tailwindcss.com/
