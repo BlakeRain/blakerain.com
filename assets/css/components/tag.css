@@ -16,5 +16,11 @@
     &:hover {
       color: var(--tag-text-hover);
     }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+      border-radius: var(--radius-md);
+    }
   }
 }

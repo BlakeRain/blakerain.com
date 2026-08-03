@@ -3,11 +3,13 @@
   --home-social-text: #78716c;
   --home-photo-bg: rgba(19, 48, 78, 0.5); /* brand/50 */
   --home-photo-border: var(--color-brand);
+  --home-hire-dot: #22c55e;
 
   @media (prefers-color-scheme: dark) {
     --home-subtitle-text: var(--color-text-subtle);
     --home-social-text: #a8a29e;
     --home-post-date: var(--color-text-subtle);
+    --home-hire-dot: #4ade80;
   }
 }
 
@@ -61,8 +63,60 @@
 
   > a.hire-me {
     align-self: center;
-    font-size: var(--text-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    margin-top: 1rem;
     margin-bottom: 1rem;
+    padding: 0.375rem 1rem;
+
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    background-color: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+
+    transition: var(--transition-colors), var(--transition-transform);
+
+    &:hover {
+      color: var(--color-text);
+      border-color: var(--color-brand-light);
+      transform: scale(1.05);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+    }
+
+    .hire-dot {
+      position: relative;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: var(--radius-full);
+      background-color: var(--home-hire-dot);
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-full);
+        background-color: var(--home-hire-dot);
+        opacity: 0.4;
+        animation: hire-pulse 2s ease-out infinite;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    > a.hire-me .hire-dot::after {
+      content: none;
+      animation: none;
+    }
   }
 
   > .socials {
@@ -78,6 +132,12 @@
 
       &:hover {
         transform: scale(1.25);
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+        border-radius: var(--radius-full);
       }
     }
   }
@@ -140,5 +200,18 @@
         }
       }
     }
+  }
+}
+
+@keyframes hire-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+
+  70%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
   }
 }
