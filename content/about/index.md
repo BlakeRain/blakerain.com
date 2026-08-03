@@ -67,9 +67,23 @@ If you need to get in touch with me, you can either use
 {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="email" >}} or DM me on
 [Mastodon].
 
-- {{< ico bootstrap "envelope-at" >}} Email: {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
-- {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}} Mastodon: https://mastodonapp.uk/@BlakeRain
-- {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}} LinkedIn: https://www.linkedin.com/in/blakerain
+<ul class="contact">
+  <li>
+    {{< ico vendor="bootstrap" name="envelope-at" >}}
+    <span>Email</span>
+    {{< encode-link protocol="mailto" target="blake@blakerain.com" text="blake@blakerain.com" >}}
+  </li>
+  <li>
+    {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}}
+    <span>Mastodon</span>
+    <a href="https://mastodonapp.uk/@BlakeRain">@BlakeRain@mastodonapp.uk</a>
+  </li>
+  <li>
+    {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}}
+    <span>LinkedIn</span>
+    <a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a>
+  </li>
+</ul>
 
 ## Public Key { .no-outline }
 
