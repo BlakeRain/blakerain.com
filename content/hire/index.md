@@ -3,6 +3,8 @@ title: Hire Me
 date: 2026-08-03T16:35:00
 summary: Available for senior and principal engineering roles.
 subtitle: true
+menus:
+  - footer_left
 ---
 
 I'm Blake Rain, a UK-based software engineer with 20 years of experience across FinTech, PropTech,
@@ -40,7 +42,7 @@ principal, and staff engineering roles.
     <h3>Regulated &amp; Financial</h3>
     <p>
       Deep experience in regulated environments: PCI-DSS Level 1 service provider compliance, FCA
-      mandates, GDPR, and financial modelling. I can own the technical side of an audit.
+      mandates, GDPR, and financial modelling. I enjoy the technical side of an audit.
     </p>
   </div>
 </div>
@@ -148,6 +150,8 @@ principal, and staff engineering roles.
 Earlier contracting work included industrial automation: FPGA-driven graphics pipelines, distributed
 consensus across ARM field units, and custom Linux distributions for GSM-connected hardware.
 
+More details on my experiences can be found on my [CV](/downloads/cv.pdf).
+
 ---
 
 ## What I'm Looking For
@@ -155,10 +159,12 @@ consensus across ARM field units, and custom Linux distributions for GSM-connect
 Senior, principal, or staff engineering roles. I prefer permanent positions where I can own hard
 technical problems. I'm particularly well suited to:
 
-- Systems engineering in Rust, C, or C++: compilers, networking, packet processing, embedded.
-- Cloud-native backend engineering on AWS, including AI/ML integration.
-- Teams operating in regulated environments (finance, insurance, telecoms) that need someone who
-  has passed audits, not just read about them.
+- Systems engineering in Rust, C, or C++: code generation, networking and packet processing,
+  embedded work.
+- Cloud backend engineering on AWS (Lambda, API Gateway, CF, CDK, etc.), including AI/ML
+  integration.
+- Teams operating in regulated environments (finance, insurance, telecoms), including owning policy
+  and procedures, and engaging with auditors.
 
 I'm based in Norwich, UK, and set up for fully remote work. I'm happy to travel for on-site days.
 
