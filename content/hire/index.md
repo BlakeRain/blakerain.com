@@ -7,11 +7,11 @@ menus:
   - footer_left
 ---
 
-I'm Blake Rain, a UK-based software engineer with 20 years of experience across FinTech, PropTech,
-telecoms, and film post-production. I build across the stack: systems at the boundary of software
-and hardware (JIT compilers, packet processors, custom NIC drivers) and cloud-native distributed
-systems on AWS, from serverless orchestration to AI/ML integration. I'm now available for senior,
-principal, and staff engineering roles.
+I'm Blake Rain, a UK-based software engineer with over 20 years of experience across FinTech,
+PropTech, telecoms, and film post-production. I build across the stack: systems at the boundary of
+software and hardware (JIT compilers, packet processors, custom NIC drivers) and cloud-native
+distributed systems on AWS, from serverless orchestration to AI/ML integration. I'm now available
+for senior, principal, and staff engineering roles.
 
 <div class="hire-cta">
   <a class="plain button" href="/downloads/cv.pdf">Download my CV (PDF)</a>
