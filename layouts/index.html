@@ -34,7 +34,7 @@
 {{ define "_partials/_inline/index.articles.html" }}
   {{- $section := .section -}}
   <ul class="posts">
-    {{ range first 4 (sort (where site.RegularPages "Section" $section) "Date" "desc") }}
+    {{ range first 10 (sort (where site.RegularPages "Section" $section) "Date" "desc") }}
       <li>
         <a href="{{ .RelPermalink }}" class="colored">
           {{ .Title }}
