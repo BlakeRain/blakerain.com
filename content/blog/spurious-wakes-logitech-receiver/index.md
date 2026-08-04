@@ -10,6 +10,8 @@ Since building this machine at the end of 2025, I've been having issues with it 
 which basically means it's spent it's entire life awake. Not great for the environment (or my
 electricity bill).
 
+<!--more-->
+
 I checked the logs, and it doesn't seem like there's a problem. The machine is just waking up again
 after about 10 seconds.
 
