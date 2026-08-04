@@ -17,7 +17,56 @@
         {{ end }}
       {{ end }}
     {{ end }}
-    {{ partial "pager" $pager }}
   </div>
+  <noscript id="articles-pager">
+    {{ partial "pager" $pager }}
+  </noscript>
+  {{ with $pager.Next }}
+    <div id="articles-list-sentinel" data-url="{{ .URL }}"></div>
+    <script>
+      (function() {
+        const outer     = document.querySelector(".articles-list");
+        const list      = document.querySelector(".articles-list > .items");
+        let   lastPager = document.getElementById("articles-pager");
+        let   sentinel  = document.getElementById("articles-list-sentinel");
+
+        const observer  = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const url  = sentinel.getAttribute("data-url");
+              const next = fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                const nextDoc = new DOMParser().parseFromString(html, "text/html");
+                const nextArticles = nextDoc.querySelectorAll(".articles-list > .items > article");
+                nextArticles.forEach(article => {
+                  list.appendChild(article);
+                });
+
+                observer.disconnect();
+                sentinel.remove();
+
+                const nextSentinel = nextDoc.querySelector("#articles-list-sentinel");
+                if (nextSentinel) {
+                  outer.appendChild(nextSentinel);
+                  observer.observe(nextSentinel);
+                  sentinel = nextSentinel;
+                }
+
+                lastPager.remove();
+                const nextPager = nextDoc.querySelector("#articles-pager");
+                if (nextPager) {
+                  outer.appendChild(nextPager);
+                  lastPager = nextPager;
+                }
+              });
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(sentinel);
+      })()
+    </script>
+  {{ end }}
 </main>
 {{ end }}
