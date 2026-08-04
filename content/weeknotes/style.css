@@ -1,3 +1,5 @@
+@import "./assets/css/media.css";
+
 /* Weeknotes component variables */
 :root {
   --weeknotes-title-text: var(--color-text);

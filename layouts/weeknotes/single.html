@@ -1,3 +1,6 @@
+{{ define "head" }}
+  {{ partial "page-css" . }}
+{{ end }}
 {{ define "main" }}
   <main class="page-main">
     {{ $parts := strings.Split (index (strings.Split .File.Dir "/") 1) "-" }}

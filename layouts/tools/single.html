@@ -1,13 +1,5 @@
 {{- define "head" -}}
-  {{- with .Resources.GetMatch "style.css" -}}
-    {{- $styles := . | css.PostCSS (dict "inlineImports" true "skipInlineImportsNotFound" true) -}}
-    {{- if hugo.IsProduction -}}
-      {{- $styles = $styles | minify | fingerprint | resources.PostProcess -}}
-    {{- else -}}
-      {{- $styles = $styles | fingerprint -}}
-    {{- end -}}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}">
-  {{- end -}}
+  {{- partial "page-css" . -}}
 {{- end -}}
 {{- define "main" -}}
   <main class="tool content">

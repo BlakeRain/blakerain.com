@@ -78,17 +78,17 @@ If you need to get in touch with me, you can either use
   <li>
     {{< ico vendor="bootstrap" name="envelope-at" >}}
     <span>Email</span>
-    {{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}
+    <div>{{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}</div>
   </li>
   <li>
     {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}}
     <span>Mastodon</span>
-    <a href="https://mastodonapp.uk/@BlakeRain">@BlakeRain@mastodonapp.uk</a>
+    <div><a href="https://mastodonapp.uk/@BlakeRain">@BlakeRain@mastodonapp.uk</a></div>
   </li>
   <li>
     {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}}
     <span>LinkedIn</span>
-    <a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a>
+    <div><a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a></div>
   </li>
 </ul>
 
