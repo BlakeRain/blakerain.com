@@ -64,6 +64,12 @@
         {{ end }}
       </div>
     {{ end }}
+    {{ with .Param "link" }}
+      <div class="content mx-auto link-source">
+        {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+        <span>Linked: <a href="{{ . }}" class="u-bookmark-of" target="_blank" rel="noopener noreferrer">{{ (urls.Parse .).Host }}</a></span>
+      </div>
+    {{ end }}
     <div class="content mx-auto markdown {{ if default false (.Param "numberedHeadings") }}numbered-headings{{ end }}">
       {{ .Content }}
     </div>

@@ -1,25 +1,17 @@
 <article>
-  {{ if isset .Params "link" }}
-    <h1>
-      {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
-      <a class="colored" href="{{ .Param "link" }}" target="_blank" rel="noopener noreferrer">
-        {{ .Title }}
-      </a>
-    </h1>
-  {{ else }}
-    <a class="colored" href="{{ .Permalink }}">
-      <h1>{{ .Title }}</h1>
-    </a>
-  {{ end }}
+  <a class="colored" href="{{ .Permalink }}">
+    <h1>{{ .Title }}</h1>
+  </a>
   <div class="meta">
     <div class="meta-row">
       <span>{{ .Date | time.Format "2 Jan 2006" }}</span>
       <span class="separator">&#8226;</span>
       <span>{{ .ReadingTime }} min read</span>
-      {{ if isset .Params "link" }}
+      {{ with .Param "link" }}
         <span class="separator">&#8226;</span>
-        <a href="{{ .Permalink }}" title="Link directly to this article" class="colored">
-          Self link
+        <a href="{{ . }}" title="External link for this post" class="colored" target="_blank" rel="noopener noreferrer">
+          {{ partial "icons/icon" (dict "vendor" "lucide" "name" "external-link") }}
+          {{ (urls.Parse .).Host }}
         </a>
       {{ end }}
       {{ if isset .Params "archive" }}
