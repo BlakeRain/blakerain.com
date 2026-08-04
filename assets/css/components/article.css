@@ -72,6 +72,12 @@
 
       > .markdown {
         margin-top: 1rem;
+
+        > .read-more {
+          margin-top: 0.5rem;
+          font-size: var(--text-sm);
+          text-transform: uppercase;
+        }
       }
     }
 

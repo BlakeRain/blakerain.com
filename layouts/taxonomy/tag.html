@@ -13,6 +13,11 @@
         {{ if .Summary }}
           {{ .Summary }}
         {{ end }}
+        {{ if or .Truncated (.Param "summary") }}
+          <p class="read-more">
+            <a class="colored" href="{{ .Permalink }}">Read more …</a>
+          </p>
+        {{ end }}
       {{ end }}
     {{ end }}
     {{ partial "pager" $pager }}
