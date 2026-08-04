@@ -26,6 +26,9 @@ Tidying up the site CSS a bit more after yesterday's refactoring.
   homepage uses this to load `_index.css` next to its `_index.md`).
 - Blog posts and individual weeknotes now also support an adjacent stylesheet, via a shared
   `page-css` partial used by all the single-page templates.
+- Added "infinite scrolling" to the blog list, so that you can keep scrolling down to see more
+  articles rather than having to use the pager. The pager is still there, wrapped in a `<noscript>`,
+  and is shown if the article loading fails.
 
 # 2026-08-03
 
