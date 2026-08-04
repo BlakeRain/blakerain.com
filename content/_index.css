@@ -73,7 +73,7 @@
     margin-bottom: 1rem;
     padding: 0.375rem 1rem;
 
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     font-weight: var(--weight-medium);
     color: var(--color-text-secondary);
     text-decoration: none;
@@ -112,6 +112,10 @@
         animation: hire-pulse 2s ease-out infinite;
       }
     }
+  }
+
+  > p + p {
+    margin-top: 1rem;
   }
 
   @media (prefers-reduced-motion: reduce) {

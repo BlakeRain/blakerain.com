@@ -12,6 +12,23 @@ sitemap:
 
 # 2026-08-04
 
+Tidying up the site CSS a bit more after yesterday's refactoring.
+
+- Slimmed down the site-wide `main.css` by moving page-specific styles out of it: the homepage,
+  [tools](/tools), and [weeknotes](/weeknotes) styles now live in per-page stylesheets, loaded via
+  the same mechanism as the about/hire pages. The gzipped global stylesheet is about 40% smaller
+  as a result.
+- Split the `@custom-media` breakpoint definitions out of `tokens.css` into a separate `media.css`,
+  so per-page stylesheets only inline the bits they actually need at build time, rather than a
+  full copy of the design tokens.
+- Renamed the per-page stylesheets from `style.css` to `index.css`, to match the `index.md` they
+  sit next to. The filename can be overridden per page with the `css` front matter parameter (the
+  homepage uses this to load `_index.css` next to its `_index.md`).
+- Blog posts and individual weeknotes now also support an adjacent stylesheet, via a shared
+  `page-css` partial used by all the single-page templates.
+
+# 2026-08-03
+
 A rather large batch of changes this time, mostly around hiring and merging the notes into the
 blog.
 

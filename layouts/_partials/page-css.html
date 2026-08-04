@@ -1,4 +1,4 @@
-{{- $cssName := default "style.css" .Params.css -}}
+{{- $cssName := default "index.css" .Params.css -}}
 {{- with .Resources.GetMatch $cssName -}}
   {{- $styles := . | css.PostCSS (dict "inlineImports" true "skipInlineImportsNotFound" true) -}}
   {{- if hugo.IsProduction -}}
