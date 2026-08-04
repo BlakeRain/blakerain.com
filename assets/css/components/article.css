@@ -95,6 +95,19 @@
     }
   }
 
+  > #articles-list-sentinel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4rem;
+
+    > .loading {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+    }
+  }
+
   &.related-articles {
     border-top: 1px dashed var(--color-meta);
     padding: 2rem 0;
