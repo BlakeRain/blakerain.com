@@ -10,6 +10,27 @@ sitemap:
   disable: true
 ---
 
+# 2026-08-04
+
+A rather large batch of changes this time, mostly around hiring and merging the notes into the
+blog.
+
+- Added a [hire me](/hire) page, with a proper HTML timeline of recent experience.
+- Added an "Available for hire" button to the homepage.
+- Per-page `style.css` resources are now compiled with PostCSS and fingerprinted in development as
+  well as production, fixing an intermittent issue where the raw file would sometimes be served
+  instead of the processed one. Not sure why this was happening, but it seems to be fixed now.
+- Moved the site-wide CSS into a cascade `@layer`, so page-level stylesheets (ported from tools)
+  always win over the base styles without any specificity wars.
+- Updated the [about](/about) page: refreshed the summary to cover additional work, added a couple
+  more experience bullets, and pointed readers at the hire page for the full timeline.
+- Merged the notes into the [blog](/blog) posts. I never wrote as many notes as I thought I would,
+  and the distinction between the two was starting to get vague. The notes now live alongside the
+  blog posts as titled page bundles, the note about the
+  [AI agent reliability paper](/blog/ai-agent-reliability) has been promoted to a full post, and
+  the homepage shows a single stream. No redirects, I'm afraid: I'm fairly certain nobody was
+  reading them anyway.
+
 # 2026-05-28
 
 - Changed the [tools](/tools) pages to use Hugo [page
@@ -28,7 +49,9 @@ sitemap:
 
 # 2026-02-24
 
-- Remove use of Tailwind CSS. This meant quite a [bit of work](https://git.blakerain.com/BlakeRain/blakerain.com/compare/before-tool-removal...v2.13.0), just to get the site to look the same as before 🫠
+- Remove use of Tailwind CSS. This meant quite a [bit of
+  work](https://git.blakerain.com/BlakeRain/blakerain.com/compare/before-tool-removal...v2.13.0),
+  just to get the site to look the same as before 🫠
 
 # 2026-02-23
 
