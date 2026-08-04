@@ -86,7 +86,7 @@ self-hosting. I'll have to see what this means for me.
 - Soatok has a good article on how [age verification doesn't need to be a privacy footgun].
 
 [for all users]: https://www.bbc.co.uk/news/articles/c1d67vdlk1ko
-[complained about this]: /notes/2026-02-12
+[complained about this]: /blog/discord-face-scan-or-id/
 [Teen by Default]: https://discord.com/press-releases/discord-launches-teen-by-default-settings-globally
 [Rocket.Chat]: https://www.rocket.chat/
 [Jitsi]: https://jitsi.github.io/handbook/docs/architecture/

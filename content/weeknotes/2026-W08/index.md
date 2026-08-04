@@ -47,7 +47,7 @@ IRCv3 features, and is built using the [iced] GUI framework, which is interestin
 
 Having a [Catppuccin] theme for Halloy is certainly a good way to get my interest 😏.
 
-[recent decision]: /notes/2026-02-12/
+[recent decision]: /blog/discord-face-scan-or-id/
 [Last week]: /weeknotes/2026-w07/
 [Rocket.Chat]: https://rocket.chat/
 [post]: https://social.treehouse.systems/@whitequark/116089585784234453

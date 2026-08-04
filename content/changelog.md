@@ -56,7 +56,7 @@ sitemap:
 
 - Added the first [weeknote](/weeknotes/2026-W07) to the site.
 - Various CSS and layout improvements.
-- Added optional archive links to [notes](/notes).
+- Added optional archive links to [notes](/blog).
 
 # 2026-02-07
 
@@ -88,7 +88,7 @@ sitemap:
 - Fixed the color of `<strong>` in markdown in dark mode.
 - Fixed various spelling mistakes.
 - Changed the RSS feed link in the footer to the new combined feed.
-- Added a combined feed for both blog posts and nosts.
+- Added a combined feed for both blog posts and notes.
 - Fixed heading width in blog and notes.
 
 # 2026-01-08
@@ -96,7 +96,7 @@ sitemap:
 - Migrated to [Hugo v0.154.0](https://github.com/gohugoio/hugo/releases/tag/v0.154.0). This mostly
   involved changing the `layouts` directory structure to the
   [new one](https://gohugo.io/templates/new-templatesystem-overview/).
-- Added [tags](/tags) to the [notes](/notes). I also changed the rendering of an individual note
+- Added [tags](/tags) to the [notes](/blog). I also changed the rendering of an individual note
   page to include some metadata: date, tags, and reading time. This brings the notes somewhat more
   in line with blog posts.
 - I updated the [OPML feed](/downloads/feeds.opml.xml) to include new feeds that I follow.
@@ -128,9 +128,9 @@ sitemap:
 
 - Added [An Almost Anonymous Blog](https://lwgrs.bearblog.dev/) to the [blogroll](/blogroll).
 - Added [Steph Ango](https://stephango.com/)'s site to the [blogroll](/blogroll).
-- [Notes](/notes) now render as individual pages, and the notes list now includes "self links" with
+- [Notes](/blog) now render as individual pages, and the notes list now includes "self links" with
   each note.
-- Added [Bitnami are shutting down their Docker images](2025-08-29.md) note.
+- Added [Bitnami are shutting down their Docker images](/blog/bitnami-shutting-down-docker-images/) note.
 
 # 2025-08-26
 
