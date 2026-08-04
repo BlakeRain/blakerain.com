@@ -28,7 +28,7 @@ paper] from Kapoor and Narayanan.
 [volume 69, no 1]: https://cacm.acm.org/issue/january-2026/
 [AISI]: https://www.aisi.gov.uk/
 [Understanding AI Trajectories]: https://www.aisi.gov.uk/blog/mapping-the-limitations-of-current-ai-systems
-[new paper]: /notes/2026-02-24/
+[new paper]: /blog/ai-agent-reliability/
 
 ## Paged Out! Issue #8
 

@@ -1,6 +1,5 @@
 ---
 title: Towards a Science of AI Agent Reliability
-link: https://www.normaltech.ai/p/new-paper-towards-a-science-of-ai
 date: 2026-02-24T21:39:00
 tags:
   - ai

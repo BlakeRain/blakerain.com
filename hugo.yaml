@@ -9,7 +9,6 @@ params:
 
 mainSections:
   - blog
-  - notes
   - weeknotes
 
 menus:
