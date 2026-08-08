@@ -33,6 +33,34 @@ sugar, and serving them with a bit of yoghurt and a sprinkle of cinnamon.
 
 [greengages]: https://en.wikipedia.org/wiki/Greengage
 
+# 📚 Reading
+
+I've been catching up with quite a lot of my reading the past few weeks, what with me having little
+in the way of a job.
+
+{{< book
+    url="https://bookshop.org/p/books/enshittification-why-everything-suddenly-got-worse-and-what-to-do-about-it-cory-doctorow/d3f8483b158906ce?ean=9780374619329"
+    cover="cover-enshittification.jpg"
+    title="Enshittification"
+    subtitle="Why Everything Suddenly Got Worse and What to Do About It"
+    author="Cory Doctorow"
+    year="2025"
+    rating=5 >}}
+Enshittification: It’s not just you—the internet sucks now. It’s been enshittified. That was no
+accident, and it’s not gonna fix itself. Here’s how we’ll disenshittify it so we can have a new,
+good internet.
+
+We are all living through the Enshittocene—the Great Enshittening—a time in which the services that
+matter to us, that we rely on, are being turned into giant piles of shit. It’s frustrating.
+Demoralizing. Even terrifying.
+{{< /book >}}
+
+I've finished off [Cory Doctorow]'s book [Enshittification].
+
+
+[Cory Doctorow]: https://craphound.com/
+[Enshittification]: https://bookshop.org/p/books/enshittification-why-everything-suddenly-got-worse-and-what-to-do-about-it-cory-doctorow/d3f8483b158906ce?ean=9780374619329
+
 # 🎶 New Music
 
 There've been a few great new music releases since the last weeknote My favourite has been [Dimmu
