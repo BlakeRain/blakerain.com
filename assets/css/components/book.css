@@ -5,6 +5,7 @@
   --book-link-text: var(--color-link);
   --book-link-text-hover: var(--color-link-hover);
   --book-meta-text: var(--color-meta);
+  --book-rating-gold: gold;
   --book-rating-text: var(--color-meta);
 
   @media (prefers-color-scheme: dark) {
@@ -118,6 +119,12 @@
 
       @media (--screen-sm) {
         display: none;
+      }
+    }
+
+    .book-rating, .book-rating-mobile {
+      > span:first-of-type {
+        color: var(--book-rating-gold);
       }
     }
   }

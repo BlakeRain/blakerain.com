@@ -14,7 +14,7 @@
       </a>
       {{ with .Get "rating" }}
         <div class="book-rating" title="Rating {{ . }}/5">
-          {{ strings.Repeat . "★" }}{{ strings.Repeat (sub 5 .) "☆" }}
+          <span>{{ strings.Repeat . "★" }}</span><span>{{ strings.Repeat (sub 5 .) "☆" }}</span>
         </div>
       {{ end }}
     </h3>
@@ -36,7 +36,7 @@
     </div>
     {{ with .Get "rating" }}
       <div class="book-rating-mobile" title="Rating {{ . }}/5">
-        {{ strings.Repeat . "★" }}{{ strings.Repeat (sub 5 .) "☆" }}
+        <span>{{ strings.Repeat . "★" }}</span><span>{{ strings.Repeat (sub 5 .) "☆" }}</span>
       </div>
     {{ end }}
   </div>
