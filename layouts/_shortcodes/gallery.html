@@ -10,13 +10,13 @@
   <div class="gallery-images">
     {{ range where $images "ResourceType" "image" }}
       {{ $caption := index $metadata.captions (path.BaseName .Name) }}
-      {{ $image   := .Process "resize 768x q90 webp" }}
+      {{ $image   := .Process "resize x700 q90 webp" }}
       {{ $link    := .RelPermalink }}
       {{ if reflect.IsMap $caption }}
         {{ $link    = index $caption "link" }}
         {{ $caption = index $caption "caption" }}
       {{ end }}
-      <div>
+      <div class="gallery-image-container">
         {{ if $link }}
           <a href="{{ $link }}" target="_blank" rel="noopener noreferrer">
         {{ end }}
