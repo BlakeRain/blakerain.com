@@ -152,6 +152,10 @@
         inset: 0;
         background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
       }
+
+      @media print {
+        display: none;
+      }
     }
 
     > .inner {
@@ -177,9 +181,17 @@
           width: 45rem;
         }
 
+        @media print {
+          margin: 0;
+        }
+
         &.with-cover {
           color: white;
           margin: 5rem 0.5rem;
+
+          @media print {
+            margin: 0;
+          }
         }
 
         &.with-subtitle {
@@ -193,6 +205,10 @@
         text-align: center;
         margin-top: 0;
         margin-bottom: 2.5rem;
+
+        @media print {
+          margin-bottom: 0;
+        }
 
         &.with-cover {
           color: #d4d4d4;
@@ -213,6 +229,10 @@
           &:hover {
             opacity: 1;
           }
+        }
+
+        @media print {
+          display: none;
         }
       }
     }
