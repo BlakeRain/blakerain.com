@@ -39,8 +39,8 @@ sugar, and serving them with a bit of yoghurt and a sprinkle of cinnamon.
 
 # 🎶 New Music
 
-There've been a few great new music releases since the last weeknote My favourite has been [Dimmu
-Bogir]'s new release: [Grand Serpent Rising].
+There've been a few great new music releases since the last weeknote. My favourite has been [Dimmu
+Borgir]'s new release: [Grand Serpent Rising].
 
 {{< bandcamp album="2783674493" url="https://dimmuborgir.bandcamp.com/album/grand-serpent-rising" >}}
 Grand Serpent Rising by Dimmu Borgir
@@ -56,23 +56,25 @@ envy?), which is a typical Electric Callboy album, with plenty of silly tracks i
 and metal. Whilst I'm not a huge fan of the pop music in general, the humour of Electric Callboy is
 quite enjoyable.
 
+Here's some other albums that I've purchased recently:
+
 - [IATT - Etheric Realms of the Night]
 - [A Dream of Poe - KATABASIS: A Marriage Among Ashes]
 - [Riverflame - Lunar Crusades]
 - [Galvanist - The Silence Between Stars]
 - [Eveale - Enter the Woodland Realm]
 
-There's also been a pre-release of two tracks of the upcoming [Insomnium - Netherwords] album.
+There's also been a pre-release of two tracks of the upcoming [Insomnium - Netherworlds] album.
 [Insomnium] are a Finnish melodic death metal band who are probably one of the best in the genre.
 I'd say that [Winters Gate] is probably their best album, with the other albums they've released
 orbiting closely. It'll be interesting to get my hands on the rest of _Netherworlds_ when it
-releases full on October 16th 2026.
+releases in full on October 16th 2026.
 
 {{< bandcamp album="4245152850" url="https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio" >}}
 Netherworlds (24-bit HD audio) by Insomnium
 {{< /bandcamp >}}
 
-[Dimmu Bogir]: https://dimmuborgir.bandcamp.com/
+[Dimmu Borgir]: https://dimmuborgir.bandcamp.com/
 [Grand Serpent Rising]: https://dimmuborgir.bandcamp.com/album/grand-serpent-rising
 [IATT - Etheric Realms of the Night]: https://iamthetrireme.bandcamp.com/album/etheric-realms-of-the-night
 [A Dream of Poe - KATABASIS: A Marriage Among Ashes]: https://dreamofpoe.bandcamp.com/album/katabasis-a-marriage-among-ashes
@@ -82,7 +84,7 @@ Netherworlds (24-bit HD audio) by Insomnium
 [Eveale - Enter the Woodland Realm]: https://eveale.bandcamp.com/album/enter-the-woodland-realm
 [Night is Calling]: https://dominum.bandcamp.com/album/night-is-calling
 [DOMINUM]: https://dominum.bandcamp.com/
-[Insomnium - Netherwords]: https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio
+[Insomnium - Netherworlds]: https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio
 [Winters Gate]: https://centurymedia.bandcamp.com/album/winters-gate
 [Electric Callboy]: https://electriccallboy.bandcamp.com/
 [TANZNEID]: https://centurymedia.bandcamp.com/album/tanzneid-24-bit-hd-audio
@@ -123,7 +125,7 @@ Here's three of the articles I've read this week:
     smartphones, then this framing may be appealing.
   - [Qwen 3.8 Max] was released this Monday, and [Artificial Analysis] are showing it having a score
     of 58 on their agentic intelligence index (at time of writing), leaving it at second place just
-    after Antrhopic's _Claude Opus 5 (max)_ at 59 and OpenAI's _GPT-5.6 Sol (max)_ also at 58 (note
+    after Anthropic's _Claude Opus 5 (max)_ at 59 and OpenAI's _GPT-5.6 Sol (max)_ also at 58 (note
     [there was a change] recently that moved Qwen down to second from first place).
 
     ![Qwen 3.8 Max](./Screenshot_20260809_102954.png)
@@ -144,7 +146,7 @@ Here's three of the articles I've read this week:
 
   The author, who seems to be an expert in strategy and marketing, does make a lot of very good
   points: the explanation of token fungibility and commodity markets was interesting. They also had
-  a take on the whole [distillation attacks](/blog/ai-for-adversarial-use) nonsense that I was note
+  a take on the whole [distillation attacks](/blog/ai-for-adversarial-use) nonsense that I was not
   expecting:
 
   > \[...\] here’s an even more interesting question around distillation: why exactly is it bad?
@@ -189,7 +191,7 @@ I have made _quite a lot_ of highlights and notes on the book, as it has a numbe
 ideas; some of which I agree with, and others that I do not.
 
 As an example of the former, in the chapter _The Funny Math Gets Dangerous_ (pp 69) Doctorow writes
-about programmers use of coding agents (highlights mine):
+about programmerse use of coding agents (highlights mine):
 
 > Programmers find spotting chatbot errors especially challenging. Remember, all the chatbot is
 > doing is making a statistical inference about which word it should place after the word it has
@@ -235,7 +237,7 @@ bit of context from the book (pp 185):
 
 Doctorow does present a compelling case that companies are very keen to ensure that we are kept
 entirely in the dark about their pricing strategies, and how that pricing might be varied depending
-on who is looking to but the company's products. I'd grant that he's not wrong here.
+on who is looking to buy the company's products. I'd grant that he's not wrong here.
 
 Next he goes on state that this presents a significant obstacle to agentic AI (pp 186):
 
@@ -344,15 +346,15 @@ where
 }
 ```
 
-Notice that there are two cases  where the message is dropped: if `self.session_manager` is `None`,
+Notice that there are two cases where the message is dropped: if `self.session_manager` is `None`,
 and if the weak handle in the `manager` field cannot be upgraded to a strong handle to the session
 manager. Both of these cases are logged: one as an error (no session manager handle), and the other
 as a warning (the weak handle cannot be upgraded).
 
 The desire to log these sort of edge cases is pretty much a _compulsion_ in software engineers.
 
-Ironically, giving the above code to Deep Seek v4 Pro for critique leads to the following
-critique and advice:
+Ironically, giving the offending example code to DeepSeek v4 Pro leads to the following critique
+and advice:
 
 > Currently a response whose id is not in `pending` is silently ignored. It’s often helpful to know
 > about such “stray” messages:
@@ -374,7 +376,7 @@ involves fallible operations like lookups in a `HashMap`. I think I could be con
 is even worse than something like [`fromJust`] in Haskell, as `if let` is _silently_ non-exhaustive:
 there's no explicit crash or panic in the way that there is with `fromJust`. I guess the closest
 might be a kind of silent short-circuit where `Nothing >>= \_ -> ...` evaluates to `Nothing` rather
-than evaluating the second argument. For other cases I guess [MonadFail] was a pretty important
+than evaluating the second argument. For other cases, I guess [MonadFail] was a pretty important
 proposal.
 
 I should probably write a [dylint] lint for `if let` without a matching `else`, just so I can make
@@ -385,3 +387,4 @@ sure I don't ever end up making the same mistake myself!
 [dylint]: https://github.com/trailofbits/dylint
 [`fromJust`]: https://hackage.haskell.org/package/base-4.17.0.0/docs/Data-Maybe.html#v:fromJust
 [MonadFail]: https://gitlab.haskell.org/haskell/prime/-/wikis/libraries/proposals/monad-fail
+
