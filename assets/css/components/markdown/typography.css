@@ -160,5 +160,10 @@ blockquote {
 mark {
   border-radius: var(--radius-sm);
   color: black;
-  background-color: rgba(255, 255, 0, 0.8);
+  background-color: rgba(255, 255, 0, 0.3);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-text);
+    background-color: rgba(255, 255, 0, 0.15);
+  }
 }
