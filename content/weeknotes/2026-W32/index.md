@@ -27,7 +27,7 @@ several years of Rust experience: [you can hire](/hire) me 😁
 
 [Cignpost]: https://cignpost.com/
 
-# 🍓 Greengages and Strawberries
+# 🍓 Greengages
 
 In more positive news, the [greengages] are now ripening on the tree in my garden, which is yielding
 a generous bowlful of fruit most evenings. I've been microwaving them with a little bit of water and
