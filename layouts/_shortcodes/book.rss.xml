@@ -1,0 +1,8 @@
+<p>
+  <a href="{{ .Get "url" }}"><strong>{{ .Get "title" }}</strong></a>
+  {{ with .Get "subtitle" }}<br><em>{{ . }}</em>{{ end }}<br>
+  {{ .Get "author" }}{{ with .Get "year" }} ({{ . }}){{ end }}{{ with .Get "pages" }} &middot; {{ . }}{{ end }}
+  {{ with .Get "rating" }}<br>Rating: {{ strings.Repeat . "★" }}{{ strings.Repeat (sub 5 .) "☆" }}{{ end }}
+</p>
+{{ .Inner | markdownify }}
+<p><a href="{{ .Get "url" }}">View book &rarr;</a></p>
