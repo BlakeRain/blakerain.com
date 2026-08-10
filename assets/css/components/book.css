@@ -4,12 +4,13 @@
   --book-card-bg: var(--color-surface-subtle);
   --book-link-text: var(--color-link);
   --book-link-text-hover: var(--color-link-hover);
-  --book-meta-text: var(--color-meta);
-  --book-rating-gold: gold;
+  --book-meta-text: var(--color-text-muted);
+  --book-rating-gold: #ab951f;
   --book-rating-text: var(--color-meta);
 
   @media (prefers-color-scheme: dark) {
     --book-card-bg: #262626;;
+    --book-rating-gold: #ffd700;
   }
 }
 

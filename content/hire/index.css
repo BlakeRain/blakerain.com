@@ -149,8 +149,7 @@
 
 .timeline-date {
   display: block;
-  /* font-size: var(--text-sm); */
-  color: var(--color-meta);
+  color: var(--color-text-muted);
 
   @media (--screen-md) {
     font-size: var(--text-lg);
@@ -194,7 +193,7 @@
     margin: 0.25rem 0 0;
     font-size: var(--text-lg);
     line-height: var(--leading-relaxed);
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
   }
 }
 
