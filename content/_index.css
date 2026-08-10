@@ -73,9 +73,9 @@
     margin-bottom: 1rem;
     padding: 0.375rem 1rem;
 
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: var(--weight-medium);
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     text-decoration: none;
 
     background-color: var(--color-surface-raised);
