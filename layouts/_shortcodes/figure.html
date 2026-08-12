@@ -12,31 +12,80 @@
 
   {{- $width := .Get "width" -}}
   {{- $height := .Get "height" -}}
+  {{- $schemed := .Get "schemed" -}}
+
+  {{- $spec := "q90 webp" -}}
+  {{- if (and $width $height) -}}
+    {{- $spec = printf "resize %dx%d %s" $width $height $spec -}}
+  {{- else if (and $width (not $height)) -}}
+    {{- $spec = printf "resize %dx %s" $width $spec -}}
+  {{- else if (and (not $width) $height) -}}
+    {{- $spec = printf "resize x%d %s" $height $spec -}}
+  {{- end -}}
+
+  {{- $lightSrc := "" -}}
+  {{- $darkSrc := "" -}}
 
   {{- if not $u.IsAbs -}}
-    {{- with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
-      {{- $spec := "q90 webp" -}}
-      {{- if (and $width $height) -}}
-        {{- $spec = printf "resize %dx%d %s" $width $height $spec -}}
-      {{- else if (and $width (not $height)) -}}
-        {{- $spec = printf "resize %dx %s" $width $spec -}}
-      {{- else if (and (not $width) $height) -}}
-        {{- $spec = printf "resize x%d %s" $height $spec -}}
+    {{- if $schemed }}
+      {{- if hasSuffix $u.Path ".svg" -}}
+        {{- $lightPath := printf "%s.light.svg" (strings.TrimSuffix ".svg" $u.Path) -}}
+        {{- $darkPath := printf "%s.dark.svg" (strings.TrimSuffix ".svg" $u.Path) -}}
+        {{ with or (.Page.Resources.Get $lightPath) (resources.Get $lightPath) -}}
+          {{- $lightSrc = .RelPermalink -}}
+        {{- end -}}
+        {{ with or (.Page.Resources.Get $darkPath) (resources.Get $darkPath) -}}
+          {{- $darkSrc = .RelPermalink -}}
+        {{- end -}}
+      {{- else -}}
+        {{- $suffix := $u.Path | path.Ext -}}
+        {{- $lightPath := printf "%s.light.%s" (string.TrimSuffix $suffix $u.Path) $suffix -}}
+        {{- with or (.Page.Resources.Get $lightPath) (resources.Get $lightPath) -}}
+          {{- $lightImage := .Process $spec -}}
+          {{- $lightSrc = $lightImage.Permalink -}}
+        {{- end -}}
+        {{- $darkPath := printf "%s.dark.%s" (strings.TrimSuffix $suffix $u.Path) $suffix -}}
+        {{- with or (.Page.Resources.Get $darkPath) (resources.Get $darkPath) -}}
+          {{- $darkImage := .Process $spec -}}
+          {{- $darkSrc = $darkImage.Permalink -}}
+        {{- end -}}
       {{- end -}}
-      {{- $image := .Process $spec -}}
-      {{- $src = $image.Permalink -}}
+
+      {{- if eq $schemed "dark" -}}
+        {{- $src = $darkSrc -}}
+      {{- else -}}
+        {{- $src = $lightSrc -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if hasSuffix $u.Path ".svg" -}}
+      {{ with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
+        {{- $src = .RelPermalink -}}
+      {{- end -}}
+    {{- else -}}
+      {{- with or (.Page.Resources.Get $u.Path) (resources.Get $u.Path) -}}
+        {{- $image := .Process $spec -}}
+        {{- $src = $image.Permalink -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
-
-  <img src="{{ $src }}"
-    {{- if or (.Get "alt") (.Get "caption") }}
-    alt="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify| plainify }}{{ end }}"
+  <picture>
+    {{- if .Get "schemed" -}}
+      <source srcset="{{ $lightSrc }}" media="(prefers-color-scheme: light)">
+      <source srcset="{{ $darkSrc }}" media="(prefers-color-scheme: dark)">
     {{- end -}}
-    {{- with .Get "width" }} width="{{ . }}"{{ end -}}
-    {{- with .Get "height" }} height="{{ . }}"{{ end -}}
-    {{- with .Get "loading" }} loading="{{ . }}"{{ end -}}
-  ><!-- Closing img tag -->
+
+    <img src="{{ $src }}"
+      {{- if or (.Get "alt") (.Get "caption") }}
+      alt="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify | plainify }}{{ end }}"
+      {{- end -}}
+      {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+      {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+      {{- with .Get "loading" }} loading="{{ . }}"{{ end -}}
+    ><!-- Closing img tag -->
+  </picture>
+
   {{- if or (.Get "link") (.Get "enlarge") }}</a>{{ end -}}
   {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") -}}
     <figcaption>
