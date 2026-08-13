@@ -25,9 +25,10 @@ pub trait Writable {
 
 # Normal Recursive Storage
 
-Normally we'd store our graph by walking the graph, and for each node, writing out the node's
-payload followed by the node's children. Each node would write out the number of children in the
-node, followed by that many children. Such a recursive function might look something like this:
+Normally --- if we were sane people --- we would store our graph by walking over each node, writing
+out the node's value followed by the children. Each serialised node would include the number of
+children, followed by the data for those children. Such a recursive function might look something
+like this:
 
 ```rust
 impl<K, V> Node<K, V>
@@ -49,23 +50,21 @@ where
 }
 ```
 
-This storage scheme recursively visits each node in the tree, storing it's value and then it's
-children. This has the effect of making us jump all the way down the leaves of our test tree: from
-`A` to `B`, to `D` and finally to `F`, then work our way along from `F` to `G` to `H`, and finally
-back up the tree, finishing off with `E` and then finally `C`. The path we take through the tree can
-be visualised as follows:
+This recursive approach has the effect of making us jump all the way down the leaves of our test
+tree: from `A` to `B`, to `D` and finally to `F`, then work our way along from `F` to `G` to `H`,
+and finally back up the tree, finishing off with `E` and then finally `C`. The path we take through
+the tree can be visualised as follows:
 
 {{< figure
     schemed="true"
     src="diagrams/recursive-storage.svg"
     caption="Recursive walk through our sample graph" >}}
 
-The green arrows represent visit a node: calling the `write()` method, and the red arrows represent
-returning from that function call to the parent node.
+The green arrows represents visiting a child node by calling the `write()` method, and the red
+arrows represent returning from that function call to the parent node.
 
-
-This approach stores our little test tree in a block of 47 bytes, with the following rather
-straightforward contents:
+Storing data this way, our little test tree encodes into a block of 47 bytes, with the following
+rather straightforward contents:
 
 ```
 Length: 47 (0x2f) bytes
