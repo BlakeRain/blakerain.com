@@ -9,14 +9,12 @@ tags:
 
 I've been self-hosting my own [Forgejo](https://forgejo.org/) instance for a while now. It all
 started with self-hosting a [Gitea](https://about.gitea.com/) that I ran on the server in my home
-network, which eventually grew in size, and eventually had to be moved to a dedicated server. I
-switched this over from Gitea to Forgejo in August last year.
+network, which eventually grew in size, and with a few extra users, had to be moved to a dedicated
+server. I switched this over from Gitea to Forgejo in August last year.
 
-Everything has been going more-or-less quite well, apart from the fact that the backups for Forgejo
-have been getting excessive. During a recent audit of my backups, I found that one backup process
-was taking up to 20 minutes to complete. Checking the logs I found that it was spending a lot of
-time processing changes to the storage of a number of containers, the most surprising of which was
-my Forgejo instance.
+During a recent audit of my backups, I found that one backup process was taking up to 20 minutes to
+complete. Checking the logs I found that it was spending a lot of time processing changes to the
+storage of a number of containers, the most surprising of which was my Forgejo instance.
 
 This was surprising, as it's mostly just me on this instance, and a few mirrors that update
 infrequently. My first instinct was that the culprit was my _mirrors_ organisation: a private
@@ -24,7 +22,7 @@ organisation on my Forgejo instance where I have a number of [repository mirrors
 existing FOSS repositories on GitHub. This mostly exists so I have a closer-to-home snapshot of a
 repository, and don't have to deal with GitHub's tiresome rate-limiting and downtime.
 
-After a bit of digging I found that, rather than the `mirrors` organisation being the culprit, 60
+After a bit of digging I found that, rather than the _mirrors_ organisation being the culprit, 60
 GB of the 98 GB of storage used by the Forgejo instance was in the `/gitea/repo-archive` directory.
 
 In the configuration for Forgejo, I had the `cron.archive_cleanup` task active and running at
