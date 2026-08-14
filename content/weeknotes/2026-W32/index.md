@@ -52,8 +52,8 @@ featuring [Battle Beast](https://battlebeastband.bandcamp.com/), who add a great
 component to the track.
 
 Even more recently --- this Friday, in fact --- [Electric Callboy] released [TANZNEID] (dance
-envy?), which is a typical Electric Callboy album, with plenty of silly tracks in a mix of pop music
-and metal. Whilst I'm not a huge fan of the pop music in general, the humour of Electric Callboy is
+envy?), which is a typical Electric Callboy album: plenty of silly tracks in a mix of pop music and
+metal. Whilst I'm not a huge fan of the pop music in general, the humour of Electric Callboy is
 quite enjoyable.
 
 Here's some other albums that I've purchased recently:
@@ -84,6 +84,7 @@ Netherworlds (24-bit HD audio) by Insomnium
 [Eveale - Enter the Woodland Realm]: https://eveale.bandcamp.com/album/enter-the-woodland-realm
 [Night is Calling]: https://dominum.bandcamp.com/album/night-is-calling
 [DOMINUM]: https://dominum.bandcamp.com/
+[Insomnium]: https://www.insomnium.net/
 [Insomnium - Netherworlds]: https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio
 [Winters Gate]: https://centurymedia.bandcamp.com/album/winters-gate
 [Electric Callboy]: https://electriccallboy.bandcamp.com/
@@ -113,7 +114,7 @@ Here's three of the articles I've read this week:
     is the exception, not the norm._"
   - "_It has become outright dangerous to even raise the possibility that AI might not be the
     solution to a problem, let alone be the sole focus of a company’s entire strategy._"
-  - "_\[...\] accept that you are probably not going to meaningfully push back on any of this. This
+  - "_[...] accept that you are probably not going to meaningfully push back on any of this. This
     is not a feature of AI, it’s a feature of dysfunctional companies._"
 - [China's Mythos Moment] --- describes ChinaTalk's theories on what might happen when a Chinese
   company develops an LLM that is on-par with Anthropic's _Claude Mythos_ model. Whilst we might
@@ -141,7 +142,7 @@ Here's three of the articles I've read this week:
   - "_I highly doubt that Chinese models are cheaper to serve on a marginal cost basis, they just
     seem cheaper because Anthropic and OpenAI are so supply constrained that they are charging far
     more than they would if there were sufficient supply to meet the demand for intelligence._"
-  - "_\[...\] the agent paradigm unlock is so massive that frontier labs should have more confidence
+  - "_[...] the agent paradigm unlock is so massive that frontier labs should have more confidence
     that they can not just survive but thrive with lower prices_"
 
   The author, who seems to be an expert in strategy and marketing, does make a lot of very good
@@ -149,7 +150,7 @@ Here's three of the articles I've read this week:
   a take on the whole [distillation attacks](/blog/ai-for-adversarial-use) nonsense that I was not
   expecting:
 
-  > \[...\] here’s an even more interesting question around distillation: why exactly is it bad?
+  > [...] here’s an even more interesting question around distillation: why exactly is it bad?
     After all, what are large language models but the distillation of all of the knowledge on the
     open Internet, scraped by the frontier labs and distilled into the models that are themselves
     being distilled? Who is exactly being wronged here?
@@ -200,7 +201,7 @@ about programmerse use of coding agents (highlights mine):
 > errors --- they make <mark>the kind of coding errors that are maximally difficult for a human
 > being to spot</mark>.
 >
-> \[...\] <mark>The only line of defence here is the programmer, who has to spot these incredibly
+> [...] <mark>The only line of defence here is the programmer, who has to spot these incredibly
 > subtle errors in automatically generated code</mark> that can be produced in volumes that dwarf
 > the output of hundreds or thousands of junior coders. If the human in the loop misses one of these
 > errors it's their fault, not the fault of the chatbot or the boss who bought the chatbot.
@@ -209,8 +210,8 @@ Whilst the phrase "_all the chatbot is doing is making a statistical inference_"
 heavy lifting, this does generally reflect much of my position on LLMs for code generation: when we
 say that LLMs are good at generating code, perhaps what we really mean is that they're good at
 convincing software engineers that the code they generate is sufficient. That is, the code has the
-_appearance_ of being correct, possibly even being _functional_, without actually being either
-correct. I'm sure this deception could extend to benchmarks and their results.
+_appearance_ of being correct, possibly even being _functional_, without actually being correct. I'm
+sure this deception could extend to benchmarks and their results.
 
 This also reminds me of an [interview](https://www.youtube.com/watch?v=YPObBOwIrHk) with [Michael
 Stonebraker], which I think is a good example of a subject matter expert being unconvinced by the
@@ -230,10 +231,10 @@ bit of context from the book (pp 185):
 > Surveillance pricing is one example of how firms use "information asymmetries" to rig prices to
 > the detriment of customers and workers.
 >
-> \[...\] Not only do companies use junk fees and individualised pricing to prevent comparisons and
+> [...] Not only do companies use junk fees and individualised pricing to prevent comparisons and
 > analysis, they also employ engineers who design and maintain elaborate anti-scraping measures.
 > They also sue and threaten people and companies who figure out how to scrape and analyse the data
-> they publish about their prices and offerings \[...\]
+> they publish about their prices and offerings [...]
 
 Doctorow does present a compelling case that companies are very keen to ensure that we are kept
 entirely in the dark about their pricing strategies, and how that pricing might be varied depending
@@ -254,7 +255,7 @@ comparisons.
 
 I don't think this is true: I think that the companies that are selling the notion that agentic AI
 is some useful future will be more than happy to work with predatory companies to ensure that there
-remain sufficient obfuscation of details like prices and terms. After all, for "agentic AI" to
+remains sufficient obfuscation of details like prices and terms. After all, for "agentic AI" to
 succeed, it will likely require cooperation from a large number of organisations. Indeed, several of
 the organisations that are pointed out by Doctorow as being the worst offenders of surveillance
 pricing — Amazon, Uber, etc — are the same companies that are themselves pushing the AI hype.
