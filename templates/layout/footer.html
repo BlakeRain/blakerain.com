@@ -1,0 +1,39 @@
+{% from "macros/social-links.html" import social_links %}
+<footer class="site-footer">
+  <div class="content mx-auto">
+    <div class="left">
+      <a href="/copyright" class="site-footer-link">
+        Copyright &copy; {{ env.today | date(format="[year]") }} Blake Rain
+      </a>
+      <div class="break"></div>
+      <a href="/about/">About Me</a>
+      <a href="/blog/">Blog</a>
+      <a href="/disclaimer/">Disclaimer</a>
+      <a href="/uses/">Uses</a>
+    </div>
+    <div class="right">
+      <a href="/index.xml">RSS</a>
+      <a href="/tags/">Tags</a>
+      <a href="/blogroll/">Blogroll</a>
+      <a href="/changelog/">Changelog</a>
+      <div class="break"></div>
+      {{ social_links(mode="text", wrap=false) }}
+      <a
+        href="https://status.blacktreenetworks.com/"
+        title="Service status"
+        target="_blank"
+        rel="noreferrer">
+        Status
+      </a>
+    </div>
+  </div>
+  {%- if env.profile == "development" %}
+    <div class="site-footer-breakpoints">
+      <div class="sm">sm</div>
+      <div class="md">md</div>
+      <div class="lg">lg</div>
+      <div class="xl">xl</div>
+      <div class="2xl">2xl</div>
+    </div>
+  {%- endif %}
+</footer>

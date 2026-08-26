@@ -1,0 +1,34 @@
+{% macro figure(src, class=none, href=none, target=none, rel=none, enlarge=false, caption=none, alt=none, width=none, height=none) %}
+<figure{% if class is string %} class="{{ class }}"{% endif %}>
+  {% if href %}
+    <a href="{{ href }}"
+      {%- if target %} target="{{ target }}"{% endif %}
+      {%- if rel %} rel="{{ rel }}"{% endif %}>
+  {% elif enlarge %}
+    <a href="{{ src }}" target="_blank" rel="noopener noreferrer">
+  {% endif %}
+  {%- set spec = "q75" %}
+  {%- if width is number and height is number %}
+  {%-   set spec = spec ~ " w" ~ width ~ " h" ~ height %}
+  {%- elif width is number %}
+  {%-   set spec = spec ~ " w" ~ width %}
+  {%- elif height is number %}
+  {%-   set spec = spec ~ " h" ~ height %}
+  {%- endif %}
+  {%- set image = image_process(src, spec) %}
+  <img src="{{ image.path }}"
+    {%- if alt %} alt="{{ alt }}"
+    {%- elif caption %} alt="{{ caption }}"{% endif %}
+    {%- if width is number %} width="{{ width }}"{% endif %}
+    {%- if height is number %} height="{{ height }}"{% endif %}>
+  {%- if href or enlarge %}</a>{% endif %}
+  {%- if caption %}
+    <figcaption>
+      <p>{{ caption }}</p>
+      {%- if enlarge %}
+        <div class="italic">(click image to enlarge)</div>
+      {%- endif %}
+    </figcaption>
+  {%- endif %}
+</figure>
+{% endmacro %}

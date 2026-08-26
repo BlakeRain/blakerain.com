@@ -97,6 +97,7 @@ fn main() -> anyhow::Result<()> {
             env => minijinja::context! {
                 now => OffsetDateTime::now_utc(),
                 today => OffsetDateTime::now_utc().date(),
+                profile => env!("CARGO_PROFILE"),
             },
             site,
         })

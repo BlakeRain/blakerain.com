@@ -1,0 +1,10 @@
+{%- macro gallery(src, caption=none) %}
+{%- set metadata = load_data("content/" ~ page.base ~ "/" ~ src ~ "/gallery.yaml") %}
+<figure class="gallery">
+  {%- if caption %}
+    <figcaption>{{ caption }}</figcaption>
+  {%- endif %}
+  <div class="gallery-images">
+  </div>
+</figure>
+{%- endmacro %}

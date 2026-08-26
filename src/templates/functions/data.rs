@@ -6,7 +6,7 @@ use minijinja::{Error, ErrorKind, Value};
 use crate::parsing::{toml::parse_toml, yaml::parse_yaml};
 
 pub fn load_data(path: &str) -> Result<Value, Error> {
-    let path = PathBuf::from("data").join(path);
+    let path = PathBuf::from(path);
 
     if !path.is_file() {
         return Err(Error::new(
