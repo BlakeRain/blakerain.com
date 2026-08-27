@@ -30,7 +30,8 @@ midnight. [This task] cleans up the repository archives that are older than a gi
 which currently defaults to 24 hours. According to the administration interface, this task had run
 recently (in the past 10 hours):
 
-{{< figure src="forgejo-archive-cleanup-task.png" title="The archive clean-up task record in the Forgejo administration interface" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("forgejo-archive-cleanup-task.png", caption="The archive clean-up task record in the Forgejo administration interface") }}
 
 Surely that wasn't so much activity on my Forgejo instance that there was nearly 60 GB of archives
 created in the last 24 hours? I ran the _Delete all repositories' archives_ maintenance operation,
@@ -67,7 +68,7 @@ website or application and uses one or more challenges to protect the upstream r
 scrapers and bots. I think this is by a [Proof of Work] challenge that must be solved by the scraper
 before it can access the resource.
 
-{{< figure src="anubis-reject.png" title="Anubis rejecting a request" >}}
+{% from "macros/figure.html" import figure %}
 
 Whilst I'd heard from [Codeberg] that [bots are solving Anubis challenges], I wasn't sure whether
 the latest version of Anubis had overcome this problem. Either way, I wanted to try it out.
@@ -198,7 +199,7 @@ lengthy regular expression against the user agent string.
 Visiting `git.blakerain.com` in the browser very briefly shows the Anubis challenge before loading
 the Forgejo instance.
 
-{{< figure src="anubis-screenshot.png" title="Anubis offering a challenge to the browser" >}}
+{{ figure("anubis-screenshot.png", caption="Anubis offering a challenge to the browser") }}
 
 # Conclusion
 

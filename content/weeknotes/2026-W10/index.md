@@ -40,7 +40,8 @@ the M1 laptop that I still use when not at my desk.
 Ruben's purchase of a new ThinkPad got me thinking about possibly changing out the M1 MacBook for
 something more suitable for running Linux. Would a ThinkPad be a good candidate?
 
-{{< figure src="lenovo-laptops.png" width=568 enlarge=true title="Lenovo ThinkPad E14 Gen 7 Laptops" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("lenovo-laptops.png", width=568, enlarge=true, caption="Lenovo ThinkPad E14 Gen 7 Laptops") }}
 
 This is difficult for me: I really do like the MacBook -- it's build and design are pleasant, and
 the ~20 hour battery life is fantastic.
@@ -63,7 +64,7 @@ I was unreasonably exciting to try out the new release, which now adds annotatio
 can now add a comment along with a highlight, which is _very_ useful, as I often look back at
 highlights and wonder what I was thinking about when I made them.
 
-{{< figure src="adding-notes-to-highlights.png" width=515 enlarge=true title="Adding a note to a highlight in Readeck" >}}
+{{ figure("adding-notes-to-highlights.png", width=515, enlarge=true, caption="Adding a note to a highlight in Readeck") }}
 
 > [!TIP]
 > I also discovered, quite by accident, that I can edit the note for a highlight by
@@ -72,12 +73,12 @@ highlights and wonder what I was thinking about when I made them.
 This new feature in Readeck prompted me to update my tool that exports highlights from Readeck to
 [Obsidian] to include any notes that I've added to the highlights.
 
-{{< figure src="notes-exported-to-obsidian.png" width=678 enlarge=true title="Notes exported with highlights into Obsidian" >}}
+{{ figure("notes-exported-to-obsidian.png", width=678, enlarge=true, caption="Notes exported with highlights into Obsidian") }}
 
 I was very excited about this, as it means I can include notes and links to other notes, just like I
 do with Zotero.
 
-{{< figure src="notes-from-zotero-example.png" width=669 enlarge=true title="An example of a highlight and note from Zotero with a link to a different page in Obsidian" >}}
+{{ figure("notes-from-zotero-example.png", width=669, enlarge=true, caption="An example of a highlight and note from Zotero with a link to a different page in Obsidian") }}
 
 # 🤖 OpenCode, OpenRouter and Kimi K2.5
 
@@ -95,7 +96,7 @@ includes applications that they don't "feature" on the main list of applications
 discover that, for [OpenCode], the [second-most popular model] is actually [Kimi K2.5], with 156B of
 the 1.31T total tokens (at the time of taking this screenshot).
 
-{{< figure src="opencode-kimi-k2.png" width=500 enlarge=true title="Top models used on OpenRouter with OpenCode" >}}
+{{ figure("opencode-kimi-k2.png", width=500, enlarge=true, caption="Top models used on OpenRouter with OpenCode") }}
 
 I thought this was quite interesting, as I really assumed that the top models would be all Claude
 variants, just like it is for [Claude Code]. Also, whilst OpenCode ranks #5 in terms of tokens

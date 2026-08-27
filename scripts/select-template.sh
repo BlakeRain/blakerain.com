@@ -12,7 +12,7 @@ fi
 
 DIR=$(dirname "$STEM")
 while true; do
-  if [ "$DIR" = "/" ]; then
+  if [ "$DIR" = "." ]; then
     CANDIDATE="templates/page.html"
   else
     CANDIDATE="templates/$DIR/page.html"

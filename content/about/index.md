@@ -71,22 +71,21 @@ For a full career timeline and selected highlights, see my [hire page](/hire).
 # Getting in touch { .no-outline }
 
 If you need to get in touch with me, you can either use
-{{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="email" >}} or DM me on
-[Mastodon].
+<a href="mailto:blake.rain@blakerain.com">email</a> or DM me on [Mastodon].
 
 <ul class="contact">
   <li>
-    {{< ico vendor="bootstrap" name="envelope-at" >}}
+    {{ icon("bootstrap", "envelope-at") }}
     <span>Email</span>
-    <div>{{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}</div>
+    <div><a href="mailto:blake.rain@blakerain.com">blake.rain@blakerain.com</a></div>
   </li>
   <li>
-    {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}}
+    {{ icon("bootstrap", "mastodon", color="#6364FF") }}
     <span>Mastodon</span>
     <div><a href="https://mastodonapp.uk/@BlakeRain">@BlakeRain@mastodonapp.uk</a></div>
   </li>
   <li>
-    {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}}
+    {{ icon("bootstrap", "linkedin", color="#0A66C2") }}
     <span>LinkedIn</span>
     <div><a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a></div>
   </li>
@@ -96,7 +95,6 @@ If you need to get in touch with me, you can either use
 
 If you need to send me something securely, you can use my public key below.
 
-{{< summary title="Click to show public key" >}}
 ```plain
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -112,7 +110,6 @@ r+psAQDlTzxKprXj0WMJBTjIYIyqIWLRF61OKjMgLLIVBqHVCQ==
 =J8Ej
 -----END PGP PUBLIC KEY BLOCK-----
 ```
-{{</summary>}}
 
 # Colophon { .no-outline }
 

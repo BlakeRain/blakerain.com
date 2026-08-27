@@ -177,27 +177,27 @@ code on GitHub and my self-hosted Forgejo instance.
 
 <ul class="contact">
   <li>
-    {{< ico vendor="bootstrap" name="envelope-at" >}}
+    {{ icon("bootstrap", "envelope-at") }}
     <span>Email</span>
-    <div>{{< encode-link protocol="mailto" target="blake.rain@blakerain.com" text="blake.rain@blakerain.com" >}}</div>
+    <div><a href="mailto:blake.rain@blakerain.com">blake.rain@blakerain.com</a></div>
   </li>
   <li>
-    {{< ico vendor="bootstrap" name="linkedin" color="#0A66C2" >}}
+    {{ icon("bootstrap", "linkedin", color="#0A66C2") }}
     <span>LinkedIn</span>
     <div><a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a></div>
   </li>
   <li>
-    {{< ico vendor="bootstrap" name="mastodon" color="#6364FF" >}}
+    {{ icon("bootstrap", "mastodon", color="#6364FF") }}
     <span>Mastodon</span>
     <div><a href="https://mastodonapp.uk/@BlakeRain">@BlakeRain@mastodonapp.uk</a></div>
   </li>
   <li>
-    {{< ico vendor="bootstrap" name="github" >}}
+    {{ icon("bootstrap", "github") }}
     <span>GitHub</span>
     <div><a href="https://github.com/BlakeRain">github.com/BlakeRain</a></div>
   </li>
   <li class="forgejo">
-    {{< ico vendor="simple-icons" name="forgejo" >}}
+    {{ icon("simple-icons", "forgejo") }}
     <span>Forgejo</span>
     <div><a href="https://git.blakerain.com/BlakeRain/">git.blakerain.com/BlakeRain</a></div>
   </li>

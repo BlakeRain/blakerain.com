@@ -30,9 +30,10 @@ I've added a number of articles to my favourites, some of which I've linked to b
 I've been acquiring new music again: two rounds since the last weeknote. The first round was mostly
 albums I'd found from [AMG].
 
-{{< bandcamp album="2172412752" url="https://uniqueleaderrecords.bandcamp.com/album/a-hill-to-die-upon" >}}
+{% from "macros/bandcamp.html" import bandcamp %}
+{% call bandcamp("2172412752", "https://uniqueleaderrecords.bandcamp.com/album/a-hill-to-die-upon") %}
 A Hill to Die Upon by Mental Cruelty
-{{< /bandcamp >}}
+{% endcall %}
 
 - [Wolves in the Throne Room - Crypt of Ancestral Knowledge] --- The first album I've heard from
   Wolves in the Throne Room. This is really great atmospheric black metal. I'm going to have to
@@ -59,9 +60,9 @@ A Hill to Die Upon by Mental Cruelty
 
 The second round of new music was catching up on releases from some favourite artists.
 
-{{< bandcamp album="1601153370" url="https://gealdyr.bandcamp.com/album/v-gr-r" >}}
+{% call bandcamp("1601153370", "https://gealdyr.bandcamp.com/album/v-gr-r") %}
 Vígríðr by Gealdýr
-{{< /bandcamp >}}
+{% endcall %}
 
 - [Gealdýr - Vígríðr] --- I've been a fan of Gealdýr for a couple of years now, so I was very keen to get
   ahold of this album. It is such peaceful and beautiful music. This guys vocals are amazing.
@@ -114,7 +115,8 @@ print on both sides of the paper at the same time saves me a lot of time faffing
 get the right side of the paper. I hadn't realised quite how upset I was every time I tried to get
 the second side print set up.
 
-{{< gallery src="printer" >}}
+{% from "macros/gallery.html" import gallery %}
+{{ gallery("printer") }}
 
 The printer lives on it's own little table next to my desk. I've configured the printer to connect
 over SFTP to one of my NAS devices, so I can scan directly to a network share. The sheet feeder has
@@ -129,7 +131,8 @@ up over the years.
 The garden has really come into bloom the past few weeks, especially the wonderful Wisteria that
 stretches over the fence on one side of the garden, planted by the previous owner.
 
-{{< figure src="wisteria.jpg" enlarge=true width=1000 title="Wisteria blooming over the fence" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("wisteria.jpg", enlarge=true, width=1000, caption="Wisteria blooming over the fence") }}
 
 I've bought a couple of new pieces of garden furniture: a sort-of armchair, a small side table, and
 a sun lounger. I've always wanted to be able to lie on a sun lounger in the sunshine, and it's
@@ -143,7 +146,7 @@ FX]. I've been eagerly following Binbun's work since I learned about their [Impa
 
 Look at these awesome effects!
 
-{{< gallery src="binbun" >}}
+{{ gallery("binbun") }}
 
 [binbun]: https://binbun3d.itch.io/
 [Explosion FX]: https://binbun3d.itch.io/explosion-fx
@@ -159,7 +162,7 @@ subscription is potentially subsidising significant cost is interesting. On of m
 post [on Reddit] showing a $39 subscription to GitHub Copilot would have cost them $5,815.77 if
 billed on a per-token basis.
 
-{{< figure src="github-copilot-extreme-cost.jpg" enlarge=true width=800 title="A developer on Reddit shared their usage-based billing on Reddit" >}}
+{{ figure("github-copilot-extreme-cost.jpg", enlarge=true, width=800, caption="A developer on Reddit shared their usage-based billing on Reddit") }}
 
 I've not really understood the draw to these subscriptions. Paying a subscription to be locked into
 only using Claude in ClaudeCode with aggressive rate-limits? No thanks. I'm not that keen on using

@@ -18,7 +18,8 @@ as a caching (non-authoritative) DNS server. After having run with this for a co
 decided that I wanted to try implementing something similar to a [PiHole] to block domains used for
 ads and other nefarious content.
 
-{{< figure src="firefox-error.png" title="Blocked domains no longer resolve, which is lovely." >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("firefox-error.png", caption="Blocked domains no longer resolve, which is lovely.") }}
 
 # Sourcing a List of Domains
 
@@ -194,7 +195,7 @@ and thankfully Firefox still lets you [configure DoH]. To make sure that Firefox
 local DNS server I disabled DNS over HTTPS in Firefox settings (found at the bottom of the _Privacy
 and Security_ page in Firefox settings).
 
-{{< figure src="firefox-dns-over-https.png" title="Disabling DNS over HTTPS in Firefox." >}}
+{{ figure("firefox-dns-over-https.png", caption="Disabling DNS over HTTPS in Firefox.") }}
 
 > [!TIP]
 > Mozilla have a rather good
@@ -356,7 +357,8 @@ and then restart Unbound.
 
 I've included the source for the `gen-adblock.sh` script in the following paste:
 
-{{< cement code="rassyneery" >}}
+{% from "macros/cement.html" import cement %}
+{{ cement("rassyneery") }}
 
 [previous post]: /blog/raspberrypi-openbsd-firewall/
 [OpenBSD]: https://www.openbsd.org/

@@ -28,7 +28,8 @@ eBay and [World of Books]. So far I've managed to find some good deals, some goi
 a Blu-ray. Buying Blu-rays new, with some of them costing nearly £20, is still too expensive. So
 I'll be scraping the second-hand market for the foreseeable future.
 
-{{< figure src="discs-on-the-table.jpg" width=800 title="Some Blu-rays and DVDs on my kitchen table" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("discs-on-the-table.jpg", width=800, caption="Some Blu-rays and DVDs on my kitchen table") }}
 
 Whilst replacing the films has gone quite well so far, some of the TV shows are proving much harder
 or more expensive to replace. For example, the [Trollhunters: Tales of Arcadia] DVD seen above was

@@ -1,0 +1,7 @@
+{% if kind is string -%}
+<aside class="callout {{ kind }}">
+  {{ content | safe }}
+</aside>
+{%- else -%}
+<blockquote>{{ content | safe }}</blockquote>
+{%- endif %}

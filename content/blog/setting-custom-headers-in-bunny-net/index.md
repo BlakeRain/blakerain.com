@@ -76,19 +76,20 @@ the rule apply to all requests, I set a single _Match any_ condition that matche
 of `https://blakerain.com/*`, which is probably consistent with the `header *` rule in the old Caddy
 configuration.
 
-{{< figure src="set-condition-match-all.png" title="A single condition that matches all paths in the site" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("set-condition-match-all.png", caption="A single condition that matches all paths in the site") }}
 
 For each of the headers that I want to add, I've added an action to that edge rule. The action to
 set a header is called _Set Response Header_, and is right at the bottom of the list of actions.
 
-{{< figure src="select-set-response-header.png" title="The action selection in an edge rule" >}}
+{{ figure("select-set-response-header.png", caption="The action selection in an edge rule") }}
 
 When _Set Response Header_ is selected, you can add in the header name and value. I'm assuming that
 Bunny are going to be pretty reasonable about dealing with things like the length and formatting of
 the header value. Unfortunately there's not really a lot of documentation about the individual
 actions and what they can (or cannot) do, so I kinda had to YOLO it.
 
-{{< figure src="setting-custom-header-values.png" title="Setting custom header values" >}}
+{{ figure("setting-custom-header-values.png", caption="Setting custom header values") }}
 
 
 Once I've added all the header values, and configured the condition, I saved the edge rule. After a
@@ -96,7 +97,7 @@ few seconds this propagated across the CDN and I was seeing the headers in my br
 
 The full edge rule looks like this:
 
-{{< figure enlarge=true src="bunny-custom-headers.png" title="Edge rule in Bunny CDN to add custom headers" >}}
+{{ figure("bunny-custom-headers.png", enlarge=true, caption="Edge rule in Bunny CDN to add custom headers", enlarge=true) }}
 
 # Adding DNSSEC
 
@@ -107,32 +108,32 @@ registrar. At some point I need to find a good EU registrar that I can move my d
 Heading over to the DNS section of the Bunny console, under the _Security_ tab for the domain, is
 the option to enable DNSSEC for the domain.
 
-{{< figure src="enable-dnssec.png" title="Enabling DNSSEC in Bunny CDN" >}}
+{{ figure("enable-dnssec.png", caption="Enabling DNSSEC in Bunny CDN") }}
 
 Selecting _Enable DNSSEC_ presents a warning about propagation of DS records. I don't really care if
 the site reports invalid DNSSEC for the time it takes for the DS records to propagate from Route53,
 and the TTL for a `.com` domain is like 6 hours or something (according to `dig -t NS com` anyway).
 
-{{< figure src="dnssec-warning.png" title="A warning about the propagation of DS records" >}}
+{{ figure("dnssec-warning.png", caption="A warning about the propagation of DS records") }}
 
 Clicking the _Enable DNSSEC_ configuration presents the DS record details that need to be given to
 my registrar. The only thing I really care about is the _Public Key_ value, which I need to give to
 Route53.
 
-{{< figure src="ds-records-for-registrar.png" title="DS records for the registrar" >}}
+{{ figure("ds-records-for-registrar.png", caption="DS records for the registrar") }}
 
 On Route53 I can add the public key from Bunny. I checked to ensure that the _Key type_ and
 _Algorithm_ I selected in Route53 matched the values given in the _Flags_ and _Algorithm_ values
 given by Bunny. I don't know what the _Key tag_ that Bunny gave me is for, so I made the wise choice
 of ignoring it.
 
-{{< figure src="add-dnssec-key-route53.png" title="Adding the public key from Bunny to Route53" >}}
+{{ figure("add-dnssec-key-route53.png", caption="Adding the public key from Bunny to Route53") }}
 
 After a short delay of a few minutes, I got confirmation from Route53 that the DNSSEC key had been
 added, and it showed up in the _DNSSEC keys_ section. The bit I was interested in was making sure
 that the _Digest_ matched the _Digest_ that Bunny gave me.
 
-{{< figure src="route53-dnssec.png" title="Route53 showing the active DNSSEC key" >}}
+{{ figure("route53-dnssec.png", caption="Route53 showing the active DNSSEC key") }}
 
 Using `delv` I was able to verify that the DNSSEC was active and validated:
 

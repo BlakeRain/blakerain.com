@@ -41,7 +41,8 @@ called [lite³], which I'm going to have to play with.
 You can find the issues on the [Paged Out!] website as PDFs. I've been ordering the past three issues as
 printed books, as they are quite fetching.
 
-{{< gallery src="pagedout" >}}
+{% from "macros/gallery.html" import gallery %}
+{{ gallery("pagedout") }}
 
 [Paged Out!]: https://pagedout.institute/
 [lite³]: https://lite3.io/
@@ -51,13 +52,15 @@ printed books, as they are quite fetching.
 A new book arrived this week: [The Genius of Lisp] by [Cees de Groot], which I learned about [on
 Mastodon].
 
-{{< book
-    url="https://berksoft.ca/gol/"
-    cover="the-genius-of-lisp.png"
-    title="The Genius of Lisp"
-    subtitle="A history of the greatest programming language ever created and the minds behind it"
-    author="Cees de Groot"
-    year="2026" >}}
+{% from "macros/book.html" import book %}
+{% call book(
+    "https://berksoft.ca/gol/",
+    "The Genius of Lisp",
+    cover="the-genius-of-lisp.png",
+    subtitle="A history of the greatest programming language ever created and the minds behind it",
+    author="Cees de Groot",
+    year="2026"
+) %}
 Journey through the fascinating story of Lisp: How it came about and why it was designed the way it
 was. Meet the geniuses involved in its creation, including Alonzo Church, Alan Turing, and the
 father of Lisp and artificial intelligence, John McCarthy. Lisp has informed the design of most
@@ -70,17 +73,18 @@ retro-compute like it’s the 1970's (and you’re a student at MIT), and why Em
 solid understanding of how this language was critical to early artificial intelligence work, from
 ELIZA (the ChatGPT of its day) to Expert Systems for medical diagnosis. While Lisp is one of the
 earliest programming languages, it is still in active use today (ever used EMACS?)
-{{< /book >}}
+{% endcall %}
 
 I recently enjoyed [John McCarthy]'s 1981 article [The History of LISP]. In the discussion of the
 implementation history, McCarthy was talking about the problems with using reference counting as
 there were only a limited number of bits in a machine word, so they decided to use [garbage
 collection]. The following line made me chuckle:
 
-{{< quote author="John McCarthy" cite="The History of LISP" >}}
+{% from "macros/quote.html" import quote %}
+{% call quote("John McCarthy") %}
 Once we decided on garbage collection, its actual implementation could be postponed, because only
 toy examples were being done.
-{{< /quote >}}
+{% endcall %}
 
 As an amateur programming language designer, I have on several occasions used the same excuse to
 avoid paying attention to the subtleties of memory management and the interaction of a language's
@@ -98,16 +102,16 @@ encountering problems in the collector, I've had grudgingly to walk back or modi
 
 My friend Rob Nash (of the awesome [Nashpacks]) asked me to design and 3D print a display pencil pot
 for his increasingly large collection of mechanical pencils and fountain pens. I put this together
-in [FreeCAD] and printed it on my [Ultimaker 2+]. You can download the FreeCAD file {{% download
-file="nash-penpot.FCStd" %}}here{{% /download %}}.
+in [FreeCAD] and printed it on my [Ultimaker 2+]. You can download the FreeCAD file <a href="./nash-penpot.FCStd">here</a>.
 
-{{< gallery src="penpot" >}}
+{{ gallery("penpot") }}
 
 And yesterday a Pheasant decided to spend part of the morning in my garden, wandering about picking
 at things and occasionally screaming. Here's a picture of him in the overgrown grass (it's all
 wintry and wet here in the UK).
 
-{{< figure src="pheasant.jpg" width=400 enlarge=true title="Pheasant in the garden" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("pheasant.jpg", width=400, enlarge=true, caption="Pheasant in the garden") }}
 
 [Nashpacks]: https://www.nashpacks.co.uk/
 [FreeCAD]: https://www.freecad.org/

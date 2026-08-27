@@ -1,0 +1,82 @@
+{% set cover = null %}
+{% if file_exists("content/" ~ page.base ~ "/cover.png") %}
+{%   set cover = "cover.png" %}
+{% elif file_exists("content/" ~ page.base ~ "/cover.jpg") %}
+{%   set cover = "cover.jpg" %}
+{% endif %}
+{% set cover_image = null %}
+{% if cover is string %}
+{%   set cover_image = image(cover, "q30") %}
+{% endif %}
+<article class="h-entry article">
+  <header
+    {% if page.frontmatter.customHero -%}
+      style="{{ page.frontmatter.customHero | replace('\n', ' ') }}"
+    {%- endif -%}>
+    {% if cover_image is mapping %}
+      <div class="cover-wrapper" aria-hidden="true">
+        <im class="cover-image" src="{{ cover_image.path }}" alt="">
+        <div class="cover-gradient"></div>
+      </div>
+    {% endif %}
+    <div class="content mx-auto inner">
+      <h1 class="{% if cover_image is mapping %}with-cover{% endif %}{% if page.frontmatter.subtitle %} with-subtitle{% endif %}">
+        <a href="/{{ page.base }}/" class="u-url p-name" rel="bookmark">
+          {{ page.title }}
+        </a>
+      </h1>
+      {% if page.frontmatter.subtitle %}
+        <h2 class="{% if cover_image is mapping %}with-cover{% endif %}">{{ page.frontmatter.subtitle }}</h2>
+      {% endif %}
+      {% if page.frontmatter.coverImage %}
+        <div class="cover-credit">
+          {% if page.frontmatter.coverImage.url %}
+            <a href="{{ page.frontmatter.coverImage.url }}" rel="noopener noreferrer">
+              Cover photo by {{ page.frontmatter.coverImage.author }}
+            </a>
+          {% else %}
+            <span>
+              Cover photo by {{ page.frontmatter.coverImage.author }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </header>
+  {% if options.meta is not boolean or options.meta %}
+    <div class="content mx-auto meta">
+      <div class="meta-details">
+        <div class="dt-published">{{ page.frontmatter.date | date(format="[day] [month repr:short] [year]") }}</div>
+        <div class="separator">&#8226;</div>
+        <div>{{ page.reading_time }} min read</div>
+        <div class="meta-break"></div>
+        <div>by</div>
+        <a rel="author" class="p-author h-card" href="https://blakerain.com/">Blake Rain</a>
+      </div>
+      {% if page.frontmatter.tags %}
+        <div class="tag-list">
+          {% for tag in page.frontmatter.tags %}
+            <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if page.frontmatter.link %}
+    <div class="content mx-auto link-source">
+      {{ icon("lucide", "external-link") }}
+      <span>
+        Linked:
+        <a
+          href="{{ page.frontmatter.link }}"
+          class="u-bookmark-of"
+          rel="noopener noreferrer">
+          {{ (page.frontmatter.link | parse_url).host }}
+        </a>
+      </span>
+    </div>
+  {% endif %}
+  <div class="content mx-auto markdown {% if page.frontmatter.numberedHeadings %}numbered-headings{% endif %}">
+    {{ page.content | safe }}
+  </div>
+</article>

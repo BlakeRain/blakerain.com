@@ -32,7 +32,6 @@ EXTRA_OUTPUT = output/css/main.css \
 							 output/sitemap.xml \
 							 output/index.xml \
 							 output/blog/index.xml \
-							 output/weenotes/index.html \
 							 output/tags/index.html
 
 .PHONY: debug release all clean
@@ -43,7 +42,7 @@ debug:
 release:
 	$(MAKE) MODE=release all
 
-all: $(PAGES) $(ASSETS) $(JAVASCRIPT) $(EXTRA_OUTPUT)
+all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(EXTRA_OUTPUT)
 
 build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 	mkdir -p $(dir $@)
@@ -91,9 +90,9 @@ output/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)
 	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ home.html
 
-output/weeknotes/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
-	mkdir -p $(dir $@)
-	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ weeknotes.html
+# output/weeknotes/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
+# 	mkdir -p $(dir $@)
+# 	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ weeknotes.html
 
 output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)

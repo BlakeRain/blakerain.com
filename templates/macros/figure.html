@@ -15,7 +15,7 @@
   {%- elif height is number %}
   {%-   set spec = spec ~ " h" ~ height %}
   {%- endif %}
-  {%- set image = image_process(src, spec) %}
+  {%- set image = image(src, spec) %}
   <img src="{{ image.path }}"
     {%- if alt %} alt="{{ alt }}"
     {%- elif caption %} alt="{{ caption }}"{% endif %}

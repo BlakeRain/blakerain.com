@@ -32,8 +32,6 @@ secure location.
 [promising]: https://press.aboutamazon.com/2023/10/amazon-web-services-to-launch-aws-european-sovereign-cloud
 [regulated]: https://handbook.fca.org.uk/glossary/G218
 
-{{% toc %}}
-
 # Bunny CDN
 
 I've been keeping an eye on Bunny for a while now, after learning about their CDN a few years ago.
@@ -114,13 +112,14 @@ To change the DNS nameservers for `blakerain.com` from Route53 to Bunny's namese
 created the DNS zone for `blakerain.com` on Bunny's DNS service. This gives me the nameservers that
 I need to provide to my registrar.
 
-{{< figure src="bunny-dns-nameservers.png" caption="Bunny's nameservers have very cute names" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("bunny-dns-nameservers.png", caption="Bunny's nameservers have very cute names") }}
 
 Back in the Route53 part of the AWS console I can remove the nameservers that Route53 placed there
 when I transferred the domain to AWS with the new nameservers from Bunny. AWS gives me the usual
 spiel about how this could take 24 hours to take effect, but it really only took about 10 minutes.
 
-{{< figure src="route53-set-nameservers.png" caption="Setting the nameservers in Route53" >}}
+{{ figure("route53-set-nameservers.png", caption="Setting the nameservers in Route53") }}
 
 While the nameservers are changing over, I wanted to copy over all the DNS records from Route53 to
 Bunny. Unfortunately, there's no easy export feature in Route53 to export all the records from a
@@ -180,7 +179,7 @@ blakerain.com.	300	IN	MX	10 hz1.blacktreenetworks.com.
 blakerain.com.	300	IN	TXT	"v=spf1 ip4:85.10.205.2 ~all"`
 ```
 
-{{< figure src="bunny-dns-import-zone.png" caption="Importing the DNS records into Bunny" >}}
+{{ figure("bunny-dns-import-zone.png", caption="Importing the DNS records into Bunny") }}
 
 Once the DNS records were imported, and the nameserver changeover had propagated, I was able to see
 from repeated invocations of `dig` that the DNS records were all present and correct.
@@ -463,7 +462,7 @@ terraform import module.freshrss.bunnynet_dns_record.freshrss "123456|987654"
 To find the IDs of the DNS zone and the DNS record, I had to use the API. The ID of the DNS zone is
 available in the UI.
 
-{{< figure src="bunny-dns-zone-id.png" caption="Finding the ID of the DNS zone" >}}
+{{ figure("bunny-dns-zone-id.png", caption="Finding the ID of the DNS zone") }}
 
 The ID of the DNS records is not shown in the UI, so I had to use the API to find them. Using the
 [Get DNS Zone] API endpoint. The path for the API endpoint is `/dnszone/{zoneId}`. The response is a
@@ -511,25 +510,25 @@ Setting up the storage zone in Bunny was very simple. For the storage tier I cho
 is the cost-effective option for a small website, priced at $0.01/GB per storage region for up to
 two regions, $0.005/GB per additional region, up to a total of 9 regions.
 
-{{< figure src="bunny-storage-tiers.png" caption="Selection of storage tier for a storage zone" >}}
+{{ figure("bunny-storage-tiers.png", caption="Selection of storage tier for a storage zone") }}
 
 For the main storage region I selected _London (UK)_ with replication in _Frankfurt (DE)_ and _New
 York (US)_. This gives me a total of three regions, and a total monthly storage cost of $0.025/GB.
 Given that this website it 45.26 MB, which is around 4% of a GB, I think this will be affordable.
 
-{{< figure src="bunny-storage-regions.png" caption="Selection of storage regions for a storage zone" >}}
+{{ figure("bunny-storage-regions.png", caption="Selection of storage regions for a storage zone") }}
 
 With the storage regions selected, I was then able to upload the website content to the storage
 zone. To connect to the storage zone, I used SFTP. The credentials for the SFTP connection are given
 in the _FTP and API Access_ section of the storage zone administration.
 
-{{< figure src="bunny-storage-access.png" caption="FTP and API Access for the storage zone" >}}
+{{ figure("bunny-storage-access.png", caption="FTP and API Access for the storage zone") }}
 
 Another setting I changed was the _404 File Path_. This is found under the _Error handling_ section
 in the administration of the storage zone. There I set the _404 File Path_ to `/404.html`, which is
 this site's [404 page].
 
-{{< figure src="bunny-storage-error-pages.png" caption="Setting the 404 file path for the storage zone" >}}
+{{ figure("bunny-storage-error-pages.png", caption="Setting the 404 file path for the storage zone") }}
 
 [bind]: https://en.wikipedia.org/wiki/BIND
 [404 page]: https://blakerain.com/404.html
@@ -540,26 +539,26 @@ Next I needed to set up the CDN, which would handle the delivery of the website 
 the Storage Zone. For the _Origin Type_ I chose _Storage Zone_, and selected the storage zone I
 created above. I selected the _Standard Tier_, which charges at $10/TB.
 
-{{< figure src="bunny-cdn-origin.png" caption="Origin Type for the CDN" >}}
+{{ figure("bunny-cdn-origin.png", caption="Origin Type for the CDN") }}
 
 For the CDN _Pricing Zones_, I selected _Europe_ and _North America_, which is consistent with the
 two main sources of traffic to this site (ignoring the bots that are coming from Singapore). The
 billing for these regions is $0.01/GB per month.
 
-{{< figure src="bunny-cdn-pricing-zone.png" caption="Pricing Zones for the CDN" >}}
+{{ figure("bunny-cdn-pricing-zone.png", caption="Pricing Zones for the CDN") }}
 
 Next I added a custom hostname for the `blakerain.com` domain. Entering `blakerain.com` into the
 _Add custom hostname_ box in the _hostnames_ section of the CDN admin page gives me the following
 feedback (note I used `test.blakerain.com` here, as I'd already added `blakerain.com`):
 
-{{< figure src="bunny-cdn-add-domain.png" caption="Adding a custom hostname for the CDN" >}}
+{{ figure("bunny-cdn-add-domain.png", caption="Adding a custom hostname for the CDN") }}
 
 You can see here that I needed to add a `CNAME` record pointing to `blakerain-com.b-cdn.net`, which
 is the first hostname given to the CDN zone by Bunny. Hopping over to the _DNS_ settings for
 `blakerain.com` I added a new `CNAME` record as requested, leaving the _Hostname_ field blank for
 the apex of the domain:
 
-{{< figure src="bunny-dns-setup-apex-cname.png" height=813 enlarge=true caption="Adding a CNAME record for the apex of the domain" >}}
+{{ figure("bunny-dns-setup-apex-cname.png", height=813, enlarge=true, caption="Adding a CNAME record for the apex of the domain") }}
 
 > [!INFO]
 > Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537] (which
@@ -575,7 +574,7 @@ SSL_. After a brief pause, Bunny confirmed that the certificate was now in place
 that `blakerain.com` was now listed as a hostname for the CDN zone, and was displayed in the
 top-right as the main public address for the zone.
 
-{{< figure src="bunny-cdn-hostname.png" caption="The `blakerain.com` hostname is now listed for the CDN zone" >}}
+{{ figure("bunny-cdn-hostname.png", caption="The `blakerain.com` hostname is now listed for the CDN zone") }}
 
 I also activated the _Force SSL_ option for the `blakerain.com` hostname (shown above), which causes
 the CDN to redirect HTTP to HTTPS.
@@ -585,7 +584,7 @@ redirected to `blakerain.com`. I did this by adding an _Edge Rule_ to the CDN. T
 redirects to `https://blakerain.com/{{path}}`, on any request where the URL matches the pattern
 `*://blakerain-com.b-cdn.net/*`.
 
-{{< figure src="bunny-cdn-edge-rule.png" caption="The edge rule to redirect to the new hostname" >}}
+{{ figure("bunny-cdn-edge-rule.png", caption="The edge rule to redirect to the new hostname") }}
 
 To figure this out, I just followed the instructions in the [How to redirect your b-cdn.net]
 documentation from Bunny to set this up.
@@ -600,7 +599,7 @@ When I'm ready to deploy a change to this site, I push a new git tag that starts
 this to version the site. This version tag is included in the site build, which I can check by going
 to the [copyright page], where the site version is displayed:
 
-{{< figure src="site-version.png" caption="The site version is displayed on the copyright page" >}}
+{{ figure("site-version.png", caption="The site version is displayed on the copyright page") }}
 
 When I push the new tag to Forgejo, it triggers the [deployment workflow], which sets up Node and
 Go, installs the dependencies, builds the site, and deploys it. Prior to moving this site to Bunny
@@ -641,9 +640,9 @@ jobs:
 
       - name: Deploy the site
         env:
-          BUNNY_STORAGE_HOST: ${{ secrets.BUNNY_STORAGE_HOST }}
-          BUNNY_STORAGE_USERNAME: ${{ secrets.BUNNY_STORAGE_USERNAME }}
-          BUNNY_STORAGE_PASSWORD: ${{ secrets.BUNNY_STORAGE_PASSWORD }}
+          BUNNY_STORAGE_HOST: ${{'{{'}} secrets.BUNNY_STORAGE_HOST {{'}}'}}
+          BUNNY_STORAGE_USERNAME: ${{'{{'}} secrets.BUNNY_STORAGE_USERNAME {{'}}'}}
+          BUNNY_STORAGE_PASSWORD: ${{'{{'}} secrets.BUNNY_STORAGE_PASSWORD {{'}}'}}
         run: |
           apt-get update -y
           apt-get install -y lftp
@@ -670,15 +669,15 @@ jobs:
       - name: Purge CDN cache
         run: |
           curl -sf -X POST \
-            "https://api.bunny.net/pullzone/${{ secrets.BUNNY_PULLZONE_ID }}/purgeCache" \
-            -H "AccessKey: ${{ secrets.BUNNY_API_KEY }}" \
+            "https://api.bunny.net/pullzone/${{'{{'}} secrets.BUNNY_PULLZONE_ID {{'}}'}}/purgeCache" \
+            -H "AccessKey: ${{'{{'}} secrets.BUNNY_API_KEY {{'}}'}}" \
             -H "Content-Length: 0"
 ```
 
 With the changes to the deployment workflow in place, I created and pushed a new tag: [v2.14.3]. This
 was built and, _somehow_ [deployed] perfectly without any issues.
 
-{{< figure src="site-deployment-success.png" caption="Successful deployment of `v2.14.3`" >}}
+{{ figure("site-deployment-success.png", caption="Successful deployment of `v2.14.3`") }}
 
 With the site deployed successfully, and seemingly all the Terraform and other infrastructure all
 set up correctly, I was able to finally go to bed.

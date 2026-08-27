@@ -1,0 +1,11 @@
+<h{{ level }}
+  {%- if id is string %} id="{{ id }}"{% endif %}
+  {%- if classes %} class="{{ classes | join(" ") }}"{% endif %}>
+  {%- if attributes.href is string %}
+    {{- icon("lucide", "external-link", size="1.5rem") -}}
+    <a href="{{ attributes.href | safe }}">{{ content | safe }}</a>
+  {%- else -%}
+    {{ content | safe }}
+  {%- endif -%}
+  <a class="heading-anchor" href="#{{ id }}">#</a>
+</h{{ level }}>

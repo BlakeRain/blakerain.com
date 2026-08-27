@@ -4,9 +4,9 @@ sitemap:
   disable: true
 ---
 
-**Site version:** {{< version >}}
+**Site version:** {{ env.version }}
 
-Copyright © {{< lastmod >}} Blake Rain
+Copyright © {{ env.now | date(format="[year]") }} Blake Rain
 
 All materials featured on this website are safeguarded under copyright law. This protection applies
 to, but is not limited to, written content, photographs, graphics, visual layout and design

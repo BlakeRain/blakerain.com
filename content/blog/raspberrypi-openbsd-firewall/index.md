@@ -95,7 +95,8 @@ back into this new filesystem.
 As usual, none of that worked. OpenBSD could not boot finish booting, as there was a problem with
 the partition that I had moved.
 
-{{< figure src="Pasted%20image%2020240528130110.jpg" title="I've broken the partitions" >}}
+{% from "macros/figure.html" import figure %}
+{{ figure("Pasted image 20240528130110.jpg", caption="I've broken the partitions") }}
 
 ## Booting without UEFI Firmware
 
@@ -112,7 +113,7 @@ instead expecting you to attach a serial interface. I didn't have the energy for
 luckily you can interrupt the auto-boot and use `set tty fb0` to redirect the TTY to the
 frame-buffer before continuing with the boot.
 
-{{< figure src="Pasted%20image%2020240528130245.jpg" title="Behold! The glorious OpenBSD installation program" >}}
+{{ figure("Pasted image 20240528130245.jpg", caption="Behold! The glorious OpenBSD installation program") }}
 
 ## Installing OpenBSD
 
@@ -123,20 +124,20 @@ I did have a small issue with getting the sets installed as the installer was un
 `openbsd.org`. Instead I had to point it to `ftp.eu.openbsd.org` to continue. After a short while,
 the installer had downloaded all the sets and was ready to reboot.
 
-{{< figure src="IMG_3764.jpg" title="OpenBSD installer has completed installation of all sets" >}}
+{{ figure("IMG_3764.jpg", caption="OpenBSD installer has completed installation of all sets") }}
 
-{{< figure src="IMG_3765.jpg" title="OpenBSD installation is complete" >}}
+{{ figure("IMG_3765.jpg", caption="OpenBSD installation is complete") }}
 
 With the installation complete and the system rebooted, I can log in using the root password that I
 set during the installation. Now I can start configuring the OpenBSD system to be my router and a
 firewall.
 
-{{< figure src="Pasted%20image%2020240528131841.png" title="Connecting to OpenBSD for the first time" >}}
+{{ figure("Pasted image 20240528131841.png", caption="Connecting to OpenBSD for the first time") }}
 
 On a side note, I really rather like the way that OpenBSD mails you a list of responses provided
 during installation.
 
-{{< figure src="CleanShot%202024-05-28%20at%2013.11.58.png" title="OpenBSD email of installation responses" >}}
+{{ figure("CleanShot 2024-05-28 at 13.11.58.png", caption="OpenBSD email of installation responses") }}
 
 Once OpenBSD has been installed it is fairly important to make sure that you add a new user for
 yourself. You should add this user to the `wheel` group so that you can `su` to root. You should
@@ -155,11 +156,11 @@ connection is only about 65 Mbps.
 The only USB Ethernet adapter I had laying around was an old Microsoft adapter that I used to use
 with a Microsoft Surface. After messing about a little, I found that I could attach it:
 
-{{< figure src="Pasted%20image%2020240528132933.png" title="Microsoft USB Ethernet adapter attached" >}}
+{{ figure("Pasted image 20240528132933.png", caption="Microsoft USB Ethernet adapter attached") }}
 
 This Microsoft adapter identifies to OpenBSD as an RTL8251 PHY and RTL8153:
 
-{{< figure src="CleanShot%202024-05-28%20at%2013.30.38.png" title="Snapshot of dmesg output when connected" >}}
+{{ figure("CleanShot 2024-05-28 at 13.30.38.png", caption="Snapshot of dmesg output when connected") }}
 
 > [!WARNING] Faulty Hardware
 > Unfortunately I am later going to find that this adapter was broken.
@@ -168,7 +169,7 @@ This Microsoft adapter identifies to OpenBSD as an RTL8251 PHY and RTL8153:
 
 Using `ifconfig` I was able to take a look at the current state of the network interfaces available:
 
-{{< figure src="CleanShot%202024-05-28%20at%2013.35.13.png" title="Output of ifconfig" >}}
+{{ figure("CleanShot 2024-05-28 at 13.35.13.png", caption="Output of ifconfig") }}
 
 There are two interfaces in this list that were of interest to me:
 

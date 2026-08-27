@@ -33,7 +33,8 @@ In more positive news, the [greengages] are now ripening on the tree in my garde
 a generous bowlful of fruit most evenings. I've been microwaving them with a little bit of water and
 sugar, and serving them with a bit of yoghurt and a sprinkle of cinnamon.
 
-{{< gallery src="greengages" >}}
+{% from "macros/gallery.html" import gallery %}
+{{ gallery("greengages") }}
 
 [greengages]: https://en.wikipedia.org/wiki/Greengage
 
@@ -42,9 +43,10 @@ sugar, and serving them with a bit of yoghurt and a sprinkle of cinnamon.
 There've been a few great new music releases since the last weeknote. My favourite has been [Dimmu
 Borgir]'s new release: [Grand Serpent Rising].
 
-{{< bandcamp album="2783674493" url="https://dimmuborgir.bandcamp.com/album/grand-serpent-rising" >}}
+{% from "macros/bandcamp.html" import bandcamp %}
+{% call bandcamp("2783674493", "https://dimmuborgir.bandcamp.com/album/grand-serpent-rising") %}
 Grand Serpent Rising by Dimmu Borgir
-{{< /bandcamp >}}
+{% endcall %}
 
 I was also very pleased by the new release of [Night is Calling] by [DOMINUM], on which the titular
 track [Night is Calling](https://dominum.bandcamp.com/track/night-is-calling-feat-battle-beast) is
@@ -70,9 +72,9 @@ I'd say that [Winters Gate] is probably their best album, with the other albums 
 orbiting closely. It'll be interesting to get my hands on the rest of _Netherworlds_ when it
 releases in full on October 16th 2026.
 
-{{< bandcamp album="4245152850" url="https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio" >}}
+{% call bandcamp("4245152850", "https://centurymedia.bandcamp.com/album/netherworlds-24-bit-hd-audio") %}
 Netherworlds (24-bit HD audio) by Insomnium
-{{< /bandcamp >}}
+{% endcall %}
 
 [Dimmu Borgir]: https://dimmuborgir.bandcamp.com/
 [Grand Serpent Rising]: https://dimmuborgir.bandcamp.com/album/grand-serpent-rising
@@ -171,14 +173,16 @@ Here's three of the articles I've read this week:
 
 I also received and read Doctorow's new [The Reverse Centaur's Guide to Life After AI].
 
-{{< book
-    url="https://bookshop.org/p/books/the-reverse-centaur-s-guide-to-life-after-ai-how-to-think-about-artificial-intelligence-before-it-s-too-late-cory-doctorow/bef8e569ac42c05b"
-    cover="cover-reverse-centaur.jpg"
-    title="The Reverse Centaur's Guide to Life After AI"
-    subtitle="How to Think About Artificial Intelligence Before It's Too Late"
-    author="Cory Doctorow"
-    year="2026"
-    rating=5 >}}
+{% from "macros/book.html" import book %}
+{% call book(
+    "https://bookshop.org/p/books/the-reverse-centaur-s-guide-to-life-after-ai-how-to-think-about-artificial-intelligence-before-it-s-too-late-cory-doctorow/bef8e569ac42c05b",
+    "The Reverse Centaur's Guide to Life After AI",
+    cover="cover-reverse-centaur.jpg",
+    subtitle="How to Think About Artificial Intelligence Before It's Too Late",
+    author="Cory Doctorow",
+    year="2026",
+    rating=5
+) %}
 A short, provocative guide to what's good, bad, and stupid about AI and the discourse around AI, by
 the author of Enshittification.
 
@@ -186,7 +190,7 @@ In modern tech parlance, a centaur is a person who is able to use technology to 
 productive version of themself. A reverse centaur is a person who is forced by technology to work at
 an inhuman pace—a driver made to deliver all day long, nonstop; a warehouse worker made to work
 without food or bathroom breaks; a programmer made to crank out impossible amounts of code.
-{{< /book >}}
+{% endcall %}
 
 I have made _quite a lot_ of highlights and notes on the book, as it has a number of interesting
 ideas; some of which I agree with, and others that I do not.

@@ -21,6 +21,7 @@ time = { version = "0.3", features = ["formatting", "macros", "parsing", "serde"
 toml = { version = "1.0", features = ["parse"] }
 tracing = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["std", "env-filter", "tracing-log"] }
+url = { version = "2.5" }
 walkdir = { version = "2.5" }
 webp = { version = "0.3" }
 yaml-rust = { version = "0.4" }

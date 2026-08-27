@@ -1,0 +1,45 @@
+{%- macro article_item(page) %}
+  <article>
+    <a class="colored" href="/{{ page.base }}">
+      <h1>{{ page.title }}</h1>
+    </a>
+    <div class="meta">
+      <div class="meta-row">
+        <span>{{ page.date | date(format="[day] [month repr:short] [year]") }}</span>
+        <span class="separator">&#8226;</span>
+        <span>{{ page.reading_time }} min read</span>
+        {% if page.frontmatter.link %}
+          <span class="separator">&#8226;</span>
+          <a
+            href="{{ page.frontmatter.link }}"
+            title="External link for this post"
+            class="colored"
+            rel="noopener noreferrer">
+            {{ icon("lucide", "external-link") }}
+            {{ (page.frontmatter | parse_url).host }}
+          </a>
+        {% endif %}
+        {% if page.frontmatter.archive %}
+          <span class="separator">&#8226;</span>
+          <a
+            href="{{ page.frontmatter.archive }}"
+            title="Archive of the source article"
+            class="colored"
+            rel="noopener noreferrer">
+            Archive
+          </a>
+        {% endif %}
+      </div>
+      {% if page.frontmatter.tags %}
+        <div class="tag-list">
+          {% for tag in page.frontmatter.tags %}
+            <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="markdown">
+      {{ caller() | safe }}
+    </div>
+  </article>
+{%- endmacro %}

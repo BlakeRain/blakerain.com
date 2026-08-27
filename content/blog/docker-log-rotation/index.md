@@ -53,7 +53,7 @@ named volume to a subtly different location, and ended up losing data.
 I typically check that the container has the correct volume mounts by running `docker inspect`:
 
 ```sh
-docker inspect my_container --format '{{ json .Mounts }}'
+docker inspect my_container --format '{{'{{'}} json .Mounts {{'}}'}}'
 ```
 
 This will show you where the container is mounting volumes, and you can check for mounts that are

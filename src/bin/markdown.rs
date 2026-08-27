@@ -94,12 +94,13 @@ fn main() -> anyhow::Result<()> {
     let source = template
         .render(minijinja::context! {
             page,
+            site,
             env => minijinja::context! {
                 now => OffsetDateTime::now_utc(),
                 today => OffsetDateTime::now_utc().date(),
                 profile => env!("CARGO_PROFILE"),
+                version => env!("CARGO_PKG_VERSION"),
             },
-            site,
         })
         .context("failed to render page as template")?;
 
