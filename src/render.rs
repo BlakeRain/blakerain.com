@@ -252,6 +252,8 @@ struct State<'t> {
     outline: OutlineBuilder,
     heading_text: Option<String>,
     html_code_block: bool,
+    in_code_block: bool,
+    word_count: usize,
     summary_text: SummaryState,
     summary_html: Option<String>,
     base: String,
@@ -277,6 +279,8 @@ impl<'t> State<'t> {
             outline: OutlineBuilder::default(),
             heading_text: None,
             html_code_block: false,
+            in_code_block: false,
+            word_count: 0,
             footnotes: HashMap::new(),
             summary_text: SummaryState::Writing(FmtWriter(String::new())),
             summary_html: None,
@@ -514,6 +518,7 @@ impl<'t> State<'t> {
             Tag::CodeBlock(info) => {
                 let info = CodeBlockInfo::from(info);
                 self.html_code_block = info.is_html();
+                self.in_code_block = true;
                 self.enter(RenderCxt::CodeBlock { info });
             }
 
@@ -767,6 +772,7 @@ impl<'t> State<'t> {
 
             TagEnd::CodeBlock => {
                 self.html_code_block = false;
+                self.in_code_block = false;
 
                 let content = self
                     .leave()
@@ -802,6 +808,10 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
         Event::End(tag) => state.end_tag(tag),
 
         Event::Text(text) => {
+            if !state.in_code_block {
+                state.word_count += text.split_whitespace().count();
+            }
+
             if state.html_code_block {
                 state.write(&text)?;
             } else {
@@ -889,6 +899,7 @@ pub struct Rendered {
     pub summary_text: Option<String>,
     pub content: String,
     pub toc: Vec<Outline>,
+    pub word_count: usize,
 }
 
 /// Marker that may be placed in Markdown content to request a table of
@@ -925,6 +936,7 @@ where
     }
 
     let mut content = state.take_content();
+    let word_count = state.word_count;
     let summary_text = state.take_summary_text();
     let summary = state
         .summary_html
@@ -943,5 +955,6 @@ where
         summary_text,
         content,
         toc,
+        word_count,
     })
 }

@@ -13,6 +13,9 @@ use blakerain_com::{
 use clap::Parser;
 use time::OffsetDateTime;
 
+/// Estimated reading speed used to compute a page's reading time.
+const WORDS_PER_MINUTE: usize = 200;
+
 #[derive(Parser)]
 struct Args {
     /// Enable logging ('-v' for debug, '-vv' for tracing)
@@ -53,7 +56,11 @@ fn main() -> anyhow::Result<()> {
     .context("failed to read Markdown file")?;
 
     let nlines = source.len();
-    let (frontmatter, source) = parse_frontmatter(source).context("failed to parse frontmatter")?;
+    let (mut frontmatter, source) = parse_frontmatter(source).context("failed to parse frontmatter")?;
+
+    if let Some(serde_json::Value::String(title)) = frontmatter.get_mut("title") {
+        *title = title.trim().to_string();
+    }
 
     let source = if source.len() < nlines {
         std::iter::repeat_n(String::new(), nlines - source.len())
@@ -142,6 +149,16 @@ fn main() -> anyhow::Result<()> {
             } else {
                 serde_json::to_value(&rendered.toc).context("failed to serialize toc")?
             },
+        );
+
+        page.insert(
+            String::from("word_count"),
+            serde_json::Value::from(rendered.word_count),
+        );
+
+        page.insert(
+            String::from("reading_time"),
+            serde_json::Value::from(rendered.word_count.div_ceil(WORDS_PER_MINUTE)),
         );
     }
 
