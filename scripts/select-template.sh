@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Make sure that we have the `jq` command available.
+if ! command -v jq >/dev/null; then
+  echo "error: the 'jq' command is required to run this script" >&2
+  exit 1
+fi
+
 JSON_FILE="$1"
 STEM="$2" # (e.g. "foo/bar/index")
 
