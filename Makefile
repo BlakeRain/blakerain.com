@@ -62,7 +62,7 @@ build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
 
-output/%.html: build/content/%.json $(RENDER) $(TEMPLATES)
+output/%.html: build/content/%.json $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	cat $< | $(RENDER) $(RENDER_FLAGS) -o $@ $$(./scripts/select-template.sh $< $*)
 
@@ -84,15 +84,15 @@ output/js/%.js: assets/js/%.js
 	cp $< $@
 endif
 
-output/sitemap.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
+output/sitemap.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) -o $@ sitemap.xml
 
-output/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
+output/index.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) -o $@ rss.xml
 
-output/blog/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
+output/blog/index.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{"target":"blog"}' | $(RENDER) -o $@ rss.xml
 

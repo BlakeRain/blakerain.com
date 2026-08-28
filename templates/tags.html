@@ -24,7 +24,7 @@
     {%- for name, tag in page.tags | dictsort if ns.pagecounts[name] > 0 %}
       <a href="/tags/{{ name | safe }}/" class="colored">{{ name }}</a>
       <div class="description">{{ tag.description }}</div>
-      <div class="count"{{ ns.pagecounts[name] | default(0) }}</div>
+      <div class="count">{{ ns.pagecounts[name] | default(0) }}</div>
     {%- endfor %}
   </div>
 </main>
