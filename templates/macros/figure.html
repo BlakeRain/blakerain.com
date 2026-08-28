@@ -6,7 +6,8 @@
   {%- if target %} target="{{ target }}"{% endif %}
   {%- if rel %} rel="{{ rel }}"{% endif %}>
 {% elif enlarge %}
-  <a href="{{ src }}" target="_blank" rel="noopener noreferrer">
+  {%- set full = image(src, "q75") %}
+  <a href="{{ full.path }}" target="_blank" rel="noopener noreferrer">
 {% endif %}
 {%- set spec = "q75" %}
 {%- if width is number and height is number %}
@@ -16,8 +17,8 @@
 {%- elif height is number %}
 {%-   set spec = spec ~ " h" ~ height %}
 {%- endif %}
-{%- set image = image(src, spec) %}
-<img src="{{ image.path }}"
+{%- set img = image(src, spec) %}
+<img src="{{ img.path }}"
   {%- if alt %} alt="{{ alt }}"
   {%- elif caption %} alt="{{ caption }}"{% endif %}
   {%- if width is number %} width="{{ width }}"{% endif %}
