@@ -1,4 +1,5 @@
 pub mod config;
+pub mod images;
 pub mod render;
 pub mod templates;
 pub mod tracing;

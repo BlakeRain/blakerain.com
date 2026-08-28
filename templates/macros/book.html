@@ -37,10 +37,12 @@
     {%- endif %}
   </div>
   <div class="book-content">
-    {{ caller() }}
-    <a class="book-link" href="{{ url }}" target="_blank" rel="noopener">
-      View book {{ icon("lucide", "arrow-right") }}
-    </a>
+
+{{ caller() }}
+
+  <a class="book-link" href="{{ url }}" target="_blank" rel="noopener">
+    View book {{ icon("lucide", "arrow-right") }}
+  </a>
   </div>
 </div>
 {%- endmacro %}

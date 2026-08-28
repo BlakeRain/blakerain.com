@@ -108,7 +108,8 @@ fn main() -> anyhow::Result<()> {
     let options = pulldown_cmark::Options::all();
     let parser = pulldown_cmark::Parser::new_ext(&source, options);
     let parser = pulldown_cmark::utils::TextMergeWithOffset::new(parser.into_offset_iter());
-    let rendered = render(&templates, parser).context("failed to render page as markdown")?;
+    let rendered =
+        render(&templates, &base.to_string_lossy(), parser).context("failed to render page as markdown")?;
 
     {
         let page = page.as_object_mut().expect("page to be a JSON object");

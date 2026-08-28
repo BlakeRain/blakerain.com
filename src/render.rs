@@ -247,11 +247,12 @@ struct State<'t> {
     heading_text: Option<String>,
     summary_text: SummaryState,
     summary_html: Option<String>,
+    base: String,
     writer: FmtWriter<String>,
 }
 
 impl<'t> State<'t> {
-    fn new(templates: &'t Environment<'t>) -> anyhow::Result<Self> {
+    fn new(templates: &'t Environment<'t>, base: &str) -> anyhow::Result<Self> {
         let mut tcache = HashMap::new();
         for path in TEMPLATE_PATHS {
             tcache.insert(
@@ -271,6 +272,7 @@ impl<'t> State<'t> {
             footnotes: HashMap::new(),
             summary_text: SummaryState::Writing(FmtWriter(String::new())),
             summary_html: None,
+            base: String::from(base),
             writer: FmtWriter(String::new()),
         })
     }
@@ -326,6 +328,19 @@ impl<'t> State<'t> {
         if let Some(heading) = &mut self.heading_text {
             heading.push_str(text);
         }
+    }
+
+    fn process_image(&self, dest_url: String) -> anyhow::Result<String> {
+        if dest_url.starts_with("http://")
+            || dest_url.starts_with("https://")
+            || dest_url.starts_with('/')
+            || dest_url.starts_with('#')
+            || dest_url.starts_with("data:")
+        {
+            return Ok(dest_url);
+        }
+
+        crate::images::process(&self.base, &dest_url, &crate::images::ImageSpec::default())
     }
 
     fn take_summary_text(&mut self) -> Option<String> {
@@ -546,6 +561,8 @@ impl<'t> State<'t> {
             } => {
                 let dest_url = String::from(dest_url);
                 let title = String::from(title);
+
+                let dest_url = self.process_image(dest_url)?;
 
                 self.enter(RenderCxt::Image { dest_url, title })
             }
@@ -857,11 +874,15 @@ pub struct Rendered {
 /// contents. It is replaced with the rendered TOC during rendering.
 pub const TOC_MARKER: &str = "<!--TOC-->";
 
-pub fn render<'a, I>(templates: &Environment<'static>, mut events: I) -> anyhow::Result<Rendered>
+pub fn render<'a, I>(
+    templates: &Environment<'static>,
+    base: &str,
+    mut events: I,
+) -> anyhow::Result<Rendered>
 where
     I: Iterator<Item = (Event<'a>, Range<usize>)>,
 {
-    let mut state = State::new(templates)?;
+    let mut state = State::new(templates, base)?;
 
     while let Some((event, range)) = events.next() {
         dispatch(&mut state, event)
