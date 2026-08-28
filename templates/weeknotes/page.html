@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block main %}
+{% set week = page.base | split("/") | last %}
+{% set week_parts = week | split("-") %}
+{% set week_title = week_parts[0] ~ " - Week " ~ week_parts[1] %}
+{% set options = { "title": week_title, "subtitle": true } %}
+<main class="page-main">
+  {% include "macros/article/article.html" %}
+</main>
+{% endblock %}

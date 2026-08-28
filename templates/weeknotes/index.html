@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Weeknotes{% endblock %}
+{% block main %}
+{% set weeknotes = load_pages("weeknotes")
+     | rejectattr("base", "eq", "weeknotes")
+     | sort(attribute="frontmatter.date", reverse=true) %}
+<main class="articles-list content">
+  <h1>Weeknotes</h1>
+  <h2>{{ page.frontmatter.description }}</h2>
+  <div class="weeknotes-list">
+    {%- for weeknote in weeknotes %}
+      {%- set week = weeknote.base | split("/") | last %}
+      {%- set week_parts = week | split("-") %}
+      {%- set week_title = week_parts[0] ~ " - Week " ~ week_parts[1] %}
+      <article>
+        {%- if file_exists("content/" ~ weeknote.base ~ "/cover.jpg") %}
+          {%- set cover = image(week ~ "/cover.jpg", "q30") %}
+          <img class="cover" src="{{ cover.path }}" alt="Cover image for {{ week_title }}">
+        {%- else %}
+          <div class="cover"></div>
+        {%- endif %}
+        <a class="colored" href="/{{ weeknote.base }}/">{{ week_title }}</a>
+        <div class="line"></div>
+        <div>{{ weeknote.frontmatter.date | date(format="[day] [month repr:short] [year]") }}</div>
+        <p>{{ weeknote.frontmatter.summary }}</p>
+      </article>
+    {%- endfor %}
+  </div>
+</main>
+{% endblock %}
