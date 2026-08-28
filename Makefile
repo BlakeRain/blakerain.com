@@ -53,6 +53,7 @@ release:
 build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 	mkdir -p $(dir $@)
 	cargo build $(CARGO_FLAGS)
+	pnpm install
 	touch $@
 
 $(MARKDOWN): build/.cargo.$(MODE)
@@ -73,7 +74,7 @@ output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css'
 ifeq ($(MODE),release)
 output/js/%.js: assets/js/%.js
 	mkdir -p $(dir $@)
-	yarn terser $< -o $@
+	pnpm terser $< -o $@
 else
 output/js/%.js: assets/js/%.js
 	mkdir -p $(dir $@)
@@ -91,14 +92,6 @@ output/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
 output/blog/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{"target":"blog"}' | $(RENDER) -o $@ rss.xml
-
-# output/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
-# 	mkdir -p $(dir $@)
-# 	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ home.html
-
-# output/weeknotes/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
-# 	mkdir -p $(dir $@)
-# 	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ weeknotes.html
 
 output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)
