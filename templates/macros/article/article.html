@@ -76,6 +76,9 @@
       </span>
     </div>
   {% endif %}
+  {% if page.frontmatter.toc %}
+    {{ toc() }}
+  {% endif %}
   <div class="content mx-auto markdown {% if page.frontmatter.numberedHeadings %}numbered-headings{% endif %}">
     {{ page.content | safe }}
   </div>

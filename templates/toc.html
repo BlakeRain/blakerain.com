@@ -1,0 +1,16 @@
+{%- macro toc(items) -%}
+  <ol>
+    {%- for item in items %}
+      <li>
+        <a href="#{{ item.id }}">{{ item.title }}</a>
+        {%- if item.children | length > 0 %}
+          {{ toc(item.children) }}
+        {%- endif %}
+      </li>
+    {%- endfor %}
+  </ol>
+{%- endmacro -%}
+
+<nav class="table-of-contents">
+  {{ toc(items) }}
+</nav>

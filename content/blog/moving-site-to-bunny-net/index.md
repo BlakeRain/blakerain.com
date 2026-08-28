@@ -25,6 +25,8 @@ compliance issues arising for EU and UK businesses that rely on US tech companie
 make sure that I have some idea of how to move our core infrastructure to a more compliant and
 secure location.
 
+<!--TOC-->
+
 [threatening to invade Greenland]: https://www.bbc.co.uk/news/articles/c07xkeee2k3o
 [imposing sanctions on the ICC]: https://www.whitehouse.gov/presidential-actions/2025/02/imposing-sanctions-on-the-international-criminal-court/
 [cancel the ICC chief prosecutor]: https://apnews.com/article/icc-trump-sanctions-karim-khan-court-a4b4c02751ab84c09718b1b95cbd5db3

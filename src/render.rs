@@ -184,11 +184,67 @@ enum SummaryState {
     Finished(String),
 }
 
+#[derive(Serialize)]
+pub struct Outline {
+    #[serde(skip)]
+    level: u32,
+    id: Option<String>,
+    title: String,
+    children: Vec<Outline>,
+}
+
+#[derive(Default)]
+pub struct OutlineBuilder {
+    outline: Vec<Outline>,
+}
+
+impl OutlineBuilder {
+    pub fn add_heading(&mut self, level: u32, id: Option<String>, title: String) {
+        self.outline.push(Outline {
+            level,
+            id,
+            title,
+            children: Vec::new(),
+        });
+    }
+
+    pub fn finish(self) -> Vec<Outline> {
+        let mut iter = self.outline.into_iter().peekable();
+        let mut root = Vec::new();
+
+        while let Some(level) = iter.peek().map(|node| node.level) {
+            let mut node = iter.next().expect("peeked heading");
+            build_children(level, &mut iter, &mut node.children);
+            root.push(node);
+        }
+
+        root
+    }
+}
+
+fn build_children(
+    parent_level: u32,
+    iter: &mut std::iter::Peekable<std::vec::IntoIter<Outline>>,
+    out: &mut Vec<Outline>,
+) {
+    while let Some(level) = iter.peek().map(|node| node.level) {
+        if level <= parent_level {
+            return;
+        }
+
+        let mut node = iter.next().expect("peeked heading");
+        build_children(level, iter, &mut node.children);
+        out.push(node);
+    }
+}
+
 struct State<'t> {
     templates: &'t Environment<'t>,
     tcache: HashMap<&'static str, Template<'t, 't>>,
     stack: VecDeque<(FmtWriter<String>, RenderCxt)>,
     footnotes: HashMap<String, usize>,
+    outline: OutlineBuilder,
+    heading_text: Option<String>,
     summary_text: SummaryState,
     summary_html: Option<String>,
     writer: FmtWriter<String>,
@@ -210,6 +266,8 @@ impl<'t> State<'t> {
             templates,
             tcache,
             stack: VecDeque::new(),
+            outline: OutlineBuilder::default(),
+            heading_text: None,
             footnotes: HashMap::new(),
             summary_text: SummaryState::Writing(FmtWriter(String::new())),
             summary_html: None,
@@ -261,6 +319,12 @@ impl<'t> State<'t> {
         if let SummaryState::Writing(writer) = &mut self.summary_text {
             let content = writer.0.trim();
             self.summary_text = SummaryState::Finished(String::from(content));
+        }
+    }
+
+    fn append_heading_text(&mut self, text: &str) {
+        if let Some(heading) = &mut self.heading_text {
+            heading.push_str(text);
         }
     }
 
@@ -351,6 +415,8 @@ impl<'t> State<'t> {
                     .into_iter()
                     .map(|(k, v)| (String::from(k), v.map(String::from)))
                     .collect::<HashMap<_, _>>();
+
+                self.heading_text = Some(String::new());
 
                 self.enter(RenderCxt::Heading {
                     level,
@@ -552,6 +618,9 @@ impl<'t> State<'t> {
                     id
                 };
 
+                let title = self.heading_text.take().unwrap_or_default();
+                self.outline.add_heading(level, id.clone(), title);
+
                 let context = RenderCxt::Heading {
                     level,
                     id,
@@ -700,6 +769,7 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
 
         Event::Text(text) => {
             state.write_escaped_body_text(&text)?;
+            state.append_heading_text(&text);
             Ok(())
         }
 
@@ -707,6 +777,7 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
             state.write("<code>")?;
             state.write_escaped(&text)?;
             state.write("</code>")?;
+            state.append_heading_text(&text);
             Ok(())
         }
 
@@ -737,6 +808,7 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
 
         Event::SoftBreak => {
             state.write("\n")?;
+            state.append_heading_text(" ");
             Ok(())
         }
 
@@ -778,7 +850,12 @@ pub struct Rendered {
     pub summary: Option<String>,
     pub summary_text: Option<String>,
     pub content: String,
+    pub toc: Vec<Outline>,
 }
+
+/// Marker that may be placed in Markdown content to request a table of
+/// contents. It is replaced with the rendered TOC during rendering.
+pub const TOC_MARKER: &str = "<!--TOC-->";
 
 pub fn render<'a, I>(templates: &Environment<'static>, mut events: I) -> anyhow::Result<Rendered>
 where
@@ -805,16 +882,24 @@ where
         anyhow::bail!("stack is not empty");
     }
 
-    let content = state.take_content();
+    let mut content = state.take_content();
     let summary_text = state.take_summary_text();
     let summary = state
         .summary_html
         .take()
         .filter(|summary| !summary.is_empty());
+    let toc = state.outline.finish();
+
+    let toc_html = crate::templates::render_toc_html(templates, &Value::from_serialize(&toc))?;
+
+    content = content.replace(TOC_MARKER, &toc_html);
+    let summary_text = summary_text.map(|text| text.replace(TOC_MARKER, &toc_html));
+    let summary = summary.map(|text| text.replace(TOC_MARKER, &toc_html));
 
     Ok(Rendered {
         summary,
         summary_text,
         content,
+        toc,
     })
 }

@@ -1,5 +1,3 @@
-use std::collections::BTreeMap;
-
 use minijinja::{Error, Value};
 
 fn page_url(base: &str, page: usize) -> String {

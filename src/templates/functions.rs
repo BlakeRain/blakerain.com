@@ -8,6 +8,7 @@ mod icon;
 mod image;
 mod paginate;
 mod path;
+mod toc;
 
 pub fn register(environment: &mut Environment) {
     environment.add_function("abort", abort);
@@ -25,6 +26,7 @@ pub fn register(environment: &mut Environment) {
     environment.add_function("path_join", path::path_join);
     environment.add_function("path_parent", path::path_parent);
     environment.add_function("repeat", repeat);
+    environment.add_function("toc", toc::toc);
 }
 
 fn abort(message: &str) -> Result<(), Error> {

@@ -1,5 +1,5 @@
 @layer components {
-  nav#TableOfContents {
+  nav.table-of-contents {
     &:before {
       display: block;
       content: "Table of Contents";

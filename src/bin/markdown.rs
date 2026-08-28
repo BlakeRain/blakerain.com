@@ -133,6 +133,15 @@ fn main() -> anyhow::Result<()> {
             String::from("content"),
             serde_json::Value::String(rendered.content),
         );
+
+        page.insert(
+            String::from("toc"),
+            if rendered.toc.is_empty() {
+                serde_json::Value::Null
+            } else {
+                serde_json::to_value(&rendered.toc).context("failed to serialize toc")?
+            },
+        );
     }
 
     if let Some(path) = args.output {
