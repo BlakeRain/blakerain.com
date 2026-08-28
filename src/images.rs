@@ -23,15 +23,24 @@ pub fn parse_spec(src: &str) -> anyhow::Result<ImageSpec> {
         };
 
         match prefix {
-            "w" => width = Some(rest.parse::<u32>().with_context(|| {
-                format!("invalid number in width specifier {part:?}")
-            })?),
-            "h" => height = Some(rest.parse::<u32>().with_context(|| {
-                format!("invalid number in height specifier {part:?}")
-            })?),
-            "q" => quality = Some(rest.parse::<u32>().with_context(|| {
-                format!("invalid number in quality specifier {part:?}")
-            })?),
+            "w" => {
+                width = Some(
+                    rest.parse::<u32>()
+                        .with_context(|| format!("invalid number in width specifier {part:?}"))?,
+                )
+            }
+            "h" => {
+                height = Some(
+                    rest.parse::<u32>()
+                        .with_context(|| format!("invalid number in height specifier {part:?}"))?,
+                )
+            }
+            "q" => {
+                quality = Some(
+                    rest.parse::<u32>()
+                        .with_context(|| format!("invalid number in quality specifier {part:?}"))?,
+                )
+            }
             _ => anyhow::bail!("unrecognized image specifier {part:?}"),
         }
     }
@@ -52,8 +61,8 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
     let src_path = PathBuf::from("content").join(PathBuf::from(base).join(&src));
     let src = PathBuf::from(base).join(src);
 
-    let metadata = std::fs::metadata(&src_path)
-        .with_context(|| format!("image not found at {src_path:?}"))?;
+    let metadata =
+        std::fs::metadata(&src_path).with_context(|| format!("image not found at {src_path:?}"))?;
 
     if !metadata.is_file() {
         anyhow::bail!("image is not a file: {src_path:?}");
@@ -135,10 +144,34 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
     }
 
     tracing::info!(?src_path, "reading image");
-    let image = ImageReader::open(&src_path)
+    let mut image = ImageReader::open(&src_path)
         .with_context(|| format!("failed to read image at {src_path:?}"))?
         .decode()
         .with_context(|| format!("failed to decode image at {src_path:?}"))?;
+
+    let (src_width, src_height) = (image.width(), image.height());
+
+    let scale = match (spec.width, spec.height) {
+        (Some(width), Some(height)) => {
+            (width as f64 / src_width as f64).min(height as f64 / src_height as f64)
+        }
+        (Some(width), None) => width as f64 / src_width as f64,
+        (None, Some(height)) => height as f64 / src_height as f64,
+        (None, None) => 1.0,
+    }
+    .min(1.0);
+
+    if scale < 1.0 {
+        let target_width = ((src_width as f64 * scale).round() as u32).max(1);
+        let target_height = ((src_height as f64 * scale).round() as u32).max(1);
+
+        tracing::info!(?src_path, ?target_width, ?target_height, "resizing image");
+        image = image.resize(
+            target_width,
+            target_height,
+            image::imageops::FilterType::Lanczos3,
+        );
+    }
 
     {
         let encoder = webp::Encoder::from_image(&image)

@@ -129,3 +129,45 @@ pub fn load_pages(path: &str) -> Result<Value, Error> {
 
     Ok(Value::from(pages))
 }
+
+pub fn list_files(path: &str) -> Result<Value, Error> {
+    let path = PathBuf::from(path);
+
+    if !path.is_dir() {
+        return Err(Error::new(
+            ErrorKind::InvalidOperation,
+            format!("directory not found at {path:?}"),
+        ));
+    }
+
+    let mut files = Vec::new();
+    for entry in std::fs::read_dir(&path).map_err(|err| {
+        Error::new(
+            ErrorKind::InvalidOperation,
+            format!("failed to read directory at {path:?}: {err}"),
+        )
+    })? {
+        let entry = entry.map_err(|err| {
+            Error::new(
+                ErrorKind::InvalidOperation,
+                format!("failed to read directory entry in {path:?}: {err}"),
+            )
+        })?;
+
+        if !entry.file_type().map_err(|err| {
+            Error::new(
+                ErrorKind::InvalidOperation,
+                format!("failed to stat directory entry in {path:?}: {err}"),
+            )
+        })?.is_file()
+        {
+            continue;
+        }
+
+        files.push(entry.file_name().to_string_lossy().to_string());
+    }
+
+    files.sort();
+
+    Ok(Value::from(files))
+}

@@ -2,7 +2,8 @@
 <div class="book-card">
   <div class="book-cover">
     <a href="{{ url }}" target="_blank" rel="noopener">
-      <img class="book-cover" src="{{ cover }}" alt="Book Cover of {{ title }}">
+      {%- set cover_image = image(cover, "q75") %}
+      <img class="book-cover" src="{{ cover_image.path }}" alt="Book Cover of {{ title }}">
     </a>
   </div>
   <div class="book-info">
