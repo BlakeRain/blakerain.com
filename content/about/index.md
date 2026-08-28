@@ -73,6 +73,7 @@ For a full career timeline and selected highlights, see my [hire page](/hire).
 If you need to get in touch with me, you can either use
 <a href="mailto:blake.rain@blakerain.com">email</a> or DM me on [Mastodon].
 
+```html
 <ul class="contact">
   <li>
     {{ icon("bootstrap", "envelope-at") }}
@@ -90,6 +91,7 @@ If you need to get in touch with me, you can either use
     <div><a href="https://www.linkedin.com/in/blakerain/">linkedin.com/in/blakerain</a></div>
   </li>
 </ul>
+```
 
 ## Public Key { .no-outline }
 

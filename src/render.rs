@@ -105,6 +105,12 @@ enum CodeBlockInfo {
     Fenced { info: String },
 }
 
+impl CodeBlockInfo {
+    fn is_html(&self) -> bool {
+        matches!(self, Self::Fenced { info } if info.trim() == "html")
+    }
+}
+
 impl From<pulldown_cmark::CodeBlockKind<'_>> for CodeBlockInfo {
     fn from(kind: pulldown_cmark::CodeBlockKind) -> Self {
         match kind {
@@ -245,6 +251,7 @@ struct State<'t> {
     footnotes: HashMap<String, usize>,
     outline: OutlineBuilder,
     heading_text: Option<String>,
+    html_code_block: bool,
     summary_text: SummaryState,
     summary_html: Option<String>,
     base: String,
@@ -269,6 +276,7 @@ impl<'t> State<'t> {
             stack: VecDeque::new(),
             outline: OutlineBuilder::default(),
             heading_text: None,
+            html_code_block: false,
             footnotes: HashMap::new(),
             summary_text: SummaryState::Writing(FmtWriter(String::new())),
             summary_html: None,
@@ -505,6 +513,7 @@ impl<'t> State<'t> {
 
             Tag::CodeBlock(info) => {
                 let info = CodeBlockInfo::from(info);
+                self.html_code_block = info.is_html();
                 self.enter(RenderCxt::CodeBlock { info });
             }
 
@@ -756,9 +765,17 @@ impl<'t> State<'t> {
             TagEnd::Strong => self.write("</strong>")?,
             TagEnd::Strikethrough => self.write("</del>")?,
 
+            TagEnd::CodeBlock => {
+                self.html_code_block = false;
+
+                let content = self
+                    .leave()
+                    .with_context(|| format!("failed to leave context for {tag:?}"))?;
+                self.writer.write_str(&content)?;
+            }
+
             TagEnd::Table
             | TagEnd::BlockQuote(_)
-            | TagEnd::CodeBlock
             | TagEnd::List(_)
             | TagEnd::DefinitionList
             | TagEnd::Link
@@ -785,8 +802,12 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
         Event::End(tag) => state.end_tag(tag),
 
         Event::Text(text) => {
-            state.write_escaped_body_text(&text)?;
-            state.append_heading_text(&text);
+            if state.html_code_block {
+                state.write(&text)?;
+            } else {
+                state.write_escaped_body_text(&text)?;
+                state.append_heading_text(&text);
+            }
             Ok(())
         }
 

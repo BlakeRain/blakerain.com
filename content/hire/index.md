@@ -13,15 +13,18 @@ software and hardware (JIT compilers, packet processors, custom NIC drivers) and
 distributed systems on AWS, from serverless orchestration to AI/ML integration. I'm now available
 for senior, principal, and staff engineering roles.
 
+```html
 <div class="hire-cta">
   <a class="plain button" href="/downloads/cv.pdf">Download my CV (PDF)</a>
   <a class="plain button" href="mailto:blake.rain@blakerain.com">Email me</a>
 </div>
+```
 
 ---
 
 ## What I Do
 
+```html
 <div class="hire-cards">
   <div class="hire-card">
     <h3>Systems &amp; Low-Level</h3>
@@ -46,6 +49,7 @@ for senior, principal, and staff engineering roles.
     </p>
   </div>
 </div>
+```
 
 ---
 
@@ -175,6 +179,7 @@ I'm based in Norwich, UK, and set up for fully remote work. I'm happy to travel 
 The fastest way to reach me is by email. You can also find me on the usual networks, or browse my
 code on GitHub and my self-hosted Forgejo instance.
 
+```html
 <ul class="contact">
   <li>
     {{ icon("bootstrap", "envelope-at") }}
@@ -202,3 +207,4 @@ code on GitHub and my self-hosted Forgejo instance.
     <div><a href="https://git.blakerain.com/BlakeRain/">git.blakerain.com/BlakeRain</a></div>
   </li>
 </ul>
+```
