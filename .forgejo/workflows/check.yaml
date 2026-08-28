@@ -13,33 +13,43 @@ jobs:
   check:
     runs-on: docker
     steps:
+      - name: Install Dependencies
+        run: |
+          apt-get update -y
+          apt-get install -y curl build-essential
+
       - name: Checkout the repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v6
         with:
           node-version: 25
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Install Rust
+        uses: https://git.blakerain.com/actions/setup-rust-toolchain@forgejo
+        with:
+          toolchain: stable
+          components: clippy
+
       - name: Install node dependencies
         run: |
-          npm i
+          pnpm i
 
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.26
 
-      - name: Setup hugo
-        uses: https://github.com/peaceiris/actions-hugo@v3
-        with:
-          hugo-version: latest
-          extended: true
-
       - name: Build the site
-        run: hugo --minify
+        run: make release
 
       - name: Check typos
         uses: https://github.com/crate-ci/typos@master
