@@ -1,4 +1,5 @@
 {%- macro bandcamp(album, url, tracklist=false) %}
+```html
 <div class="bandcamp-embed">
   <iframe
     style="border: 0; width: 560px; height: {% if tracklist %}472px{% else %}120px{% endif %};"
@@ -7,4 +8,5 @@
     <a href="{{ url }}">{{ caller() }}</a>
   </iframe>
 </div>
+```
 {%- endmacro %}

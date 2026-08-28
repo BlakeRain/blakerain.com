@@ -2,6 +2,7 @@
 {%- set dir = "content/" ~ page.base ~ "/" ~ src %}
 {%- set metadata = load_data(dir ~ "/gallery.yaml") %}
 {%- set captions = metadata.captions | default({}, true) %}
+```html
 <figure class="gallery">
   {%- if caption %}
     <figcaption>{{ caption }}</figcaption>
@@ -41,4 +42,5 @@
     {%- endfor %}
   </div>
 </figure>
+```
 {%- endmacro %}

@@ -1,4 +1,5 @@
 {%- macro book(url, title, cover, author, subtitle=none, rating=0, year=0, pages=0) %}
+```html
 <div class="book-card">
   <div class="book-cover">
     <a href="{{ url }}" target="_blank" rel="noopener">
@@ -38,12 +39,15 @@
     {%- endif %}
   </div>
   <div class="book-content">
+```
 
 {{ caller() }}
 
+```html
   <a class="book-link" href="{{ url }}" target="_blank" rel="noopener">
     View book {{ icon("lucide", "arrow-right") }}
   </a>
   </div>
 </div>
+```
 {%- endmacro %}

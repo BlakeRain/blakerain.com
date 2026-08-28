@@ -1,4 +1,5 @@
 {%- macro quote(author, url=none) %}
+```html
 <figure class="quote">
   <p>{{ caller() | safe }}</p>
   {%- if author is string %}
@@ -11,4 +12,5 @@
     </cite>
   {%- endif %}
 </figure>
+```
 {%- endmacro %}
