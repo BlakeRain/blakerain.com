@@ -1,12 +1,14 @@
-/* Content wrapper - constrains page width */
-.content {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  width: min(100%, 64rem);
+@layer components {
+  /* Content wrapper - constrains page width */
+  .content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    width: min(100%, 64rem);
 
-  @media print {
-    padding-left: 0;
-    padding-right: 0;
-    max-width: 100%;
+    @media print {
+      padding-left: 0;
+      padding-right: 0;
+      max-width: 100%;
+    }
   }
 }

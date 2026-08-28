@@ -1,21 +1,19 @@
-div.highlight {
-  @import "./syntax/catppuccin-latte.css";
+@import "./syntax/catppuccin-latte.css";
+@import "./syntax/catppuccin-mocha.css";
 
-  &.text-wrap {
-    pre {
-      white-space: pre-wrap;
-    }
+@layer components {
+  div.highlight {
 
-    &.aggressive {
+    &.text-wrap {
       pre {
-        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      &.aggressive {
+        pre {
+          overflow-wrap: anywhere;
+        }
       }
     }
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  div.highlight {
-    @import "./syntax/catppuccin-mocha.css";
   }
 }

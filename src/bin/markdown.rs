@@ -75,6 +75,7 @@ fn main() -> anyhow::Result<()> {
     let mut page = serde_json::json!({
         "path": path.to_string_lossy().to_owned(),
         "base": base.to_string_lossy().to_owned(),
+        "name": path.file_stem().context("failed to get file stem")?.to_string_lossy().to_string(),
         "metadata": {
             "size": metadata.len(),
             "modified": OffsetDateTime::from(metadata.modified().context("failed to get modified time")?),

@@ -1,85 +1,89 @@
-figure {
-  width: 100%;
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+@layer components {
+  .markdown {
+    figure {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-  & div.highlight {
-    width: 100%;
-    overflow-x: scroll;
-  }
+      & div.highlight {
+        width: 100%;
+        overflow-x: scroll;
+      }
 
-  & pre {
-    margin-bottom: 0;
-    width: 100%;
-    background-color: var(--color-surface-subtle);
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    overflow-x: scroll;
+      & pre {
+        margin-bottom: 0;
+        width: 100%;
+        background-color: var(--color-surface-subtle);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        overflow-x: scroll;
 
-    & code {
-      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-      line-height: var(--leading-snug);
-    }
+        & code {
+          font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+          line-height: var(--leading-snug);
+        }
 
-    @media print {
-      padding: 0.5rem;
-    }
-  }
+        @media print {
+          padding: 0.5rem;
+        }
+      }
 
-  & img {
-    height: auto;
-    max-width: 100%;
-    border-radius: var(--radius-md);
-  }
+      & img {
+        height: auto;
+        max-width: 100%;
+        border-radius: var(--radius-md);
+      }
 
-  &.quote {
-    position: relative;
-    align-items: flex-start;
+      &.quote {
+        position: relative;
+        align-items: flex-start;
 
-    &::before {
-      position: absolute;
-      top: -18px;
-      left: -44px;
-      content: "\201c";
-      font-size: 6rem;
-      line-height: 1;
-      display: none;
-      color: var(--color-text-subtle);
+        &::before {
+          position: absolute;
+          top: -18px;
+          left: -44px;
+          content: "\201c";
+          font-size: 6rem;
+          line-height: 1;
+          display: none;
+          color: var(--color-text-subtle);
 
-      @media (--screen-md) {
-        display: block;
+          @media (--screen-md) {
+            display: block;
+          }
+        }
+
+        & p {
+          font-style: italic;
+          margin-bottom: 0;
+          color: var(--color-text-muted);
+        }
+
+        & cite {
+          font-family: ui-sans-serif, system-ui, sans-serif;
+          margin-left: 1rem;
+
+          &::before {
+            content: "— ";
+          }
+        }
       }
     }
 
-    & p {
-      font-style: italic;
-      margin-bottom: 0;
-      color: var(--color-text-muted);
-    }
+    figure:not(.gallery) {
+      figcaption {
+        margin-top: 0.5rem;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: var(--text-sm);
+        text-align: center;
+        color: var(--color-text-muted);
 
-    & cite {
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      margin-left: 1rem;
-
-      &::before {
-        content: "— ";
+        p {
+          margin-bottom: 0 !important;
+        }
       }
-    }
-  }
-}
-
-figure:not(.gallery) {
-  figcaption {
-    margin-top: 0.5rem;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    font-size: var(--text-sm);
-    text-align: center;
-    color: var(--color-text-muted);
-
-    p {
-      margin-bottom: 0 !important;
     }
   }
 }

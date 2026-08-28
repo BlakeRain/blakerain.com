@@ -1,5 +1,5 @@
 /* Components for the hire page */
-@import "./assets/css/media.css";
+@import "../../assets/css/media.css";
 
 .hire-cta {
   display: flex;

@@ -1,119 +1,121 @@
-:root {
-  --nav-text: #e5e5e5;
-  --nav-social-text: rgba(229, 229, 229, 0.75);
-}
-
-.site-navigation {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-
-  background-color: var(--color-brand);
-  backdrop-filter: blur(8px);
-  color: var(--nav-text);
-  box-shadow: var(--shadow-md);
-
-  @media print {
-    display: none;
+@layer components {
+  :root {
+    --nav-text: #e5e5e5;
+    --nav-social-text: rgba(229, 229, 229, 0.75);
   }
 
-  @media (prefers-color-scheme: dark) {
-    box-shadow: none;
-  }
+  .site-navigation {
+    position: sticky;
+    top: 0;
+    z-index: 10;
 
-  > .content {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: column;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    background-color: var(--color-brand);
+    backdrop-filter: blur(8px);
+    color: var(--nav-text);
+    box-shadow: var(--shadow-md);
 
-    @media (--screen-sm) {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    @media (--screen-md) {
-      flex-direction: row;
-    }
-
-    > .header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-
-      > a {
-        display: block;
-        padding-right: 1rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-
-        > img {
-          display: block;
-        }
-      }
-
-      > button {
-        padding: 1rem;
-
-        @media (--screen-md) {
-          display: none;
-        }
-      }
-    }
-
-    > ul {
+    @media print {
       display: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      box-shadow: none;
+    }
+
+    > .content {
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
       flex-direction: column;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+
+      @media (--screen-sm) {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
 
       @media (--screen-md) {
-        display: flex;
         flex-direction: row;
       }
 
-      &.open {
-        display: flex;
-      }
-
-      > li {
+      > .header {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
         > a {
-          flex: 1;
-          padding: 1.5rem 1rem;
-          transition: var(--transition-colors);
+          display: block;
+          padding-right: 1rem;
+          padding-top: 1rem;
+          padding-bottom: 1rem;
 
-          &:hover {
-            text-decoration: underline;
+          > img {
+            display: block;
           }
+        }
 
-          &.active {
-            text-decoration: underline;
+        > button {
+          padding: 1rem;
+
+          @media (--screen-md) {
+            display: none;
           }
         }
       }
-    }
 
-    > .socials {
-      display: none;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-      margin-left: auto;
+      > ul {
+        display: none;
+        flex-direction: column;
 
-      @media (--screen-md) {
-        display: flex;
+        @media (--screen-md) {
+          display: flex;
+          flex-direction: row;
+        }
+
+        &.open {
+          display: flex;
+        }
+
+        > li {
+          display: flex;
+          flex-direction: row;
+
+          > a {
+            flex: 1;
+            padding: 1.5rem 1rem;
+            transition: var(--transition-colors);
+
+            &:hover {
+              text-decoration: underline;
+            }
+
+            &.active {
+              text-decoration: underline;
+            }
+          }
+        }
       }
 
-      a {
-        color: var(--nav-social-text);
-        transition: var(--transition-colors);
+      > .socials {
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
 
-        &.github:hover {
-          color: white;
+        @media (--screen-md) {
+          display: flex;
+        }
+
+        a {
+          color: var(--nav-social-text);
+          transition: var(--transition-colors);
+
+          &.github:hover {
+            color: white;
+          }
         }
       }
     }

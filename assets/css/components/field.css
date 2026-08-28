@@ -1,117 +1,119 @@
-/* Field component variables */
-:root {
-  --label-text: var(--color-text-secondary);
-  --label-text-disabled: var(--color-disabled);
+@layer components {
+  /* Field component variables */
+  :root {
+    --label-text: var(--color-text-secondary);
+    --label-text-disabled: var(--color-disabled);
 
-  --field-bg: #f9fafb;
-  --field-text: var(--color-disabled-dark);
-  --field-border: var(--color-disabled);
-  --field-border-focus: var(--color-brand-light);
-  --field-focus-ring: rgba(28, 71, 115, 0.2);
-  --field-disabled-bg: #f3f4f6;
-  --field-disabled-border: #e5e7eb;
-  --field-disabled-text: var(--color-meta);
-  --field-invalid-border: var(--color-error);
+    --field-bg: #f9fafb;
+    --field-text: var(--color-disabled-dark);
+    --field-border: var(--color-disabled);
+    --field-border-focus: var(--color-brand-light);
+    --field-focus-ring: rgba(28, 71, 115, 0.2);
+    --field-disabled-bg: #f3f4f6;
+    --field-disabled-border: #e5e7eb;
+    --field-disabled-text: var(--color-meta);
+    --field-invalid-border: var(--color-error);
 
-  --field-icon-color: var(--color-border);
+    --field-icon-color: var(--color-border);
 
-  @media (prefers-color-scheme: dark) {
-    --field-text: white;
-    --field-bg: #24242b;
-    --field-disabled-bg: #18181b;
-    --field-disabled-border: #3f3f46;
-  }
-}
-
-/* Form label */
-label {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: var(--label-text);
-
-  &:disabled {
-    color: var(--label-text-disabled);
-  }
-}
-
-/* Form field input */
-.field {
-  display: block;
-  width: 100%;
-  padding: 0.5rem 0.625rem;
-  font-size: var(--text-base);
-
-  outline: none;
-  border: 1px solid var(--field-border);
-  border-radius: var(--radius-lg);
-
-  background-color: var(--field-bg);
-  color: var(--field-text);
-
-  &:focus {
-    border-color: var(--field-border-focus);
-    box-shadow: 0 0 0 2px var(--field-focus-ring);
+    @media (prefers-color-scheme: dark) {
+      --field-text: white;
+      --field-bg: #24242b;
+      --field-disabled-bg: #18181b;
+      --field-disabled-border: #3f3f46;
+    }
   }
 
-  &:disabled {
-    background-color: var(--field-disabled-bg);
-    border-color: var(--field-disabled-border);
-    color: var(--field-disabled-text);
-    cursor: not-allowed;
-  }
-
-  &:invalid {
-    border-color: var(--field-invalid-border);
-  }
-
-  @media (--screen-sm) {
+  /* Form label */
+  label {
+    display: block;
     font-size: var(--text-sm);
-  }
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--label-text);
 
-  @media (prefers-color-scheme: dark) {
-    &::placeholder {
-      color: var(--field-placeholder);
+    &:disabled {
+      color: var(--label-text-disabled);
     }
   }
 
-  &.right {
-    text-align: right;
-  }
-}
+  /* Form field input */
+  .field {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.625rem;
+    font-size: var(--text-base);
 
-/* Input with icons */
-.input-icons {
-  position: relative;
+    outline: none;
+    border: 1px solid var(--field-border);
+    border-radius: var(--radius-lg);
 
-  & svg:first-child,
-  & svg:last-child {
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    margin-top: -0.625rem;
-    color: var(--field-icon-color);
-  }
+    background-color: var(--field-bg);
+    color: var(--field-text);
 
-  & svg:first-child {
-    left: 0.75rem;
-  }
-
-  & svg:last-child {
-    right: 0.75rem;
-  }
-
-  & select,
-  & input[type="text"],
-  & input[type="number"],
-  & input[type="password"] {
-    &.icon-left {
-      padding-left: 2.5rem;
+    &:focus {
+      border-color: var(--field-border-focus);
+      box-shadow: 0 0 0 2px var(--field-focus-ring);
     }
 
-    &.icon-right {
-      padding-right: 2.5rem;
+    &:disabled {
+      background-color: var(--field-disabled-bg);
+      border-color: var(--field-disabled-border);
+      color: var(--field-disabled-text);
+      cursor: not-allowed;
+    }
+
+    &:invalid {
+      border-color: var(--field-invalid-border);
+    }
+
+    @media (--screen-sm) {
+      font-size: var(--text-sm);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      &::placeholder {
+        color: var(--field-placeholder);
+      }
+    }
+
+    &.right {
+      text-align: right;
+    }
+  }
+
+  /* Input with icons */
+  .input-icons {
+    position: relative;
+
+    & svg:first-child,
+    & svg:last-child {
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      margin-top: -0.625rem;
+      color: var(--field-icon-color);
+    }
+
+    & svg:first-child {
+      left: 0.75rem;
+    }
+
+    & svg:last-child {
+      right: 0.75rem;
+    }
+
+    & select,
+    & input[type="text"],
+    & input[type="number"],
+    & input[type="password"] {
+      &.icon-left {
+        padding-left: 2.5rem;
+      }
+
+      &.icon-right {
+        padding-right: 2.5rem;
+      }
     }
   }
 }

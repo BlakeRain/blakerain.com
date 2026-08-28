@@ -162,6 +162,14 @@ pub fn image(state: &State, src: &str, spec: &str) -> Result<Value, Error> {
             PathBuf::from(filename)
         };
 
+        let output_url = output_url.strip_prefix("content").map_err(|err| {
+            tracing::error!(?src_path, ?err, "failed to strip content prefix");
+            Error::new(
+                ErrorKind::InvalidOperation,
+                format!("failed to strip content prefix: {err}"),
+            )
+        })?;
+
         let output_path = PathBuf::from("output").join(&output_url);
 
         (output_path, format!("/{}", output_url.to_string_lossy()))

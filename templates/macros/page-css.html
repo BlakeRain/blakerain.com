@@ -1,0 +1,13 @@
+{%- macro page_css() %}
+{%- set page_css_path = path_join("content", page.base, page.name ~ ".css") %}
+{%- if page.frontmatter is mapping and page.frontmatter.css is string %}
+{%-   if not file_exists(page.frontmatter.css) %}
+{{      abort("CSS file not found at " ~ page.frontmatter.css) }}
+{%-   endif %}
+{%-   set page_css_path = page.frontmatter.css %}
+{%- endif %}
+{%- if file_exists(page_css_path) %}
+{%- set output = path_drop_prefix(page_css_path, "content") %}
+<link rel="stylesheet" href="{{ css(page_css_path, output=output) | safe }}">
+{%- endif %}
+{%- endmacro %}

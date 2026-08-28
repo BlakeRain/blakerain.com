@@ -1,13 +1,15 @@
-.socials {
-  > a:hover {
-    &.forgejo  { color: #c2410c; }
-    &.github   { color: #24292e; }
-    &.mastodon { color: #6364FF; }
-    &.linkedin { color: #0A66C2; }
+@layer components {
+  .socials {
+    > a:hover {
+      &.forgejo  { color: #c2410c; }
+      &.github   { color: #24292e; }
+      &.mastodon { color: #6364FF; }
+      &.linkedin { color: #0A66C2; }
 
-    @media (prefers-color-scheme: dark) {
-      &.forgejo  { color: #fB923c; }
-      &.github   { color: white;   }
+      @media (prefers-color-scheme: dark) {
+        &.forgejo  { color: #fB923c; }
+        &.github   { color: white;   }
+      }
     }
   }
 }

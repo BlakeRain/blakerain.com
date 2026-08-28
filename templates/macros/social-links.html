@@ -1,5 +1,5 @@
 {%- macro social_links(mode="icons", class="", linkClass="", wrap=true, iconSize=undefined) %}
-  {%- if wrap %}<div class="{{ class }} links>">{% endif %}
+  {%- if wrap %}<div class="{{ class }} socials">{% endif %}
   {%- for social in load_data("data/social.yaml") %}
     <a href="{{ social.url }}"
       target="_blank"

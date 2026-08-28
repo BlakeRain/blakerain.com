@@ -1,78 +1,80 @@
-/* Button component variables */
-:root {
-  --button-text: #e7e7e7;
-  --button-text-hover: #f5f5f5;
-  --button-bg: var(--color-brand-light);
-  --button-bg-hover: var(--color-brand);
-  --button-bg-active: var(--color-brand);
-  --button-disabled-text: var(--color-disabled);
-  --button-disabled-bg: #e5e7eb;
-  --button-focus-ring: var(--color-brand);
+@layer components {
+  /* Button component variables */
+  :root {
+    --button-text: #e7e7e7;
+    --button-text-hover: #f5f5f5;
+    --button-bg: var(--color-brand-light);
+    --button-bg-hover: var(--color-brand);
+    --button-bg-active: var(--color-brand);
+    --button-disabled-text: var(--color-disabled);
+    --button-disabled-bg: #e5e7eb;
+    --button-focus-ring: var(--color-brand);
 
-  --button-outline-border: var(--button-bg);
-  --button-outline-text: var(--button-text);
-  --button-outline-bg-hover: rgba(100, 116, 139, 0.1);
-  --button-outline-bg-active: rgba(51, 65, 85, 0.5);
+    --button-outline-border: var(--button-bg);
+    --button-outline-text: var(--button-text);
+    --button-outline-bg-hover: rgba(100, 116, 139, 0.1);
+    --button-outline-bg-active: rgba(51, 65, 85, 0.5);
 
-  @media (prefers-color-scheme: dark) {
-    --button-disabled-bg: #3f3f46;
-    --button-disabled-text: #99a1af;
-  }
-}
-
-/* Button component */
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-
-  padding: 0.5rem 1rem;
-  font-size: var(--text-sm);
-  white-space: nowrap;
-
-  color: var(--button-text);
-  background-color: var(--button-bg);
-  transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
-
-  &:hover:not(:disabled) {
-    color: var(--button-text-hover);
-    background-color: var(--button-bg-hover);
+    @media (prefers-color-scheme: dark) {
+      --button-disabled-bg: #3f3f46;
+      --button-disabled-text: #99a1af;
+    }
   }
 
-  &:active:not(:disabled) {
-    background-color: var(--button-bg-active);
+  /* Button component */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+
+    padding: 0.5rem 1rem;
+    font-size: var(--text-sm);
+    white-space: nowrap;
+
+    color: var(--button-text);
+    background-color: var(--button-bg);
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+    &:hover:not(:disabled) {
+      color: var(--button-text-hover);
+      background-color: var(--button-bg-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--button-bg-active);
+    }
+
+    &:disabled {
+      color: var(--button-disabled-text);
+      background-color: var(--button-disabled-bg);
+      cursor: not-allowed;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--button-outline-border), 0 0 0 4px var(--button-focus-ring);
+    }
+
+    & > svg {
+      margin-right: 0.25rem;
+    }
   }
 
-  &:disabled {
-    color: var(--button-disabled-text);
-    background-color: var(--button-disabled-bg);
-    cursor: not-allowed;
-  }
+  /* Outline button variant */
+  .button.button-outline {
+    background-color: transparent;
+    border-color: var(--button-outline-border);
+    color: var(--button-outline-text);
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--button-outline-border), 0 0 0 4px var(--button-focus-ring);
-  }
+    &:hover:not(:disabled) {
+      background-color: var(--button-outline-bg-hover);
+    }
 
-  & > svg {
-    margin-right: 0.25rem;
-  }
-}
-
-/* Outline button variant */
-.button.button-outline {
-  background-color: transparent;
-  border-color: var(--button-outline-border);
-  color: var(--button-outline-text);
-
-  &:hover:not(:disabled) {
-    background-color: var(--button-outline-bg-hover);
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--button-outline-bg-active);
+    &:active:not(:disabled) {
+      background-color: var(--button-outline-bg-active);
+    }
   }
 }

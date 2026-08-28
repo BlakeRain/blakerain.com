@@ -1,4 +1,3 @@
-@layer site {
 @import "tokens.css";
 @import "media.css";
 @import "reset.css";
@@ -23,58 +22,59 @@
 
 @import "syntax.css";
 
-:root {
-  --body-text: var(--color-text);
-  --body-bg: var(--color-surface);
+@layer site {
+  :root {
+    --body-text: var(--color-text);
+    --body-bg: var(--color-surface);
 
-  --link-colored-text: var(--color-link);
-  --link-colored-text-hover: var(--color-link-hover);
-}
-
-html {
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-  tab-size: 4;
-  font-family: var(--sans-font-family);
-}
-
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-
-  color: var(--body-text);
-  background-color: var(--body-bg);
-  background-repeat: repeat;
-  background-image: url("/media/cartographer-light.webp");
-
-  @media (prefers-color-scheme: dark) {
-    background-image: url("/media/cartographer-dark.webp");
-  }
-}
-
-a.colored {
-  color: var(--link-colored-text);
-  transition: var(--transition-colors);
-
-  &:not(.plain) {
-    text-decoration: underline;
+    --link-colored-text: var(--color-link);
+    --link-colored-text-hover: var(--color-link-hover);
   }
 
-  &:hover {
-    color: var(--link-colored-text-hover);
+  html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--sans-font-family);
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
-    border-radius: var(--radius-md);
-  }
-}
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 
-/* Inline SVG icons from hugomods/icons */
-.hi-svg-inline {
-  display: inline;
-  vertical-align: -0.125rem;
-}
+    color: var(--body-text);
+    background-color: var(--body-bg);
+    background-repeat: repeat;
+    background-image: url("/media/cartographer-light.webp");
+
+    @media (prefers-color-scheme: dark) {
+      background-image: url("/media/cartographer-dark.webp");
+    }
+  }
+
+  a.colored {
+    color: var(--link-colored-text);
+    transition: var(--transition-colors);
+
+    &:not(.plain) {
+      text-decoration: underline;
+    }
+
+    &:hover {
+      color: var(--link-colored-text-hover);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-brand);
+      border-radius: var(--radius-md);
+    }
+  }
+
+  /* Inline SVG icons from hugomods/icons */
+  .hi-svg-inline {
+    display: inline;
+    vertical-align: -0.125rem;
+  }
 }

@@ -27,7 +27,7 @@ impl TryFrom<&Value> for ParsedDate {
 
                 Err(Error::new(
                     ErrorKind::InvalidOperation,
-                    "not a valid date or datetime",
+                    format!("not a valid date or datetime: {:?}", value),
                 ))
             }
         } else {

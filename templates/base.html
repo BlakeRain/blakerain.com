@@ -30,6 +30,8 @@
         <meta name="keywords" content="{{ page.tags | join(', ') }}">
       {%- endif %}
     {%- endif %}
+    {% from "macros/page-css.html" import page_css %}
+    {{ page_css() }}
     {% block head %}{% endblock %}
   </head>
   <body>

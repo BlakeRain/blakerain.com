@@ -5,7 +5,7 @@
 <main class="articles-list content">
   <h1>Blog</h1>
   <div class="items separated">
-    {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) %}
+    {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) if page.base != "blog" %}
       {%- call article_item(page) %}
         <p>
           {%- if page.frontmatter.summary -%}
@@ -22,4 +22,3 @@
   </div>
 </main>
 {% endblock %}
-

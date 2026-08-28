@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% block head %}
+  {% from "macros/page-css.html" import page_css %}
+  {{ page_css() }}
+{% endblock %}
 {% block main %}
 <main class="page-main">
   {% set options = {} %}

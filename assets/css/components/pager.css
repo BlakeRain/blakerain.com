@@ -1,17 +1,19 @@
-.pager {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  margin-top: 2rem;
-  font-size: var(--text-lg);
+@layer components {
+  .pager {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    font-size: var(--text-lg);
 
-  @media (--screen-lg) {
-    gap: 1rem;
+    @media (--screen-lg) {
+      gap: 1rem;
+    }
   }
-}
 
-.pager-current {
-  color: var(--color-text-muted);
+  .pager-current {
+    color: var(--color-text-muted);
+  }
 }

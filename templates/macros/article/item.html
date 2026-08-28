@@ -1,12 +1,14 @@
 {%- macro article_item(page) %}
   <article>
     <a class="colored" href="/{{ page.base }}">
-      <h1>{{ page.title }}</h1>
+      <h1>{{ page.frontmatter.title }}</h1>
     </a>
     <div class="meta">
       <div class="meta-row">
-        <span>{{ page.date | date(format="[day] [month repr:short] [year]") }}</span>
-        <span class="separator">&#8226;</span>
+        {%- if page.frontmatter.date %}
+          <span>{{ page.frontmatter.date | date(format="[day] [month repr:short] [year]") }}</span>
+          <span class="separator">&#8226;</span>
+        {% endif %}
         <span>{{ page.reading_time }} min read</span>
         {% if page.frontmatter.link %}
           <span class="separator">&#8226;</span>
@@ -16,7 +18,7 @@
             class="colored"
             rel="noopener noreferrer">
             {{ icon("lucide", "external-link") }}
-            {{ (page.frontmatter | parse_url).host }}
+            {{ (page.frontmatter.link | parse_url).host }}
           </a>
         {% endif %}
         {% if page.frontmatter.archive %}

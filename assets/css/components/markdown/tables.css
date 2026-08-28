@@ -1,68 +1,72 @@
-div.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+@layer components {
+  .markdown {
+    div.table-wrapper {
+      width: 100%;
+      overflow-x: auto;
 
-  &:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
+      &:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
 
-  & table {
-    min-width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
+      & table {
+        min-width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
 
-    & thead {
-      background-color: transparent;
-      color: inherit;
+        & thead {
+          background-color: transparent;
+          color: inherit;
 
-      & tr th {
-        padding: 0.5rem 0.75rem;
+          & tr th {
+            padding: 0.5rem 0.75rem;
 
-        &.left {
-          text-align: left;
+            &.left {
+              text-align: left;
+            }
+
+            &.right {
+              text-align: right;
+            }
+
+            &.center {
+              text-align: center;
+            }
+          }
         }
 
-        &.right {
-          text-align: right;
+        & tbody tr td {
+          white-space: nowrap;
+          padding: 0.5rem 0.75rem;
+
+          &.left {
+            text-align: left;
+          }
+
+          &.right {
+            text-align: right;
+          }
+
+          &.center {
+            text-align: center;
+          }
         }
 
-        &.center {
-          text-align: center;
+        &.tight {
+          & thead tr th,
+          & tbody tr td {
+            padding: 0.25rem;
+          }
         }
-      }
-    }
 
-    & tbody tr td {
-      white-space: nowrap;
-      padding: 0.5rem 0.75rem;
+        &:not(.borderless) {
+          & thead {
+            border-bottom: 1px solid var(--color-border);
+          }
 
-      &.left {
-        text-align: left;
-      }
-
-      &.right {
-        text-align: right;
-      }
-
-      &.center {
-        text-align: center;
-      }
-    }
-
-    &.tight {
-      & thead tr th,
-      & tbody tr td {
-        padding: 0.25rem;
-      }
-    }
-
-    &:not(.borderless) {
-      & thead {
-        border-bottom: 1px solid var(--color-border);
-      }
-
-      & tbody tr {
-        border-bottom: 1px solid var(--color-border);
+          & tbody tr {
+            border-bottom: 1px solid var(--color-border);
+          }
+        }
       }
     }
   }

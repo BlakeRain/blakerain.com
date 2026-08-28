@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use minijinja::{Error, ErrorKind, State};
+use minijinja::{value::Rest, Error, ErrorKind, State};
 
 pub fn base_url(state: &State, url: String) -> Result<String, Error> {
     let Some(site) = state.lookup("site") else {
@@ -39,4 +39,36 @@ pub fn path_parent(path: &str) -> Result<String, Error> {
 
 pub fn file_exists(path: &str) -> Result<bool, Error> {
     Ok(PathBuf::from(path).is_file())
+}
+
+pub fn path_join(start: &str, args: Rest<String>) -> Result<String, Error> {
+    let mut path = PathBuf::from(start);
+    for arg in args.0.iter() {
+        path.push(arg);
+    }
+
+    Ok(path.to_string_lossy().to_string())
+}
+
+pub fn path_drop_prefix(path: &str, prefix: &str) -> Result<String, Error> {
+    let path = PathBuf::from(path);
+    let prefix = PathBuf::from(prefix);
+
+    if !path.starts_with(&prefix) {
+        return Err(Error::new(
+            ErrorKind::InvalidOperation,
+            format!("path does not start with prefix: {:?}", prefix),
+        ));
+    }
+
+    let path = path.strip_prefix(&prefix).map_err(|err| {
+        tracing::error!(?path, ?prefix, ?err, "failed to strip prefix");
+
+        Error::new(
+            ErrorKind::InvalidOperation,
+            format!("failed to strip prefix: {err}"),
+        )
+    })?;
+
+    Ok(path.to_string_lossy().to_string())
 }

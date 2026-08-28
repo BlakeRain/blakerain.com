@@ -1,7 +1,7 @@
 ---
 title: Blog
 description: "A random collection of thoughts, ideas and journalling"
+template: blog/index.html
 menus:
   - main
 ---
-

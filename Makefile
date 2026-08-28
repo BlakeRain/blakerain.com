@@ -11,7 +11,7 @@ else
 	CARGO_FLAGS =
 	TARGET_DIR = target/debug
 	POSTCSS_FLAGS = --map --env development
-	RENDER_FALGS =
+	RENDER_FLAGS =
 endif
 
 # The two tools, written in Rust, that we use to render the website.
@@ -24,8 +24,14 @@ CONTENT = $(shell find content -type f -name '*.md')
 PAGES_HTML = $(patsubst content/%.md,output/%.html,$(CONTENT))
 PAGES_JSON = $(patsubst output/%.html,build/content/%.json,$(PAGES_HTML))
 
-# Assets eclude CSS and JavaScript from the catch-all rule
-ASSETS = $(patsubst assets/%,output/%,$(shell find assets -type f ! -path 'assets/css/*'))
+# Assets exclude CSS and JavaScript from the catch-all rule
+ASSETS = $(patsubst assets/%,output/%,$(shell find assets -type f ! -path 'assets/css/*' ! -path 'assets/js/*'))
+
+# JavaScript is handled by its own terser/copy rules below
+JAVASCRIPT = $(patsubst assets/js/%.js,output/js/%.js,$(shell find assets/js -type f -name '*.js'))
+
+# Static files are copied verbatim into the output
+STATIC = $(patsubst static/%,output/%,$(shell find static -type f))
 
 # Extra output files
 EXTRA_OUTPUT = output/css/main.css \
@@ -36,13 +42,13 @@ EXTRA_OUTPUT = output/css/main.css \
 
 .PHONY: debug release all clean
 
+all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT)
+
 debug:
 	$(MAKE) MODE=debug all
 
 release:
 	$(MAKE) MODE=release all
-
-all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(EXTRA_OUTPUT)
 
 build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 	mkdir -p $(dir $@)
@@ -60,11 +66,11 @@ build/content/%.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(MARKDOWN) -o $@ $<
 
-output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css')
+output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css') postcss.config.js
 	mkdir -p $(dir $@)
-	NODE_ENV9=$(NODE_ENV) pnpm postcss $< -o $@
+	NODE_ENV=$(NODE_ENV) pnpm postcss $< -o $@
 
-ifeq ($)(MODE),release)
+ifeq ($(MODE),release)
 output/js/%.js: assets/js/%.js
 	mkdir -p $(dir $@)
 	yarn terser $< -o $@
@@ -86,9 +92,9 @@ output/blog/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{"target":"blog"}' | $(RENDER) -o $@ rss.xml
 
-output/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
-	mkdir -p $(dir $@)
-	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ home.html
+# output/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
+# 	mkdir -p $(dir $@)
+# 	echo "{}" | $(RENDER) $(RENDER_FLAGS) -o $@ home.html
 
 # output/weeknotes/index.html: $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 # 	mkdir -p $(dir $@)
@@ -99,6 +105,10 @@ output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES
 	cat data/tags.yaml | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tags.html
 
 output/%: assets/%
+	mkdir -p $(dir $@)
+	cp $< $@
+
+$(STATIC): output/%: static/%
 	mkdir -p $(dir $@)
 	cp $< $@
 

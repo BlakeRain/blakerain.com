@@ -22,7 +22,7 @@
     <div class="content mx-auto inner">
       <h1 class="{% if cover_image is mapping %}with-cover{% endif %}{% if page.frontmatter.subtitle %} with-subtitle{% endif %}">
         <a href="/{{ page.base }}/" class="u-url p-name" rel="bookmark">
-          {{ page.title }}
+          {{ page.frontmatter.title }}
         </a>
       </h1>
       {% if page.frontmatter.subtitle %}
