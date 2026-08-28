@@ -122,6 +122,14 @@ fn main() -> anyhow::Result<()> {
         );
 
         page.insert(
+            String::from("summary_text"),
+            rendered
+                .summary_text
+                .map(serde_json::Value::String)
+                .unwrap_or(serde_json::Value::Null),
+        );
+
+        page.insert(
             String::from("content"),
             serde_json::Value::String(rendered.content),
         );

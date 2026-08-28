@@ -189,7 +189,8 @@ struct State<'t> {
     tcache: HashMap<&'static str, Template<'t, 't>>,
     stack: VecDeque<(FmtWriter<String>, RenderCxt)>,
     footnotes: HashMap<String, usize>,
-    summary: SummaryState,
+    summary_text: SummaryState,
+    summary_html: Option<String>,
     writer: FmtWriter<String>,
 }
 
@@ -210,7 +211,8 @@ impl<'t> State<'t> {
             tcache,
             stack: VecDeque::new(),
             footnotes: HashMap::new(),
-            summary: SummaryState::Writing(FmtWriter(String::new())),
+            summary_text: SummaryState::Writing(FmtWriter(String::new())),
+            summary_html: None,
             writer: FmtWriter(String::new()),
         })
     }
@@ -228,7 +230,7 @@ impl<'t> State<'t> {
     fn write(&mut self, text: &str) -> anyhow::Result<()> {
         self.writer.write_str(text)?;
 
-        if let SummaryState::Writing(writer) = &mut self.summary {
+        if let SummaryState::Writing(writer) = &mut self.summary_text {
             writer.write_str(text)?;
         }
 
@@ -238,7 +240,7 @@ impl<'t> State<'t> {
     fn write_escaped(&mut self, text: &str) -> anyhow::Result<()> {
         escape_html(&mut self.writer, text)?;
 
-        if let SummaryState::Writing(writer) = &mut self.summary {
+        if let SummaryState::Writing(writer) = &mut self.summary_text {
             escape_html(writer, text)?;
         }
 
@@ -248,23 +250,23 @@ impl<'t> State<'t> {
     fn write_escaped_body_text(&mut self, text: &str) -> anyhow::Result<()> {
         escape_html_body_text(&mut self.writer, text)?;
 
-        if let SummaryState::Writing(writer) = &mut self.summary {
+        if let SummaryState::Writing(writer) = &mut self.summary_text {
             escape_html_body_text(writer, text)?;
         }
 
         Ok(())
     }
 
-    fn finish_summary(&mut self) {
-        if let SummaryState::Writing(writer) = &mut self.summary {
+    fn finish_summary_text(&mut self) {
+        if let SummaryState::Writing(writer) = &mut self.summary_text {
             let content = writer.0.trim();
-            self.summary = SummaryState::Finished(String::from(content));
+            self.summary_text = SummaryState::Finished(String::from(content));
         }
     }
 
-    fn take_summary(&mut self) -> Option<String> {
+    fn take_summary_text(&mut self) -> Option<String> {
         let mut summary = SummaryState::Writing(FmtWriter(String::new()));
-        std::mem::swap(&mut self.summary, &mut summary);
+        std::mem::swap(&mut self.summary_text, &mut summary);
 
         let summary = match summary {
             SummaryState::Writing(writer) => writer.0,
@@ -502,11 +504,16 @@ impl<'t> State<'t> {
             TagEnd::HtmlBlock => {}
 
             TagEnd::Paragraph => {
-                self.finish_summary();
+                self.finish_summary_text();
 
                 let content = self
                     .leave()
                     .with_context(|| "failed to leave context for {tag:?}")?;
+
+                if self.summary_html.is_none() {
+                    self.summary_html = Some(content.trim().to_string());
+                }
+
                 self.writer.write_str(&content)?;
             }
 
@@ -718,8 +725,10 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
         }
 
         Event::Html(html) | Event::InlineHtml(html) => {
-            if &*html == "<!--more-->" {
-                state.finish_summary();
+            if html.trim() == "<!--more-->" {
+                state.finish_summary_text();
+                state.summary_html = Some(state.writer.0.trim().to_string());
+                return Ok(());
             }
 
             state.write(&html)?;
@@ -767,6 +776,7 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
 
 pub struct Rendered {
     pub summary: Option<String>,
+    pub summary_text: Option<String>,
     pub content: String,
 }
 
@@ -796,7 +806,15 @@ where
     }
 
     let content = state.take_content();
-    let summary = state.take_summary();
+    let summary_text = state.take_summary_text();
+    let summary = state
+        .summary_html
+        .take()
+        .filter(|summary| !summary.is_empty());
 
-    Ok(Rendered { summary, content })
+    Ok(Rendered {
+        summary,
+        summary_text,
+        content,
+    })
 }

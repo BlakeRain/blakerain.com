@@ -23,8 +23,8 @@
     <meta name="author" content="Blake Rain">
     {%- if page %}
       <link rel="canonical" href="https://blakerain.com/{{ page.path }}">
-      {%- if page.summary %}
-        <meta name="description" content="{{ page.summary }}">
+      {%- if page.summary_text %}
+        <meta name="description" content="{{ page.summary_text }}">
       {%- endif %}
       {%- if page.tags and page.tags | length > 0 %}
         <meta name="keywords" content="{{ page.tags | join(', ') }}">

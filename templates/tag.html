@@ -12,13 +12,11 @@
     {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) %}
       {% if page.frontmatter.tags | contains(page.tag) %}
         {% call article_item(page) %}
-          <p>
-            {% if page.frontmatter.summary %}
-              {{ page.frontmatter.summary }}
-            {% else %}
-              {{ page.summary | safe }}
-            {% endif %}
-          </p>
+          {% if page.frontmatter.summary %}
+            <p>{{ page.frontmatter.summary }}</p>
+          {% else %}
+            {{ page.summary | safe }}
+          {% endif %}
           <p class="read-more">
             <a class="colored" href="/{{ page.base }}/">Read more …</a>
           </p>

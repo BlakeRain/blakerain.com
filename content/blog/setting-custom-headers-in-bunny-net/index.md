@@ -97,7 +97,7 @@ few seconds this propagated across the CDN and I was seeing the headers in my br
 
 The full edge rule looks like this:
 
-{{ figure("bunny-custom-headers.png", enlarge=true, caption="Edge rule in Bunny CDN to add custom headers", enlarge=true) }}
+{{ figure("bunny-custom-headers.png", enlarge=true, caption="Edge rule in Bunny CDN to add custom headers") }}
 
 # Adding DNSSEC
 
