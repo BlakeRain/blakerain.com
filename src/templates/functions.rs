@@ -6,6 +6,7 @@ mod css;
 mod data;
 mod icon;
 mod image;
+mod paginate;
 mod path;
 
 pub fn register(environment: &mut Environment) {
@@ -19,6 +20,7 @@ pub fn register(environment: &mut Environment) {
     environment.add_function("load_data", data::load_data);
     environment.add_function("load_page", data::load_page);
     environment.add_function("load_pages", data::load_pages);
+    environment.add_function("paginate", paginate::paginate);
     environment.add_function("path_drop_prefix", path::path_drop_prefix);
     environment.add_function("path_join", path::path_join);
     environment.add_function("path_parent", path::path_parent);

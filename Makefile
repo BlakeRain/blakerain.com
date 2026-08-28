@@ -40,9 +40,12 @@ EXTRA_OUTPUT = output/css/main.css \
 							 output/blog/index.xml \
 							 output/tags/index.html
 
+# Pagination pages for the blog index
+BLOG_PAGINATION = build/blog.pagination.stamp
+
 .PHONY: debug release all clean
 
-all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT)
+all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION)
 
 debug:
 	$(MAKE) MODE=debug all
@@ -96,6 +99,10 @@ output/blog/index.xml: $(CONTENT) $(RENDER) $(TEMPLATES)
 output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)
 	cat data/tags.yaml | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tags.html
+
+$(BLOG_PAGINATION): $(PAGES_JSON) $(RENDER) $(TEMPLATES) scripts/render-paginated.sh
+	RENDER="$(RENDER)" RENDER_FLAGS="$(RENDER_FLAGS)" ./scripts/render-paginated.sh blog blog/index.html 10
+	touch $@
 
 output/%: assets/%
 	mkdir -p $(dir $@)

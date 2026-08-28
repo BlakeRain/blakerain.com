@@ -2,10 +2,14 @@
 {% extends "base.html" %}
 {% block title %}Blog{% endblock %}
 {% block main %}
+{% set posts = load_pages("blog")
+     | rejectattr("base", "eq", "blog")
+     | sort(attribute="frontmatter.date", reverse=true) %}
+{% set pager = paginate(posts, page.page_number | default(1), page.frontmatter.paginate | default(10), "blog") %}
 <main class="articles-list content">
   <h1>Blog</h1>
   <div class="items separated">
-    {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) if page.base != "blog" %}
+    {%- for page in pager.items %}
       {%- call article_item(page) %}
         {%- if page.frontmatter.summary -%}
           <p>{{ page.frontmatter.summary }}</p>
@@ -18,5 +22,28 @@
       {%- endcall %}
     {%- endfor %}
   </div>
+  <noscript id="articles-pager">
+    <nav class="pager">
+      {%- if pager.prev %}
+        <a href="{{ pager.prev | safe }}" class="colored">Previous</a>
+      {%- endif %}
+      {%- for p in pager.pages %}
+        {%- if p.number == pager.page %}
+          <span class="pager-current">{{ p.number }}</span>
+        {%- else %}
+          <a class="colored" href="{{ p.url | safe }}">{{ p.number }}</a>
+        {%- endif %}
+      {%- endfor %}
+      {%- if pager.next %}
+        <a href="{{ pager.next | safe }}" class="colored">Next</a>
+      {%- endif %}
+    </nav>
+  </noscript>
+  {%- if pager.next %}
+    <div id="articles-list-sentinel" data-url="{{ pager.next | safe }}">
+      <p class="loading" hidden>Loading more articles …</p>
+    </div>
+    <script src="/js/scroll-load.js" defer></script>
+  {%- endif %}
 </main>
 {% endblock %}
