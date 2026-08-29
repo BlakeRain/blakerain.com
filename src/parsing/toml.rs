@@ -11,7 +11,7 @@ pub fn load_toml<P: AsRef<Path>>(path: P) -> anyhow::Result<Value> {
         return Err(anyhow::anyhow!("TOML file not found at {:?}", path));
     }
 
-    let contents = std::fs::read_to_string(&path).context("failed to read TOML file")?;
+    let contents = std::fs::read_to_string(path).context("failed to read TOML file")?;
     parse_toml(&contents)
 }
 

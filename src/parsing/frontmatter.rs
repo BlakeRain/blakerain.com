@@ -40,7 +40,7 @@ pub fn parse_frontmatter(lines: Vec<String>) -> anyhow::Result<(serde_json::Valu
 
     let prefix = mode.get_prefix();
     let mut source = Vec::new();
-    while let Some(line) = lines.next() {
+    for line in lines.by_ref() {
         if line.starts_with(prefix) {
             break;
         }

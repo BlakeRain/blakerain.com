@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use anyhow::Context;
-use minijinja::{path_loader, Environment, Value};
+use minijinja::{Environment, Value, path_loader};
 
 mod filters;
 mod functions;

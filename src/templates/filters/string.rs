@@ -1,4 +1,4 @@
-use minijinja::{value::Kwargs, Error, ErrorKind};
+use minijinja::{Error, ErrorKind, value::Kwargs};
 
 pub fn substr(value: String, kwargs: Kwargs) -> Result<String, Error> {
     let start = kwargs.get::<Option<usize>>("start")?.unwrap_or(0);

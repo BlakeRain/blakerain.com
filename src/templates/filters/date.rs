@@ -1,9 +1,9 @@
-use minijinja::{value::Kwargs, Error, ErrorKind, Value};
-use serde::{de::value::SeqDeserializer, Deserialize};
+use minijinja::{Error, ErrorKind, Value, value::Kwargs};
+use serde::{Deserialize, de::value::SeqDeserializer};
 use time::{
-    format_description::{well_known, BorrowedFormatItem},
-    macros::format_description,
     Date, OffsetDateTime, PrimitiveDateTime,
+    format_description::{BorrowedFormatItem, well_known},
+    macros::format_description,
 };
 
 enum ParsedDate {

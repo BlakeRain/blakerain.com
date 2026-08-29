@@ -11,7 +11,7 @@ pub fn load_yaml<P: AsRef<Path>>(path: P) -> anyhow::Result<Value> {
         return Err(anyhow::anyhow!("YAML file not found at {:?}", path));
     }
 
-    let contents = std::fs::read_to_string(&path).context("failed to read YAML file")?;
+    let contents = std::fs::read_to_string(path).context("failed to read YAML file")?;
     parse_yaml(&contents)
 }
 

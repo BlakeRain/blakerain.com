@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use minijinja::{value::Rest, Environment, Error, ErrorKind, Value};
+use minijinja::{Environment, Error, ErrorKind, Value, value::Rest};
 
 mod css;
 mod data;

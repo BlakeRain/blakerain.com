@@ -106,7 +106,7 @@ pub fn load_pages(path: &str) -> Result<Value, Error> {
 
         tracing::info!(?path, "loading page");
 
-        let contents = std::fs::read_to_string(&path).map_err(|err| {
+        let contents = std::fs::read_to_string(path).map_err(|err| {
             tracing::error!(?path, ?err, "failed to read page");
 
             Error::new(
@@ -154,12 +154,15 @@ pub fn list_files(path: &str) -> Result<Value, Error> {
             )
         })?;
 
-        if !entry.file_type().map_err(|err| {
-            Error::new(
-                ErrorKind::InvalidOperation,
-                format!("failed to stat directory entry in {path:?}: {err}"),
-            )
-        })?.is_file()
+        if !entry
+            .file_type()
+            .map_err(|err| {
+                Error::new(
+                    ErrorKind::InvalidOperation,
+                    format!("failed to stat directory entry in {path:?}: {err}"),
+                )
+            })?
+            .is_file()
         {
             continue;
         }

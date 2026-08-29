@@ -56,7 +56,8 @@ fn main() -> anyhow::Result<()> {
     .context("failed to read Markdown file")?;
 
     let nlines = source.len();
-    let (mut frontmatter, source) = parse_frontmatter(source).context("failed to parse frontmatter")?;
+    let (mut frontmatter, source) =
+        parse_frontmatter(source).context("failed to parse frontmatter")?;
 
     if let Some(serde_json::Value::String(title)) = frontmatter.get_mut("title") {
         *title = title.trim().to_string();
@@ -64,7 +65,7 @@ fn main() -> anyhow::Result<()> {
 
     let source = if source.len() < nlines {
         std::iter::repeat_n(String::new(), nlines - source.len())
-            .chain(source.into_iter())
+            .chain(source)
             .collect::<Vec<_>>()
     } else {
         source
@@ -80,8 +81,8 @@ fn main() -> anyhow::Result<()> {
     let site = load_yaml("site.yaml").context("failed to load site configuration")?;
 
     let mut page = serde_json::json!({
-        "path": path.to_string_lossy().to_owned(),
-        "base": base.to_string_lossy().to_owned(),
+        "path": path.to_string_lossy(),
+        "base": base.to_string_lossy(),
         "name": path.file_stem().context("failed to get file stem")?.to_string_lossy().to_string(),
         "metadata": {
             "size": metadata.len(),
@@ -115,8 +116,8 @@ fn main() -> anyhow::Result<()> {
     let options = pulldown_cmark::Options::all();
     let parser = pulldown_cmark::Parser::new_ext(&source, options);
     let parser = pulldown_cmark::utils::TextMergeWithOffset::new(parser.into_offset_iter());
-    let rendered =
-        render(&templates, &base.to_string_lossy(), parser).context("failed to render page as markdown")?;
+    let rendered = render(&templates, &base.to_string_lossy(), parser)
+        .context("failed to render page as markdown")?;
 
     {
         let page = page.as_object_mut().expect("page to be a JSON object");

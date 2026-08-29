@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use minijinja::{
-    value::{Enumerator, Object},
     Error, ErrorKind, State, Value,
+    value::{Enumerator, Object},
 };
 
 #[derive(Debug)]
@@ -108,7 +108,7 @@ impl Object for Url {
                 };
 
                 let mut result = self.0.clone();
-                if let Err(_) = result.set_scheme(input) {
+                if result.set_scheme(input).is_err() {
                     return Err(Error::new(ErrorKind::InvalidOperation, "invalid scheme"));
                 }
 

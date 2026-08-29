@@ -4,7 +4,7 @@ use std::{
     sync::{Arc, LazyLock, Mutex, OnceLock},
 };
 
-use minijinja::{value::Kwargs, Error, ErrorKind, Value};
+use minijinja::{Error, ErrorKind, Value, value::Kwargs};
 use regex::Regex;
 
 static SVG_TAG_RE: LazyLock<Regex> =
@@ -16,6 +16,7 @@ static SVG_DIMENSION_RE: LazyLock<Regex> = LazyLock::new(|| {
 });
 
 pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
+    #[allow(clippy::type_complexity)]
     static ICON_CACHE: OnceLock<Arc<Mutex<HashMap<(String, String), String>>>> = OnceLock::new();
 
     let cache = ICON_CACHE.get_or_init(|| Arc::new(Mutex::new(HashMap::new())));
@@ -38,7 +39,7 @@ pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
         }
 
         let icon = SVG_TAG_RE
-            .replace(&icon, |caps: &regex::Captures| {
+            .replace(icon, |caps: &regex::Captures| {
                 let tag = caps.get(0).expect("SVG tag").as_str();
 
                 if let Some((left, right)) = tag.split_once('>') {
@@ -49,7 +50,7 @@ pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
             })
             .into_owned();
 
-        Value::from_safe_string(String::from(icon))
+        Value::from_safe_string(icon)
     }
 
     if let Some(icon) = cache.get(&key) {
@@ -86,7 +87,7 @@ pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
     let icon = contents.trim();
 
     let icon = SVG_TAG_RE
-        .replace(&icon, |caps: &regex::Captures| {
+        .replace(icon, |caps: &regex::Captures| {
             let tag = caps.get(0).expect("SVG tag").as_str();
             SVG_DIMENSION_RE.replace_all(tag, "").into_owned()
         })

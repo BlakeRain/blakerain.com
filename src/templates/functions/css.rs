@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use minijinja::{value::Kwargs, Error, ErrorKind};
+use minijinja::{Error, ErrorKind, value::Kwargs};
 
 pub fn css(path: &str, options: Kwargs) -> Result<String, Error> {
     let path = PathBuf::from(path);

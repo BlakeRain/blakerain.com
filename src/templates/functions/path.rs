@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use minijinja::{value::Rest, Error, ErrorKind, State};
+use minijinja::{Error, ErrorKind, State, value::Rest};
 
 pub fn base_url(state: &State, url: String) -> Result<String, Error> {
     let Some(site) = state.lookup("site") else {

@@ -321,7 +321,7 @@ impl<'t> State<'t> {
 
     fn get_template(&self, path: &'static str) -> anyhow::Result<Template<'t, 't>> {
         if let Some(template) = self.tcache.get(path) {
-            return Ok(template.clone());
+            Ok(template.clone())
         } else {
             self.templates
                 .get_template(path)
@@ -665,8 +665,7 @@ impl<'t> State<'t> {
                         content
                             .trim()
                             .chars()
-                            .map(|c| c.to_lowercase())
-                            .flatten()
+                            .flat_map(|c| c.to_lowercase())
                             .filter_map(|c| match c {
                                 'a'..='z' | '0'..='9' | '-' | '_' => Some(c),
                                 ' ' => Some('-'),
@@ -1002,14 +1001,14 @@ const TOC_MARKER: &str = "<!--TOC-->";
 pub fn render<'a, I>(
     templates: &Environment<'static>,
     base: &str,
-    mut events: I,
+    events: I,
 ) -> anyhow::Result<Rendered>
 where
     I: Iterator<Item = (Event<'a>, Range<usize>)>,
 {
     let mut state = State::new(templates, base)?;
 
-    while let Some((event, range)) = events.next() {
+    for (event, range) in events {
         dispatch(&mut state, event)
             .with_context(|| format!("error at {}:{}", range.start, range.end))?;
     }
