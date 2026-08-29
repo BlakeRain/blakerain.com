@@ -17,18 +17,17 @@
 
 This is the repository for my website [blakerain.com](https://blakerain.com/), which features a blog and some informational pages.
 
-The website is built using [hugo] and deployed by a Forgejo [workflow].
+The website is built using a custom processor written in Rust, and is deployed to the [Bunny] CDN by a Forgejo [workflow].
 
 ## Building
 
-The site can be built by first installing the dependencies with `npm i` and then running `hugo --minify`.
+The site can be built using the `Makefile` in the root of the repository:
 
 ```
-npm i
-hugo --minify
+make
 ```
 
-A development server can be started with `hugo server -D --disableFastRender`.
+A release build can be built with `make release`.
 
-[hugo]: https://gohugo.io/
+[Bunny]: https://bunny.net/
 [workflow]: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/.forgejo/workflows/deploy.yaml
