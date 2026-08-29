@@ -5,12 +5,16 @@ ifeq ($(MODE),release)
 	CARGO_FLAGS = --release
 	TARGET_DIR = target/release
 	POSTCSS_FLAGS = --no-map -env production
+	MARKDOWN_FLAGS =
+	HTML_FLAGS =
 	RENDER_FLAGS = --minify
 else
 	NODE_ENV = development
 	CARGO_FLAGS =
 	TARGET_DIR = target/debug
 	POSTCSS_FLAGS = --map --env development
+	MARKDOWN_FLAGS =
+	HTML_FLAGS =
 	RENDER_FLAGS =
 endif
 
@@ -89,15 +93,15 @@ output/%.html: build/content/%.html.json $(PAGES_HTML_JSON) $(TOOLS_JSON) $(REND
 
 build/content/%.html.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	$(MARKDOWN) -o $@ $<
+	$(MARKDOWN) $(MARKDOWN_FLAGS) -o $@ $<
 
 build/content/%.rss.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	$(MARKDOWN) --target rss -o $@ $<
+	$(MARKDOWN) $(MARKDOWN_FLAGS) --target rss -o $@ $<
 
 build/content/tools/%.html.json: content/tools/%.html $(HTML)
 	mkdir -p $(dir $@)
-	$(HTML) -o $@ $<
+	$(HTML) $(HTML_FLAGS) -o $@ $<
 
 output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css') $(THEMES) postcss.config.js
 	mkdir -p $(dir $@)
@@ -126,15 +130,15 @@ $(TOOLS_SCRIPTS): output/tools/%.js: content/tools/%.js
 
 output/sitemap.xml: $(PAGES_HTML_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	echo '{}' | $(RENDER) -o $@ sitemap.xml
+	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ sitemap.xml
 
 output/index.xml: $(PAGES_RSS_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	echo '{}' | $(RENDER) -o $@ rss.xml
+	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ rss.xml
 
 output/blog/index.xml: $(filter build/content/blog/%,$(PAGES_RSS_JSON)) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	echo '{"target":"blog"}' | $(RENDER) -o $@ rss.xml
+	echo '{"target":"blog"}' | $(RENDER) $(RENDER_FLAGS) -o $@ rss.xml
 
 output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_HTML_JSON)
 	mkdir -p $(dir $@)

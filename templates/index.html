@@ -42,9 +42,10 @@
                 <li>
                   <ul class="tag-list">
                     {%- for tag in page.frontmatter.tags %}
+                      {%- set tag_info = tag_infos[tag] %}
                       <li>
-                        <a href="/tags/{{ tag | safe }}/" class="tag p-category">
-                          {% if tag in tag_infos %}{{ tag_infos[tag].name }}{% else %}{{ abort("Unknown tag: " ~ tag) }}{% endif %}
+                        <a href="/tags/{{ tag | safe }}/" class="tag p-category" title="{{ tag_info.description }}">
+                          {{ tag_info.name }}
                         </a>
                       </li>
                     {%- endfor %}

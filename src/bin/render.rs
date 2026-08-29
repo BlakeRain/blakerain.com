@@ -5,10 +5,7 @@ use std::{
 
 use anyhow::Context;
 use blakerain_com::{
-    parsing::yaml::parse_yaml,
-    templates::load_templates,
-    tracing::setup_tracing,
-    types::Site,
+    parsing::yaml::parse_yaml, templates::load_templates, tracing::setup_tracing, types::Site,
 };
 use clap::Parser;
 use time::OffsetDateTime;

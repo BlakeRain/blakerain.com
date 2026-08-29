@@ -28,7 +28,7 @@
       </a>
       {%- if rating > 0 %}
         <div class="book-rating" title="Rating {{ rating }}/5">
-          {{ repeat("★", rating) }}{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}
+          <span>{{ repeat("★", rating) }}</span><span>{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}</span>
         </div>
       {%- endif %}
     </h3>
@@ -48,7 +48,7 @@
     </div>
     {%- if rating > 0 %}
       <div class="book-rating-mobile" title="Rating {{ rating }}/5">
-        {{ repeat("★", rating) }}{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}
+        <span>{{ repeat("★", rating) }}</span><span>{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}</span>
       </div>
     {%- endif %}
   </div>

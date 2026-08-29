@@ -55,8 +55,10 @@
       </div>
       {% if page.frontmatter.tags %}
         <div class="tag-list">
+          {%- set tag_infos = load_data("data/tags.yaml").tags %}
           {% for tag in page.frontmatter.tags %}
-            <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+            {% set tag_info = tag_infos[tag] %}
+            <a href="/tags/{{ tag | safe }}/" class="tag p-category" title="{{ tag_info.description }}">{{ tag_info.name }}</a>
           {% endfor %}
         </div>
       {% endif %}

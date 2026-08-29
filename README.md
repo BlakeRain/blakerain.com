@@ -29,5 +29,8 @@ make
 
 A release build can be built with `make release`.
 
+You can run a local development server that will rebuild the site on any changes and cause the
+browser to reload the page with the new content using `cargo run --bin dev`.
+
 [Bunny]: https://bunny.net/
 [workflow]: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/.forgejo/workflows/deploy.yaml
