@@ -37,8 +37,8 @@ PAGES_RSS_JSON = $(patsubst content/%.md,build/content/%.rss.json,$(RSS_CONTENT)
 # Tool pages are raw HTML (not Markdown), processed with the `html` tool. Their `index.js` files
 # are copied verbatim and loaded by the browser as ES modules.
 TOOLS = $(shell find content/tools -type f -name '*.html')
-TOOLS_JSON = $(patsubst content/tools/%.html,build/content/tools/%.html.json,$(TOOLS))
-TOOLS_PAGES = $(patsubst build/content/tools/%.html.json,output/tools/%.html,$(TOOLS_JSON))
+TOOLS_HTML = $(patsubst content/tools/%.html,output/tools/%.html,$(TOOLS))
+TOOLS_HTML_JSON = $(patsubst output/tools/%.html,build/content/tools/%.html.json,$(TOOLS_HTML))
 TOOLS_SCRIPTS = $(patsubst content/tools/%.js,output/tools/%.js,$(shell find content/tools -type f -name '*.js'))
 
 TAGS = $(shell cat data/tags.yaml | yq -r '.tags | keys | .[]' | sort)
@@ -68,7 +68,7 @@ BLOG_PAGINATION = build/blog.pagination.stamp
 
 .PHONY: debug release all clean
 
-all: $(PAGES_HTML) $(TOOLS_PAGES) $(TOOLS_SCRIPTS) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
+all: $(PAGES_HTML) $(TOOLS_HTML) $(TOOLS_SCRIPTS) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
 
 debug:
 	$(MAKE) MODE=debug all
@@ -87,7 +87,7 @@ $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
 $(THEME_EXPORTER): build/.cargo.$(MODE)
 
-output/%.html: build/content/%.html.json $(PAGES_HTML_JSON) $(TOOLS_JSON) $(RENDER) $(TEMPLATES)
+output/%.html: build/content/%.html.json $(PAGES_HTML_JSON) $(TOOLS_HTML_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	cat $< | $(RENDER) $(RENDER_FLAGS) -o $@ $$(./scripts/select-template.sh $< $*)
 
@@ -99,7 +99,7 @@ build/content/%.rss.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(MARKDOWN) $(MARKDOWN_FLAGS) --target rss -o $@ $<
 
-build/content/tools/%.html.json: content/tools/%.html $(HTML)
+build/content/tools/%.html.json: content/tools/%.html $(HTML) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(HTML) $(HTML_FLAGS) -o $@ $<
 

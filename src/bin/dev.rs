@@ -62,15 +62,7 @@ impl WatchConfig {
             return false;
         };
 
-        if self.directories.iter().any(|dir| {
-            tracing::info!(
-                "{:?} starts with {:?} = {}",
-                path,
-                dir,
-                path.starts_with(dir)
-            );
-            path.starts_with(dir)
-        }) {
+        if self.directories.iter().any(|dir| path.starts_with(dir)) {
             return true;
         }
 
@@ -79,7 +71,6 @@ impl WatchConfig {
             .iter()
             .any(|dir| path.starts_with(dir))
         {
-            tracing::info!("path {:?} starts with an excluded directory", path);
             return false;
         }
 
@@ -268,8 +259,6 @@ async fn main() -> anyhow::Result<()> {
 
         move |result: DebounceEventResult| match result {
             Ok(events) => {
-                tracing::info!("debouncer event: {:#?}", events);
-
                 let should_build = events.iter().any(|event| {
                     if !is_interesting_event(&event.event) {
                         return false;
