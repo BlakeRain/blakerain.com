@@ -36,7 +36,7 @@
       <script defer data-domain="blakerain.com" src="https://pa.blakerain.com/js/script.js" ></script>
     {%- endif %}
     {%- from "macros/page-css.html" import page_css %}
-    {{ page_css() }}
+    {%- if page %}{{ page_css() }}{%- endif %}
     {% block head %}{% endblock %}
   </head>
   <body>
