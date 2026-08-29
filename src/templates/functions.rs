@@ -23,6 +23,7 @@ pub fn register(environment: &mut Environment) {
     environment.add_function("load_pages", data::load_pages);
     environment.add_function("list_files", data::list_files);
     environment.add_function("paginate", paginate::paginate);
+    environment.add_function("related", data::related);
     environment.add_function("path_drop_prefix", path::path_drop_prefix);
     environment.add_function("path_join", path::path_join);
     environment.add_function("path_parent", path::path_parent);

@@ -125,6 +125,7 @@
       }
 
       > h1 {
+        justify-content: flex-start;
         font-size: var(--text-3xl);
         font-weight: var(--weight-bold);
       }

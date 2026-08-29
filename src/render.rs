@@ -7,7 +7,7 @@ use anyhow::Context;
 use minijinja::{Environment, Template, Value};
 use pulldown_cmark::{Alignment, BlockQuoteKind, Event, HeadingLevel, LinkType, Tag, TagEnd};
 use pulldown_cmark_escape::{FmtWriter, StrWrite, escape_html, escape_html_body_text};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{
     parse::{AttributeValue, CodeBlockSpec},
@@ -222,7 +222,7 @@ enum SummaryState {
     Finished(String),
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Outline {
     #[serde(skip)]
     level: u32,

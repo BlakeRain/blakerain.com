@@ -7,5 +7,8 @@
 <main class="page-main">
   {% set options = {} %}
   {% include "macros/article/article.html" %}
+  {% from "macros/article/related.html" import related_articles %}
+  {% set related_pages = related("blog", page.frontmatter.tags, page.base, 5) %}
+  {{ related_articles(related_pages) }}
 </main>
 {% endblock %}

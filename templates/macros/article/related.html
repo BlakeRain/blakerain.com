@@ -1,0 +1,17 @@
+{%- from "macros/article/item.html" import article_item %}
+{%- macro related_articles(pages) %}
+  {%- if pages %}
+  <div class="articles-list related-articles content">
+    <h1>Related Posts</h1>
+    <h2>
+      These are other posts that are related to this one.
+    </h2>
+    <div class="items">
+      {%- for page in pages %}
+        {%- call article_item(page) %}
+        {%- endcall %}
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+{%- endmacro %}
