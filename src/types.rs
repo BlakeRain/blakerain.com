@@ -9,6 +9,30 @@ use time::OffsetDateTime;
 
 use crate::render::Outline;
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Site {
+    pub title: String,
+    pub base_url: String,
+    #[serde(default = "default_target")]
+    pub target: String,
+}
+
+fn default_target() -> String {
+    String::from("html")
+}
+
+impl Site {
+    pub fn load<P: AsRef<Path>>(path: P) -> anyhow::Result<Self> {
+        let value = crate::parsing::yaml::load_yaml(path)?;
+        serde_json::from_value(value).context("failed to parse site configuration")
+    }
+
+    pub fn with_target(mut self, target: &str) -> Self {
+        self.target = String::from(target);
+        self
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Page {
     pub path: PathBuf,
@@ -56,7 +80,7 @@ impl Page {
         serde_json::from_str(&source).context("failed to parse frontmatter")
     }
 
-    pub fn load_all<P: AsRef<Path>>(path: P) -> anyhow::Result<Vec<Self>> {
+    pub fn load_all<P: AsRef<Path>>(path: P, target: &str) -> anyhow::Result<Vec<Self>> {
         let path = path.as_ref();
 
         if !path.is_dir() {
@@ -64,20 +88,29 @@ impl Page {
             anyhow::bail!("path {:?} is not a directory", path);
         }
 
+        let suffix = format!(".{target}.json");
         let mut pages = Vec::new();
-        for entry in walkdir::WalkDir::new(&path)
+        for entry in walkdir::WalkDir::new(path)
             .into_iter()
             .filter_map(|entry| entry.ok())
         {
-            let path = entry.path();
-            if !path.is_file() {
+            let entry_path = entry.path();
+            if !entry_path.is_file() {
                 continue;
             }
 
-            tracing::info!(?path, "loading page");
+            if !entry_path
+                .file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| name.ends_with(suffix.as_str()))
+            {
+                continue;
+            }
 
-            let page =
-                Page::load(path).with_context(|| format!("failed to load page at {path:?}"))?;
+            tracing::info!(?entry_path, "loading page");
+
+            let page = Page::load(entry_path)
+                .with_context(|| format!("failed to load page at {entry_path:?}"))?;
 
             pages.push(page);
         }
@@ -100,14 +133,8 @@ impl Page {
     }
 
     pub fn get_date(&self) -> Option<String> {
-        let Some(date) = self.frontmatter.get("date") else {
-            return None;
-        };
-
-        let Some(date) = date.as_str() else {
-            return None;
-        };
-
+        let date = self.frontmatter.get("date")?;
+        let date = date.as_str()?;
         Some(String::from(date))
     }
 }

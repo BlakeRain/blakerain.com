@@ -5,9 +5,10 @@ use std::{
 
 use anyhow::Context;
 use blakerain_com::{
-    parsing::yaml::{load_yaml, parse_yaml},
+    parsing::yaml::parse_yaml,
     templates::load_templates,
     tracing::setup_tracing,
+    types::Site,
 };
 use clap::Parser;
 use time::OffsetDateTime;
@@ -50,7 +51,7 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     setup_tracing(args.ansi, Some(args.verbose));
 
-    let site = load_yaml("site.yaml").context("failed to load site configuration")?;
+    let site = Site::load("site.yaml").context("failed to load site configuration")?;
 
     tracing::info!("loading template from {:?}", args.template);
     let templates = args.templates.unwrap_or_else(|| PathBuf::from("templates"));

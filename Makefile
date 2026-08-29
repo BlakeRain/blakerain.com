@@ -24,13 +24,17 @@ RUST_SOURCES = $(shell find src -type f -name '*.rs')
 TEMPLATES = $(shell find templates -type f)
 CONTENT = $(shell find content -type f -name '*.md')
 PAGES_HTML = $(patsubst content/%.md,output/%.html,$(CONTENT))
-PAGES_JSON = $(patsubst output/%.html,build/content/%.json,$(PAGES_HTML))
+PAGES_HTML_JSON = $(patsubst output/%.html,build/content/%.html.json,$(PAGES_HTML))
+
+# RSS variants of the blog and weeknotes pages.
+RSS_CONTENT = $(shell find content/blog content/weeknotes -type f -name '*.md')
+PAGES_RSS_JSON = $(patsubst content/%.md,build/content/%.rss.json,$(RSS_CONTENT))
 
 # Tool pages are raw HTML (not Markdown), processed with the `html` tool. Their `index.js` files
 # are copied verbatim and loaded by the browser as ES modules.
 TOOLS = $(shell find content/tools -type f -name '*.html')
-TOOLS_JSON = $(patsubst content/tools/%.html,build/content/tools/%.json,$(TOOLS))
-TOOLS_PAGES = $(patsubst build/content/tools/%.json,output/tools/%.html,$(TOOLS_JSON))
+TOOLS_JSON = $(patsubst content/tools/%.html,build/content/tools/%.html.json,$(TOOLS))
+TOOLS_PAGES = $(patsubst build/content/tools/%.html.json,output/tools/%.html,$(TOOLS_JSON))
 TOOLS_SCRIPTS = $(patsubst content/tools/%.js,output/tools/%.js,$(shell find content/tools -type f -name '*.js'))
 
 TAGS = $(shell cat data/tags.yaml | yq -r '.tags | keys | .[]' | sort)
@@ -79,15 +83,19 @@ $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
 $(THEME_EXPORTER): build/.cargo.$(MODE)
 
-output/%.html: build/content/%.json $(PAGES_JSON) $(TOOLS_JSON) $(RENDER) $(TEMPLATES)
+output/%.html: build/content/%.html.json $(PAGES_HTML_JSON) $(TOOLS_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	cat $< | $(RENDER) $(RENDER_FLAGS) -o $@ $$(./scripts/select-template.sh $< $*)
 
-build/content/%.json: content/%.md $(MARKDOWN) $(TEMPLATES)
+build/content/%.html.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(MARKDOWN) -o $@ $<
 
-build/content/tools/%.json: content/tools/%.html $(MARKDOWN)
+build/content/%.rss.json: content/%.md $(MARKDOWN) $(TEMPLATES)
+	mkdir -p $(dir $@)
+	$(MARKDOWN) --target rss -o $@ $<
+
+build/content/tools/%.html.json: content/tools/%.html $(HTML)
 	mkdir -p $(dir $@)
 	$(HTML) -o $@ $<
 
@@ -116,23 +124,23 @@ $(TOOLS_SCRIPTS): output/tools/%.js: content/tools/%.js
 	mkdir -p $(dir $@)
 	cp $< $@
 
-output/sitemap.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
+output/sitemap.xml: $(PAGES_HTML_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) -o $@ sitemap.xml
 
-output/index.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
+output/index.xml: $(PAGES_RSS_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) -o $@ rss.xml
 
-output/blog/index.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
+output/blog/index.xml: $(filter build/content/blog/%,$(PAGES_RSS_JSON)) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{"target":"blog"}' | $(RENDER) -o $@ rss.xml
 
-output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
+output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_HTML_JSON)
 	mkdir -p $(dir $@)
 	cat data/tags.yaml | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tags.html
 
-output/tags/%/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
+output/tags/%/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_HTML_JSON)
 	mkdir -p $(dir $@)
 	echo '{"tag":"$*"}' | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tag.html
 
@@ -140,7 +148,7 @@ output/404.html: $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ 404.html
 
-$(BLOG_PAGINATION): $(PAGES_JSON) $(RENDER) $(TEMPLATES) scripts/render-paginated.sh
+$(BLOG_PAGINATION): $(PAGES_HTML_JSON) $(RENDER) $(TEMPLATES) scripts/render-paginated.sh
 	RENDER="$(RENDER)" RENDER_FLAGS="$(RENDER_FLAGS)" ./scripts/render-paginated.sh blog blog/index.html 10
 	touch $@
 

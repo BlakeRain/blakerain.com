@@ -1,1 +1,1 @@
-<img src="{{ dest_url | safe }}" alt="{{ content }}" {% if title %}title="{{ title }}"{% endif %}>
+<img src="{% if site.target == "rss" and dest_url is startingwith "/" %}{{ base_url(dest_url) | safe }}{% else %}{{ dest_url | safe }}{% endif %}" alt="{{ content }}" {% if title %}title="{{ title }}"{% endif %}>

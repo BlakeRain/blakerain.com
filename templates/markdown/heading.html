@@ -7,5 +7,7 @@
   {%- else -%}
     {{ content | safe }}
   {%- endif -%}
-  <a class="heading-anchor" href="#{{ id }}">#</a>
+  {%- if site.target != "rss" -%}
+    <a class="heading-anchor" href="#{{ id }}">#</a>
+  {%- endif -%}
 </h{{ level }}>

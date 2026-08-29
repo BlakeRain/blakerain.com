@@ -1,3 +1,7 @@
 {%- macro cement(code) %}
+{%- if site.target == "rss" %}
+<p>Click here to see this on <a href="https://paste.blakerain.com/{{ code }}">paste.blakerain.com</a></p>
+{%- else %}
 <iframe src="https://paste.blakerain.com/embed/{{ code }}" class="cement"></iframe>
+{%- endif %}
 {%- endmacro %}

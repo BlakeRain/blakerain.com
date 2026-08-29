@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     parse::{AttributeValue, CodeBlockSpec},
     pikchr, syntax,
+    types::Site,
 };
 
 fn map_alignment(alignment: Alignment) -> Value {
@@ -287,12 +288,13 @@ struct State<'t> {
     word_count: usize,
     summary_text: SummaryState,
     summary_html: Option<String>,
+    site: Value,
     base: String,
     writer: FmtWriter<String>,
 }
 
 impl<'t> State<'t> {
-    fn new(templates: &'t Environment<'t>, base: &str) -> anyhow::Result<Self> {
+    fn new(templates: &'t Environment<'t>, base: &str, site: &Site) -> anyhow::Result<Self> {
         let mut tcache = HashMap::new();
         for path in TEMPLATE_PATHS {
             tcache.insert(
@@ -314,6 +316,7 @@ impl<'t> State<'t> {
             footnotes: HashMap::new(),
             summary_text: SummaryState::Writing(FmtWriter(String::new())),
             summary_html: None,
+            site: Value::from_serialize(site),
             base: String::from(base),
             writer: FmtWriter(String::new()),
         })
@@ -438,6 +441,7 @@ impl<'t> State<'t> {
         template
             .render(minijinja::context! {
                 content => writer.0,
+                site => self.site,
                 ..Value::from_serialize(&context)
             })
             .with_context(|| format!("failed to render template '{}'", template_path))
@@ -695,6 +699,7 @@ impl<'t> State<'t> {
                 let output = template
                     .render(minijinja::context! {
                         content,
+                        site => self.site,
                         ..Value::from_serialize(&context)
                     })
                     .with_context(|| format!("failed to render template {template_path:?}"))?;
@@ -837,6 +842,7 @@ impl<'t> State<'t> {
                             width => light_image.width,
                             height => light_image.height,
                             attributes => &attributes,
+                            site => self.site,
                             ..Value::from_serialize(&info)
                         })
                         .context("failed to render codeblock template")?;
@@ -869,6 +875,7 @@ impl<'t> State<'t> {
                         .render(minijinja::context! {
                             content,
                             attributes,
+                            site => self.site,
                             ..Value::from_serialize(&info)
                         })
                         .context("failed to render codeblock template")?;
@@ -1001,12 +1008,13 @@ const TOC_MARKER: &str = "<!--TOC-->";
 pub fn render<'a, I>(
     templates: &Environment<'static>,
     base: &str,
+    site: &Site,
     events: I,
 ) -> anyhow::Result<Rendered>
 where
     I: Iterator<Item = (Event<'a>, Range<usize>)>,
 {
-    let mut state = State::new(templates, base)?;
+    let mut state = State::new(templates, base, site)?;
 
     for (event, range) in events {
         dispatch(&mut state, event)

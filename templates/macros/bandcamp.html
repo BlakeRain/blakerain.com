@@ -1,4 +1,9 @@
 {%- macro bandcamp(album, url, tracklist=false) %}
+{%- if site.target == "rss" %}
+```html
+<p><a href="{{ url }}">{{ caller() }}</a></p>
+```
+{%- else %}
 ```html
 <div class="bandcamp-embed">
   <iframe
@@ -9,4 +14,5 @@
   </iframe>
 </div>
 ```
+{%- endif %}
 {%- endmacro %}

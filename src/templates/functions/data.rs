@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use anyhow::Context;
-use minijinja::{Error, ErrorKind, Value};
+use minijinja::{Error, ErrorKind, Value, value::Kwargs};
 
 use crate::{
     parsing::{toml::parse_toml, yaml::parse_yaml},
@@ -55,9 +55,11 @@ pub fn load_data(path: &str) -> Result<Value, Error> {
     })
 }
 
-pub fn load_page(path: &str) -> Result<Value, Error> {
+pub fn load_page(path: &str, kwargs: Kwargs) -> Result<Value, Error> {
+    let target = kwargs.get::<Option<&str>>("target")?.unwrap_or("html");
+
     let mut path = PathBuf::from(path);
-    path.add_extension("json");
+    path.add_extension(format!("{target}.json"));
     let path = PathBuf::from("build/content").join(path);
 
     if !path.is_file() {
@@ -77,7 +79,9 @@ pub fn load_page(path: &str) -> Result<Value, Error> {
     Ok(Value::from_serialize(page))
 }
 
-pub fn load_pages(path: &str) -> Result<Value, Error> {
+pub fn load_pages(path: &str, kwargs: Kwargs) -> Result<Value, Error> {
+    let target = kwargs.get::<Option<&str>>("target")?.unwrap_or("html");
+
     let path = PathBuf::from(path);
     let path = PathBuf::from("build/content").join(path);
 
@@ -91,7 +95,7 @@ pub fn load_pages(path: &str) -> Result<Value, Error> {
     }
 
     tracing::info!(?path, "loading pages");
-    let pages = Page::load_all(&path).map_err(|err| {
+    let pages = Page::load_all(&path, target).map_err(|err| {
         tracing::error!(?path, ?err, "failed to load pages");
 
         Error::new(
@@ -125,7 +129,7 @@ pub fn related(
     }
 
     let path = PathBuf::from("build").join("content").join(section);
-    let pages = Page::load_all(&path).map_err(|err| {
+    let pages = Page::load_all(&path, "html").map_err(|err| {
         tracing::error!(?path, ?err, "failed to load pages");
 
         Error::new(

@@ -3,11 +3,10 @@ use std::path::PathBuf;
 use anyhow::Context;
 use blakerain_com::{
     parse::load_frontmatter_and_source,
-    parsing::yaml::load_yaml,
     render::render,
     templates::load_templates,
     tracing::setup_tracing,
-    types::{Page, PageMetadata},
+    types::{Page, PageMetadata, Site},
 };
 use clap::Parser;
 use time::OffsetDateTime;
@@ -32,6 +31,10 @@ struct Args {
     /// The path to the directory containing our templates
     #[arg(long, env)]
     pub templates: Option<PathBuf>,
+
+    /// The rendering target (e.g. "html" or "rss")
+    #[arg(long, default_value = "html")]
+    pub target: String,
 
     /// The output path to write the JSON to
     #[arg(short, long, env)]
@@ -73,7 +76,9 @@ fn main() -> anyhow::Result<()> {
         reading_time: 0,
     };
 
-    let site = load_yaml("site.yaml").context("failed to load site configuration")?;
+    let site = Site::load("site.yaml")
+        .context("failed to load site configuration")?
+        .with_target(&args.target);
 
     let source = source.join("\n");
     let templates = args.templates.unwrap_or_else(|| PathBuf::from("templates"));
@@ -99,7 +104,7 @@ fn main() -> anyhow::Result<()> {
     let options = pulldown_cmark::Options::all();
     let parser = pulldown_cmark::Parser::new_ext(&source, options);
     let parser = pulldown_cmark::utils::TextMergeWithOffset::new(parser.into_offset_iter());
-    let rendered = render(&templates, &page.base.to_string_lossy(), parser)
+    let rendered = render(&templates, &page.base.to_string_lossy(), &site, parser)
         .context("failed to render page as markdown")?;
 
     {

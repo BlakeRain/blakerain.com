@@ -1,3 +1,3 @@
-<a href="{% if kind == "email" %}mailto:{% endif %}{{ dest_url | safe }}"{% if title %} title="{{ title }}"{% endif %}>
+<a href="{% if kind == "email" %}mailto:{{ dest_url | safe }}{% elif site.target == "rss" and dest_url is startingwith "/" %}{{ base_url(dest_url) | safe }}{% else %}{{ dest_url | safe }}{% endif %}"{% if title %} title="{{ title }}"{% endif %}>
   {{- content | safe -}}
 </a>

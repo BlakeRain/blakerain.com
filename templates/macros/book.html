@@ -1,4 +1,18 @@
 {%- macro book(url, title, cover, author, subtitle=none, rating=0, year=0, pages=0) %}
+{%- if site.target == "rss" %}
+```html
+<p>
+  <a href="{{ url }}"><strong>{{ title }}</strong></a>
+  {%- if subtitle %}<br><em>{{ subtitle }}</em>{%- endif %}<br>
+  {{ author }}{% if year > 0 %} ({{ year }}){% endif %}{% if pages > 0 %} &middot; {{ pages }}{% endif %}
+  {%- if rating > 0 %}<br>Rating: {{ repeat("★", rating) }}{% if rating < 5 %}{{ repeat("☆", 5 - rating) }}{% endif %}{%- endif %}
+</p>
+```
+{{ caller() }}
+```html
+<p><a href="{{ url }}">View book &rarr;</a></p>
+```
+{%- else %}
 ```html
 <div class="book-card">
   <div class="book-cover">
@@ -50,4 +64,5 @@
   </div>
 </div>
 ```
+{%- endif %}
 {%- endmacro %}

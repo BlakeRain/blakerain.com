@@ -18,7 +18,7 @@ SECTION="$1"
 TEMPLATE="$2"
 DEFAULT_SIZE="${3:-10}"
 
-INDEX_JSON="build/content/${SECTION}/index.json"
+INDEX_JSON="build/content/${SECTION}/index.html.json"
 if [ ! -f "$INDEX_JSON" ]; then
   echo "error: no index JSON at ${INDEX_JSON}" >&2
   exit 1
@@ -31,12 +31,12 @@ if [ -z "$PAGE_SIZE" ]; then
 fi
 
 # Count the section's pages (each lives in its own directory, e.g.
-# `build/content/blog/<slug>/index.json`), then work out how many pagination pages we need to
+# `build/content/blog/<slug>/index.html.json`), then work out how many pagination pages we need to
 # generate.
 #
 # Note: Page 1 is rendered by the normal Makefile rule.
 
-COUNT=$(find "build/content/${SECTION}" -mindepth 2 -name index.json | wc -l | tr -d ' ')
+COUNT=$(find "build/content/${SECTION}" -mindepth 2 -name index.html.json | wc -l | tr -d ' ')
 TOTAL=$(( (COUNT + PAGE_SIZE - 1) / PAGE_SIZE ))
 
 RENDER="${RENDER:-target/debug/render}"

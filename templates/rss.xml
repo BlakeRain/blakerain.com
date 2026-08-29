@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    {% if target == "blog" -%}
+    {% if page.target == "blog" -%}
       <link>{{ site.base_url }}blog/</link>
       <title>Blake Rain's Blog Posts</title>
       <description>Recent blog posts by Blake Rain</description>
@@ -16,17 +16,24 @@
     <managingEditor>blake@blakerain.com (Blake Rain)</managingEditor>
     <webMaster>blake@blakerain.com (Blake Rain)</webMaster>
     <lastBuildDate>{{ env.now | datetime(format="rfc2822") }}</lastBuildDate>
-    {% if target == "blog" -%}
-      {% set pages = load_pages("blog") -%}
+    {% if page.target == "blog" -%}
+      {% set pages = load_pages("blog", target="rss") -%}
     {%- else -%}
-      {% set pages = load_pages("blog") -%}
-      {% set pages = pages | chain(load_pages("weeknotes")) -%}
+      {% set pages = load_pages("blog", target="rss") -%}
+      {% set pages = pages | chain(load_pages("weeknotes", target="rss")) -%}
     {%- endif %}
     {%- set pages = pages | sort(attribute="frontmatter.date") | reverse -%}
+    {%- set pages = pages
+      | rejectattr("base", "eq", "blog")
+      | rejectattr("base", "eq", "weeknotes") -%}
     {% for page in pages -%}
     {% if not page.frontmatter.rss or not page.frontmatter.rss.skip -%}
     <item>
-      <title>{{ page.frontmatter.title | default(page.path) }}</title>
+      {%- set item_title = page.frontmatter.title -%}
+      {%- if not item_title and page.base is startingwith "weeknotes/" -%}
+        {%- set item_title = "Weeknote " ~ (page.base | split("/") | last) -%}
+      {%- endif %}
+      <title>{{ item_title | default(page.path) }}</title>
       <link>{{ base_url(path_parent(page.path)) | safe }}/</link>
       {%- if page.frontmatter.date -%}
         <pubDate>{{ page.frontmatter.date | datetime(format="rfc2822") }}</pubDate>
@@ -36,7 +43,7 @@
       <author>blake@blakerain.com (Blake Rain)</author>
       <guid>{{ base_url(path_parent(page.path)) | safe }}</guid>
       <description><![CDATA[
-        TODO: put the content here
+        {{ page.content | safe }}
         <hr>
         <p>Thanks for reading this post via RSS! 👋</p>
         <a href="mailto:blake@blakerain.com?subject=Feedback on {{ page.path }}">Reply to this post by email</a>
