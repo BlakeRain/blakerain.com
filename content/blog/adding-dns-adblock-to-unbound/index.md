@@ -35,9 +35,11 @@ time of writing, this includes 177,286 distinct domains.
 The README in the repository includes a [list of downloads], with links to the README and hosts file
 download for each variant.
 
-> [!TIP]
-> This file is laid out in the same way you're used to seeing in an `/etc/hosts` file. You can read
-> more about it on the manpage for [hosts(5)](https://man.openbsd.org/man5/hosts.5).
+{% from "macros/callout.html" import callout %}
+{% call callout("tip") %}
+This file is laid out in the same way you're used to seeing in an `/etc/hosts` file. You can read
+more about it on the manpage for [hosts(5)](https://man.openbsd.org/man5/hosts.5).
+{% endcall %}
 
 Here is a sample from the top of the hosts file.
 
@@ -107,10 +109,10 @@ I want to block these domains, I use the `refuse` option, which tells Unbound to
 # Block my own domain
 local-zone: "blakerain.com" refuse
 ```
-
-> [!TIP]
-> See the [unbound documentation](https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html#unbound-conf-local-zone)
-> for the supported options to the `local-zone` attribute.
+{% call callout("tip") %}
+See the [unbound documentation](https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html#unbound-conf-local-zone)
+for the supported options to the `local-zone` attribute.
+{% endcall %}
 
 To create this configuration, I needed to convert each of the hosts mentioned in the downloaded
 hosts file into a `local-zone` attribute in Unbound's configuration language. Taking a look at the
@@ -196,10 +198,11 @@ and Security_ page in Firefox settings).
 
 {{ figure("firefox-dns-over-https.png", caption="Disabling DNS over HTTPS in Firefox.") }}
 
-> [!TIP]
-> Mozilla have a rather good
-> [DNS over HTTPS FAQ](https://support.mozilla.org/en-US/kb/dns-over-https-doh-faqs) that is worth a
-> look.
+{% call callout("tip") %}
+Mozilla have a rather good
+[DNS over HTTPS FAQ](https://support.mozilla.org/en-US/kb/dns-over-https-doh-faqs) that is worth a
+look.
+{% endcall %}
 
 # Automating with Shell Scripting
 

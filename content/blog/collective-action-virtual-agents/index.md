@@ -30,8 +30,10 @@ intelligence](https://pure.mpg.de/rest/items/item_3514481/component/file_3514482
 Collective adaption refers to this phenomenon where a group adapts to novel tasks through the
 adaptive behaviours of its individual behaviours.
 
-> [!NOTE]
-> A reference is made to the article [Beyond collective intelligence: Collective adaption](https://royalsocietypublishing.org/doi/10.1098/rsif.2022.0736) from RSIF.
+{% from "macros/callout.html" import callout %}
+{% call callout("note") %}
+A reference is made to the article [Beyond collective intelligence: Collective adaption](https://royalsocietypublishing.org/doi/10.1098/rsif.2022.0736) from RSIF.
+{% endcall %}
 
 Collective adaption, the authors argue, would allow for scalable, efficient, and robust management
 of complex systems like power grids, traffic networks, and building HVAC systems. All of this

@@ -127,8 +127,10 @@ While the nameservers are changing over, I wanted to copy over all the DNS recor
 Bunny. Unfortunately, there's no easy export feature in Route53 to export all the records from a
 hosted zone.
 
-> [!NOTE]
-> The reason for importing them all at once will become clear later on.
+{% from "macros/callout.html" import callout %}
+{% call callout("note") %}
+The reason for importing them all at once will become clear later on.
+{% endcall %}
 
 I used the `aws` CLI to export the salient properties from each record in the hosted zone and format
 the result as CSV:
@@ -285,15 +287,16 @@ provider "bunnynet" {
 I provide the API key to the Bunny provider in a variable named `bunny_api_key`, which I populate
 from the Terraform secrets file.
 
-> [!WARNING] Bunny has only one API key per account?
-> Strangely, it appears Bunny's API keys seem to be tied to each account, rather than allowing an
-> account to have as many API keys as required. Nor does there appear to be a way to limit the
-> actions that can be taken by an API key.
->
-> I can see that Bunny supports [team members], but it doesn't appear that these team members have
-> particularly granular permissions or separate API keys.
->
-> This might be a problem.
+{% call callout("warning", "Bunny has only one API key per account?") %}
+Strangely, it appears Bunny's API keys seem to be tied to each account, rather than allowing an
+account to have as many API keys as required. Nor does there appear to be a way to limit the
+actions that can be taken by an API key.
+
+I can see that Bunny supports [team members], but it doesn't appear that these team members have
+particularly granular permissions or separate API keys.
+
+This might be a problem.
+{% endcall %}
 
 I then replaced all uses of the `aws_route53_record` resource against the `blakerain.com` domain
 with `bunnynet_dns_record` resources in the Terraform modules. There are some differences between
@@ -413,14 +416,15 @@ This makes me believe that I can safely remove the length split from the Terrafo
 that I can rely on the record still being valid. Unfortunately there is no mention of the length
 requirement for a DNS record in the Bunny documentation.
 
-> [!WARNING] The Bunny Documentation is Pretty Sparse
-> I don't expect Bunny to compete with a multi-billion dollar corporation, but the documentation for
-> Bunny is quite sparse, and often missing small details that would be pretty important.
->
-> As an example, consider the Bunny documentation for [DNS records] and the AWS documentation for
-> just the [TXT record type]. The AWS documentation (which is endless), goes into exquisite detail
-> about exactly what characters are allowed in a TXT record, how to split the length on a 255
-> character boundary, what the _actual_ length limit is (4,000 characters), and so on.
+{% call callout("warning", "The Bunny Documentation is Pretty Sparse") %}
+I don't expect Bunny to compete with a multi-billion dollar corporation, but the documentation for
+Bunny is quite sparse, and often missing small details that would be pretty important.
+
+As an example, consider the Bunny documentation for [DNS records] and the AWS documentation for
+just the [TXT record type]. The AWS documentation (which is endless), goes into exquisite detail
+about exactly what characters are allowed in a TXT record, how to split the length on a 255
+character boundary, what the _actual_ length limit is (4,000 characters), and so on.
+{% endcall %}
 
 To keep the resource that Terraform is generating consistent with what Bunny is showing me, I'll
 change the DKIM resource in the Terraform module to include the entire DKIM record value, without
@@ -562,14 +566,16 @@ the apex of the domain:
 
 {{ figure("bunny-dns-setup-apex-cname.png", height=813, enlarge=true, caption="Adding a CNAME record for the apex of the domain") }}
 
-> [!INFO]
-> Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537] (which
-> celebrated its 30th birthday in February). These days the kids are ignoring RFCs and [doing
-> whatever they want], where "whatever they want" means flattening the CNAME records into an A
-> record.
->
-> This is a silly feature, and custom behaviour that should not be encouraged. But it's also really
-> convenient, so I'm going to try and fit in.
+{% from "macros/callout.html" import callout %}
+{% call callout("info") %}
+Back in my day, we couldn't use CNAME records for the domain apex, as per [RFC 1537] (which
+celebrated its 30th birthday in February). These days the kids are ignoring RFCs and [doing
+whatever they want], where "whatever they want" means flattening the CNAME records into an A
+record.
+
+This is a silly feature, and custom behaviour that should not be encouraged. But it's also really
+convenient, so I'm going to try and fit in.
+{% endcall %}
 
 With the DNS record in place, I returned to the CDN admin page and clicked _Verify and Activate
 SSL_. After a brief pause, Bunny confirmed that the certificate was now in place, and I could see
@@ -608,20 +614,21 @@ Go, installs the dependencies, builds the site, and deploys it. Prior to moving 
 CDN, the deployment workflow used `rsync` to a `blakerain-com` user on the server. Caddy served from
 the `~/www` directory for this user.
 
-> [!INFO]
-> To make sure that the `rsync` was reasonably secure, I used key-based authentication with an SSH
-> key that was stored in a Forgejo action secret. Then I configured the `/etc/ssh/authorized_keys`
-> entry corresponding to that key to limit the access:
->
-> ```plain {class="text-wrap"}
-> from="192.168.204.0/24",no-agent-forwarding,no-port-forwarding,no-pty,no-X11-forwarding,command="/user/bin/rrsync ~/www/" ssh-ed25519 AAAAC3.... worker@git.blakerain.com
-> ```
->
-> This limits the access to the restriction script of `rsync` (called [`rrsync`]), limits the IP
-> address to the IP address of the Forgejo action runner, limits all the SSH options, and finally
-> chroots rsync to the `~/www` directory.
->
-> Pretty fun stuff 😀
+{% call callout("info") %}
+To make sure that the `rsync` was reasonably secure, I used key-based authentication with an SSH
+key that was stored in a Forgejo action secret. Then I configured the `/etc/ssh/authorized_keys`
+entry corresponding to that key to limit the access:
+
+```plain {class="text-wrap"}
+from="192.168.204.0/24",no-agent-forwarding,no-port-forwarding,no-pty,no-X11-forwarding,command="/user/bin/rrsync ~/www/" ssh-ed25519 AAAAC3.... worker@git.blakerain.com
+```
+
+This limits the access to the restriction script of `rsync` (called [`rrsync`]), limits the IP
+address to the IP address of the Forgejo action runner, limits all the SSH options, and finally
+chroots rsync to the `~/www` directory.
+
+Pretty fun stuff 😀
+{% endcall %}
 
 [`rrsync`]: https://man7.org/linux/man-pages/man1/rrsync.1.html
 

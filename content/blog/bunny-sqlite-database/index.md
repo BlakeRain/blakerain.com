@@ -27,9 +27,11 @@ The pricing for Bunny seems pretty clear:
 | Writes      | $0.30 per million rows   |
 | Storage     | $0.10 per GB/month       |
 
-> [!NOTE] Reads are biller per billion, and writes are billed per *million*
-> So I guess that means writes are a thousand times more expensive than reads, which is the same
-> as Turso.
+{% from "macros/callout.html" import callout %}
+{% call callout("note") %}
+So I guess that means writes are a thousand times more expensive than reads, which is the same as
+Turso.
+{% endcall %}
 
 Databases only incur storage costs when idle, with one primary region charged continuously and
 read replicas only adding cost when serving traffic, metered per hour.

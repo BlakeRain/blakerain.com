@@ -66,9 +66,11 @@ highlights and wonder what I was thinking about when I made them.
 
 {{ figure("adding-notes-to-highlights.png", width=515, enlarge=true, caption="Adding a note to a highlight in Readeck") }}
 
-> [!TIP]
-> I also discovered, quite by accident, that I can edit the note for a highlight by
-> double-clicking on the highlight in the main document view.
+{% from "macros/callout.html" import callout %}
+{% call callout("tip") %}
+I also discovered, quite by accident, that I can edit the note for a highlight by
+double-clicking on the highlight in the main document view.
+{% endcall %}
 
 This new feature in Readeck prompted me to update my tool that exports highlights from Readeck to
 [Obsidian] to include any notes that I've added to the highlights.

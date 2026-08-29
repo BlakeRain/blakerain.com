@@ -24,17 +24,20 @@ interactivity. This project, whilst complete, has not been without some frustrat
 I felt it might be worth documenting some of the more interesting problems I encountered along the
 way.
 
-> [!WARNING]
-> This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
-> whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
-> the change over to using hugo.
+{% from "macros/callout.html" import callout %}
+{% call callout("warning") %}
+This site is now built using [Hugo](https://gohugo.io/). If you want to see the code for this site
+whilst it was using the Yew framework, you can checkout [v2.2.3], which is the last release before
+the change over to using hugo.
+{% endcall %}
 
 [v2.2.3]: https://git.blakerain.com/BlakeRain/blakerain.com/src/tag/v2.2.3
 
 # What is SSG and Hydration? { #what-is-ssg-and-hydration }
 
-> [!NOTE]
-> If you're already familiar with this topic, you might want to skip ahead to the next section.
+{% call callout("note") %}
+If you're already familiar with this topic, you might want to skip ahead to the next section.
+{% endcall %}
 
 These days, it is fairly common for web applications to use libraries such as [React] or [Vue.js]
 to power their user interface. These libraries typically offer excellent approaches to building
@@ -95,9 +98,10 @@ fn hydrate_my_app() {
 }
 ```
 
-> [!NOTE]
-> The `LocalServerRenderer` and hydration support will require the `ssr` and `hydration` features to
-> be enabled for the `yew` crate.
+{% call callout("note") %}
+The `LocalServerRenderer` and hydration support will require the `ssr` and `hydration` features to
+be enabled for the `yew` crate.
+{% endcall %}
 
 This is very close to what I needed in order to achieve my goal of a hydrating SSG using WebAssembly:
 
@@ -498,10 +502,11 @@ pub fn static_app(props: &StaticAppProps) -> Html {
 }
 ```
 
-> [!NOTE]
-> Something you might have noticed here is the addition of the `HeadContext` type in the
-> `StaticAppProps`. This is used to capture HTML that should be written into the `<head>` element,
-> rather than the `<body>`. I'll get to that in the next section.
+{% call callout("note") %}
+Something you might have noticed here is the addition of the `HeadContext` type in the
+`StaticAppProps`. This is used to capture HTML that should be written into the `<head>` element,
+rather than the `<body>`. I'll get to that in the next section.
+{% endcall %}
 
 With the `StaticApp` component prepared I was then able to render each route using the
 [`LocalServerRenderer`] introduced earlier:
@@ -599,16 +604,17 @@ performing static rendering. To enable this, I added a `HeadContext` that contai
 When I use the `<Head>` component and the `HeadContext` is available, a copy of the HTML that would
 be inserted into the `<head>` is also added to the `HeadContext`.
 
-> [!TIP] Definition of HeadContext
-> Currently the `HeadContext` type just wraps an `Rc<RefCell<Vec<Html>>>`. It provides a function to
-> add an `Html` to the `Vec`, and another function to clone the `Vec<Html>` out of the
-> `HeadContext`. The use of `Rc<RefCell<...>>` is fine in this case, as I'm using the
-> `LocalServerRenderer`. However, the `ServerRenderer::with_props()` constructor requires that the
-> property type is `Send`, which is not true for `HeadContext`.
->
-> If you want to use the `ServerRenderer` type instead of `LocalServerRenderer`, you will probably
-> want to change the `HeadContext` type to somethine like an `Arc<Mutex<...>>` rather than an
-> `Rc<RefCell<...>>`.
+{% call callout("tip", "Definition of HeadContext") %}
+Currently the `HeadContext` type just wraps an `Rc<RefCell<Vec<Html>>>`. It provides a function to
+add an `Html` to the `Vec`, and another function to clone the `Vec<Html>` out of the
+`HeadContext`. The use of `Rc<RefCell<...>>` is fine in this case, as I'm using the
+`LocalServerRenderer`. However, the `ServerRenderer::with_props()` constructor requires that the
+property type is `Send`, which is not true for `HeadContext`.
+
+If you want to use the `ServerRenderer` type instead of `LocalServerRenderer`, you will probably
+want to change the `HeadContext` type to something like an `Arc<Mutex<...>>` rather than an
+`Rc<RefCell<...>>`.
+{% endcall %}
 
 When it comes to rendering the application, I provide the `HeadContext` value in the `StaticApp`
 component, and capture any `Html` stored in it. After rendering the contents of the `<body>` a new

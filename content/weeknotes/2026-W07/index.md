@@ -6,12 +6,13 @@ coverImage:
   url: https://www.pexels.com/photo/trees-on-snow-covered-ground-6553833/
 ---
 
-> [!success] This is the first weeknote
->
-> I have come to really enjoy the weeknotes from people like [Robb Knight], [Stephen Gower], [Joel],
-> and [Noisy Deadlines]. Last year I was thinking about starting my own weeknotes, and I decided
-> to start them in 2026. After one thing or another, I've finally managed to get going. Only took up
-> to week 7 🙄
+{% from "macros/callout.html" import callout %}
+{% call callout("success", "This is the first weeknote") %}
+I have come to really enjoy the weeknotes from people like [Robb Knight], [Stephen Gower], [Joel],
+and [Noisy Deadlines]. Last year I was thinking about starting my own weeknotes, and I decided
+to start them in 2026. After one thing or another, I've finally managed to get going. Only took up
+to week 7 🙄
+{% endcall %}
 
 [Robb Knight]: https://rknight.me/blog/tags/weeknotes/
 [Stephen Gower]: https://srgower.com/archive/

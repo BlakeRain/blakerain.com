@@ -12,15 +12,19 @@
   "example":  "list"
 } %}
 {%- macro callout(type, title=none) %}
-{%- set title = title if title is not none else (type | title) %}
-{%- set icon_name = ICONS[type] | default("triangle-alert") %}
+```html
 <aside class="callout {{ type }}">
   <p>
     <strong class="callout-label">
-      <span aria-hidden="true">{{ icon("lucide", icon_name) }}</span>
-      {{ title }}
+      <span aria-hidden="true">{{ icon("lucide", ICONS[type] | default("triangle-alert")) }}</span>
+      {{ title if title is not none else (type | title) }}
     </strong>
   </p>
-  {{ caller() }}
+```
+
+{{ caller() }}
+
+```html
 </aside>
+```
 {%- endmacro %}
