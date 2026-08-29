@@ -36,7 +36,7 @@
       <author>blake@blakerain.com (Blake Rain)</author>
       <guid>{{ base_url(path_parent(page.path)) | safe }}</guid>
       <description><![CDATA[
-        TOOD: put the content here
+        TODO: put the content here
         <hr>
         <p>Thanks for reading this post via RSS! 👋</p>
         <a href="mailto:blake@blakerain.com?subject=Feedback on {{ page.path }}">Reply to this post by email</a>

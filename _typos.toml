@@ -1,5 +1,5 @@
 [files]
-extend-exclude = ["static/*", "*.yaml"]
+extend-exclude = ["static/*", "*.yaml", "old/", "cbits/"]
 
 [default]
 check-filename = false
@@ -11,6 +11,7 @@ extend-ignore-identifiers-re = [
 
 [default.extend-words]
 grap = "grap"
+pn = "pn"
 Som = "Som"
 ue306 = "UE306"
 ure0 = "ure0"

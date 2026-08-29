@@ -20,7 +20,7 @@ pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
     static ICON_CACHE: OnceLock<Arc<Mutex<HashMap<(String, String), String>>>> = OnceLock::new();
 
     let cache = ICON_CACHE.get_or_init(|| Arc::new(Mutex::new(HashMap::new())));
-    let mut cache = cache.lock().expect("failed ot lock icon cache");
+    let mut cache = cache.lock().expect("failed to lock icon cache");
     let key = (String::from(vendor), String::from(name));
     let color = kwargs.get::<Option<String>>("color")?;
     let size = kwargs.get::<Option<String>>("size")?;
