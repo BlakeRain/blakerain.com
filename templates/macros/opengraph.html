@@ -1,0 +1,11 @@
+{%- macro opengraph() %}
+{%- if page and page.base is defined %}
+  <meta property="og:url" content="{{ base_url(page.base ~ "/") | safe }}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ page.frontmatter.title | default(site.title) }}">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="{% if page.frontmatter.template %}website{% else %}article{% endif %}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.frontmatter.title | default(site.title) }}">
+{%- endif %}
+{%- endmacro %}
