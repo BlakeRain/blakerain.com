@@ -15,6 +15,7 @@ else
 endif
 
 # The tools, written in Rust, that we use to render the website.
+HTML = $(TARGET_DIR)/html
 MARKDOWN = $(TARGET_DIR)/markdown
 RENDER = $(TARGET_DIR)/render
 THEME_EXPORTER = $(TARGET_DIR)/theme
@@ -24,6 +25,14 @@ TEMPLATES = $(shell find templates -type f)
 CONTENT = $(shell find content -type f -name '*.md')
 PAGES_HTML = $(patsubst content/%.md,output/%.html,$(CONTENT))
 PAGES_JSON = $(patsubst output/%.html,build/content/%.json,$(PAGES_HTML))
+
+# Tool pages are raw HTML (not Markdown), processed with the `html` tool. Their `index.js` files
+# are copied verbatim and loaded by the browser as ES modules.
+TOOLS = $(shell find content/tools -type f -name '*.html')
+TOOLS_JSON = $(patsubst content/tools/%.html,build/content/tools/%.json,$(TOOLS))
+TOOLS_PAGES = $(patsubst build/content/tools/%.json,output/tools/%.html,$(TOOLS_JSON))
+TOOLS_SCRIPTS = $(patsubst content/tools/%.js,output/tools/%.js,$(shell find content/tools -type f -name '*.js'))
+
 TAGS = $(shell cat data/tags.yaml | yq -r '.tags | keys | .[]' | sort)
 TAG_PAGES = $(patsubst %,output/tags/%/index.html,$(TAGS))
 THEMES = assets/css/themes/catppuccin-mocha.css \
@@ -43,14 +52,15 @@ EXTRA_OUTPUT = output/css/main.css \
 							 output/sitemap.xml \
 							 output/index.xml \
 							 output/blog/index.xml \
-							 output/tags/index.html
+							 output/tags/index.html \
+							 output/404.html
 
 # Pagination pages for the blog index
 BLOG_PAGINATION = build/blog.pagination.stamp
 
 .PHONY: debug release all clean
 
-all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
+all: $(PAGES_HTML) $(TOOLS_PAGES) $(TOOLS_SCRIPTS) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
 
 debug:
 	$(MAKE) MODE=debug all
@@ -64,17 +74,22 @@ build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 	pnpm install
 	touch $@
 
+$(HTML): build/.cargo.$(MODE)
 $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
 $(THEME_EXPORTER): build/.cargo.$(MODE)
 
-output/%.html: build/content/%.json $(PAGES_JSON) $(RENDER) $(TEMPLATES)
+output/%.html: build/content/%.json $(PAGES_JSON) $(TOOLS_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	cat $< | $(RENDER) $(RENDER_FLAGS) -o $@ $$(./scripts/select-template.sh $< $*)
 
 build/content/%.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(MARKDOWN) -o $@ $<
+
+build/content/tools/%.json: content/tools/%.html $(MARKDOWN)
+	mkdir -p $(dir $@)
+	$(HTML) -o $@ $<
 
 output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css') $(THEMES) postcss.config.js
 	mkdir -p $(dir $@)
@@ -97,6 +112,10 @@ output/js/%.js: assets/js/%.js
 	cp $< $@
 endif
 
+$(TOOLS_SCRIPTS): output/tools/%.js: content/tools/%.js
+	mkdir -p $(dir $@)
+	cp $< $@
+
 output/sitemap.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	echo '{}' | $(RENDER) -o $@ sitemap.xml
@@ -116,6 +135,10 @@ output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES
 output/tags/%/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)
 	echo '{"tag":"$*"}' | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tag.html
+
+output/404.html: $(RENDER) $(TEMPLATES)
+	mkdir -p $(dir $@)
+	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ 404.html
 
 $(BLOG_PAGINATION): $(PAGES_JSON) $(RENDER) $(TEMPLATES) scripts/render-paginated.sh
 	RENDER="$(RENDER)" RENDER_FLAGS="$(RENDER_FLAGS)" ./scripts/render-paginated.sh blog blog/index.html 10

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+<main class="tool content">
+  <header>
+    <h1>
+      {{ page.frontmatter.title }}
+    </h1>
+  </header>
+  {{ page.content | safe }}
+</main>
+{% if file_exists("content/" ~ page.base ~ "/index.js") %}
+  <script src="/{{ page.base }}/index.js" type="module"></script>
+{% endif %}
+{% endblock %}

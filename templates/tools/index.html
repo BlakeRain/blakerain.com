@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Tools{% endblock %}
+{% block main %}
+{% set tools = load_pages("tools") | rejectattr("base", "eq", "tools") %}
+<main class="tools content">
+  <h1>
+    {{ icon("bootstrap", "wrench-adjustable-circle") }}
+    <span>Tools</span>
+  </h1>
+  <h2>Some small web-based tools</h2>
+  <ul class="items">
+    {% for tool in tools %}
+      <li>
+        <div class="header" style="background-color: {{ tool.frontmatter.color | default("#ff0000") }};">
+          {% if tool.frontmatter.icon %}
+            {{ icon(tool.frontmatter.icon.vendor, tool.frontmatter.icon.name) }}
+          {% endif %}
+        </div>
+        <div class="details">
+          <h1>
+            <a href="/{{ tool.base }}/">{{ tool.frontmatter.title }}</a>
+          </h1>
+          <p>
+            {{ tool.frontmatter.summary }}
+          </p>
+        </div>
+        <div class="links">
+          <a href="{{ tool.frontmatter.source }}">View Source</a>
+          <a href="/{{ tool.base }}/">Open</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</main>
+{% endblock %}

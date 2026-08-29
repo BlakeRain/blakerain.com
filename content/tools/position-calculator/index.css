@@ -1,8 +1,8 @@
-@import "./assets/css/media.css";
-@import "./assets/css/components/tool.css";
-@import "./assets/css/components/field.css";
-@import "./assets/css/components/toggle.css";
-@import "./assets/css/components/tooltip.css";
+@import "../../../assets/css/media.css";
+@import "../../../assets/css/components/tool.css";
+@import "../../../assets/css/components/field.css";
+@import "../../../assets/css/components/toggle.css";
+@import "../../../assets/css/components/tooltip.css";
 
 .calc-grid {
   display: grid;
