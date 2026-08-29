@@ -70,6 +70,26 @@
           }
         }
       }
+
+      &.pikchr {
+        > div.light {
+          display: block;
+        }
+
+        > div.dark {
+          display: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          > div.light {
+            display: none;
+          }
+
+          > div.dark {
+            display: block;
+          }
+        }
+      }
     }
 
     figure:not(.gallery) {

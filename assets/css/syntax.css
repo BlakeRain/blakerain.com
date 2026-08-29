@@ -1,5 +1,5 @@
-@import "./syntax/catppuccin-latte.css";
-@import "./syntax/catppuccin-mocha.css";
+@import "./themes/catppuccin-latte.css";
+@import "./themes/catppuccin-mocha.css";
 
 @layer components {
   div.highlight {

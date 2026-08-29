@@ -14,9 +14,10 @@ else
 	RENDER_FLAGS =
 endif
 
-# The two tools, written in Rust, that we use to render the website.
+# The tools, written in Rust, that we use to render the website.
 MARKDOWN = $(TARGET_DIR)/markdown
 RENDER = $(TARGET_DIR)/render
+THEME_EXPORTER = $(TARGET_DIR)/theme
 
 RUST_SOURCES = $(shell find src -type f -name '*.rs')
 TEMPLATES = $(shell find templates -type f)
@@ -25,6 +26,8 @@ PAGES_HTML = $(patsubst content/%.md,output/%.html,$(CONTENT))
 PAGES_JSON = $(patsubst output/%.html,build/content/%.json,$(PAGES_HTML))
 TAGS = $(shell cat data/tags.yaml | yq -r '.tags | keys | .[]' | sort)
 TAG_PAGES = $(patsubst %,output/tags/%/index.html,$(TAGS))
+THEMES = assets/css/themes/catppuccin-mocha.css \
+					 assets/css/themes/catppuccin-latte.css
 
 # Assets exclude CSS and JavaScript from the catch-all rule
 ASSETS = $(patsubst assets/%,output/%,$(shell find assets -type f ! -path 'assets/css/*' ! -path 'assets/js/*'))
@@ -63,6 +66,7 @@ build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 
 $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
+$(THEME_EXPORTER): build/.cargo.$(MODE)
 
 output/%.html: build/content/%.json $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
@@ -72,9 +76,16 @@ build/content/%.json: content/%.md $(MARKDOWN) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	$(MARKDOWN) -o $@ $<
 
-output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css') postcss.config.js
+output/css/%.css: assets/css/%.css $(shell find assets/css -type f -name '*.css') $(THEMES) postcss.config.js
 	mkdir -p $(dir $@)
 	NODE_ENV=$(NODE_ENV) pnpm postcss $< -o $@
+
+assets/css/themes/catppuccin-mocha.css: $(THEME_EXPORTER)
+	mkdir -p assets/css/themes
+	$(THEME_EXPORTER) dark > assets/css/themes/catppuccin-mocha.css
+
+assets/css/themes/catppuccin-latte.css: $(THEME_EXPORTER)
+	$(THEME_EXPORTER) light > assets/css/themes/catppuccin-latte.css
 
 ifeq ($(MODE),release)
 output/js/%.js: assets/js/%.js
@@ -120,3 +131,4 @@ $(STATIC): output/%: static/%
 
 clean:
 	rm -rf build output
+	rm -f assets/css/themes/catppuccin-mocha.css assets/css/themes/catppuccin-latte.css

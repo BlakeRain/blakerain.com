@@ -1,9 +1,7 @@
-{% if type == "fenced" and info == "html" -%}
+{% if type == "fenced" and language == "html" -%}
 {{ content | safe }}
-{%- elif type == "indented" -%}
-<pre><code>{{ content | safe }}</code></pre>
-{%- elif type == "fenced" -%}
-<pre><code class="language-{{ info }}">{{ content | safe }}</code></pre>
+{%- elif type == "fenced" and language -%}
+<div class="highlight{% if class %} {{ class }}{% endif %}">{{ content | safe }}</div>
 {%- else -%}
-<pre><code>Unknown code block type: {{ type | tojson }}</code></pre>
+<pre><code>{{ content | safe }}</code></pre>
 {%- endif %}

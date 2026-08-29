@@ -31,20 +31,18 @@ used to: `pic`, `tbl`, `grap`, and so on. Post processors are usually fewer in n
 relate to processing graphics and imagery. The PostScript output is these days typically rendered to
 PDF for distribution, and this rendering is typically performed by [Ghostscript].
 
-```goat {caption="Processing input sources into PDFs via PostScript"}
-+---------------+                                   +---------------+
-| Input Sources |                                   | Rendered PDFs |
-+------+--------+                                   +---------------+
-       |                                                    ^
-       |                                                    |
-       |                                             +------+------+
-       |                                             | Ghostscript |
-       |                                             +-------------+
-       |                                                    ^
-       v                                                    |
-+---------------+        +-------------+            +-------+--------+
-| Preprocessors +------->| Troff/Groff +----------->| Postprocessors |
-+---------------+ troff  +-------------+ postscript +----------------+
+```pikchr {title="Processing input sources into PDFs via PostScript"}
+box width 3cm height 1cm "Input Sources"
+arrow down 3cm from last.s
+box width 3cm height 1cm "Preprocessors"
+arrow right 2cm from last.e "" "troff"
+box width 3cm height 1cm "Troff/Groff"
+arrow right 2cm from last.e "" "postscript"
+box width 3cm height 1cm "Postprocessors"
+arrow up 1cm from last.n
+box width 3cm height 1cm "Ghostscript"
+arrow up 1cm from last.n
+box width 3cm height 1cm "rendered PDFs"
 ```
 
 Typically, generating things like indices and tables of contents happens towards the end of

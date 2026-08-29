@@ -6,8 +6,13 @@ use std::{
 use anyhow::Context;
 use minijinja::{Environment, Template, Value};
 use pulldown_cmark::{Alignment, BlockQuoteKind, Event, HeadingLevel, LinkType, Tag, TagEnd};
-use pulldown_cmark_escape::{escape_html, escape_html_body_text, FmtWriter, StrWrite};
+use pulldown_cmark_escape::{FmtWriter, StrWrite, escape_html, escape_html_body_text};
 use serde::Serialize;
+
+use crate::{
+    parse::{AttributeValue, CodeBlockSpec},
+    pikchr, syntax,
+};
 
 fn map_alignment(alignment: Alignment) -> Value {
     match alignment {
@@ -57,6 +62,7 @@ const TEMPLATE_PATH_DEFINITIONS: &str = "markdown/definitions.html";
 const TEMPLATE_PATH_LINK: &str = "markdown/link.html";
 const TEMPLATE_PATH_IMAGE: &str = "markdown/image.html";
 const TEMPLATE_PATH_FOOTNOTE: &str = "markdown/footnote.html";
+const TEMPLATE_PATH_PIKCHR: &str = "markdown/pikchr.html";
 
 const TEMPLATE_PATHS: &[&str] = &[
     TEMPLATE_PATH_PARAGRAPH,
@@ -69,6 +75,7 @@ const TEMPLATE_PATHS: &[&str] = &[
     TEMPLATE_PATH_LINK,
     TEMPLATE_PATH_IMAGE,
     TEMPLATE_PATH_FOOTNOTE,
+    TEMPLATE_PATH_PIKCHR,
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -102,22 +109,47 @@ impl TableState {
 #[serde(tag = "type", rename_all = "snake_case")]
 enum CodeBlockInfo {
     Indented,
-    Fenced { info: String },
+    Fenced {
+        info: String,
+        language: Option<String>,
+        attributes: HashMap<String, AttributeValue>,
+    },
 }
 
 impl CodeBlockInfo {
     fn is_html(&self) -> bool {
-        matches!(self, Self::Fenced { info } if info.trim() == "html")
+        matches!(self, Self::Fenced { language: Some(language), .. } if language == "html")
     }
 }
 
-impl From<pulldown_cmark::CodeBlockKind<'_>> for CodeBlockInfo {
-    fn from(kind: pulldown_cmark::CodeBlockKind) -> Self {
+impl TryFrom<pulldown_cmark::CodeBlockKind<'_>> for CodeBlockInfo {
+    type Error = anyhow::Error;
+
+    fn try_from(kind: pulldown_cmark::CodeBlockKind) -> Result<Self, Self::Error> {
         match kind {
-            pulldown_cmark::CodeBlockKind::Indented => Self::Indented,
+            pulldown_cmark::CodeBlockKind::Indented => Ok(Self::Indented),
             pulldown_cmark::CodeBlockKind::Fenced(info) => {
                 let info = String::from(info);
-                Self::Fenced { info }
+                let (
+                    _,
+                    CodeBlockSpec {
+                        language,
+                        attributes,
+                    },
+                ) = CodeBlockSpec::parse(&info).map_err(|err| {
+                    tracing::error!(
+                        ?err,
+                        "failed to parse code block attributes in fenced code block"
+                    );
+
+                    anyhow::anyhow!("failed to parse code block attributes")
+                })?;
+
+                Ok(Self::Fenced {
+                    info,
+                    language,
+                    attributes,
+                })
             }
         }
     }
@@ -251,7 +283,6 @@ struct State<'t> {
     footnotes: HashMap<String, usize>,
     outline: OutlineBuilder,
     heading_text: Option<String>,
-    html_code_block: bool,
     in_code_block: bool,
     word_count: usize,
     summary_text: SummaryState,
@@ -278,7 +309,6 @@ impl<'t> State<'t> {
             stack: VecDeque::new(),
             outline: OutlineBuilder::default(),
             heading_text: None,
-            html_code_block: false,
             in_code_block: false,
             word_count: 0,
             footnotes: HashMap::new(),
@@ -516,8 +546,7 @@ impl<'t> State<'t> {
             }
 
             Tag::CodeBlock(info) => {
-                let info = CodeBlockInfo::from(info);
-                self.html_code_block = info.is_html();
+                let info = CodeBlockInfo::try_from(info)?;
                 self.in_code_block = true;
                 self.enter(RenderCxt::CodeBlock { info });
             }
@@ -771,13 +800,82 @@ impl<'t> State<'t> {
             TagEnd::Strikethrough => self.write("</del>")?,
 
             TagEnd::CodeBlock => {
-                self.html_code_block = false;
                 self.in_code_block = false;
 
-                let content = self
-                    .leave()
-                    .with_context(|| format!("failed to leave context for {tag:?}"))?;
-                self.writer.write_str(&content)?;
+                let (mut writer, context) = self.pop()?;
+                let RenderCxt::CodeBlock { info } = context else {
+                    return Err(anyhow::anyhow!("expected code block context"));
+                };
+
+                std::mem::swap(&mut self.writer, &mut writer);
+                let raw = writer.0;
+
+                if let CodeBlockInfo::Fenced {
+                    language: Some(language),
+                    attributes,
+                    ..
+                } = &info
+                    && language == "pikchr"
+                {
+                    let light_image = pikchr::Image::render(&raw, None, pikchr::Options::default())
+                        .context("failed to render pikchr image")?;
+
+                    let dark_image = pikchr::Image::render(
+                        &raw,
+                        None,
+                        pikchr::Options::default().set_dark_mode(true),
+                    )
+                    .context("failed to render pikchr image")?;
+
+                    let template = self
+                        .get_template(TEMPLATE_PATH_PIKCHR)
+                        .context("failed to load pikchr template")?;
+
+                    let output = template
+                        .render(minijinja::context! {
+                            light_image => *light_image,
+                            dark_image => *dark_image,
+                            width => light_image.width,
+                            height => light_image.height,
+                            attributes => &attributes,
+                            ..Value::from_serialize(&info)
+                        })
+                        .context("failed to render codeblock template")?;
+
+                    self.writer.write_str(&output)?;
+                } else {
+                    let (content, attributes) = match &info {
+                        CodeBlockInfo::Fenced { attributes, .. } if info.is_html() => {
+                            (raw, attributes)
+                        }
+
+                        CodeBlockInfo::Fenced {
+                            language: Some(language),
+                            attributes,
+                            ..
+                        } => (syntax::highlight(&raw, language), attributes),
+
+                        CodeBlockInfo::Fenced { .. } | CodeBlockInfo::Indented => {
+                            let mut buf = FmtWriter(String::new());
+                            escape_html(&mut buf, &raw)?;
+                            (buf.0, &HashMap::new())
+                        }
+                    };
+
+                    let template = self
+                        .get_template(TEMPLATE_PATH_CODEBLOCK)
+                        .context("failed to load codeblock template")?;
+
+                    let output = template
+                        .render(minijinja::context! {
+                            content,
+                            attributes,
+                            ..Value::from_serialize(&info)
+                        })
+                        .context("failed to render codeblock template")?;
+
+                    self.writer.write_str(&output)?;
+                }
             }
 
             TagEnd::Table
@@ -808,13 +906,10 @@ fn dispatch(state: &mut State, event: Event) -> anyhow::Result<()> {
         Event::End(tag) => state.end_tag(tag),
 
         Event::Text(text) => {
-            if !state.in_code_block {
-                state.word_count += text.split_whitespace().count();
-            }
-
-            if state.html_code_block {
+            if state.in_code_block {
                 state.write(&text)?;
             } else {
+                state.word_count += text.split_whitespace().count();
                 state.write_escaped_body_text(&text)?;
                 state.append_heading_text(&text);
             }
@@ -902,9 +997,7 @@ pub struct Rendered {
     pub word_count: usize,
 }
 
-/// Marker that may be placed in Markdown content to request a table of
-/// contents. It is replaced with the rendered TOC during rendering.
-pub const TOC_MARKER: &str = "<!--TOC-->";
+const TOC_MARKER: &str = "<!--TOC-->";
 
 pub fn render<'a, I>(
     templates: &Environment<'static>,

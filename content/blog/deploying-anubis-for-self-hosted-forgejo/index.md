@@ -139,7 +139,7 @@ to a halt, with only the occasional request.
 The logs from Anubis, on the other hand, quickly sprang to life with hundreds of messages. The logs
 seem to be mostly about offering challenges to clients:
 
-```
+```json
 {
   "time": "2026-08-13T12:05:32.306960898Z",
   "level": "INFO",
@@ -166,7 +166,7 @@ seem to be mostly about offering challenges to clients:
 Every now and then, Anubis is logging that a rule has been matched, and the request has been denied
 (rather than challenged):
 
-```
+```json
 {
   "time": "2026-08-13T12:07:34.528068124Z",
   "level": "INFO",
