@@ -66,9 +66,11 @@ EXTRA_OUTPUT = output/css/main.css \
 # Pagination pages for the blog index
 BLOG_PAGINATION = build/blog.pagination.stamp
 
-.PHONY: debug release all clean
+.PHONY: debug release all clean json
 
-all: $(PAGES_HTML) $(TOOLS_HTML) $(TOOLS_SCRIPTS) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
+all: json $(PAGES_HTML) $(TOOLS_HTML) $(TOOLS_SCRIPTS) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
+
+json: $(PAGES_HTML_JSON) $(TOOLS_HTML_JSON) $(PAGES_RSS_JSON)
 
 debug:
 	$(MAKE) MODE=debug all
@@ -87,7 +89,7 @@ $(MARKDOWN): build/.cargo.$(MODE)
 $(RENDER): build/.cargo.$(MODE)
 $(THEME_EXPORTER): build/.cargo.$(MODE)
 
-output/%.html: build/content/%.html.json $(PAGES_HTML_JSON) $(TOOLS_HTML_JSON) $(RENDER) $(TEMPLATES)
+output/%.html: build/content/%.html.json $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
 	cat $< | $(RENDER) $(RENDER_FLAGS) -o $@ $$(./scripts/select-template.sh $< $*)
 
