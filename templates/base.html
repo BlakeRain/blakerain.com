@@ -10,7 +10,7 @@
     <link rel="mask-icon" href="/safari-pinned-tag.svg" color="#12304c">
     <meta name="msapplication-TileColor" content="#12304c">
     <meta name="theme-color" content="#12304c">
-    <title>{% block title %}{% if page %}{{ page.title }}{% endif %}{% endblock %}</title>
+    <title>{% block title %}{% if page and page.frontmatter and page.frontmatter.title is string %}{{ page.frontmatter.title }}{% endif %}{% endblock %}</title>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
