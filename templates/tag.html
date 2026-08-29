@@ -2,23 +2,24 @@
 {% extends "base.html" %}
 {% block title %}{{ page.tag }}{% endblock %}
 {% block main %}
+{% set tag_info = load_data("data/tags.yaml").tags[page.tag] %}
 <main class="articles-list content">
   <h1>
     {{ icon("bootstrap", "tags-fill") }}
     <span>Pages Featuring</span>
-    <span>{{ page.tag }}</span>
+    <span>{{ tag_info.name }}</span>
   </h1>
   <div class="items separated">
-    {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) %}
-      {% if page.frontmatter.tags | contains(page.tag) %}
-        {% call article_item(page) %}
-          {% if page.frontmatter.summary %}
-            <p>{{ page.frontmatter.summary }}</p>
+    {%- for blog_page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) %}
+      {% if page.tag is in blog_page.frontmatter.tags %}
+        {% call article_item(blog_page) %}
+          {% if blog_page.frontmatter.summary %}
+            <p>{{ blog_page.frontmatter.summary }}</p>
           {% else %}
-            {{ page.summary | safe }}
+            {{ blog_page.summary | safe }}
           {% endif %}
           <p class="read-more">
-            <a class="colored" href="/{{ page.base }}/">Read more …</a>
+            <a class="colored" href="/{{ blog_page.base }}/">Read more …</a>
           </p>
         {% endcall %}
       {% endif %}

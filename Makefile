@@ -23,6 +23,8 @@ TEMPLATES = $(shell find templates -type f)
 CONTENT = $(shell find content -type f -name '*.md')
 PAGES_HTML = $(patsubst content/%.md,output/%.html,$(CONTENT))
 PAGES_JSON = $(patsubst output/%.html,build/content/%.json,$(PAGES_HTML))
+TAGS = $(shell cat data/tags.yaml | yq -r '.tags | keys | .[]' | sort)
+TAG_PAGES = $(patsubst %,output/tags/%/index.html,$(TAGS))
 
 # Assets exclude CSS and JavaScript from the catch-all rule
 ASSETS = $(patsubst assets/%,output/%,$(shell find assets -type f ! -path 'assets/css/*' ! -path 'assets/js/*'))
@@ -45,7 +47,7 @@ BLOG_PAGINATION = build/blog.pagination.stamp
 
 .PHONY: debug release all clean
 
-all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION)
+all: $(PAGES_HTML) $(ASSETS) $(JAVASCRIPT) $(STATIC) $(EXTRA_OUTPUT) $(BLOG_PAGINATION) $(TAG_PAGES)
 
 debug:
 	$(MAKE) MODE=debug all
@@ -99,6 +101,10 @@ output/blog/index.xml: $(PAGES_JSON) $(RENDER) $(TEMPLATES)
 output/tags/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
 	mkdir -p $(dir $@)
 	cat data/tags.yaml | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tags.html
+
+output/tags/%/index.html: data/tags.yaml $(CONTENT) $(RENDER) $(TEMPLATES) $(PAGES_JSON)
+	mkdir -p $(dir $@)
+	echo '{"tag":"$*"}' | $(RENDER) $(RENDER_FLAGS) -o $@ --yaml tag.html
 
 $(BLOG_PAGINATION): $(PAGES_JSON) $(RENDER) $(TEMPLATES) scripts/render-paginated.sh
 	RENDER="$(RENDER)" RENDER_FLAGS="$(RENDER_FLAGS)" ./scripts/render-paginated.sh blog blog/index.html 10

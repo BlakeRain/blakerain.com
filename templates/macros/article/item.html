@@ -34,11 +34,14 @@
       </div>
       {% if page.frontmatter.tags %}
         <div class="tag-list">
-          {% for tag in page.frontmatter.tags %}
-            <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
-          {% endfor %}
+          {%- set tag_infos = load_data("data/tags.yaml").tags %}
+          {%- for tag in page.frontmatter.tags %}
+            <a href="/tags/{{ tag | safe }}/" class="tag p-category">
+              {% if tag in tag_infos %}{{ tag_infos[tag].name }}{% else %}{{ abort("Unknown tag: " ~ tag) }}{% endif %}
+            </a>
+          {%- endfor %}
         </div>
-      {% endif %}
+      {%- endif %}
     </div>
     <div class="markdown">
       {{ caller() | safe }}

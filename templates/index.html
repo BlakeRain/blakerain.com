@@ -27,6 +27,7 @@
     <section>
       <h1>Latest Posts</h1>
       <ul class="posts">
+        {%- set tag_infos = load_data("data/tags.yaml").tags %}
         {%- for page in load_pages("blog") | sort(attribute="frontmatter.date", reverse=true) | take(10) %}
           <li>
             <a href="{{ path_parent(page.path) | safe }}/" class="colored">
@@ -42,7 +43,9 @@
                   <ul class="tag-list">
                     {%- for tag in page.frontmatter.tags %}
                       <li>
-                        <a href="/tags/{{ tag | safe }}/" class="tag p-category">{{ tag }}</a>
+                        <a href="/tags/{{ tag | safe }}/" class="tag p-category">
+                          {% if tag in tag_infos %}{{ tag_infos[tag].name }}{% else %}{{ abort("Unknown tag: " ~ tag) }}{% endif %}
+                        </a>
                       </li>
                     {%- endfor %}
                   </ul>

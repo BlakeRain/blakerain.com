@@ -22,7 +22,7 @@
     <h3 class="col3">Count</h3>
     <div class="divider"></div>
     {%- for name, tag in page.tags | dictsort if ns.pagecounts[name] > 0 %}
-      <a href="/tags/{{ name | safe }}/" class="colored">{{ name }}</a>
+      <a href="/tags/{{ name | safe }}/" class="colored">{{ tag.name }}</a>
       <div class="description">{{ tag.description }}</div>
       <div class="count">{{ ns.pagecounts[name] | default(0) }}</div>
     {%- endfor %}
