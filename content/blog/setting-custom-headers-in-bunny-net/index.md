@@ -20,7 +20,7 @@ when I migrated the domain to Bunny's DNS.
 The old site was hosted on a server I rent from [Hetzner], and was served via [Caddy]. The old
 configuration for this site looked like this:
 
-```caddy
+```caddyfile
 blakerain.com {
   root * /var/www/blakerain-com
   file_server
