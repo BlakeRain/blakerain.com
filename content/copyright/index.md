@@ -4,7 +4,9 @@ sitemap:
   disable: true
 ---
 
-**Site version:** {{ env.version }}
+{% from "macros/version.html" import version %}
+
+**Site version:** {{ version() }}
 
 Copyright © {{ env.now | date(format="[year]") }} Blake Rain
 

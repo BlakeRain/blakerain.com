@@ -1,0 +1,4 @@
+{%- macro version() %}
+{%- set version = load_data("data/tag.json").tag %}
+{{ version }}
+{%- endmacro %}
