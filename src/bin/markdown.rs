@@ -1,14 +1,13 @@
-use std::{
-    io::{BufRead, BufReader},
-    path::PathBuf,
-};
+use std::path::PathBuf;
 
 use anyhow::Context;
 use blakerain_com::{
-    parsing::{frontmatter::parse_frontmatter, yaml::load_yaml},
+    parse::load_frontmatter_and_source,
+    parsing::yaml::load_yaml,
     render::render,
     templates::load_templates,
     tracing::setup_tracing,
+    types::{Page, PageMetadata},
 };
 use clap::Parser;
 use time::OffsetDateTime;
@@ -47,29 +46,7 @@ fn main() -> anyhow::Result<()> {
     setup_tracing(args.ansi, Some(args.verbose));
 
     let metadata = std::fs::metadata(&args.markdown).context("failed to stat Markdown file")?;
-
-    let source = BufReader::new(
-        std::fs::File::open(&args.markdown).context("failed to open Markdown file")?,
-    )
-    .lines()
-    .collect::<Result<Vec<_>, _>>()
-    .context("failed to read Markdown file")?;
-
-    let nlines = source.len();
-    let (mut frontmatter, source) =
-        parse_frontmatter(source).context("failed to parse frontmatter")?;
-
-    if let Some(serde_json::Value::String(title)) = frontmatter.get_mut("title") {
-        *title = title.trim().to_string();
-    }
-
-    let source = if source.len() < nlines {
-        std::iter::repeat_n(String::new(), nlines - source.len())
-            .chain(source)
-            .collect::<Vec<_>>()
-    } else {
-        source
-    };
+    let (frontmatter, source) = load_frontmatter_and_source(&args.markdown)?;
 
     let path = args
         .markdown
@@ -78,19 +55,25 @@ fn main() -> anyhow::Result<()> {
 
     let base = path.parent().map(PathBuf::from).unwrap_or(PathBuf::new());
 
-    let site = load_yaml("site.yaml").context("failed to load site configuration")?;
+    let mut page = Page {
+        path: path.to_path_buf(),
+        base,
+        name: path
+            .file_stem()
+            .context("failed to get file stem")?
+            .to_string_lossy()
+            .to_string(),
+        metadata: PageMetadata::try_from(metadata).context("failed to get page metadata")?,
+        frontmatter,
+        summary: None,
+        summary_text: None,
+        toc: Vec::new(),
+        content: String::new(),
+        word_count: 0,
+        reading_time: 0,
+    };
 
-    let mut page = serde_json::json!({
-        "path": path.to_string_lossy(),
-        "base": base.to_string_lossy(),
-        "name": path.file_stem().context("failed to get file stem")?.to_string_lossy().to_string(),
-        "metadata": {
-            "size": metadata.len(),
-            "modified": OffsetDateTime::from(metadata.modified().context("failed to get modified time")?),
-            "created": OffsetDateTime::from(metadata.created().context("failed to get created time")?),
-        },
-        "frontmatter": frontmatter,
-    });
+    let site = load_yaml("site.yaml").context("failed to load site configuration")?;
 
     let source = source.join("\n");
     let templates = args.templates.unwrap_or_else(|| PathBuf::from("templates"));
@@ -116,51 +99,16 @@ fn main() -> anyhow::Result<()> {
     let options = pulldown_cmark::Options::all();
     let parser = pulldown_cmark::Parser::new_ext(&source, options);
     let parser = pulldown_cmark::utils::TextMergeWithOffset::new(parser.into_offset_iter());
-    let rendered = render(&templates, &base.to_string_lossy(), parser)
+    let rendered = render(&templates, &page.base.to_string_lossy(), parser)
         .context("failed to render page as markdown")?;
 
     {
-        let page = page.as_object_mut().expect("page to be a JSON object");
-
-        page.insert(
-            String::from("summary"),
-            rendered
-                .summary
-                .map(serde_json::Value::String)
-                .unwrap_or(serde_json::Value::Null),
-        );
-
-        page.insert(
-            String::from("summary_text"),
-            rendered
-                .summary_text
-                .map(serde_json::Value::String)
-                .unwrap_or(serde_json::Value::Null),
-        );
-
-        page.insert(
-            String::from("content"),
-            serde_json::Value::String(rendered.content),
-        );
-
-        page.insert(
-            String::from("toc"),
-            if rendered.toc.is_empty() {
-                serde_json::Value::Null
-            } else {
-                serde_json::to_value(&rendered.toc).context("failed to serialize toc")?
-            },
-        );
-
-        page.insert(
-            String::from("word_count"),
-            serde_json::Value::from(rendered.word_count),
-        );
-
-        page.insert(
-            String::from("reading_time"),
-            serde_json::Value::from(rendered.word_count.div_ceil(WORDS_PER_MINUTE)),
-        );
+        page.summary = rendered.summary;
+        page.summary_text = rendered.summary_text;
+        page.content = rendered.content;
+        page.toc = rendered.toc;
+        page.word_count = rendered.word_count;
+        page.reading_time = rendered.word_count.div_ceil(WORDS_PER_MINUTE);
     }
 
     if let Some(path) = args.output {

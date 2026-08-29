@@ -6,6 +6,7 @@ pub mod render;
 pub mod syntax;
 pub mod templates;
 pub mod tracing;
+pub mod types;
 
 pub mod parsing {
     pub mod frontmatter;

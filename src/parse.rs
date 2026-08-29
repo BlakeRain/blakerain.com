@@ -1,5 +1,10 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    io::{BufRead, BufReader},
+    path::Path,
+};
 
+use anyhow::Context;
 use nom::{
     IResult, Parser,
     branch::alt,
@@ -11,6 +16,30 @@ use nom::{
     sequence::{delimited, pair, preceded},
 };
 use serde::Serialize;
+
+use crate::parsing::frontmatter::parse_frontmatter;
+
+pub fn load_frontmatter_and_source<P: AsRef<Path>>(
+    path: P,
+) -> anyhow::Result<(serde_json::Value, Vec<String>)> {
+    let source = BufReader::new(std::fs::File::open(path).context("failed to open source file")?)
+        .lines()
+        .collect::<Result<Vec<_>, _>>()
+        .context("failed to read source file")?;
+
+    let nlines = source.len();
+    let (frontmatter, source) = parse_frontmatter(source).context("failed to parse frontmatter")?;
+
+    let source = if source.len() < nlines {
+        std::iter::repeat_n(String::new(), nlines - source.len())
+            .chain(source)
+            .collect::<Vec<_>>()
+    } else {
+        source
+    };
+
+    Ok((frontmatter, source))
+}
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct CodeBlockSpec {

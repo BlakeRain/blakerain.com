@@ -222,7 +222,7 @@ enum SummaryState {
     Finished(String),
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct Outline {
     #[serde(skip)]
     level: u32,
