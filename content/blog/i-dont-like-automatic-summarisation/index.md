@@ -4,11 +4,10 @@ date: 2026-02-03T16:47:38
 tags:
   - ai
   - llm
-params:
-  numberedHeadings: false
-  coverImage:
-    author: Kate Holovacheva
-    url: https://www.pexels.com/photo/close-up-of-plant-leaves-covered-in-hoarfrost-15684738/
+numberedHeadings: false
+coverImage:
+  author: Kate Holovacheva
+  url: https://www.pexels.com/photo/close-up-of-plant-leaves-covered-in-hoarfrost-15684738/
 ---
 
 I don't like automatic summarisation any more. Especially in the context of technical publications.

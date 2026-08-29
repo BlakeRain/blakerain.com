@@ -4,8 +4,7 @@ summary: A list of other sites that I read and recommend.
 subtitle: true
 menus:
   - footer_right
-params:
-  icon: { vendor: "bootstrap", name: "link-45deg" }
+icon: { vendor: "bootstrap", name: "link-45deg" }
 ---
 
 My descriptions of these sites are brief, and do little justice to the quality of the content.

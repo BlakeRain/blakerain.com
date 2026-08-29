@@ -4,8 +4,7 @@ summary: A log of changes made to this website.
 subtitle: true
 menus:
   - footer_right
-params:
-  icon: { vendor: "bootstrap", name: "journal-text" }
+icon: { vendor: "bootstrap", name: "journal-text" }
 sitemap:
   disable: true
 ---

@@ -3,8 +3,7 @@ title: Album of the Year 2025
 date: 2026-01-06T19:31:26
 tags:
   - music
-params:
-  numberedHeadings: false
+numberedHeadings: false
 coverImage:
   author: Orbit Culture
   url: https://orbitculture.bandcamp.com/album/death-above-life-24-bit-hd-audio

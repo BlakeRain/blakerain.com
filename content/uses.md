@@ -5,8 +5,7 @@ summary: A list of hardware and software I use.
 subtitle: true
 menus:
   - footer_left
-params:
-  icon: { vendor: "bootstrap", name: "pc" }
+icon: { vendor: "bootstrap", name: "pc" }
 ---
 
 This page lists the software and development tools that I use on a regular basis. You might also be

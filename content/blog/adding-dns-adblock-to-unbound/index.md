@@ -8,9 +8,8 @@ date: 2024-07-03T15:05:05
 summary: |
   In this post I share how I added DNS adblocking to the Unbound DNS server configuration on my
   OpenBSD firewall.
-params:
-  customHero: |
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(90deg, rgba(195,63,117,1) 0%, rgba(175,58,134,1) 50%, rgba(11,13,67,1) 100%);
+customHero: |
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), linear-gradient(90deg, rgba(195,63,117,1) 0%, rgba(175,58,134,1) 50%, rgba(11,13,67,1) 100%);
 ---
 
 In a [previous post] I shared my experiences setting up an [OpenBSD] router that included [Unbound]
