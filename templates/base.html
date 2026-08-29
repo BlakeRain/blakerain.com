@@ -21,8 +21,10 @@
     </script>
     <link rel="stylesheet" href="/css/main.css">
     <meta name="author" content="Blake Rain">
+    <meta name="fediverse:creator" content="@BlakeRain@mastodonapp.uk"/>
+    <link rel="human-json" href="/human.json">
     {%- if page %}
-      <link rel="canonical" href="https://blakerain.com/{{ page.path }}">
+      <link rel="canonical" href="https://blakerain.com/{{ page.base }}/">
       {%- if page.summary_text %}
         <meta name="description" content="{{ page.summary_text }}">
       {%- endif %}
@@ -30,7 +32,10 @@
         <meta name="keywords" content="{{ page.tags | join(', ') }}">
       {%- endif %}
     {%- endif %}
-    {% from "macros/page-css.html" import page_css %}
+    {%- if env.profile != "debug" %}
+      <script defer data-domain="blakerain.com" src="https://pa.blakerain.com/js/script.js" ></script>
+    {%- endif %}
+    {%- from "macros/page-css.html" import page_css %}
     {{ page_css() }}
     {% block head %}{% endblock %}
   </head>
