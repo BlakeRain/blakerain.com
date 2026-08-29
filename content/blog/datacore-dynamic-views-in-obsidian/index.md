@@ -1,6 +1,5 @@
 ---
-title: |
-  datacore: create dynamic views in Obsidian
+title: "datacore: create dynamic views in Obsidian"
 link: https://blacksmithgu.github.io/datacore/
 date: 2025-05-30T05:49:04
 tags:

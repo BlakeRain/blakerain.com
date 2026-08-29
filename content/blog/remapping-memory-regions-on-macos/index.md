@@ -1,6 +1,5 @@
 ---
-title: |
-  Remapping memory regions on macOS
+title: Remapping memory regions on macOS
 link: https://paste.blakerain.com/ismuddempl
 date: 2025-06-05T07:04:11
 tags:
