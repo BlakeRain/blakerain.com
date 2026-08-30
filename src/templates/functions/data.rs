@@ -94,7 +94,7 @@ pub fn load_pages(path: &str, kwargs: Kwargs) -> Result<Value, Error> {
         ));
     }
 
-    tracing::info!(?path, "loading pages");
+    tracing::debug!(?path, "loading pages");
     let pages = Page::load_all(&path, target).map_err(|err| {
         tracing::error!(?path, ?err, "failed to load pages");
 

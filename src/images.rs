@@ -124,7 +124,7 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
             .context("failed to get modified time")?;
 
         if output_metadata.len() > 0 && src_mtime <= output_mtime {
-            tracing::info!(?src, "reusing already generated image");
+            tracing::debug!(?src, "reusing already generated image");
 
             return Ok(output_url);
         }
@@ -143,7 +143,7 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
         return Ok(output_url);
     }
 
-    tracing::info!(?src_path, "reading image");
+    tracing::debug!(?src_path, "reading image");
     let mut image = ImageReader::open(&src_path)
         .with_context(|| format!("failed to read image at {src_path:?}"))?
         .decode()
@@ -165,7 +165,7 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
         let target_width = ((src_width as f64 * scale).round() as u32).max(1);
         let target_height = ((src_height as f64 * scale).round() as u32).max(1);
 
-        tracing::info!(?src_path, ?target_width, ?target_height, "resizing image");
+        tracing::debug!(?src_path, ?target_width, ?target_height, "resizing image");
         image = image.resize(
             target_width,
             target_height,
@@ -177,7 +177,7 @@ pub fn process(base: &str, src: &str, spec: &ImageSpec) -> anyhow::Result<String
         let encoder = webp::Encoder::from_image(&image)
             .map_err(|err| anyhow::anyhow!("failed to create WebP encoder: {err}"))?;
 
-        tracing::info!(?output_path, "writing image");
+        tracing::debug!(?output_path, "writing image");
 
         let webp = encoder.encode(spec.quality.unwrap_or(90) as f32);
         std::fs::write(&output_path, &*webp)

@@ -107,7 +107,7 @@ impl Page {
                 continue;
             }
 
-            tracing::info!(?entry_path, "loading page");
+            tracing::debug!(?entry_path, "loading page");
 
             let page = Page::load(entry_path)
                 .with_context(|| format!("failed to load page at {entry_path:?}"))?;

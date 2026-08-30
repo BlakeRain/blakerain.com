@@ -1,4 +1,5 @@
 use std::{
+    collections::HashMap,
     io::{Read, Write},
     path::PathBuf,
 };
@@ -36,6 +37,10 @@ struct Args {
     #[arg(long, env)]
     pub minify: bool,
 
+    /// Various additional environment variables
+    #[arg(long, env)]
+    pub env: Vec<String>,
+
     /// Path to the directory containing our templates
     #[arg(long, env)]
     pub templates: Option<PathBuf>,
@@ -68,6 +73,15 @@ fn main() -> anyhow::Result<()> {
             .context("failed to parse input as JSON")?
     };
 
+    let mut extra_env = HashMap::new();
+    for env in args.env {
+        let Some((key, value)) = env.split_once('=') else {
+            anyhow::bail!("invalid environment variable {env:?}");
+        };
+
+        extra_env.insert(key.to_string(), value.to_string());
+    }
+
     let result = template
         .render(minijinja::context! {
             site,
@@ -77,6 +91,7 @@ fn main() -> anyhow::Result<()> {
                 today => OffsetDateTime::now_utc().date(),
                 profile => env!("CARGO_PROFILE"),
                 version => env!("CARGO_PKG_VERSION"),
+                ..extra_env
             }
         })
         .context("failed to render template")?;

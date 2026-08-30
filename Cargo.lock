@@ -297,6 +297,7 @@ dependencies = [
  "nom",
  "notify-debouncer-full",
  "poem",
+ "poem-route-macro",
  "pulldown-cmark",
  "pulldown-cmark-escape",
  "regex",
@@ -2485,6 +2486,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "056e2fea6de1cb240ffe23cfc4fc370b629f8be83b5f27e16b7acd5231a72de4"
 dependencies = [
  "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
+]
+
+[[package]]
+name = "poem-route-macro"
+version = "0.1.1"
+source = "sparse+https://git.blakerain.com/api/packages/BlakeRain/cargo/"
+checksum = "b6477a7efabf9b8d599c4353004a59accd0a3d9e45508a73370b6fdc5786b4c3"
+dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.119",

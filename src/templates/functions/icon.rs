@@ -76,7 +76,7 @@ pub fn icon(vendor: &str, name: &str, kwargs: Kwargs) -> Result<Value, Error> {
         ));
     }
 
-    tracing::info!("loading icon from {:?}", icon_path);
+    tracing::debug!("loading icon from {:?}", icon_path);
     let contents = std::fs::read_to_string(&icon_path).map_err(|err| {
         Error::new(
             ErrorKind::InvalidOperation,

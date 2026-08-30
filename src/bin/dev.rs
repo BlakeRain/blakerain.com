@@ -1,31 +1,31 @@
-use std::{
-    path::{Path, PathBuf},
-    process::Stdio,
-    sync::Arc,
-    time::Duration,
-};
+use std::{path::PathBuf, process::Stdio, sync::Arc, time::Duration};
 
 use anyhow::Context;
 use blakerain_com::tracing::setup_tracing;
 use futures_util::{SinkExt, StreamExt};
 use notify_debouncer_full::{
-    DebounceEventResult, new_debouncer,
-    notify::{Event, RecursiveMode},
+    DebounceEventResult, Debouncer, FileIdMap, new_debouncer,
+    notify::{Event, FsEventWatcher, RecursiveMode},
 };
 use poem::{
-    EndpointExt, IntoResponse, Route,
+    EndpointExt, IntoResponse,
     endpoint::StaticFilesEndpoint,
     handler,
     listener::TcpListener,
-    web::Data,
-    web::websocket::{Message, WebSocket},
+    middleware::Tracing,
+    web::{
+        Data,
+        websocket::{Message, WebSocket},
+    },
 };
+use poem_route_macro::define_routes;
 use serde::Deserialize;
 use tokio::{
     io::{AsyncBufReadExt, BufReader},
     process::Command,
-    sync::broadcast,
+    sync::broadcast::{self, error::RecvError},
 };
+use tracing::Instrument;
 
 #[derive(Debug, Deserialize)]
 struct WatchConfig {
@@ -74,8 +74,14 @@ impl WatchConfig {
             return false;
         }
 
-        self.files.iter().any(|file| path == *file)
+        self.files.contains(&path)
     }
+}
+
+#[derive(Debug, Deserialize, Clone, Copy)]
+enum BuildMode {
+    Debug,
+    Release,
 }
 
 #[derive(Debug, Deserialize)]
@@ -87,19 +93,9 @@ struct DevConfig {
     jobs: Option<usize>,
     #[serde(default = "default_debounce_ms")]
     debounce_ms: u64,
+    #[serde(default = "default_build_mode")]
+    build_mode: BuildMode,
     watch: WatchConfig,
-}
-
-impl DevConfig {
-    fn get_jobs(&self) -> usize {
-        if let Some(jobs) = self.jobs {
-            jobs
-        } else if let Ok(jobs) = std::thread::available_parallelism() {
-            jobs.get()
-        } else {
-            1
-        }
-    }
 }
 
 fn default_host() -> String {
@@ -114,12 +110,50 @@ fn default_debounce_ms() -> u64 {
     200
 }
 
+fn default_build_mode() -> BuildMode {
+    BuildMode::Release
+}
+
+impl DevConfig {
+    async fn load() -> anyhow::Result<Self> {
+        let source = tokio::fs::read_to_string("dev.json")
+            .await
+            .context("failed to read dev.json")?;
+        let mut config =
+            serde_json::from_str::<DevConfig>(&source).context("failed to parse dev.json")?;
+        config.watch.canonicalize_paths();
+
+        Ok(config)
+    }
+
+    fn get_jobs(&self) -> usize {
+        if let Some(jobs) = self.jobs {
+            jobs
+        } else if let Ok(jobs) = std::thread::available_parallelism() {
+            jobs.get()
+        } else {
+            1
+        }
+    }
+
+    fn get_debounce(&self) -> Duration {
+        Duration::from_millis(self.debounce_ms)
+    }
+}
+
 async fn run_make(config: &DevConfig) -> anyhow::Result<bool> {
-    let mut child = Command::new("make")
-        .arg("-j")
-        .arg(config.get_jobs().to_string())
-        .arg("MODE=debug")
+    let mut child = Command::new("make");
+
+    child.arg("-j").arg(config.get_jobs().to_string());
+
+    match config.build_mode {
+        BuildMode::Debug => child.arg("MODE=debug"),
+        BuildMode::Release => child.arg("MODE=release"),
+    };
+
+    let mut child = child
         .arg("ANSI=false")
+        .arg("RELOADER=true")
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()?;
@@ -130,19 +164,25 @@ async fn run_make(config: &DevConfig) -> anyhow::Result<bool> {
     let stdout_reader = BufReader::new(stdout).lines();
     let stderr_reader = BufReader::new(stderr).lines();
 
-    let stdout_task = tokio::spawn(async move {
-        let mut reader = stdout_reader;
-        while let Some(line) = reader.next_line().await.unwrap_or(None) {
-            tracing::info!("{}", line);
+    let stdout_task = tokio::spawn(
+        async move {
+            let mut reader = stdout_reader;
+            while let Some(line) = reader.next_line().await.unwrap_or(None) {
+                tracing::info!("{}", line);
+            }
         }
-    });
+        .instrument(tracing::info_span!("stdout")),
+    );
 
-    let stderr_task = tokio::spawn(async move {
-        let mut reader = stderr_reader;
-        while let Some(line) = reader.next_line().await.unwrap_or(None) {
-            tracing::info!("{}", line);
+    let stderr_task = tokio::spawn(
+        async move {
+            let mut reader = stderr_reader;
+            while let Some(line) = reader.next_line().await.unwrap_or(None) {
+                tracing::info!("{}", line);
+            }
         }
-    });
+        .instrument(tracing::info_span!("stderr")),
+    );
 
     let status = child
         .wait()
@@ -164,35 +204,112 @@ async fn run_make(config: &DevConfig) -> anyhow::Result<bool> {
     Ok(status.success())
 }
 
-#[handler]
-async fn ws_handler(ws: WebSocket, tx: Data<&broadcast::Sender<String>>) -> impl IntoResponse {
-    let mut rx = tx.subscribe();
+#[derive(Debug, Clone)]
+struct Reloader {
+    reload_tx: broadcast::Sender<ReloadMessage>,
+}
 
-    ws.on_upgrade(move |mut socket| async move {
-        loop {
-            tokio::select! {
-                msg = rx.recv() => {
-                    match msg {
-                        Ok(text) => {
-                            tracing::info!("sending message to client: {text}");
-                            if socket.send(Message::Text(text)).await.is_err() {
-                                break;
-                            }
-                        }
-                        Err(broadcast::error::RecvError::Lagged(_)) => continue,
-                        Err(broadcast::error::RecvError::Closed) => break,
-                    }
-                }
+#[derive(Debug, Clone, Copy)]
+enum ReloadMessage {
+    Reload,
+}
 
-                recv = socket.next() => {
-                    match recv {
-                        Some(Ok(_)) => {}
-                        Some(Err(_)) | None => break,
+impl std::fmt::Display for ReloadMessage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Reload => write!(f, "reload"),
+        }
+    }
+}
+
+impl Reloader {
+    pub fn new() -> Self {
+        let (reload_tx, mut reload_rx) = broadcast::channel::<ReloadMessage>(16);
+
+        tokio::spawn(
+            async move {
+                loop {
+                    if reload_rx.recv().await.is_ok() {
+                        tracing::info!("reload message sent");
+                    } else {
+                        tracing::error!("reload channel closed");
+                        break;
                     }
                 }
             }
-        }
-    })
+            .instrument(tracing::info_span!("reloader")),
+        );
+
+        Self { reload_tx }
+    }
+
+    pub fn subscribe(&self) -> broadcast::Receiver<ReloadMessage> {
+        self.reload_tx.subscribe()
+    }
+
+    pub fn reload(&self) -> anyhow::Result<()> {
+        self.reload_tx
+            .send(ReloadMessage::Reload)
+            .context("failed to send reload message")?;
+        Ok(())
+    }
+}
+
+#[derive(Debug)]
+struct Builder {
+    build_tx: broadcast::Sender<BuildMessage>,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum BuildMessage {
+    Build,
+}
+
+impl Builder {
+    async fn start(config: Arc<DevConfig>, reloader: Reloader) -> anyhow::Result<Self> {
+        let (build_tx, build_rx) = broadcast::channel::<BuildMessage>(16);
+
+        tokio::spawn(
+            async move {
+                let mut build_rx = build_rx;
+
+                loop {
+                    match build_rx.recv().await {
+                        Ok(message) => match message {
+                            BuildMessage::Build => {
+                                tracing::info!("Rebuilding ...");
+                                if let Ok(true) = run_make(&config).await {
+                                    tracing::info!("Rebuild successful");
+                                    if let Err(err) = reloader.reload() {
+                                        tracing::error!(
+                                            error = ?err,
+                                            "Failed to notify reloader"
+                                        );
+                                    }
+                                }
+                            }
+                        },
+
+                        Err(RecvError::Lagged(_)) => {}
+                        Err(RecvError::Closed) => {
+                            tracing::info!("Build channel closed");
+                            break;
+                        }
+                    }
+                }
+            }
+            .instrument(tracing::info_span!("builder")),
+        );
+
+        Ok(Self { build_tx })
+    }
+
+    fn build(&self) -> anyhow::Result<()> {
+        self.build_tx
+            .send(BuildMessage::Build)
+            .context("failed to send build message")?;
+        Ok(())
+    }
 }
 
 fn is_interesting_event(event: &Event) -> bool {
@@ -207,54 +324,11 @@ fn is_interesting_event(event: &Event) -> bool {
     )
 }
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    setup_tracing(Some(true), None);
-
-    let config: Arc<DevConfig> = {
-        let source = std::fs::read_to_string("dev.json").context("failed to read dev.json")?;
-        let mut config =
-            serde_json::from_str::<DevConfig>(&source).context("failed to parse dev.json")?;
-        config.watch.canonicalize_paths();
-        Arc::new(config)
-    };
-
-    tracing::info!("Running first build ...");
-    run_make(&config).await?;
-
-    tracing::info!("Starting server");
-
-    let (reload_tx, _) = broadcast::channel::<String>(16);
-    let (build_tx, build_rx) = broadcast::channel::<()>(16);
-
-    {
-        let reload_tx = reload_tx.clone();
-        let config = config.clone();
-
-        tokio::spawn(async move {
-            let mut build_rx = build_rx;
-
-            loop {
-                match build_rx.recv().await {
-                    Ok(()) => {
-                        tracing::info!("changes detected, rebuilding ...");
-                        if let Ok(true) = run_make(&config).await {
-                            tracing::info!("rebuild complete");
-                            let _ = reload_tx.send("reload".into());
-                        }
-                    }
-
-                    Err(broadcast::error::RecvError::Lagged(_)) => {}
-                    Err(broadcast::error::RecvError::Closed) => {
-                        tracing::info!("build channel closed");
-                        break;
-                    }
-                }
-            }
-        });
-    }
-
-    let mut debouncer = new_debouncer(Duration::from_millis(config.debounce_ms), None, {
+async fn watcher(
+    config: Arc<DevConfig>,
+    builder: Builder,
+) -> anyhow::Result<Debouncer<FsEventWatcher, FileIdMap>> {
+    let mut debouncer = new_debouncer(config.get_debounce(), None, {
         let config = config.clone();
 
         move |result: DebounceEventResult| match result {
@@ -271,12 +345,15 @@ async fn main() -> anyhow::Result<()> {
                 });
 
                 if should_build {
-                    let _ = build_tx.send(());
+                    tracing::debug!(?events, "Should rebuild");
+
+                    let _ = builder.build();
                 }
             }
+
             Err(errors) => {
-                for e in errors {
-                    eprintln!("watch error: {e}");
+                for err in errors {
+                    tracing::error!("Watch error: {err}");
                 }
             }
         }
@@ -284,25 +361,87 @@ async fn main() -> anyhow::Result<()> {
     .context("failed to create file watcher")?;
 
     for dir in &config.watch.directories {
-        let path = Path::new(dir);
-
-        if path.exists() {
-            tracing::info!("watching directory: {}", dir.display());
+        if dir.exists() {
+            tracing::info!("Watching directory: {}", dir.display());
 
             debouncer
-                .watch(path, RecursiveMode::Recursive)
-                .with_context(|| format!("failed to watch directory: {}", dir.display()))?;
+                .watch(dir, RecursiveMode::Recursive)
+                .with_context(|| format!("Failed to watch directory: {}", dir.display()))?;
         } else {
-            tracing::error!("watch directory does not exist: {}", dir.display());
+            tracing::error!("Watch directory does not exist: {}", dir.display());
         }
     }
 
-    let app = Route::new()
-        .at("/__dev/ws", poem::get(ws_handler.data(reload_tx)))
-        .nest(
-            "/",
-            StaticFilesEndpoint::new("output").index_file("index.html"),
-        );
+    Ok(debouncer)
+}
+
+#[handler]
+async fn get_websocket(ws: WebSocket, tx: Data<&Reloader>) -> impl IntoResponse {
+    let mut rx = tx.subscribe();
+
+    ws.on_upgrade(move |mut socket| async move {
+        loop {
+            tokio::select! {
+                msg = rx.recv() => {
+                    match msg {
+                        Ok(message) => {
+                            let message = message.to_string();
+                            tracing::info!("sending message to client: {message:?}");
+                            if let Err(err) = socket.send(Message::Text(message)).await {
+                                tracing::error!(
+                                    error = ?err,
+                                    "failed to send message to client"
+                                );
+
+                                break;
+                            }
+                        }
+                        Err(broadcast::error::RecvError::Lagged(_)) => continue,
+                        Err(broadcast::error::RecvError::Closed) => {
+                            tracing::info!("websocket closed");
+                            break;
+                        },
+                    }
+                }
+
+                recv = socket.next() => {
+                    match recv {
+                        Some(Ok(message)) => {
+                            tracing::info!("received message from client: {message:?}");
+                        }
+
+                        Some(Err(_)) | None => break,
+                    }
+                }
+            }
+        }
+    })
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    setup_tracing(Some(true), None);
+
+    tracing::info!("Loading config");
+    let config = Arc::new(DevConfig::load().await?);
+
+    tracing::info!("Running first build");
+    run_make(&config).await?;
+
+    tracing::info!("Starting server");
+
+    let reloader = Reloader::new();
+    let builder = Builder::start(Arc::clone(&config), reloader.clone()).await?;
+    let debouncer = watcher(Arc::clone(&config), builder).await?;
+
+    let static_ep = StaticFilesEndpoint::new("output").index_file("index.html");
+
+    let routes = define_routes!({
+        "/__dev/ws" websocket GET
+        *"/"        { static_ep }
+    });
+
+    let app = routes.data(reloader).with(Tracing);
 
     let addr = format!("{}:{}", config.host, config.port);
     tracing::info!("serving at http://{addr}");
@@ -311,6 +450,8 @@ async fn main() -> anyhow::Result<()> {
         .run(app)
         .await
         .context("server error")?;
+
+    debouncer.stop();
 
     Ok(())
 }

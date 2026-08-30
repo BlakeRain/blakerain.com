@@ -1,0 +1,6 @@
+[registries.blakerain]
+index = "sparse+https://git.blakerain.com/api/packages/BlakeRain/cargo/"
+
+[net]
+git-fetch-with-cli = true
+

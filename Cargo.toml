@@ -34,6 +34,8 @@ walkdir = { version = "2.5" }
 webp = { version = "0.3" }
 yaml-rust = { version = "0.4" }
 
+poem-route-macro = { version = "0.1.1", registry = "blakerain" }
+
 [dependencies.minijinja]
 version = "2.24"
 features = [

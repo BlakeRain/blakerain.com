@@ -1,4 +1,5 @@
 MODE ?= debug
+RELOADER ?= false
 
 ifeq ($(MODE),release)
 	NODE_ENV = production
@@ -16,6 +17,10 @@ else
 	MARKDOWN_FLAGS =
 	HTML_FLAGS =
 	RENDER_FLAGS =
+endif
+
+ifeq ($(RELOADER),true)
+	RENDER_FLAGS += --env reloader=true
 endif
 
 # The tools, written in Rust, that we use to render the website.
