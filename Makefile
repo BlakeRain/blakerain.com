@@ -137,11 +137,11 @@ $(TOOLS_SCRIPTS): output/tools/%.js: content/tools/%.js
 
 output/sitemap.xml: $(PAGES_HTML_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ sitemap.xml
+	echo '{}' | $(RENDER) -o $@ sitemap.xml
 
 output/index.xml: $(PAGES_RSS_JSON) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
-	echo '{}' | $(RENDER) $(RENDER_FLAGS) -o $@ rss.xml
+	echo '{}' | $(RENDER) -o $@ rss.xml
 
 output/blog/index.xml: $(filter build/content/blog/%,$(PAGES_RSS_JSON)) $(RENDER) $(TEMPLATES)
 	mkdir -p $(dir $@)
