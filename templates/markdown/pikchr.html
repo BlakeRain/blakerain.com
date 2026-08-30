@@ -1,8 +1,8 @@
 <figure class="pikchr">
-  <div class="light" style="width: {{ width }}px; height: {{ height }}px">
+  <div class="light" style="width: {{ width }}px;">
     {{ light_image | safe }}
   </div>
-  <div class="dark" style="width: {{ width }}px; height: {{ height }}px">
+  <div class="dark" style="width: {{ width }}px;">
     {{ dark_image | safe }}
   </div>
   {% if attributes and attributes.title is string %}<figcaption>{{ attributes.title }}</figcaption>{% endif %}

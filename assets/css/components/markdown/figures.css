@@ -72,6 +72,8 @@
       }
 
       &.pikchr {
+        overflow-x: auto;
+
         > div.light {
           display: block;
         }
