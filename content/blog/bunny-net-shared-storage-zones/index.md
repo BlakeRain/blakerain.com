@@ -17,6 +17,7 @@ David demonstrates it with).
 I wonder how useful this would be for redirecting to other origin servers, like a [magic container]
 or an [edge function].
 
+<!--more-->
 
 [David Bushell]: https://dbushell.com/
 [Bunny]: https://bunny.net/

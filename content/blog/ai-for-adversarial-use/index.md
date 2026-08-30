@@ -19,6 +19,8 @@ It is a bit difficult to sympathise with Google here, as LLMs may well constitut
 [intellectual property theft]. Certainly this seems to be as much a form of advertising as it is a
 report on advances in malicious uses of AI models.
 
+<!--more-->
+
 > A common target for attackers is <mark>Gemini's exceptional reasoning capability</mark>. While
 > internal reasoning traces are typically summarized before being delivered to users, attackers have
 > attempted to coerce the model into outputting full reasoning processes.

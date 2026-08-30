@@ -17,6 +17,8 @@ not going to be collecting any sensitive information from users.
 Given that they don't say what information they've already got that they can use to confirm my
 age, I'm going to assume that it's more than I'd be comfortable with them using.
 
+<!--more-->
+
 > When additional confirmation is required, we offer multiple privacy-forward options through
 > trusted partners.
 

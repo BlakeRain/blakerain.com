@@ -14,6 +14,8 @@ rotation, as this effects the default logging for all containers. I tend to assu
 logs to hang around forever. When I _have_ used the global configuration, I've often ended up
 finding I've lost logs that I assumed would be kept, usually several months later.
 
+<!--more-->
+
 As I use [Terraform] to manage most of my infrastructure, I would typically use the [log_opts] in
 the `docker_container` resource to set the log rotation options:
 

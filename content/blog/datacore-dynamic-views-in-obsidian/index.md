@@ -14,6 +14,8 @@ I really like that I can import React components from [other notes]. This means 
 Components.md` file in a `Templates` folder, and import components from code blocks in that note
 into other queries:
 
+<!--more-->
+
 ```jsx
 const { TaskList } = await dc.require(dc.blockLink("Templates/My Component.md", "code"));
 

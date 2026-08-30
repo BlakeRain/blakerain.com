@@ -12,6 +12,8 @@ about the mechanisms that have come to replace interpersonal trust in a larger s
 making a category error. That category error currently manifests in people thinking of corporations
 and other organisations as friends, when actually they are services.
 
+<!--more-->
+
 Schneier goes on to say:
 
 > Corporations are not moral; they are precisely as immoral as they can get away with.

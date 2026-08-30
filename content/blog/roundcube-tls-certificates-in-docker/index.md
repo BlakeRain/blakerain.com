@@ -22,6 +22,8 @@ services:
       - ROUNDCUBEMAIL_SMTP_PORT=465
 ```
 
+<!--more-->
+
 Unfortunately, authentication didn't work. The error that I was getting in the Roundcube logs was
 not very helpful:
 

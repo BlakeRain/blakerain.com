@@ -14,6 +14,8 @@ This is a nice addition to see, although I'd prefer they worked on things like: 
 Terraform provider so I don't have to keep the order of environment variables and containers
 alphabetical 😔
 
+<!--more-->
+
 Their [eject to GitHub] features is a nice touch, although I'd prefer other options like downloading
 configuration and Dockerfiles or, even better, connecting to something _other than GitHub_.
 

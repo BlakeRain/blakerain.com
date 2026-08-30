@@ -22,11 +22,14 @@ mmap(addr + offset, block_size, PROT_READ | PROT_WRITE, MAP_FIXED | MAP_ANON | M
 madvise(addr + offset, block_size, MADV_WILLNEED);
 ```
 
-However, on macOS this has lead to a crash when the second `mmap` call is made. It seems that macOS
-does not allow `mmap` to remap a memory region that has already been reserved. This caught me off
-guard for a while, but rummaging through some old code I found a previous solution that seems to
-work. Instead of using `mmap` to reserve and then commit memory, we use the macOS `vm_allocate` and
-`vm_protect` functions from the Mach kernel API.
+However, on macOS this has lead to a crash when the second `mmap` call is made.
+
+<!--more-->
+
+It seems that macOS does not allow `mmap` to remap a memory region that has already been reserved.
+This caught me off guard for a while, but rummaging through some old code I found a previous
+solution that seems to work. Instead of using `mmap` to reserve and then commit memory, we use the
+macOS `vm_allocate` and `vm_protect` functions from the Mach kernel API.
 
 ```c
 kern_return_t kr = 0;

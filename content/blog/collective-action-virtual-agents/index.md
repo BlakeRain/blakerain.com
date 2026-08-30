@@ -17,6 +17,8 @@ issues (robustness, lack of adaptability to novel task settings, requiring rigid
 configuration assumptions) whereas emergent collective behaviour, as observed in nature, tends to
 produce systems that are "_robust, adaptable, and have less rigid assumptions_".
 
+<!--more-->
+
 > Collective intelligence, as a field, studies the group intelligence that emerges from the
 > interactions of many individuals. Within this field, ideas such as self-organization, emergent
 > behaviour, swarm optimization, and cellular automata were developed to model and explain complex

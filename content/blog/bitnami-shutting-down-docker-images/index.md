@@ -16,6 +16,8 @@ their OCI images on [Docker Hub](https://hub.docker.com/u/bitnami).
 This seems to be part of a wider move to deprecate more of Bitnami's free OCI images in favour of
 their paid-for image registry.
 
+<!--more-->
+
 > While some BSI images will be free, they are only for use in development/testing purposes, and
 > a commercial subscription is recommended for access to the entire catalog, as well as stable
 > tags, long-term support versions, and more.

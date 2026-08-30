@@ -16,6 +16,8 @@ In October [GitHub] decided that I no longer qualify to receive Copilot Pro [for
 maintainer of FOSS projects. I'm not entirely surprised, as I've not contributed to FOSS projects in
 a while.
 
+<!--more-->
+
 I started using Supermaven as I still find it handy to have my [`AsRef`] traits generated, and I can
 never remember how to handle [time] in C++. Supermaven's NeoVim plugin works quite nicely too, so
 I'd prefer to keep being able to use it.

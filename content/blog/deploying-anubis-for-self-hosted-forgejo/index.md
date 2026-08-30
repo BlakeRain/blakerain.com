@@ -16,6 +16,8 @@ During a recent audit of my backups, I found that one backup process was taking 
 complete. Checking the logs I found that it was spending a lot of time processing changes to the
 storage of a number of containers, the most surprising of which was my Forgejo instance.
 
+<!--more-->
+
 This was surprising, as it's mostly just me on this instance, and a few mirrors that update
 infrequently. My first instinct was that the culprit was my _mirrors_ organisation: a private
 organisation on my Forgejo instance where I have a number of [repository mirrors], which pull from
