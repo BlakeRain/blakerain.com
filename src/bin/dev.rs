@@ -4,8 +4,8 @@ use anyhow::Context;
 use blakerain_com::tracing::setup_tracing;
 use futures_util::{SinkExt, StreamExt};
 use notify_debouncer_full::{
-    DebounceEventResult, Debouncer, FileIdMap, new_debouncer,
-    notify::{Event, FsEventWatcher, RecursiveMode},
+    DebounceEventResult, Debouncer, RecommendedCache, new_debouncer,
+    notify::{Event, RecommendedWatcher, RecursiveMode},
 };
 use poem::{
     EndpointExt, IntoResponse,
@@ -327,7 +327,7 @@ fn is_interesting_event(event: &Event) -> bool {
 async fn watcher(
     config: Arc<DevConfig>,
     builder: Builder,
-) -> anyhow::Result<Debouncer<FsEventWatcher, FileIdMap>> {
+) -> anyhow::Result<Debouncer<RecommendedWatcher, RecommendedCache>> {
     let mut debouncer = new_debouncer(config.get_debounce(), None, {
         let config = config.clone();
 
