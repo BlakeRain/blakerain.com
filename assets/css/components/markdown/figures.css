@@ -39,13 +39,16 @@
       &.quote {
         position: relative;
         align-items: flex-start;
+        padding-left: 3rem;
+        border-left: 4px solid var(--color-link);
 
         &::before {
           position: absolute;
-          top: -18px;
-          left: -44px;
+          top: -4px;
+          left: 11px;
           content: "\201c";
-          font-size: 6rem;
+          font-family: serif;
+          font-size: 4rem;
           line-height: 1;
           display: none;
           color: var(--color-text-subtle);
@@ -55,7 +58,7 @@
           }
         }
 
-        & p {
+        > p {
           font-style: italic;
           margin-bottom: 0;
           color: var(--color-text-muted);

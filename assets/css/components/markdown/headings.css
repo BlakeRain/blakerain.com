@@ -1,4 +1,4 @@
-@layer components {
+@layer typography {
   .markdown {
     counter-reset: h1-outline-counter;
 

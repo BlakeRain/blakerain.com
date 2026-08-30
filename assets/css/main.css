@@ -22,6 +22,8 @@
 
 @import "syntax.css";
 
+@layer site, typography, components, utilities;
+
 @layer site {
   :root {
     --body-text: var(--color-text);
