@@ -1,13 +1,16 @@
 use std::{
     collections::{HashMap, VecDeque},
     ops::Range,
+    path::PathBuf,
 };
 
 use anyhow::Context;
+use base64::Engine as _;
 use minijinja::{Environment, Template, Value};
 use pulldown_cmark::{Alignment, BlockQuoteKind, Event, HeadingLevel, LinkType, Tag, TagEnd};
 use pulldown_cmark_escape::{FmtWriter, StrWrite, escape_html, escape_html_body_text};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 use crate::{
     parse::{AttributeValue, CodeBlockSpec},
@@ -831,14 +834,45 @@ impl<'t> State<'t> {
                     )
                     .context("failed to render pikchr image")?;
 
+                    let mut hasher = Sha256::new();
+                    hasher.update(raw.as_bytes());
+                    let hash = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(hasher.finalize());
+
+                    let light_filename = format!("pikchr_{}_{}_light.svg", hash, light_image.width);
+                    let dark_filename = format!("pikchr_{}_{}_dark.svg", hash, dark_image.width);
+
+                    let light_url = format!("/{}/{}", self.base, light_filename);
+                    let dark_url = format!("/{}/{}", self.base, dark_filename);
+
+                    let light_path = PathBuf::from("output").join(&self.base).join(&light_filename);
+                    let dark_path = PathBuf::from("output").join(&self.base).join(&dark_filename);
+
+                    if !light_path.exists() {
+                        if let Some(parent) = light_path.parent() {
+                            std::fs::create_dir_all(parent)
+                                .with_context(|| format!("failed to create output directory at {parent:?}"))?;
+                        }
+                        std::fs::write(&light_path, light_image.as_bytes())
+                            .with_context(|| format!("failed to write pikchr SVG to {light_path:?}"))?;
+                    }
+
+                    if !dark_path.exists() {
+                        if let Some(parent) = dark_path.parent() {
+                            std::fs::create_dir_all(parent)
+                                .with_context(|| format!("failed to create output directory at {parent:?}"))?;
+                        }
+                        std::fs::write(&dark_path, dark_image.as_bytes())
+                            .with_context(|| format!("failed to write pikchr SVG to {dark_path:?}"))?;
+                    }
+
                     let template = self
                         .get_template(TEMPLATE_PATH_PIKCHR)
                         .context("failed to load pikchr template")?;
 
                     let output = template
                         .render(minijinja::context! {
-                            light_image => *light_image,
-                            dark_image => *dark_image,
+                            light_url => light_url,
+                            dark_url => dark_url,
                             width => light_image.width,
                             height => light_image.height,
                             attributes => &attributes,

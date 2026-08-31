@@ -1,9 +1,8 @@
 <figure class="pikchr">
-  <div class="light" style="width: {{ width }}px;">
-    {{ light_image | safe }}
-  </div>
-  <div class="dark" style="width: {{ width }}px;">
-    {{ dark_image | safe }}
-  </div>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="{{ dark_url }}">
+    <source media="(prefers-color-scheme: light)" srcset="{{ light_url }}">
+    <img src="{{ light_url }}" alt="{% if attributes and attributes.title is string %}{{ attributes.title }}{% endif %}" width="{{ width }}" height="{{ height }}">
+  </picture>
   {% if attributes and attributes.title is string %}<figcaption>{{ attributes.title }}</figcaption>{% endif %}
 </figure>
