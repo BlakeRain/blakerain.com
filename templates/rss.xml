@@ -3,15 +3,15 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     {% if page.target == "blog" -%}
-      <link>{{ site.base_url }}blog/</link>
+      <link>{{ site.base_url | safe }}blog/</link>
       <title>Blake Rain's Blog Posts</title>
       <description>Recent blog posts by Blake Rain</description>
-      <atom:link href="https://blakerain.com/blog/index.xml" rel="self" type="application/rss+xml"/>
+      <atom:link href="{{ site.base_url | safe }}/blog/index.xml" rel="self" type="application/rss+xml"/>
     {%- else -%}
-      <link>{{ site.base_url }}</link>
+      <link>{{ site.base_url | safe }}</link>
       <title>Blake Rain</title>
       <description>Recent content by Blake Rain</description>
-      <atom:link href="https://blakerain.com/index.xml" rel="self" type="application/rss+xml"/>
+      <atom:link href="{{ site.base_url | safe }}/index.xml" rel="self" type="application/rss+xml"/>
     {%- endif %}
     <language>en-GB</language>
     <managingEditor>blake@blakerain.com (Blake Rain)</managingEditor>
@@ -42,7 +42,7 @@
         <pubDate>{{ page.metadata.modified | datetime(format="rfc2822") }}</pubDate>
       {%- endif %}
       <author>blake@blakerain.com (Blake Rain)</author>
-      <guid>{{ base_url(path_parent(page.path)) | safe }}</guid>
+      <guid>{{ base_url(path_parent(page.path)) | safe }}/</guid>
       <description><![CDATA[
         {{ page.content | safe }}
         <hr>
