@@ -14,7 +14,7 @@
 {%- macro callout(type, title=none) %}
 ```html
 <aside class="callout {{ type }}">
-  <p>
+  <p class="callout-title">
     <strong class="callout-label">
       <span aria-hidden="true">{{ icon("lucide", ICONS[type] | default("triangle-alert")) }}</span>
       {{ title if title is not none else (type | title) }}
