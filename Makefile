@@ -86,7 +86,7 @@ release:
 build/.cargo.$(MODE): Cargo.toml $(RUST_SOURCES)
 	mkdir -p $(dir $@)
 	cargo build $(CARGO_FLAGS)
-	pnpm install
+	pnpm install --yes
 	touch $@
 
 $(HTML): build/.cargo.$(MODE)

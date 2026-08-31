@@ -1,12 +1,8 @@
 .DS_Store
-.hugo_build.lock
-hugo_stats.json
-package-lock.json
 
-/public
-/resources
-/node_modules
+node_modules/
+.pnpm-store/
 
-/build/
-/output/
-/target/
+build/
+output/
+target/
