@@ -58,7 +58,7 @@ to security concerns. Whilst I'd be inclined to suggest a "_safe mode_" that can
 people who are happy to manage the risks, I can respect the developer's decision to focus on
 security.
 
-I've been wanted to start a new website renderer for a while now. I've made a few aborted attempts
+I've been wanting to start a new website renderer for a while now. I've made a few aborted attempts
 at creating a new generator over the past year or so, and quickly run out of steam: a site generator
 needs to do quite a bit more than just transform Markdown into HTML.
 
@@ -79,7 +79,7 @@ a couple of small tools:
 
 1. The `markdown` tool that renders Markdown into HTML, and captures various metadata and salient
    facts about the content, such as tags and reading time.
-2. The `render` tool that takes some structure input (like JSON or YAML) along with a Jinja
+2. The `render` tool that takes some structured input (like JSON or YAML) along with a Jinja
    template, and renders that template with the structured input as the context.
 
 I've also taken this as an opportunity to add support for [pikchr] diagrams, which I've been wanting
@@ -106,7 +106,7 @@ cat build/content/blog/a-new-website-builder/index.json | \
 
 Each page is processed in much the same way: rendered from Markdown and stored in a JSON file in the
 `build` directory, then rendered using a template and written to the `output` directory. Some of the
-aggregation pages --- like the blog index and tags pages) --- are rendered using a template that
+aggregation pages --- like the blog index and tags pages --- are rendered using a template that
 loads all the JSON files from a directory (such as `build/content/blog` for all the blog posts), and
 then processes them within the template.
 
@@ -214,8 +214,8 @@ output/%.html: build/content/%.json
 Things get a little bit more complicated from here onwards. First of all, we want to use different
 templates for different pages. The quickest way to do this was to use a simple script:
 `scripts/select-template.sh`. This script basically takes the path to the JSON file, examines it,
-and the picks the corresponding template. If the script finds that the `template` property is set in
-the frontmatter, the value of that property is used as the template file. This let's me directly
+and then picks the corresponding template. If the script finds that the `template` property is set
+in the frontmatter, the value of that property is used as the template file. This let's me directly
 override the template file in the Markdown document:
 
 ```markdown
