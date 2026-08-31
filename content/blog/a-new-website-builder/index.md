@@ -7,29 +7,41 @@ tags:
 coverImage:
   author: Steffen Lemmerzahl
   url: https://unsplash.com/photos/a-room-that-has-a-bunch-of-items-in-it-yJpvGn5goGc
-numberedHeadings: true
 ---
 
 For a while now, I've been reading various blog posts from people that have been iterating on their
 websites, changing tools, and experimenting with different approaches to hosting or generating their
 content. As a great example, I've had fun this year reading [Jack Baty's] posts about switching
-between [Hugo], Kev Quirk's [Pure Blog], and [Ghost]. He also has some more posts in the [blogging
-tag] on [baty.net].
+between [Hugo], Kev Quirk's [Pure Blog], and [Ghost]. Jack has some more posts in the [blogging
+tag] on [baty.net]. His post on [Blog management fatigue] was a bit hard to relate to, given that I almost
+never post anything, but it's interesting to see how other people approach their own blogging
+process.
+
+{% from "macros/quote.html" import quote %}
+{% call quote("Jack Baty", url="https://baty.net/posts/2026/02/blog-management-fatigue/") %}
+Sometimes I just want a CMS.
+{% endcall %}
+
+Ew 😂
+
+I also recently read an article or blog post that argued something to the effect that your website
+is never finished, and that you should keep evolving it and trying different things. Typically, I
+haven't saved this anywhere, or I can't find it if I have.
+
+<!--more-->
 
 [Jack Baty's]: https://baty.blog/tag/blogging
 [Pure Blog]: https://pureblog.org/
 [Ghost]: https://ghost.org/
 [blogging tag]: https://baty.net/tags/blogging/
 [baty.net]: https://baty.net/
-
-I also recently read an article or blog post that argued something to the effect that your website
-is never finished, and that you should keep evolving it and trying different things. Typically, I
-haven't saved this anywhere, or I can't find it if I have.
+[Blog management fatigue]: https://baty.net/posts/2026/02/blog-management-fatigue/
 
 # I'm Tired of Hugo
 
-I've been running into friction with using Hugo to build this site for a while now, primarily in two
-areas:
+Just to be clear: I really like [Hugo], and I've built several other static sites using Hugo and
+been very happy with it. It's actually a great generator, and makes a lot of things very easy.
+However, for this site I've been running into a bit of friction, primarily in two areas:
 
 1. I have to use Go templates for the website, and I don't really like working with them.
 2. I can't add any additional processing to the site, such as different figure generation.
@@ -46,9 +58,9 @@ to security concerns. Whilst I'd be inclined to suggest a "_safe mode_" that can
 people who are happy to manage the risks, I can respect the developer's decision to focus on
 security.
 
-So I've been wanted to start a new website renderer for a while now. I've made a few aborted
-attempts at creating a new generator over the past year or so, and quickly run out of steam: a site
-generator needs to do quite a bit more than just transform Markdown into HTML.
+I've been wanted to start a new website renderer for a while now. I've made a few aborted attempts
+at creating a new generator over the past year or so, and quickly run out of steam: a site generator
+needs to do quite a bit more than just transform Markdown into HTML.
 
 [Hugo]: https://gohugo.io/
 [opened in 2020]: https://github.com/gohugoio/hugo/issues/7765
@@ -57,19 +69,18 @@ generator needs to do quite a bit more than just transform Markdown into HTML.
 
 # New Site Generator
 
-So, now that I've got [quite a bit of spare time], I've taken the opportunity to add a further
-seventeen thousand lines of code to the website. True to form, I've vastly increased the size,
-complexity, and overall fragility of the entire site just to get back to exactly where I started
-from. Great effort was expended to make sure that the site looks and behaves as reasonably close to
-the original as I could.
+Now that I've got [quite a bit of spare time], I've taken the opportunity to add a further seventeen
+thousand lines of code to the website (only half of them are actually mine). True to form, I've
+vastly increased the size, complexity, and overall fragility of the entire site just to get back to
+exactly where I started from. Great use of my time 🙄
 
-I've decided to build the new site generator around the [minijinja] templating engine for Rust, with
-a couple of tools small tools:
+I've decided to build the new site generator around the [minijinja] templating engine for Rust, using
+a couple of small tools:
 
-1. A tool that renders Markdown into HTML, and captures various metadata and salient facts about the
-   content, such as tags and reading time.
-2. A tool that takes some structure input (like JSON or YAML) along with a Jinja template, and
-   renders that template with the structured input as the context.
+1. The `markdown` tool that renders Markdown into HTML, and captures various metadata and salient
+   facts about the content, such as tags and reading time.
+2. The `render` tool that takes some structure input (like JSON or YAML) along with a Jinja
+   template, and renders that template with the structured input as the context.
 
 I've also taken this as an opportunity to add support for [pikchr] diagrams, which I've been wanting
 to be able to use for a while now. I'm quite excited about this part, so I'll talk more about them
@@ -91,6 +102,31 @@ markdown -o build/content/blog/a-new-website-builder/index.json \
 cat build/content/blog/a-new-website-builder/index.json | \
   render blog/page.html \
   > output/blog/a-new-website-builder/index.html
+```
+
+Each page is processed in much the same way: rendered from Markdown and stored in a JSON file in the
+`build` directory, then rendered using a template and written to the `output` directory. Some of the
+aggregation pages --- like the blog index and tags pages) --- are rendered using a template that
+loads all the JSON files from a directory (such as `build/content/blog` for all the blog posts), and
+then processes them within the template.
+
+```pikchr
+boxwid = 3cm
+boxht  = 1cm
+
+box "blog/a/page.md"
+arrow "markdown" above monospace right 2cm
+JSON: box "blog/a/page.json"
+RENDER: arrow "render" below monospace right 2cm
+box "blog/a/page.html"
+arrow <- up 1cm from RENDER.n
+box "templates/a/page.html" wid 4cm
+arrow down 1cm from JSON.s \
+  then right until even with RENDER.e
+box "blog/index.html"
+"render" monospace above at last arrow.s + (0.75cm, 0)
+arrow <- down 1cm from last arrow.s + (0.75cm, 0)
+box "templates/blog/index.html" wid 4cm
 ```
 
 If we take a look at `index.json` file that was generated by the `markdown` tool, we can see the
@@ -215,48 +251,126 @@ Further rules are defined in the `Makefile` for handling other special cases, su
 - Copying over static files from the `static` directory.
 - Compiling the CSS files and generating the [Catppuccin] theme files.
 
-Taking this approach has a few advantages:
+Taking this approach has a few advantages that get me towards a satisfactory build pipeline that is
+not much less convenient than Hugos:
 
-1. I get something like "_incremental builds_": I can run `make` and only the files that have
-   changed will be built.
+1. I get something that's a bit like incremental builds: I can run `make` and only the files that
+   have changed will be built. Of course, Hugo did this too, so this is only really feature parity.
 2. I can use `make -j` to build the site in parallel, which greatly speeds up the build process.
+   I've no idea if Hugo built anything concurrently, but I'm guessing it did.
+3. I can now have any kind of build pipeline I want, and I don't have to end up running into
+   limitations in Hugo.
 
-The incremental builds are _almost_ working quite well: when I make changes to a single blog
-Markdown file, only a couple of pages are rebuilt: the blog page itself and the blog index page.
+The incremental builds are _almost_ working quite well: when I make changes to a single Markdown
+file, only a couple of pages are rebuilt: the blog page itself and the blog index page.
 Unfortunately, this also cascades to the RSS feed, every tag page, the sitemap, and so on.
 
 I think I'll add a new build mode that skips RSS and sitemap generation, and focuses only on the
 files loaded by the browser.
 
-[quite a bit of spare time]: /worknotes/2026-W32/#-unemployment
+In order to make life a little easier, I've added a little development server to the project. This
+server will serve the files generated by the `Makefile` in the `output` directory. It also watches
+various directories for changes and, if it detects any, causes the site to be rebuilt using the
+`Makefile`. The development server reads various settings (such as the directories to watch) from a
+`dev.json` configuration file.
+
+Whilst this worked very nicely, there were a couple of caveats to this approach that I had to take
+care of:
+
+1. Editors like `vim` tend to do a few more operations than just writing directly to a file. This is
+   a well-known behaviour, and the solution is to debounce the file detection. To do this, I've used
+   the [`notify-debouncer-full`] crate, which tidies up the events received from the [`notify`]
+   crate in various ways. A configuration option `debounce_ms` allows me to set the debounce time.
+2. The issue with [pnpm] asking about whether it should replace the `node_modules/` directory and
+   promptly blocking all operation ([#7727]) requires adding the `--yes` flag to the `pnpm install`
+   command. Whilst this was obvious on Linux, when working on MacOS it appeared that the build
+   process would hang with no indication of why.
+3. I can't make `async` calls within the [`DebounceEventHandler`], so I used a [`broadcast`] channel
+   from `tokio` to send a message to a separate task which would then invoke `make` and pipe the
+   output streams to the logs.
+4. Dealing with [SSE] in [poem] (my preferred web framework) was a bit of a hassle, so I used a
+   [WebSocket] instead. When the server has finished a build, it sends a refresh message to a
+   `broadcast`. When running under the development server, a small JavaScript module is included by
+   the page template that connects to the WebSocket endpoint. When a client connects, it is
+   subscribed to the refresh broadcast. When the JavaScript code receives a refresh message it calls
+   `window.reload()` to reload the page, hopefully showing the latest changes.
+
+[quite a bit of spare time]: /weeknotes/2026-W32/#-unemployment
 [Makefile]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/9c4ab7831f95ef4901c1c3e71aec105813637daa/Makefile
 [this blog post]: https://git.blakerain.com/BlakeRain/blakerain.com/src/branch/main/content/blog/a-new-website-builder/index.md
 [stat(2)]: https://www.man7.org/linux/man-pages/man2/stat.2.html
 [Catppuccin]: https://catppuccin.com/
+[`notify-debouncer-full`]: https://crates.io/crates/notify-debouncer-full
+[`notify`]: https://crates.io/crates/notify
+[pnpm]: https://pnpm.io/
+[#7727]: https://github.com/pnpm/pnpm/issues/7727
+[`DebounceEventHandler`]: https://docs.rs/notify-debouncer-full/latest/notify_debouncer_full/trait.DebounceEventHandler.html
+[`broadcast`]: https://docs.rs/tokio/latest/tokio/sync/broadcast/index.html
+[SSE]: https://en.wikipedia.org/wiki/Server-sent_events
+[poem]: https://crates.io/crates/poem
+[WebSocket]: https://docs.rs/poem/3.1.12/poem/web/websocket/index.html
 
-## Jinja-like Templating with `minijinja`
+# Jinja-like Templating with `minijinja`
 
-I'm sorry to say that I really don't like the [Go templates] that I had to use with Hugo. I find the
-syntax clunky to work with, as I've been spoiled for years by the [Jinja] templating language. For
-most of the projects that I've built, I use the [minijinja] crate, which provides a Rust-based
-templating engine based on Jinja version 2, and is [very well documented].
+As I've mentioned before,  I really don't like the [Go templates] that I had to use with Hugo. I
+find the syntax clunky to work with, as I've been spoiled for years by the [Jinja] templating
+language. For most of the projects that I've built, I use the [minijinja] crate, which provides a
+Rust-based templating engine based on Jinja version 2, and is [very well documented]. It's really a
+great implementation, and provides a lot of very useful features.
 
 Using `minijinja` lets me define the templates for this website in a manner much more akin to what I
 have been used to for quite some years:
 
-{% from "macros/cement.html" import cement %}
-{{ cement("ulawatetzl") }}
+```jinja
+{{'{'}}% macro figure(src, class=none, href=none, target=none,
+                      rel=none, enlarge=false, caption=none,
+                      alt=none, width=none, height=none) %}
+<figure{{'{'}}% if class is string %} class="{{'{'}}{{'{'}} class }}"{{'{'}}% endif %}>
+{{'{'}}% if href %}
+<a href="{{'{'}}{{'{'}} href }}"
+  {{'{'}}%- if target %} target="{{'{'}}{{'{'}} target }}"{{'{'}}% endif %}
+  {{'{'}}%- if rel %} rel="{{'{'}}{{'{'}} rel }}"{{'{'}}% endif %}>
+{{'{'}}% elif enlarge %}
+  {{'{'}}%- set full = image(src, "q75") %}
+  <a href="{{'{'}}{{'{'}} full.path }}" target="_blank" rel="noopener noreferrer">
+{{'{'}}% endif %}
+{{'{'}}%- set spec = "q75" %}
+{{'{'}}%- if width is number and height is number %}
+{{'{'}}%-   set spec = spec ~ " w" ~ width ~ " h" ~ height %}
+{{'{'}}%- elif width is number %}
+{{'{'}}%-   set spec = spec ~ " w" ~ width %}
+{{'{'}}%- elif height is number %}
+{{'{'}}%-   set spec = spec ~ " h" ~ height %}
+{{'{'}}%- endif %}
+{{'{'}}%- set img = image(src, spec) %}
+<img src="{{'{'}}{{'{'}} img.path }}"
+  {{'{'}}%- if alt %} alt="{{'{'}}{{'{'}} alt }}"
+  {{'{'}}%- elif caption %} alt="{{'{'}}{{'{'}} caption }}"{{'{'}}% endif %}
+  {{'{'}}%- if width is number %} width="{{'{'}}{{'{'}} width }}"{{'{'}}% endif %}
+  {{'{'}}%- if height is number %} height="{{'{'}}{{'{'}} height }}"{{'{'}}% endif %}>
+{{'{'}}%- if href or enlarge %}</a>{{'{'}}% endif %}
+{{'{'}}%- if caption %}
+<figcaption>
+  <p>{{'{'}}{{'{'}} caption }}</p>
+  {{'{'}}%- if enlarge %}
+    <div class="italic">(click image to enlarge)</div>
+  {{'{'}}%- endif %}
+</figcaption>
+{{'{'}}%- endif %}
+</figure>
+{{'{'}}% endmacro %}
+```
 
-The above embed is from the [`article.html`] template that renders the main content of an article (a
-blog post, weeknote, or generally any other non-specialised page).
+The above template is from the [`figure.html`] macro that renders a figure with an image and various
+options.
 
 [Go templates]: https://pkg.go.dev/text/template
 [Jinja]: https://jinja.palletsprojects.com/en/stable/
 [minijinja]: https://crates.io/crates/minijinja
 [very well documented]: https://docs.rs/minijinja/latest/minijinja/
-[`article.html`]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/0cc9e48b58af8ae70fe08d121d4cadefcbe97245/templates/macros/article/article.html
+[`figure.html`]: https://git.blakerain.com/BlakeRain/blakerain.com/src/commit/0cc9e48b58af8ae70fe08d121d4cadefcbe97245/templates/macros/figure.html
 
-## Better Diagrams with `pikchr`
+# Better Diagrams with `pikchr`
 
 Whilst the additional 17k lines seems excessive, just over half of those new lines is the C source
 for [pikchr], which I've been very keen to start using for some diagrams. When I started using
@@ -268,81 +382,6 @@ If you've not used `pic` before, I highly encourage you to check it out. It lets
 with a simple language. One of the main attractions of `pic` is that diagrams are laid out
 automatically: objects in a diagram can be either stacked in a particular direction, or placed
 relative to each other.
-
-As an example, we could place three boxes next to each other, with a gap of 1cm and 2cm between
-them:
-
-```
-box "First"
-move right 1cm
-box "Second"
-move right 2cm
-box "Third"
-```
-
-This would produce the following diagram:
-
-```pikchr
-box "First"
-move right 1cm
-box "Second"
-move right 2cm
-box "Third"
-```
-
-We can then connect these boxes together with arrows. For example, instead of using `move right`
-from the first box to the second, we can use `arrow right` to draw an arrow from the first box to
-the second:
-
-```
-box "First"
-arrow right 1cm
-box "Second"
-move right 2cm
-box "Third"
-```
-
-This would change our diagram to include the arrow between the first two boxes:
-
-```pikchr
-box "First"
-arrow right 1cm
-box "Second"
-move right 2cm
-box "Third"
-```
-
-Arrows can be drawn in segments, which can be useful for connecting shapes to show the flow of data
-or events through a system. For example, we could draw an arrow from the top of the first box to the
-last box:
-
-```
-box "First"
-arrow right 1cm
-box "Second"
-move right 2cm
-box "Third"
-
-arrow from first box.n up 1cm \
-  then right until even with last box \
-  then to last box.n
-```
-
-This draws an arrow up 1cm from the north edge of the first box (the `first box.n`), then right
-until it reaches the north edge of the last box (the `last box.n`), and then draws an arrow down
-the north edge of the last box.
-
-```pikchr
-box "First"
-arrow right 1cm
-box "Second"
-move right 2cm
-box "Third"
-
-arrow from first box.n up 1cm \
-  then right until even with last box \
-  then to last box.n
-```
 
 You can read a lot more about `pic` in [Brian Kernighan's Paper](/downloads/pic.pdf) and in the more
 recent [Making Pictures with GNU PIC](/downloads/gpic.pdf) by Eric S. Raymond. The [pikchr
@@ -419,3 +458,20 @@ You can see the source for the diagram above here: [https://paste.blakerain.com/
 
 [pikchr]: https://pikchr.org/
 [pikchr documentation]: https://pikchr.org/home/doc/trunk/doc/userman.md
+
+# What's Next
+
+I'm still settling into the new build pipeline. There are a few rough edges I'd like to smooth out
+before I consider this migration complete:
+
+- The incremental builds under the development server need refining so that changing a single page
+  doesn't cascade into rebuilding the RSS feed and sitemap.
+- It's difficult to actually quote Jinja code directly in Markdown files now that they're being
+  rendered as templates by the `markdown` tool. I could look at adding configuration in the
+  frontmatter that changes the [`SyntaxConfig`] to use different delimiters.
+
+Beyond that, I'm looking forward to using Jinja templates when I make changes to this site, and
+making better use of `pikchr` diagrams in future posts. I've missed having a proper diagramming tool
+integrated into the build pipeline, and I think it'll make technical write-ups considerably clearer.
+
+[`SyntaxConfig`]: https://docs.rs/minijinja/latest/minijinja/syntax/struct.SyntaxConfig.html
