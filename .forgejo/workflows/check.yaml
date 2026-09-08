@@ -19,7 +19,7 @@ jobs:
           apt-get install -y build-essential curl jq yq
 
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
