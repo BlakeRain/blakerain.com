@@ -40,7 +40,7 @@ jobs:
           components: clippy
 
       - name: Build the site
-        run: make release
+        run: make -j8 release
 
       - name: Check typos
         uses: https://github.com/crate-ci/typos@master
