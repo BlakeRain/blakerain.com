@@ -36,8 +36,11 @@ jobs:
           toolchain: stable
           components: clippy
 
+      - name: Install Node Dependencies
+        run: pnpm install --yes
+
       - name: Build the site
-        run: make release
+        run: make -j8 release
 
       - name: Check typos
         uses: https://github.com/crate-ci/typos@master
