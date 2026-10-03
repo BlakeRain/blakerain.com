@@ -9,7 +9,7 @@
     "cssnano": "^9.0.0",
     "lucide-static": "^1.34.0",
     "postcss": "^8.5.13",
-    "postcss-cli": "^11.0.1",
+    "postcss-cli": "^12.0.0",
     "postcss-custom-media": "^12.0.1",
     "postcss-import": "^17.0.0",
     "postcss-nesting": "^14.0.0",
