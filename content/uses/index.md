@@ -48,7 +48,7 @@ organised.
 - [Tmux] - Terminal multiplexer, I use this all the time.
 - [Wezterm] - The terminal I use on MacOS (thanks [@wez](https://github.com/wez)).
 - [yazi] - A terminal-based file manager that I've recently adopted.
-- [zsh] - My shell of choice. My [zhrc] is in my [dotfiles].
+- [zsh] - My shell of choice. My [zshrc] is in my [dotfiles].
 
 # Services
 
