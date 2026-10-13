@@ -13,6 +13,9 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
 - [Caddy](https://caddyserver.com/) – Web server and reverse proxy. I use it to manage TLS
   certificates with [Let's Encrypt](https://letsencrypt.org/), and to route traffic to the various
   services I run. Pretty much everything is behind Caddy.
+- [Calibre](https://github.com/crocodilestick/Calibre-Web-Automated) – A self-hosted ebook manager.
+  I keep all my eBooks in Calibre, and read them either on my [Kobo Libre
+Color](https://ereader.kobo.com/en-gb/products/kobo-libra-colour) or in [Zotero](https://www.zotero.org/).
 - [Cement](https://git.blakerain.com/BlakeRain/cement) – A self-hosted pastebin service. You can
   find it at [paste.blakerain.com](https://paste.blakerain.com/). This is one of my own projects.
 - [changedetection.io](https://changedetection.io/) – A self-hosted change detection service. I
@@ -22,6 +25,9 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   [git.blakerain.com](https://git.blakerain.com/). This is basically a hedge against GitHub going
   completely evil, and I also use it for private repositories.
 - [FreshRSS](https://freshrss.org/) - A self-hosted RSS and Atom feed aggregator.
+- [Hister](https://hister.org/) – A self-hosted full content search index for sites I've visited. I
+  use this as my default search engine, falling back to [SearXNG](https://github.com/searxng/searxng)
+  and [DuckDuckGo](https://duckduckgo.com/).
 - [Homebox](https://homebox.software/en/) – Self-hosted inventory management software. I host this
   at home, just to keep track of components and other bits and pieces. Where are all the cables and
   Raspberry Pis? Homebox (probably) knows!
@@ -34,11 +40,13 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   [mod](https://github.com/bans-minecraft/utamacraft) for some custom functionality.
 - [Navidrome](https://www.navidrome.org/) - A self-hosted music server. Supports a wide range of
   formats and metadata. Also supports (Open)Subsonic APIs, which work with lots of clients.
+- [Nextcloud](https://nextcloud.com/) - alternative to Office365.
 - [Open WebUI](https://github.com/open-webui/open-webui) – Self-hosted interface to LLMs. Useful for
   shouting at LLMs via API with a reasonable UI.
 - [Parcel](https://git.blakerain.com/BlakeRain/parcel) – A self-hosted file sharing service.
   Actually another project of mine. I use it to share files with friends and family, with some teams
   configured for different groups.
+- [Penpot](https://penpot.app/) – UI design tool.
 - [Postfix](https://www.postfix.org/) + [Dovecot](https://www.dovecot.org/) – I run my own email
   server. The build is quite custom, not an off-the-shelf deployment. There's software to manage all
   the domains and mailboxes. I'll probably open source it all at some point.
@@ -58,6 +66,8 @@ an software that I self-host. This is not an exhaustive list, and some of it is 
   [status.blakerain.com](https://status.blakerain.com/).
 - [Vaultwarden](https://github.com/dani-garcia/vaultwarden) - The unofficial Bitwarden compatible
   server.
+- [Web Minidisc Pro](https://github.com/cmsj/docker-webminidiscpro) – A browser-based tool to
+  transfer music from my computer to Minidisc.
 
 # IaC
 
