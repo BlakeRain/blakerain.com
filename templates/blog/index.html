@@ -1,13 +1,13 @@
 {% from "macros/article/item.html" import article_item %}
 {% extends "base.html" %}
-{% block title %}Blog{% endblock %}
 {% block main %}
 {% set posts = load_pages("blog")
      | rejectattr("base", "eq", "blog")
      | sort(attribute="frontmatter.date", reverse=true) %}
 {% set pager = paginate(posts, page.page_number | default(1), page.frontmatter.paginate | default(10), "blog") %}
 <main class="articles-list content">
-  <h1>Blog</h1>
+  <h1>{{ page.frontmatter.title }}</h1>
+  <h2>{{ page.frontmatter.description }}</h2>
   <div class="items separated">
     {%- for page in pager.items %}
       {%- call article_item(page) %}
