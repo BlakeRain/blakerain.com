@@ -9,6 +9,11 @@ sitemap:
   disable: true
 ---
 
+# 026-10-19
+
+Fixed the URL for the status page after migration of resources to `greylight.systems` from
+`blacktreenetworks.com`.
+
 # 2026-08-04
 
 Tidying up the site CSS a bit more after yesterday's refactoring.

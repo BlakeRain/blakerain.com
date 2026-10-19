@@ -6,7 +6,7 @@ subtitle: true
 
 Inspired by [Matze's page](https://kittsteiner.blog/self-hosting/), below is a list of the services
 an software that I self-host. This is not an exhaustive list, and some of it is conflated with
-[blacktreenetworks.com](https://blacktreenetworks.com/) stuff, but it covers the main things I use.
+[greylight.systems](https://greylight.systems/) stuff, but it covers the main things I use.
 
 - [ArchiveBox](https://archivebox.io/) - A self-hosted website archiver.
 - [Atuin](https://atuin.sh/) – A shell history manager. I self-host the server component.
