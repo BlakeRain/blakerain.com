@@ -37,7 +37,7 @@ yaml-rust = { version = "0.4" }
 poem-route-macro = { version = "0.1.1", registry = "blakerain" }
 
 [dependencies.minijinja]
-version = "2.24"
+version = "3.0"
 features = [
   "json",
   "loader",
